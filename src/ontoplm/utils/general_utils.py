@@ -11,4 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from .onto import Ontology
+"""Providing useful utility functions"""
+
+
+def uniqify(ls):
+    """ return a list of unique elements without messing around the order
+    """
+    non_empty_ls = list(filter(lambda x: x != "", ls))
+    return list(dict.fromkeys(non_empty_ls))
