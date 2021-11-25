@@ -103,7 +103,7 @@ def prep_labs(ent: EntityClass, lab_prop: str) -> List[str]:
 
 
 ##################################################################################
-###                         usefual tokenizer paths                            ###
+###                         useful tokenizer paths                             ###
 ##################################################################################
 
 BASIC_BERT = "bert-base-uncased"

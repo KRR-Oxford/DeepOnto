@@ -11,4 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Class for extracting synonym pairs from an ontology"""
+"""Class for extracting synonyms from an ontology"""
+
+from __future__ import annotations
+
+from owlready2.entity import EntityClass
+from typing import List
+from ..onto import Ontology
+from .text_utils import *
+
+
+class OntoSynonyms:
+    def __init__(self, onto: Ontology):
+        self.onto = onto
+

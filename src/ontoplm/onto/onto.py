@@ -29,6 +29,7 @@ class Ontology(SavedObj):
     def __init__(self, owl_path: str):
         self.owl_path = owl_path
         self.owl = get_ontology(f"file://{owl_path}").load()
+        self.lab_probs = None
         self.num_classes = None
         self.num_labs = None
         self.avg_labs = None
@@ -75,12 +76,14 @@ class Ontology(SavedObj):
         # the owlready2 ontology cannot be pickled, so saved as a separate file
         delattr(self, "owl")
         self.save_pkl(self, saved_path)
+        # load back the owl ontology after saving the pickled parts
         self.owl = get_ontology(f"file://{self.owl_path}").load()
 
     def __str__(self) -> str:
         info = {
             "owl_name": self.owl.name,
             "num_classes": self.num_classes,
+            "labs_probs": self.lab_probs,
             "num_labs": self.num_labs,
             "avg_labs": self.avg_labs,
             "num_entries_inv_idx": self.num_entries_inv_idx,
