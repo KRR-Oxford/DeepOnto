@@ -12,11 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from collections import defaultdict
 from owlready2.entity import EntityClass
 from owlready2.prop import IndividualValueList
+from typing import Iterable, List, Dict, Iterator, Optional
+
+from transformers import AutoTokenizer
+from collections import defaultdict
 from itertools import chain
-from typing import Iterable, List, Dict
+
 from ...utils import uniqify
 from ..iris import namespaces, inv_namespaces
 
@@ -66,10 +69,13 @@ def ents_labs_from_props(
     """ extract unique and cleaned labels (for a group of entities) given the input annotational properties;
         entities are represented by their numbers according to {ents2idx}
     """
-    onto_labels = defaultdict(list)
+    ents_labels = defaultdict(list)
+    num_labels = 0
     for ent in ents:
-        onto_labels[ents2idx[abbr_iri(ent.iri)]] = ent_labs_from_props(ent, lab_props)
-    return onto_labels
+        ent_labs = ent_labs_from_props(ent, lab_props)
+        ents_labels[ents2idx[abbr_iri(ent.iri)]] = ent_labs
+        num_labels += len(ent_labs)
+    return ents_labels, num_labels
 
 
 def ent_labs_from_props(ent: EntityClass, lab_props: List[str] = ["label"]):
@@ -94,3 +100,11 @@ def prep_labs(ent: EntityClass, lab_prop: str) -> List[str]:
     assert type(raw_labels) is IndividualValueList
     cleaned_labels = [lab.lower().replace("_", " ") for lab in raw_labels]
     return cleaned_labels
+
+
+##################################################################################
+###                         usefual tokenizer paths                            ###
+##################################################################################
+
+BASIC_BERT = "bert-base-uncased"
+BIOCLINICAL_BERT = "emilyalsentzer/Bio_ClinicalBERT"
