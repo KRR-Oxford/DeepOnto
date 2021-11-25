@@ -90,3 +90,4 @@ target/
 
 # pytest
 .pytest*
+testing/
