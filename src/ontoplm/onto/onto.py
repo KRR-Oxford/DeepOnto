@@ -1,0 +1,115 @@
+# Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""Class for handling the ontology in owlready2 format"""
+
+from __future__ import annotations
+
+from typing import Optional, List
+from collections import defaultdict
+from itertools import chain
+from owlready2 import get_ontology
+
+from ontoplm import SavedObj
+from ontoplm.onto.onto_text.text_utils import ents_labs_from_props
+from .onto_text import abbr_iri, Tokenizer
+
+
+class Ontology(SavedObj):
+    def __init__(self, owl_path: str):
+        self.owl_path = owl_path
+        self.owl = get_ontology(f"file://{owl_path}").load()
+        self.num_classes = None
+        self.num_labs = None
+        self.avg_labs = None
+        self.num_entries_inv_idx = None
+        super().__init__(self.owl.name)
+
+    @classmethod
+    def from_new(
+        cls, onto_path: str, lab_props: List[str] = ["label"], tokenizer: Optional[Tokenizer] = None
+    ) -> Ontology:
+        onto = cls(onto_path)
+        # {class_iri: class_number}; {class_number: class_iri}
+        onto.class2idx, onto.idx2class = onto.assign_class_numbers(onto.owl)
+        # {class_number: [labels]}
+        onto.lab_probs = lab_props
+        onto.class2labs, onto.num_labs = ents_labs_from_props(
+            onto.owl.classes(), onto.class2idx, onto.lab_probs
+        )
+        onto.num_classes = len(onto.class2idx)
+        onto.avg_labs = round(onto.num_labs / onto.num_classes, 2)
+        # {token: [class_numbers]}
+        if tokenizer:
+            onto.build_inv_idx(tokenizer, cut=0)
+        print(onto)
+        return onto
+
+    @classmethod
+    def from_saved(cls, saved_path: str) -> Optional[Ontology]:
+        try:
+            onto = cls.load_pkl(saved_path)
+            onto.owl = get_ontology(f"file://{onto.owl_path}").load()
+            return onto
+        except:
+            raise FileNotFoundError(f"please check file integrity in : {saved_path})")
+
+    def save_instance(self, saved_path: str):
+        """the saved Ontology consists of a owl file and a pkl file with all the
+        data (class2idx, class2labs, inv_idx, ...) generated from construction
+        """
+        super().save_instance(saved_path=saved_path)
+        self.copy2(self.owl_path, saved_path)
+        owl_file_name = self.owl_path.split("/")[-1]
+        self.owl_path = saved_path + "/" + owl_file_name
+        # the owlready2 ontology cannot be pickled, so saved as a separate file
+        delattr(self, "owl")
+        self.save_pkl(self, saved_path)
+        self.owl = get_ontology(f"file://{self.owl_path}").load()
+
+    def __str__(self) -> str:
+        info = {
+            "owl_name": self.owl.name,
+            "num_classes": self.num_classes,
+            "num_labs": self.num_labs,
+            "avg_labs": self.avg_labs,
+            "num_entries_inv_idx": self.num_entries_inv_idx,
+        }
+        return super().report(**info)
+
+    @staticmethod
+    def assign_class_numbers(owl_onto):
+        """ assign numbers for each class in an owlready2 ontology
+        """
+        cl_iris = [abbr_iri(cl.iri) for cl in owl_onto.classes()]
+        cl_idx = list(range(len(cl_iris)))
+        class2idx = dict(zip(cl_iris, cl_idx))
+        idx2class = dict(zip(cl_idx, cl_iris))
+        assert len(class2idx) == len(idx2class)
+        return class2idx, idx2class
+
+    def build_inv_idx(self, tokenizer, cut: int = 0) -> None:
+        """create inverted index based on the extracted labels of an ontology
+
+        Args:
+            tokenizer : text tokenizer, word-level or sub-word-level,
+                        a .tokenize() funciton needs to be implemented
+            cut (int): keep tokens with length > cut 
+        """
+        self.inv_idx = defaultdict(list)
+        for cls_iri, cls_labs in self.class2labs.items():
+            tokens = list(chain.from_iterable(tokenizer.tokenize(lab) for lab in cls_labs))
+            for tk in tokens:
+                if len(tk) > cut:
+                    self.inv_idx[tk].append(cls_iri)
+        self.num_entries_inv_idx = len(self.inv_idx)

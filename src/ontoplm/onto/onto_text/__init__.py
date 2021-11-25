@@ -13,3 +13,4 @@
 # limitations under the License.
 
 from .text_utils import *
+from .tokenizer import Tokenizer
