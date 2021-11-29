@@ -32,8 +32,10 @@ class TextSemantics(SavedObj):
         self.indiv_names = []
         self.indiv_synonyms_sizes = []
         self.merged = dict()
+        super().__init__("txtsem")
 
     def __call__(self, *ontos: ontoplm.onto.Ontology):
+        self.__init__(self.transitive, self.neg_ratio)
         for i in range(len(ontos)):
             onto = ontos[i]
             grouped_synonyms = self.synonym_field(onto)

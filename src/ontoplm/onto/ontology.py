@@ -125,7 +125,3 @@ class Ontology(SavedObj):
                 if len(tk) > cut:
                     self.inv_idx[tk].append(cls_iri)
         self.num_entries_inv_idx = len(self.inv_idx)
-
-    def synonyms(transitive=False):
-        return
-
