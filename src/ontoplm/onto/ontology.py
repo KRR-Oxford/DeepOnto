@@ -19,10 +19,11 @@ from typing import Optional, List
 from collections import defaultdict
 from itertools import chain
 from owlready2 import get_ontology
+from pyats.datastructures import AttrDict
+from pathlib import Path
 
 from ontoplm import SavedObj
-from ontoplm.onto.onto_text.text_utils import ents_labs_from_props
-from .onto_text import abbr_iri, Tokenizer
+from .onto_text import Tokenizer, text_utils
 
 
 class Ontology(SavedObj):
@@ -30,6 +31,12 @@ class Ontology(SavedObj):
         self.owl_path = owl_path
         self.owl = get_ontology(f"file://{owl_path}").load()
         self.lab_probs = None
+        # dict attributes
+        self.class2idx = None
+        self.idx2class = None
+        self.class2labs = None
+        self.inv_idx = None
+        # stat attributes
         self.num_classes = None
         self.num_labs = None
         self.avg_labs = None
@@ -45,7 +52,7 @@ class Ontology(SavedObj):
         onto.class2idx, onto.idx2class = onto.assign_class_numbers(onto.owl)
         # {class_number: [labels]}
         onto.lab_probs = lab_props
-        onto.class2labs, onto.num_labs = ents_labs_from_props(
+        onto.class2labs, onto.num_labs = text_utils.ents_labs_from_props(
             onto.owl.classes(), onto.class2idx, onto.lab_probs
         )
         onto.num_classes = len(onto.class2idx)
@@ -69,7 +76,7 @@ class Ontology(SavedObj):
         """the saved Ontology consists of a owl file and a pkl file with all the
         data (class2idx, class2labs, inv_idx, ...) generated from construction
         """
-        super().save_instance(saved_path=saved_path)
+        Path(saved_path).mkdir(parents=True, exist_ok=True)
         self.copy2(self.owl_path, saved_path)
         owl_file_name = self.owl_path.split("/")[-1]
         self.owl_path = saved_path + "/" + owl_file_name
@@ -80,21 +87,23 @@ class Ontology(SavedObj):
         self.owl = get_ontology(f"file://{self.owl_path}").load()
 
     def __str__(self) -> str:
-        info = {
-            "owl_name": self.owl.name,
-            "num_classes": self.num_classes,
-            "labs_probs": self.lab_probs,
-            "num_labs": self.num_labs,
-            "avg_labs": self.avg_labs,
-            "num_entries_inv_idx": self.num_entries_inv_idx,
-        }
-        return super().report(**info)
+        self.info = AttrDict(
+            {
+                "owl_name": self.owl.name,
+                "num_classes": self.num_classes,
+                "labs_probs": self.lab_probs,
+                "num_labs": self.num_labs,
+                "avg_labs": self.avg_labs,
+                "num_entries_inv_idx": self.num_entries_inv_idx,
+            }
+        )
+        return super().report(**self.info)
 
     @staticmethod
     def assign_class_numbers(owl_onto):
         """ assign numbers for each class in an owlready2 ontology
         """
-        cl_iris = [abbr_iri(cl.iri) for cl in owl_onto.classes()]
+        cl_iris = [text_utils.abbr_iri(cl.iri) for cl in owl_onto.classes()]
         cl_idx = list(range(len(cl_iris)))
         class2idx = dict(zip(cl_iris, cl_idx))
         idx2class = dict(zip(cl_idx, cl_iris))
@@ -116,3 +125,7 @@ class Ontology(SavedObj):
                 if len(tk) > cut:
                     self.inv_idx[tk].append(cls_iri)
         self.num_entries_inv_idx = len(self.inv_idx)
+
+    def synonyms(transitive=False):
+        return
+
