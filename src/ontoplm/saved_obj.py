@@ -37,13 +37,13 @@ class SavedObj:
     def from_saved(cls, saved_path, *args, **kwargs):
         """constructor for loading saved instance
         """
-        raise NotImplementedError
+        return cls.load_pkl(saved_path)
 
     def save_instance(self, saved_path, *args, **kwargs):
         """save the current instance locally
         """
         Path(saved_path).mkdir(parents=True, exist_ok=True)
-        # TODO after creating the saved directory
+        self.save_pkl(self, saved_path)
 
     @staticmethod
     def save_json(json_obj, saved_path: str, sort_keys: bool = False):
@@ -63,7 +63,7 @@ class SavedObj:
             pickle.dump(obj, output, -1)
 
     @staticmethod
-    def load_pkl(saved_path: str, num_saved: int = 1):
+    def load_pkl(saved_path: str):
         """load the pickled part of the SavedObj
         """
         for file in os.listdir(saved_path):
