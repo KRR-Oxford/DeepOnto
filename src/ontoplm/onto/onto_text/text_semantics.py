@@ -17,17 +17,20 @@ from __future__ import annotations
 
 import networkx as nx
 import itertools
-from typing import List, Set, Tuple
+import random
+from typing import List, Set, Tuple, Optional
 from pyats.datastructures import AttrDict
 import ontoplm
 from ontoplm import SavedObj
-from ontoplm.utils import rand_sample_excl
+from ontoplm.utils import rand_sample_excl, uniqify
 
 
 class TextSemantics(SavedObj):
-    def __init__(self, transitive: bool = False, neg_ratio: int = 10):
+    def __init__(self, transitive: bool = False):
+        # note that reflexivity and symmetricality have been assumed by 
+        # e.g., if a class C has labels {x, y}, we include (x, x), (y, y) 
+        # for reflexivity; and (x, y), (y, x) for symmetricality.
         self.transitive = transitive
-        self.neg_ratio = neg_ratio
         self.indivs = []
         self.indiv_names = []
         self.indiv_synonyms_sizes = []
@@ -35,7 +38,7 @@ class TextSemantics(SavedObj):
         super().__init__("txtsem")
 
     def __call__(self, *ontos: ontoplm.onto.Ontology):
-        self.__init__(self.transitive, self.neg_ratio)
+        self.__init__(self.transitive)
         for i in range(len(ontos)):
             onto = ontos[i]
             grouped_synonyms = self.synonym_field(onto)
@@ -58,7 +61,6 @@ class TextSemantics(SavedObj):
         self.info = AttrDict(
             {
                 "transitive": self.transitive,
-                "neg_ratio": self.neg_ratio,
                 "owl_names": self.indiv_names,
                 "indv_synonyms_sizes": self.indiv_synonyms_sizes,
                 "indv_synonyms_total": sum(self.indiv_synonyms_sizes),
@@ -120,22 +122,41 @@ class TextSemantics(SavedObj):
         # nx.draw(G, with_labels = True)
         cc = list(nx.connected_components(G))
         return cc
+    
+    ##################################################################################
+    ###                          +ve and -ve sampling                              ###
+    ##################################################################################
+    
+    @staticmethod
+    def positive_sampling(grouped_synonyms: List[Set[str]], pos_num: Optional[int] = None):
+        pos_sample_pool = []
+        for synonym_set in grouped_synonyms:
+            synonym_pairs = list(itertools.product(synonym_set, synonym_set))
+            pos_sample_pool += synonym_pairs
+        pos_sample_pool = uniqify(pos_sample_pool)
+        if (not pos_num) or (pos_num >= len(pos_sample_pool)):
+            # return all the possible synonyms if no maximum limit
+            return pos_sample_pool
+        else:
+            return random.sample(pos_sample_pool, pos_num)
 
     @staticmethod
-    def sample_soft_nonsynonyms(grouped_synonyms: List[Set[str]], neg_ratio: int):
-        """soft non-synonyms are defined as label pairs from two random classes;
-        because of the extreme positive-negative imbalance, we need to sample 
-        certain number of non-synonyms for each synonym group; to force an even
-        distribution, we sample for each label in a synonym group {N} negative
-        labels to form the non-synonym groups
-
-        Args:
-            grouped_synonyms (List[Set[str]]): [description]
+    def random_negative_sampling(grouped_synonyms: List[Set[str]], neg_num: int):
+        """soft non-synonyms are defined as label pairs from two disjoint synonym groups
+        that are randomly selected
         """
-        grouped_soft_nonsynonyms = []
-        for i in range(len(grouped_synonyms)):
-            synonyms = grouped_synonyms[i]
-            neg_idxs = rand_sample_excl(0, len(grouped_synonyms), neg_ratio, i)
+        neg_sample_pool = []
+        # randomly select disjoint synonym group pairs
+        while len(neg_sample_pool) < neg_num:
+            left, right = tuple(random.sample(grouped_synonyms, 2))
+            # randomly choose one label from a synonym group
+            left_label = random.choice(list(left))  
+            right_label = random.choice(list(right))  
+            neg_sample_pool.append((left_label, right_label))
+            neg_sample_pool = uniqify(neg_sample_pool)
+        return neg_sample_pool
 
-    def get_hard_nonsynonyms(self, onto: ontoplm.onto.Ontology):
+
+    @staticmethod
+    def disjointness_negative_sampling(onto: ontoplm.onto.Ontology, neg_num: int):
         pass
