@@ -18,7 +18,7 @@ from __future__ import annotations
 import networkx as nx
 import itertools
 import random
-from typing import List, Set, Tuple, Optional
+from typing import List, Set, Tuple, Optional, Iterable
 from pyats.datastructures import AttrDict
 import ontoplm
 from ontoplm import SavedObj
@@ -27,8 +27,8 @@ from ontoplm.utils import rand_sample_excl, uniqify
 
 class TextSemantics(SavedObj):
     def __init__(self, transitive: bool = False):
-        # note that reflexivity and symmetricality have been assumed by 
-        # e.g., if a class C has labels {x, y}, we include (x, x), (y, y) 
+        # note that reflexivity and symmetricality have been assumed by
+        # e.g., if a class C has labels {x, y}, we include (x, x), (y, y)
         # for reflexivity; and (x, y), (y, x) for symmetricality.
         self.transitive = transitive
         self.indivs = []
@@ -68,7 +68,9 @@ class TextSemantics(SavedObj):
         )
         if self.transitive:
             self.info.merged_synonyms_size = self.merged.num_synonyms
-            self.info.reduced_synonyms_size = self.info.indv_synonyms_total - self.merged.num_synonyms
+            self.info.reduced_synonyms_size = (
+                self.info.indv_synonyms_total - self.merged.num_synonyms
+            )
         return super().report(**self.info)
 
     def merge_semantics(self):
@@ -94,10 +96,7 @@ class TextSemantics(SavedObj):
 
     @classmethod
     def merge_synonym_fields(cls, *synonym_fields_seq: List[Set[str]]):
-        """with transitivity assumed, 
-
-        Returns:
-            [type]: [description]
+        """With transitivity assumed, to merge different snonym fields
         """
         label_pairs = []
         for grouped_synonyms in synonym_fields_seq:
@@ -108,7 +107,7 @@ class TextSemantics(SavedObj):
 
     @staticmethod
     def connected_labels(label_pairs: List[Tuple[str, str]]) -> List[Set[str]]:
-        """build a graph for adjacency among the class labels such that
+        """Build a graph for adjacency among the class labels such that
         the transitivity of synonyms is ensured
 
         Args:
@@ -117,16 +116,16 @@ class TextSemantics(SavedObj):
         Returns:
             List[Set[str]]: a collection of synonym sets
         """
-        G = nx.Graph()
-        G.add_edges_from(label_pairs)
+        graph = nx.Graph()
+        graph.add_edges_from(label_pairs)
         # nx.draw(G, with_labels = True)
-        cc = list(nx.connected_components(G))
-        return cc
-    
+        connected = list(nx.connected_components(graph))
+        return connected
+
     ##################################################################################
     ###                          +ve and -ve sampling                              ###
     ##################################################################################
-    
+
     @staticmethod
     def positive_sampling(grouped_synonyms: List[Set[str]], pos_num: Optional[int] = None):
         pos_sample_pool = []
@@ -142,21 +141,32 @@ class TextSemantics(SavedObj):
 
     @staticmethod
     def random_negative_sampling(grouped_synonyms: List[Set[str]], neg_num: int):
-        """soft non-synonyms are defined as label pairs from two disjoint synonym groups
+        """soft non-synonyms are defined as label pairs from two different synonym groups
         that are randomly selected
         """
         neg_sample_pool = []
-        # randomly select disjoint synonym group pairs
+        # randomly select disjoint synonym group pairs from all
         while len(neg_sample_pool) < neg_num:
             left, right = tuple(random.sample(grouped_synonyms, 2))
             # randomly choose one label from a synonym group
-            left_label = random.choice(list(left))  
-            right_label = random.choice(list(right))  
+            left_label = random.choice(list(left))
+            right_label = random.choice(list(right))
             neg_sample_pool.append((left_label, right_label))
             neg_sample_pool = uniqify(neg_sample_pool)
         return neg_sample_pool
 
-
     @staticmethod
-    def disjointness_negative_sampling(onto: ontoplm.onto.Ontology, neg_num: int):
-        pass
+    def disjointness_negative_sampling(
+        grouped_disjoint_synonyms: List[Iterable[Iterable[str]]], neg_num: int
+    ):
+        neg_sample_pool = []
+        # randomly select disjoint synonym group pairs from defined disjointness
+        while len(neg_sample_pool) < neg_num:
+            disjoint_group = random.choice(grouped_disjoint_synonyms)
+            left, right = tuple(random.sample(disjoint_group, 2))
+            # randomly choose one label from a synonym group
+            left_label = random.choice(list(left))
+            right_label = random.choice(list(right))
+            neg_sample_pool.append((left_label, right_label))
+            neg_sample_pool = uniqify(neg_sample_pool)
+        return neg_sample_pool
