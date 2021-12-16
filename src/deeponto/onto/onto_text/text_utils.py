@@ -14,14 +14,14 @@
 
 from owlready2.entity import EntityClass
 from owlready2.prop import IndividualValueList
-from typing import Iterable, List, Dict, Tuple, Set
+from typing import Iterable, List, Dict, Tuple
 
 from collections import defaultdict
 from itertools import chain
 import networkx as nx
 
-from ontoplm.utils import uniqify
-from ontoplm.onto.iris import namespaces, inv_namespaces
+from deeponto.utils import uniqify
+from deeponto.onto.iris import namespaces, inv_namespaces
 
 ##################################################################################
 ###                         useful tokenizer paths                             ###
