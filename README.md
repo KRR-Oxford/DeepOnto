@@ -14,9 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-OntoPLM
+DeepOnto
 ==============================
 
-> A package for ontology engineering with pre-trained language models.
+<p align="center">
+  A package for ontology engineering with deep learning. 
+</p>
+
+
 
 
