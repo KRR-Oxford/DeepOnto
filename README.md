@@ -24,7 +24,9 @@ limitations under the License.
   A package for ontology engineering with deep learning. 
 </p>
 
-DeepOnto aims to provide implemented deep learning models for various ontology engineering purposes.
+## About
+
+DeepOnto aims to provide implemented deep learning models and an evaluation platform for various ontology engineering purposes.
 
 ## Essential Dependencies
 
