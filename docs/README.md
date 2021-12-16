@@ -21,6 +21,12 @@ limitations under the License.
 </p>
 
 <p align="center">
+    <a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/LICENSE">
+        <img alt="license" src="https://img.shields.io/github/license/KRR-Oxford/DeepOnto">
+    </a>
+</p>
+
+<p align="center">
   A package for ontology engineering with deep learning.
 </p>
 
