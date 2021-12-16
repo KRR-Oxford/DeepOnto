@@ -24,7 +24,9 @@ limitations under the License.
   A package for ontology engineering with deep learning. 
 </p>
 
+## Implemented Models
 
+- BERTMap (AAAI-22)
 
 ## License
 
@@ -42,4 +44,4 @@ limitations under the License.
 
 ## Publications
 
-- *Yuan He‚ Jiaoyan Chen‚ Denvar Antonyrajah and Ian Horrocks.* In Proceedings of 36th AAAI Conference on Artificial Intelligence 2022 (AAAI-22). To Appear.
+- *Yuan He‚ Jiaoyan Chen‚ Denvar Antonyrajah and Ian Horrocks.* **BERTMap: A BERT−based Ontology Alignment System**. In Proceedings of 36th AAAI Conference on Artificial Intelligence 2022 (AAAI-22). To Appear.
