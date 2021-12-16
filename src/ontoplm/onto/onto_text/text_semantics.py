@@ -128,6 +128,8 @@ class TextSemantics(SavedObj):
 
     @staticmethod
     def positive_sampling(grouped_synonyms: List[Set[str]], pos_num: Optional[int] = None):
+        """Generate synonym pairs from each independent synonym group
+        """
         pos_sample_pool = []
         for synonym_set in grouped_synonyms:
             synonym_pairs = list(itertools.product(synonym_set, synonym_set))
@@ -141,7 +143,7 @@ class TextSemantics(SavedObj):
 
     @staticmethod
     def random_negative_sampling(grouped_synonyms: List[Set[str]], neg_num: int):
-        """soft non-synonyms are defined as label pairs from two different synonym groups
+        """Soft (random) non-synonyms are defined as label pairs from two different synonym groups
         that are randomly selected
         """
         neg_sample_pool = []
@@ -159,6 +161,9 @@ class TextSemantics(SavedObj):
     def disjointness_negative_sampling(
         grouped_disjoint_synonyms: List[Iterable[Iterable[str]]], neg_num: int
     ):
+        """Hard (disjoint) non-synonyms are defined as label pairs from two different synonym groups
+        that are logically disjoint
+        """
         neg_sample_pool = []
         # randomly select disjoint synonym group pairs from defined disjointness
         while len(neg_sample_pool) < neg_num:
