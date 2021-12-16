@@ -24,6 +24,15 @@ limitations under the License.
   A package for ontology engineering with deep learning. 
 </p>
 
+DeepOnto aims to provide implemented deep learning models for various ontology engineering purposes.
+
+## Essential Dependencies
+
+DeepOnto is mainly extended from the following packages:
+
+- [OwlReady2](https://owlready2.readthedocs.io/) for basic ontology processing.
+- [Transformers](https://github.com/huggingface/transformers) for pre-trained language models.
+
 ## Implemented Models
 
 - BERTMap (AAAI-22)
