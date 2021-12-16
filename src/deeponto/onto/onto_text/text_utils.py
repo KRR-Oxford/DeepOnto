@@ -114,14 +114,14 @@ def prep_labs(ent: EntityClass, lab_prop: str) -> List[str]:
 ##################################################################################
 
 
-def sibling_labels(
+def sib_labs(
     ents: Iterable[EntityClass], lab_props: List[str] = ["label"]
 ) -> List[Tuple[Tuple[str]]]:
     """Return all the sibling label groups with size > 1 and no duplicates
     """
     sib_lables = []
     for ent in ents:
-        ch_labels = child_labels(ent, lab_props)
+        ch_labels = child_labs(ent, lab_props)
         if ch_labels and len(ch_labels) > 1:
             sib_lables.append(ch_labels)
     sib_lables = uniqify(sib_lables)
@@ -129,7 +129,7 @@ def sibling_labels(
     return list(map(lambda dis_group: [list(syn_group) for syn_group in dis_group], sib_lables))
 
 
-def child_labels(ent: EntityClass, lab_props: List[str] = ["label"]) -> Tuple[Tuple[str]]:
+def child_labs(ent: EntityClass, lab_props: List[str] = ["label"]) -> Tuple[Tuple[str]]:
     """Return labels of child entity classes, ensuring that not label groups are duplicated 
     """
     return tuple(
