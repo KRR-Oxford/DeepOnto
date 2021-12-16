@@ -20,9 +20,9 @@ import itertools
 import random
 from typing import List, Set, Tuple, Optional, Iterable
 from pyats.datastructures import AttrDict
-import ontoplm
-from ontoplm import SavedObj
-from ontoplm.utils import rand_sample_excl, uniqify
+import deeponto
+from deeponto import SavedObj
+from deeponto.utils import rand_sample_excl, uniqify
 
 
 class TextSemantics(SavedObj):
@@ -37,7 +37,7 @@ class TextSemantics(SavedObj):
         self.merged = dict()
         super().__init__("txtsem")
 
-    def __call__(self, *ontos: ontoplm.onto.Ontology):
+    def __call__(self, *ontos: deeponto.onto.Ontology):
         self.__init__(self.transitive)
         for i in range(len(ontos)):
             onto = ontos[i]
@@ -80,7 +80,7 @@ class TextSemantics(SavedObj):
             {"num_synonyms": len(merged_synonym_field), "synonyms": merged_synonym_field}
         )
 
-    def synonym_field(self, onto: ontoplm.onto.Ontology) -> List[Set[str]]:
+    def synonym_field(self, onto: deeponto.onto.Ontology) -> List[Set[str]]:
         grouped_synonyms = []
         # group labels by their associated classes if transitivity is not considered
         if not self.transitive:

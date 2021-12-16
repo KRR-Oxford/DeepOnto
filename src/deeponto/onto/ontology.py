@@ -22,7 +22,7 @@ from owlready2 import get_ontology
 from pyats.datastructures import AttrDict
 from pathlib import Path
 
-from ontoplm import SavedObj
+from deeponto import SavedObj
 from .onto_text import Tokenizer, text_utils
 
 
