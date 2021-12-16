@@ -20,9 +20,10 @@ import itertools
 import random
 from typing import List, Set, Tuple, Optional, Iterable
 from pyats.datastructures import AttrDict
+
 import deeponto
 from deeponto import SavedObj
-from deeponto.utils import rand_sample_excl, uniqify
+from deeponto.utils import uniqify
 
 
 class TextSemantics(SavedObj):
