@@ -17,7 +17,6 @@ from __future__ import annotations
 
 from typing import Optional, List
 from collections import defaultdict
-from itertools import chain
 from owlready2 import get_ontology
 from pyats.datastructures import AttrDict
 from pathlib import Path
@@ -73,7 +72,7 @@ class Ontology(SavedObj):
             raise FileNotFoundError(f"please check file integrity in : {saved_path})")
 
     def save_instance(self, saved_path: str):
-        """the saved Ontology consists of a owl file and a pkl file with all the
+        """The saved Ontology consists of a owl file and a pkl file with all the
         data (class2idx, class2labs, inv_idx, ...) generated from construction
         """
         Path(saved_path).mkdir(parents=True, exist_ok=True)
@@ -101,7 +100,7 @@ class Ontology(SavedObj):
 
     @staticmethod
     def assign_class_numbers(owl_onto):
-        """ assign numbers for each class in an owlready2 ontology
+        """Assign numbers for each class in an owlready2 ontology
         """
         cl_iris = [text_utils.abbr_iri(cl.iri) for cl in owl_onto.classes()]
         cl_idx = list(range(len(cl_iris)))
@@ -111,7 +110,7 @@ class Ontology(SavedObj):
         return class2idx, idx2class
 
     def build_inv_idx(self, tokenizer, cut: int = 0) -> None:
-        """create inverted index based on the extracted labels of an ontology
+        """Create inverted index based on the extracted labels of an ontology
 
         Args:
             tokenizer : text tokenizer, word-level or sub-word-level,
@@ -120,8 +119,16 @@ class Ontology(SavedObj):
         """
         self.inv_idx = defaultdict(list)
         for cls_iri, cls_labs in self.class2labs.items():
-            tokens = list(chain.from_iterable(tokenizer.tokenize(lab) for lab in cls_labs))
-            for tk in tokens:
+            for tk in tokenizer.tokenize_all(cls_labs):
                 if len(tk) > cut:
                     self.inv_idx[tk].append(cls_iri)
         self.num_entries_inv_idx = len(self.inv_idx)
+
+    def idf_select(self, ent_toks, pool_size: int = 200) -> List[str]:
+        """Select entities based on idf scores
+        """
+        cand_pool = text_utils.idf_select(ent_toks, self.inv_idx, pool_size)
+        cand_pool = [self.idx2class[c[0]] for c in cand_pool]
+        info = {"num_candidates": len(cand_pool), "examples": cand_pool[: min(pool_size, 2)]}
+        print(self.report(root_name="Selection.Info", **info))
+        return cand_pool
