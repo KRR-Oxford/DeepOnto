@@ -19,6 +19,7 @@ import json
 import dill as pickle
 import os
 import shutil
+from typing import Optional
 from pathlib import Path
 from lxml import etree, builder
 
@@ -80,14 +81,14 @@ class SavedObj:
         except shutil.SameFileError:
             print(f"same file exists at {destination}")
 
-    def report(self, **kwargs) -> str:
+    def report(self, root_name: Optional[str] = None, **kwargs) -> str:
         """generate xml report for the saved object
         """
         xml = builder.ElementMaker()
-        name = type(self).__name__
+        root_name = type(self).__name__ if not root_name else root_name
         elems = []
         for k, v in kwargs.items():
             elems.append(getattr(xml, k)(str(v)))
-        root = getattr(xml, name)(*elems)
+        root = getattr(xml, root_name)(*elems)
         string = etree.tostring(root, pretty_print=True).decode()
         return string

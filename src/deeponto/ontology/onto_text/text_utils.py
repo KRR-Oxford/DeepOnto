@@ -18,6 +18,7 @@ from typing import Iterable, List, Dict, Tuple
 
 from collections import defaultdict
 from itertools import chain
+import math
 
 from deeponto.utils import uniqify
 from deeponto.ontology.iris import namespaces, inv_namespaces
@@ -138,3 +139,35 @@ def child_labs(ent: EntityClass, lab_props: List[str] = ["label"]) -> Tuple[Tupl
             if isinstance(child, EntityClass)
         )
     )
+
+
+##################################################################################
+###                 inverted index-based candidate selection                   ###
+##################################################################################
+
+
+def idf_select(ent_toks: List[str], inv_idx: Dict, pool_size: int = 200) -> List[str]:
+    """Given tokenized labels associated to an entity, select a set of entities 
+    from the values of an inverted index according to `idf` scores; `idf` score of 
+    a token T is lower when T is shared by more entities. 
+    
+    We use `idf` instead of  `tf` because labels have different lengths 
+    ==> tf is not a fair measure.
+    """
+    cand_pool = defaultdict(lambda: 0)
+    # D := number of "documents", i.e., total number of entities in the values of the inverted index
+    D = len(set(chain.from_iterable(inv_idx.values())))
+    for tok in ent_toks:
+        # each token is associated with some classes
+        potential_cands = inv_idx.setdefault(tok, [])
+        if not potential_cands:
+            continue
+        # We use idf instead of tf because the text for each class is of different length, tf is not a fair measure
+        # inverse document frequency: with more classes to have the current token tk, the score decreases
+        idf = math.log10(D / len(potential_cands))
+        for ent_id in potential_cands:
+            # each candidate class is scored by sum(idf)
+            cand_pool[ent_id] += idf
+    cand_pool = list(sorted(cand_pool.items(), key=lambda item: item[1], reverse=True))
+    # select the first K ranked
+    return cand_pool[:pool_size]

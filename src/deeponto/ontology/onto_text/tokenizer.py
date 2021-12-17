@@ -16,6 +16,7 @@
 from types import MethodType
 from transformers import AutoTokenizer
 import spacy
+from itertools import chain
 
 
 class Tokenizer:
@@ -26,6 +27,9 @@ class Tokenizer:
 
     def __call__(self, texts):
         return self.tokenize(texts)
+    
+    def tokenize_all(self, texts_list):
+        return list(chain.from_iterable(self(txt) for txt in texts_list))
 
     @classmethod
     def from_pretrained(cls, pretrained_path: str = "bert-base-uncased"):
