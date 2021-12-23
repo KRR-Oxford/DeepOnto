@@ -16,7 +16,7 @@
 from deeponto.ontology import Ontology
 from deeponto.ontology.mapping import *
 from deeponto.ontology.onto_text import Tokenizer, text_utils
-from itertools import cycle, product
+from itertools import cycle
 from typing import List, Tuple, Optional
 
 
@@ -41,12 +41,8 @@ class OntoAlign:
         )
         self.n_best = n_best
 
-        self.src2tgt_mappings = EntityRankedMappings(
-            flag="src2tgt", n_best=self.n_best, rel=self.rel
-        )
-        self.tgt2src_mappings = EntityRankedMappings(
-            flag="tgt2src", n_best=self.n_best, rel=self.rel
-        )
+        self.src2tgt_mappings = Alignment(flag="src2tgt", n_best=self.n_best, rel=self.rel)
+        self.tgt2src_mappings = Alignment(flag="tgt2src", n_best=self.n_best, rel=self.rel)
         self.flag_set = cycle(["src2tgt", "tgt2src"])
         self.flag = next(self.flag_set)
 
