@@ -17,7 +17,7 @@ from owlready2.prop import IndividualValueList
 from typing import Iterable, List, Dict, Tuple
 
 from collections import defaultdict
-from itertools import chain
+from itertools import chain, product
 import math
 
 from deeponto.utils import uniqify
@@ -68,6 +68,15 @@ def unfold_iri(ent_abbr_iri: str):
 ##################################################################################
 ###                          process entity labels                             ###
 ##################################################################################
+
+
+def lab_product(src_ent_labs: List[str], tgt_ent_labs: List[str]) -> Tuple[List, List]:
+    """Compute Catersian Product of source and target entity labels,
+    and return in the form of two lists
+    """
+    # zip(*) is the inverse of zip()
+    src_out, tgt_out = zip(*product(src_ent_labs, tgt_ent_labs))
+    return list(src_out), list(tgt_out)
 
 
 def ents_labs_from_props(

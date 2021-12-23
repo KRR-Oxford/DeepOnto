@@ -33,7 +33,7 @@ class Ontology(SavedObj):
         # dict attributes
         self.class2idx = None
         self.idx2class = None
-        self.class2labs = None
+        self.idx2labs = None
         self.inv_idx = None
         # stat attributes
         self.num_classes = None
@@ -51,7 +51,7 @@ class Ontology(SavedObj):
         onto.class2idx, onto.idx2class = onto.assign_class_numbers(onto.owl)
         # {class_number: [labels]}
         onto.lab_probs = lab_props
-        onto.class2labs, onto.num_labs = text_utils.ents_labs_from_props(
+        onto.idx2labs, onto.num_labs = text_utils.ents_labs_from_props(
             onto.owl.classes(), onto.class2idx, onto.lab_probs
         )
         onto.num_classes = len(onto.class2idx)
@@ -73,7 +73,7 @@ class Ontology(SavedObj):
 
     def save_instance(self, saved_path: str):
         """The saved Ontology consists of a owl file and a pkl file with all the
-        data (class2idx, class2labs, inv_idx, ...) generated from construction
+        data (class2idx, idx2labs, inv_idx, ...) generated from construction
         """
         Path(saved_path).mkdir(parents=True, exist_ok=True)
         self.copy2(self.owl_path, saved_path)
@@ -118,7 +118,7 @@ class Ontology(SavedObj):
             cut (int): keep tokens with length > cut 
         """
         self.inv_idx = defaultdict(list)
-        for cls_iri, cls_labs in self.class2labs.items():
+        for cls_iri, cls_labs in self.idx2labs.items():
             for tk in tokenizer.tokenize_all(cls_labs):
                 if len(tk) > cut:
                     self.inv_idx[tk].append(cls_iri)
@@ -128,7 +128,13 @@ class Ontology(SavedObj):
         """Select entities based on idf scores
         """
         cand_pool = text_utils.idf_select(ent_toks, self.inv_idx, pool_size)
-        cand_pool = [self.idx2class[c[0]] for c in cand_pool]
-        info = {"num_candidates": len(cand_pool), "examples": cand_pool[: min(pool_size, 2)]}
+        # print three selected examples
+        examples = [
+            (self.idx2class[ent_id], round(idf_score, 1))
+            for ent_id, idf_score in cand_pool[: min(pool_size, 3)]
+        ]
+        info = {"num_candidates": len(cand_pool)}
+        for i in range(len(examples)):
+            info[f"example_{i+1}"] = examples[i]
         print(self.report(root_name="Selection.Info", **info))
         return cand_pool
