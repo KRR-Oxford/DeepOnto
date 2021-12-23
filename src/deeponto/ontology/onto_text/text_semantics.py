@@ -85,11 +85,11 @@ class TextSemantics(SavedObj):
         grouped_synonyms = []
         # group labels by their associated classes if transitivity is not considered
         if not self.transitive:
-            grouped_synonyms = [set(v) for v in onto.class2labs.values()]
+            grouped_synonyms = [set(v) for v in onto.idx2labs.values()]
         # group labels using adjacency of graph
         else:
             label_pairs = []
-            for v in onto.class2labs.values():
+            for v in onto.idx2labs.values():
                 # cannot rule out edges to self otherwise singletons will be removed
                 label_pairs += itertools.product(v, v)
             grouped_synonyms = self.connected_labels(label_pairs)

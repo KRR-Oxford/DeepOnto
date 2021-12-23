@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Providing useful utility functions"""
+from typing import Optional
 import random
 import re
 
@@ -21,14 +22,14 @@ import re
 
 
 def uniqify(ls):
-    """ return a list of unique elements without messing around the order
+    """Return a list of unique elements without messing around the order
     """
     non_empty_ls = list(filter(lambda x: x != "", ls))
     return list(dict.fromkeys(non_empty_ls))
 
 
 def to_identifier(var_name: str):
-    """change a variable name to a valid identifier
+    """Change a variable name to a valid identifier
     """
     if var_name.isidentifier():
         return var_name
@@ -38,13 +39,21 @@ def to_identifier(var_name: str):
         return changed_name
 
 
+def sort_dict_by_values(dic: dict, desc: bool = True, top_k: Optional[int] = None):
+    """Return a sorted dict by values with top k reserved
+    """
+    top_k = len(dic) if not top_k else top_k
+    sorted_items = list(sorted(dic.items(), key=lambda item: item[1], reverse=desc))
+    return dict(sorted_items[:top_k])
+
+
 ##################################################################################
 ###                                 randomness                                 ###
 ##################################################################################
 
 
 def rand_sample_excl(start, end, number, *excl):
-    """randomly generate a number between {start} and {end} with end and specified 
+    """Randomly generate a number between {start} and {end} with end and specified 
     {excl} value(s) excluded
     """
     field = list(set(range(start, end)) - set(excl))
