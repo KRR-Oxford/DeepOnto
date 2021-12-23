@@ -27,7 +27,7 @@ from deeponto.utils import sort_dict_by_values
 ##################################################################################
 
 
-class EntityRankedMappings(SavedObj):
+class Alignment(SavedObj):
     def __init__(self, flag: str, n_best: Optional[int], rel: str, *ent_mappings: EntityMapping):
         """Store ranked (by score) mappings for each head entity in Dict:
         {
