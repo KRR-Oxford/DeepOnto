@@ -58,6 +58,10 @@ class SavedObj:
         return json_obj
 
     @staticmethod
+    def print_json(json_obj):
+        print(json.dumps(json_obj, indent=4, separators=(",", ": ")))
+
+    @staticmethod
     def save_pkl(obj: SavedObj, saved_path: str):
         saved_path = saved_path + f"/{obj.saved_name}.pkl"
         with open(saved_path, "wb") as output:
