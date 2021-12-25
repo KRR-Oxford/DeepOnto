@@ -17,8 +17,8 @@ from typing import Optional, List, Set
 from textdistance import levenshtein
 from itertools import product
 
-from deeponto.ontology.onto_text import Tokenizer
-from deeponto.ontology import Ontology
+from deeponto.onto.onto_text import Tokenizer
+from deeponto.onto import Ontology
 from . import OntoAlign
 
 
@@ -31,16 +31,16 @@ class StringMatch(OntoAlign):
         cand_pool_size: Optional[int] = 200,
         rel: str = "=",
         n_best: Optional[int] = 10,
+        saved_path: str = "",
         use_edit_dist: bool = False,
     ):
-        super().__init__(src_onto, tgt_onto, tokenizer, cand_pool_size, rel, n_best)
+        super().__init__(src_onto, tgt_onto, tokenizer, cand_pool_size, rel, n_best, saved_path)
         self.use_edit_dist = use_edit_dist
 
     def compute_mappings_for_ent(self, src_ent_id: int):
-        """Compute cross-ontology mappings between source and target ontologies
+        """Compute cross-ontology mappings for a source entity
         """
-        # get current alignment set: src2tgt or tgt2src
-        mappings = self.current_mappings()
+        mappings_for_ent = super().compute_mappings_for_ent(src_ent_id)
         # get source entity contents
         src_ent_name = self.src_onto.idx2class[src_ent_id]
         src_ent_labs = self.src_onto.idx2labs[src_ent_id]
@@ -55,7 +55,11 @@ class StringMatch(OntoAlign):
                 mapping_score = self.max_norm_edit_sim(src_ent_labs, tgt_ent_labs)
             if mapping_score > 0:
                 # save mappings only with positive mapping scores
-                mappings.add(self.set_mapping(src_ent_name, tgt_ent_name, mapping_score))
+                mappings_for_ent.append(self.set_mapping(src_ent_name, tgt_ent_name, mapping_score))
+        # output only the top (k=n_best) scored mappings
+        n_best_mappings_for_ent = mappings_for_ent.top_k(self.n_best)
+        self.logger.info(f"[{self.flag}: {src_ent_id}] {n_best_mappings_for_ent}\n")
+        return n_best_mappings_for_ent
 
     @staticmethod
     def overlap(src_ent_labs: List[str], tgt_ent_labs: List[str]) -> Set:

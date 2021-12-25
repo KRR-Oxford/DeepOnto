@@ -60,6 +60,13 @@ class Alignment(SavedObj):
         )
         return super().report(**self.info)
 
+    def save_instance(self, saved_path):
+        """save the current instance locally
+        """
+        super().save_instance(saved_path)
+        # also save a readable format of the ranked alignment set
+        self.save_json(self.ranked, saved_path + f"/{self.saved_name}.json")
+
     def get_mappings_of_ent(self, src_ent_name: str):
         """Return ranked mappings for a particular entry entity
         """
@@ -80,12 +87,32 @@ class Alignment(SavedObj):
     def check_type(self, em: EntityMapping):
         if em.rel != self.rel:
             raise ValueError("Input mappings are not of the same type (relation).")
+        
+    def check_existed(self, em: EntityMapping):
+        return em.tail in self.ranked[em.head].keys()
+
+    def add_many(self, *ems: EntityMapping):
+        """Add a list of new mappings while keeping the ranking
+        """
+        for em in ems:
+            self.add(em)
 
     def add(self, em: EntityMapping):
-        """Add a new entity mapping while keeping the ranking
+        """Add a new entity mapping or add an existing mapping to update mapping score (take average)
+        while keeping the ranking
         """
         self.check_type(em)
-        self.ranked[em.head][em.tail] = em.score
+        # average the mapping scores if already existed
+        if self.check_existed(em):
+            old_score = self.ranked[em.head][em.tail]
+            print(f"Found an existing mapping...")
+            print(f"\t[Old]: {EntityMapping(em.head, em.tail, self.rel, old_score)}")
+            print(f"\t[New]: {EntityMapping(em.head, em.tail, self.rel, em.score)}")
+            new_score = (old_score + em.score) / 2
+            print(f"\t ==> update score to {new_score}")
+            self.ranked[em.head][em.tail] = new_score
+        else:
+            self.ranked[em.head][em.tail] = em.score
         self.ranked[em.head] = sort_dict_by_values(self.ranked[em.head], top_k=self.n_best)
 
 
@@ -95,12 +122,12 @@ class EntityMappingList(list):
             super().append(em)
         else:
             raise TypeError("Only Entity Mapping can be added to the list.")
-        
+
     def top_k(self, k: int):
         """Return top K scored mappings from the list
         """
         return EntityMappingList(sorted(self, key=lambda x: x.score, reverse=True))[:k]
-    
+
     def __getitem__(self, item):
         result = list.__getitem__(self, item)
         if type(item) is slice:

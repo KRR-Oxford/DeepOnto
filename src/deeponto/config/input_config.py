@@ -14,7 +14,6 @@
 """Class for input configurations"""
 
 import click
-import json
 from pyats.datastructures import NestedAttrDict
 
 from deeponto import SavedObj
@@ -26,21 +25,16 @@ class InputConfig(SavedObj):
         super().__init__("config")
 
     @classmethod
-    def new_template(cls):
+    def new_config(cls):
         """Set up new config template from command lines
         """
-        template = NestedAttrDict()
+        config = NestedAttrDict()
         finished = False
         banner_msg(f"New {type(cls).__name__} Template")
         while not finished:
-            cls.add_param_group(template)
+            cls.add_param_group(config)
             finished = not click.confirm("Do you want to continue?")
-        banner_msg("Preview of the Template")
-        print(json.dumps(template, indent=4, separators=(",", ": ")))
-        saved = click.confirm("Do you want to save the template?")
-        if saved:
-            save_path = click.prompt("Please enter the saved file path")
-            cls.save_json(template, save_path)
+        cls.preview_and_save(config)
 
     @staticmethod
     def add_param_group(param_dict: NestedAttrDict):
@@ -63,6 +57,21 @@ class InputConfig(SavedObj):
         banner_msg(f'add a new param group under "{top_param}"')
 
     @classmethod
+    def preview_and_save(cls, config):
+        banner_msg("Preview of the Config")
+        SavedObj.print_json(config)
+        saved = click.confirm("Do you want to save the config?")
+        if saved:
+            save_path = click.prompt("Please enter the saved file path")
+            cls.save_json(config, save_path)
+
+    @classmethod
+    def load_config(cls, config_json_path):
+        """Load saved config
+        """
+        return NestedAttrDict(cls.load_json(config_json_path))
+
+    @classmethod
     def edit_config(cls, config_json_path):
         """Edit existing config through command lines
         """
@@ -83,17 +92,18 @@ class InputConfig(SavedObj):
                     print(f'[{i}]: "{name}"')
                 sub_selected = sub_params[
                     click.prompt(
-                        f'Please choose a number for the nested parameters under "{selected}"', type=int
+                        f'Please choose a number for the nested parameters under "{selected}"',
+                        type=int,
                     )
                 ]
-                print(f"Existed value for \"{sub_selected}\": {config[selected][sub_selected]}")
-                config[selected][sub_selected] = click.prompt(f"New value for \"{sub_selected}\"")
+                print(f'Existed value for "{sub_selected}": {config[selected][sub_selected]}')
+                config[selected][sub_selected] = click.prompt(f'New value for "{sub_selected}"')
             else:
-                print(f"Existed value for \"{selected}\": {config[selected]}")
-                config[selected]= click.prompt(f"New value for \"{selected}\"")
+                print(f'Existed value for "{selected}": {config[selected]}')
+                config[selected] = click.prompt(f'New value for "{selected}"')
             finished = not click.confirm("Do you want to continue?")
-        banner_msg("Preview of the Config")
-        print(json.dumps(config, indent=4, separators=(",", ": ")))
-        saved = click.confirm("Do you want to save the changes?")
-        if saved:
-            cls.save_json(config, config_json_path)
+        cls.preview_and_save(config)
+
+
+    def main(self):
+        pass

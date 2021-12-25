@@ -15,6 +15,7 @@
 from typing import Optional
 import random
 import re
+import sys
 
 ##################################################################################
 ###                             element processing                             ###
@@ -60,3 +61,35 @@ def rand_sample_excl(start, end, number, *excl):
     if not field:
         raise ValueError(f"impossible to generate a number because the whole range is excluded")
     return random.sample(field, number)
+
+
+##################################################################################
+###                                   logging                                  ###
+##################################################################################
+
+
+def log_print(log_info, log_path: str):
+    """Print and save log information
+    """
+    print(log_info)
+    with open(log_path, "a+") as f:
+        f.write(f"{log_info}\n")
+    # flush() is important for printing logs during multiprocessing
+    sys.stdout.flush()
+
+
+def banner_msg(message: str, banner_len: int = 70, sym="#"):
+    """Print banner message:
+    
+    ######################################################################
+    ###                            example                             ###
+    ######################################################################
+    
+    """
+    print()
+    print(sym * banner_len)
+    message = sym * 3 + " " * ((banner_len - len(message)) // 2 - 3) + message
+    message = message + " " * (banner_len - len(message) - 3) + sym * 3
+    print(message)
+    print(sym * banner_len)
+    print()
