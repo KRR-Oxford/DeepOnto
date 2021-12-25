@@ -13,3 +13,4 @@
 # limitations under the License.
 from .onto_align import OntoAlign
 from .string_match import  StringMatch
+from .edit_sim import EditSimilarity
