@@ -103,7 +103,3 @@ class InputConfig(SavedObj):
                 config[selected] = click.prompt(f'New value for "{selected}"')
             finished = not click.confirm("Do you want to continue?")
         cls.preview_and_save(config)
-
-
-    def main(self):
-        pass
