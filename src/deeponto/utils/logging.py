@@ -47,3 +47,23 @@ def create_logger(model_name: str, saved_path: str):
     logger.addHandler(fh)
     logger.addHandler(ch)
     return logger
+
+##################################################################################
+###                              pretty print                                  ###
+##################################################################################
+
+def banner_msg(message: str, banner_len: int = 70, sym="#"):
+    """Print banner message:
+    
+    ######################################################################
+    ###                            example                             ###
+    ######################################################################
+    
+    """
+    print()
+    print(sym * banner_len)
+    message = sym * 3 + " " * ((banner_len - len(message)) // 2 - 3) + message
+    message = message + " " * (banner_len - len(message) - 3) + sym * 3
+    print(message)
+    print(sym * banner_len)
+    print()

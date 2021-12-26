@@ -29,30 +29,35 @@ class StringMatch(OntoAlign):
         tgt_onto: Ontology,
         tokenizer: Tokenizer,
         cand_pool_size: Optional[int] = 200,
-        rel: str = "=",
         n_best: Optional[int] = 10,
         saved_path: str = "",
         use_edit_dist: bool = False,
     ):
-        super().__init__(src_onto, tgt_onto, tokenizer, cand_pool_size, rel, n_best, saved_path)
+        super().__init__(src_onto, tgt_onto, tokenizer, cand_pool_size, "≡", n_best, saved_path)
         self.use_edit_dist = use_edit_dist
 
-    def compute_mappings_for_ent(self, src_ent_id: int):
+    def compute_score(self, src_ent_id: str, tgt_ent_id: str):
+        """Compute mapping score between a cross-ontology entity pair
+        """
+        src_ent_labs = self.src_onto.idx2labs[src_ent_id]
+        tgt_ent_labs = self.tgt_onto.idx2labs[tgt_ent_id]
+        if not self.use_edit_dist:
+            mapping_score = int(len(self.overlap(src_ent_labs, tgt_ent_labs)) > 0)
+        else:
+            mapping_score = self.max_norm_edit_sim(src_ent_labs, tgt_ent_labs)
+        return mapping_score
+
+    def global_mappings_for_ent(self, src_ent_id: int):
         """Compute cross-ontology mappings for a source entity
         """
-        mappings_for_ent = super().compute_mappings_for_ent(src_ent_id)
+        mappings_for_ent = super().global_mappings_for_ent(src_ent_id)
         # get source entity contents
         src_ent_name = self.src_onto.idx2class[src_ent_id]
-        src_ent_labs = self.src_onto.idx2labs[src_ent_id]
         # select target candidates and compute score for each
         tgt_cands = self.idf_select_for_ent(src_ent_id)
         for tgt_cand_id, _ in tgt_cands:
             tgt_ent_name = self.tgt_onto.idx2class[tgt_cand_id]
-            tgt_ent_labs = self.tgt_onto.idx2labs[tgt_cand_id]
-            if not self.use_edit_dist:
-                mapping_score = int(len(self.overlap(src_ent_labs, tgt_ent_labs)) > 0)
-            else:
-                mapping_score = self.max_norm_edit_sim(src_ent_labs, tgt_ent_labs)
+            mapping_score = self.compute_score(src_ent_id, tgt_cand_id)
             if mapping_score > 0:
                 # save mappings only with positive mapping scores
                 mappings_for_ent.append(self.set_mapping(src_ent_name, tgt_ent_name, mapping_score))

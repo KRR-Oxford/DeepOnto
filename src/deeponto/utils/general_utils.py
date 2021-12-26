@@ -13,9 +13,10 @@
 # limitations under the License.
 """Providing useful utility functions"""
 from typing import Optional
+from pathlib import Path
 import random
 import re
-import sys
+import os
 
 ##################################################################################
 ###                             element processing                             ###
@@ -64,32 +65,15 @@ def rand_sample_excl(start, end, number, *excl):
 
 
 ##################################################################################
-###                                   logging                                  ###
+###                                     path                                   ###
 ##################################################################################
 
 
-def log_print(log_info, log_path: str):
-    """Print and save log information
+def detect_path(saved_obj_path: str) -> bool:
+    """Check if path exists
     """
-    print(log_info)
-    with open(log_path, "a+") as f:
-        f.write(f"{log_info}\n")
-    # flush() is important for printing logs during multiprocessing
-    sys.stdout.flush()
+    return os.exists(saved_obj_path)
 
-
-def banner_msg(message: str, banner_len: int = 70, sym="#"):
-    """Print banner message:
-    
-    ######################################################################
-    ###                            example                             ###
-    ######################################################################
-    
-    """
-    print()
-    print(sym * banner_len)
-    message = sym * 3 + " " * ((banner_len - len(message)) // 2 - 3) + message
-    message = message + " " * (banner_len - len(message) - 3) + sym * 3
-    print(message)
-    print(sym * banner_len)
-    print()
+def create_path(path: str):
+    """Create path recursively"""
+    Path(path).mkdir(parents=True, exist_ok=True)

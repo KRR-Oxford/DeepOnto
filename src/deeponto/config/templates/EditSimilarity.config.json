@@ -1,8 +1,0 @@
-{
-    "src_onto": "data/LargeBio/fma2nci.small.owl",
-    "tgt_onto": "data/LargeBio/nci2fma.small.owl",
-    "fine": {
-        "lr": "0.02",
-        "batch": "32"
-    }
-}

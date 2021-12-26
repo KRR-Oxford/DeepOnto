@@ -27,7 +27,6 @@ class EditSimilarity(StringMatch):
         tgt_onto: Ontology,
         tokenizer: Tokenizer,
         cand_pool_size: Optional[int] = 200,
-        rel: str = "=",
         n_best: Optional[int] = 10,
         saved_path: str = "",
     ):
@@ -36,7 +35,6 @@ class EditSimilarity(StringMatch):
             tgt_onto,
             tokenizer,
             cand_pool_size,
-            rel,
             n_best,
             saved_path,
             use_edit_dist=True,

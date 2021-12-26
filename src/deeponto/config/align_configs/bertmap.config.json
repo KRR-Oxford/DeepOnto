@@ -1,0 +1,19 @@
+{
+    "lab_props": [
+        "label"
+    ],
+    "tokenizer": {
+        "type": "pretrained",
+        "path": "emilyalsentzer/Bio_ClinicalBERT"
+    },
+    "search": {
+        "n_best": 10,
+        "cand_pool_size": 200
+    },
+    "fine_tune": {
+        "pretrained_path": "emilyalsentzer/Bio_ClinicalBERT",
+        "max_len": 128,
+        "n_epochs": 3.0,
+        "batch_size": 32
+    }
+}

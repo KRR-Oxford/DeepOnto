@@ -11,20 +11,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Class for ontology alignment pipeline"""
+"""Class for ontology alignment, requiring:
+
+1. Mapping computation for a cross-ontology entity pair;
+2. Full alignment computation w/o selection heuristic.
+
+"""
 
 from itertools import cycle
 from typing import List, Tuple, Optional, Iterable
 from multiprocessing_on_dill import Process, Manager
-from copy import deepcopy
 import numpy as np
 import os
 
 from deeponto.onto import Ontology
 from deeponto.onto.mapping import *
 from deeponto.onto.onto_text import Tokenizer, text_utils
-from deeponto.utils import banner_msg
-from deeponto.utils.logging import create_logger
+from deeponto.utils.logging import create_logger, banner_msg
 
 
 class OntoAlign:
@@ -52,40 +55,34 @@ class OntoAlign:
         self.logger = create_logger(f"{type(self).__name__}", saved_path=self.saved_path)
         self.n_best = n_best
 
-        self.src2tgt_mappings = Alignment(flag="src2tgt", n_best=self.n_best, rel=self.rel)
-        self.tgt2src_mappings = Alignment(flag="tgt2src", n_best=self.n_best, rel=self.rel)
-        self.combined_mappings = None
+        self.src2tgt_mappings = OntoMappings(flag="src2tgt", n_best=self.n_best, rel=self.rel)
+        self.tgt2src_mappings = OntoMappings(flag="tgt2src", n_best=self.n_best, rel=self.rel)
         self.flag_set = cycle(["src2tgt", "tgt2src"])
         self.flag = next(self.flag_set)
 
-    def run(self, num_procs: Optional[int] = None):
+    ##################################################################################
+    ###                        compute a single mapping                            ###
+    ##################################################################################
+
+    def compute_score(self, src_ent_id: str, tgt_ent_id: str):
+        """Compute mapping score between a cross-ontology entity pair
+        """
+        raise NotImplementedError
+
+    ##################################################################################
+    ###                        compute global mappings                             ###
+    ##################################################################################
+
+    def global_matching(self, num_procs: Optional[int] = None):
         """Compute alignment for both src2tgt and tgt2src
         """
-        self.compute_mappings_all_multi_procs(
+        self.global_mappings_for_onto_multi_procs(
             num_procs
-        ) if num_procs else self.compute_mappings_all()
+        ) if num_procs else self.global_mappings_for_onto()
         self.switch()
-        self.compute_mappings_all_multi_procs(
+        self.global_mappings_for_onto_multi_procs(
             num_procs
-        ) if num_procs else self.compute_mappings_all()
-        self.combined_alignment()
-        
-    # def combined_alignment(self):
-    #     """Combine src2tgt and tgt2src mappings with duplicates removed
-    #     """
-    #     while self.flag != "src2tgt":
-    #         self.switch()
-    #     # add all the tgt2src mappings into the deep-copied src2tgt mappings
-    #     # since mappings are maintained in dict, duplicates will automatically be removed 
-    #     self.combined_mappings = deepcopy(self.src2tgt_mappings)
-    #     self.combined_mappings.flag = "combined"
-    #     self.combined_mappings.saved_name = f"combined.maps"
-    #     for tgt_ent_name, v in self.tgt2src_mappings.ranked.items():
-    #         for src_ent_name, score in v.items():
-    #             em = EntityMapping(src_ent_name, tgt_ent_name, self.rel, score)
-    #             if self.src2tgt_mappings.check_existed(em)
-    #                 self.combined_mappings.add(EntityMapping(tgt_ent_name, src_ent_name, self.rel, score))
-    #     self.combined_mappings.save_instance(f"{self.saved_path}/combined")
+        ) if num_procs else self.global_mappings_for_onto()
 
     def switch(self):
         """Switch alignment direction
@@ -93,10 +90,10 @@ class OntoAlign:
         self.src_onto, self.tgt_onto = self.tgt_onto, self.src_onto
         self.flag = next(self.flag_set)
 
-    def current_mappings(self):
+    def current_global_mappings(self):
         return getattr(self, f"{self.flag}_mappings")
 
-    def compute_mappings_all_multi_procs(self, num_procs: int):
+    def global_mappings_for_onto_multi_procs(self, num_procs: int):
         """Compute mappings for all entities in the current source ontology but distributed
         to multiple processes
         """
@@ -107,7 +104,7 @@ class OntoAlign:
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
         def async_compute(proc_idx: int, return_dict: dict, src_ent_id_chunk: Iterable[int]):
-            return_dict[proc_idx] = self.compute_mappings_chunk(src_ent_id_chunk)
+            return_dict[proc_idx] = self.global_mappings_for_ent_chunk(src_ent_id_chunk)
 
         self.logger.info(
             f'Compute "{self.rel}" Mappings: {self.src_onto.owl.name} ==> {self.tgt_onto.owl.name}\n'
@@ -128,33 +125,34 @@ class OntoAlign:
             p.join()
 
         # save the output mappings
-        mappings = self.current_mappings()
+        mappings = self.current_global_mappings()
         for ent_mappings in return_dict.values():
             mappings.add_many(*ent_mappings)
         banner_msg("Task Finished")
         mappings.save_instance(f"{self.saved_path}/{self.flag}")
 
-    def compute_mappings_all(self):
+    def global_mappings_for_onto(self):
         """Compute mappings for all entities in the current source ontology
         """
         self.logger.info(
             f'Compute "{self.rel}" Mappings: {self.src_onto.owl.name} ==> {self.tgt_onto.owl.name}\n'
         )
         # save the output mappings
-        mappings = self.current_mappings()
-        mappings.add_many(*self.compute_mappings_chunk(self.src_onto.idx2class.keys()))
+        mappings = self.current_global_mappings()
+        mappings.add_many(*self.global_mappings_for_ent_chunk(self.src_onto.idx2class.keys()))
         banner_msg("Task Finished")
         mappings.save_instance(f"{self.saved_path}/{self.flag}")
 
-    def compute_mappings_chunk(self, src_ent_id_chunk: Iterable[int]):
-        """Compute cross-ontology mappings for a chunk of source entities
+    def global_mappings_for_ent_chunk(self, src_ent_id_chunk: Iterable[int]):
+        """Compute cross-ontology mappings for a chunk of source entities,
+        Note: save time especially for evaluating on Hits@K, MRR, etc.
         """
         mappings_for_chunk = []
         for src_ent_id in src_ent_id_chunk:
-            mappings_for_chunk += self.compute_mappings_for_ent(src_ent_id)
+            mappings_for_chunk += self.global_mappings_for_ent(src_ent_id)
         return mappings_for_chunk
 
-    def compute_mappings_for_ent(self, src_ent_id: int) -> EntityMappingList:
+    def global_mappings_for_ent(self, src_ent_id: int) -> EntityMappingList:
         """Compute cross-ontology mappings for a source entity
         """
         banner_msg(f"Compute Mappings for Entity {src_ent_id} ({self.flag})")
@@ -172,6 +170,10 @@ class OntoAlign:
             src_ent_toks, self.cand_pool_size
         )  # [(ent_id, idf_score)]
         return tgt_cands
+
+    ##################################################################################
+    ###                        other auxiliary functions                           ###
+    ##################################################################################
 
     def lab_products_for_ent(self, src_ent_id: int) -> Tuple[List[str], List[str], List[int]]:
         """Compute Catesian Product between a source entity's labels and its selected 
