@@ -13,17 +13,19 @@
 # limitations under the License.
 """Class for running implemented models."""
 
-from typing import Optional
+from typing import Optional, List, Tuple
 
 from deeponto.utils import create_path
 from deeponto.onto import Ontology
+from deeponto.onto.mapping import OntoMappings
 from deeponto.onto.onto_text import Tokenizer
 from deeponto.models import OntoPipeline
 from . import StringMatch, EditSimilarity
 
 
-implemented_models = ["bertmap", "string_match", "edit_sim"]
-modes = ["global_match", "train"]
+learning_based_models = ["bertmap"]
+rule_based_models = ["string_match", "edit_sim"]
+modes = ["global_match", "pair_score"]
 
 
 class OntoAlignPipeline(OntoPipeline):
@@ -48,13 +50,30 @@ class OntoAlignPipeline(OntoPipeline):
         self.tgt_onto = self.load_onto("tgt", tgt_onto_path)
 
         # load align object
-        self.align = self.load_model()
+        self.model = self.load_model()
 
-    def run(self, num_procs: Optional[int] = None):
+    def run(
+        self,
+        mode: str,
+        ent_name_pairs: Optional[List[Tuple[str, str]]] = None,
+        num_procs: Optional[int] = None,
+    ):
         """Run the whole pipeline
         """
         super().run()
-        self.align.global_matching(num_procs)
+        
+        # train the learning-based models
+        if self.model_name in learning_based_models:
+            self.model.train(**self.config.train)
+            
+        # make prediction according mode
+        if mode == "global_match":
+            self.model.global_match(num_procs)
+        elif mode == "pair_score":
+            assert ent_name_pairs != None
+            src_maps, tgt_maps = self.model.pair_score(ent_name_pairs)
+        else:
+            raise ValueError(f"Unknown mode: {mode}, please choose from [global_match, scoring].")
 
     def load_onto(self, flag: str, new_onto_path: str):
         """Load ontology from saved or new data path
@@ -77,7 +96,7 @@ class OntoAlignPipeline(OntoPipeline):
         if self.model_name == "bertmap":
             pass
         elif self.model_name == "string_match":
-            align = StringMatch(
+            align_model = StringMatch(
                 src_onto=self.src_onto,
                 tgt_onto=self.tgt_onto,
                 tokenizer=self.tokenizer,
@@ -86,7 +105,7 @@ class OntoAlignPipeline(OntoPipeline):
                 saved_path=self.paths.model,
             )
         elif self.model_name == "edit_sim":
-            align = EditSimilarity(
+            align_model = EditSimilarity(
                 src_onto=self.src_onto,
                 tgt_onto=self.tgt_onto,
                 tokenizer=self.tokenizer,
@@ -96,5 +115,5 @@ class OntoAlignPipeline(OntoPipeline):
             )
         else:
             raise ValueError(f"{self.model_name} is not an implemented model.")
-        
-        return align
+
+        return align_model

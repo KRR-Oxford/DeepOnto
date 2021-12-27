@@ -10,7 +10,7 @@
         "n_best": 10,
         "cand_pool_size": 200
     },
-    "fine_tune": {
+    "train": {
         "pretrained_path": "emilyalsentzer/Bio_ClinicalBERT",
         "max_len": 128,
         "n_epochs": 3.0,

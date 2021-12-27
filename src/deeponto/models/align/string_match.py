@@ -36,7 +36,7 @@ class StringMatch(OntoAlign):
         super().__init__(src_onto, tgt_onto, tokenizer, cand_pool_size, "≡", n_best, saved_path)
         self.use_edit_dist = use_edit_dist
 
-    def compute_score(self, src_ent_id: str, tgt_ent_id: str):
+    def ent_pair_score(self, src_ent_id: str, tgt_ent_id: str):
         """Compute mapping score between a cross-ontology entity pair
         """
         src_ent_labs = self.src_onto.idx2labs[src_ent_id]
@@ -57,7 +57,7 @@ class StringMatch(OntoAlign):
         tgt_cands = self.idf_select_for_ent(src_ent_id)
         for tgt_cand_id, _ in tgt_cands:
             tgt_ent_name = self.tgt_onto.idx2class[tgt_cand_id]
-            mapping_score = self.compute_score(src_ent_id, tgt_cand_id)
+            mapping_score = self.ent_pair_score(src_ent_id, tgt_cand_id)
             if mapping_score > 0:
                 # save mappings only with positive mapping scores
                 mappings_for_ent.append(self.set_mapping(src_ent_name, tgt_ent_name, mapping_score))
