@@ -72,8 +72,21 @@ def rand_sample_excl(start, end, number, *excl):
 def detect_path(saved_obj_path: str) -> bool:
     """Check if path exists
     """
-    return os.exists(saved_obj_path)
+    return os.path.exists(saved_obj_path)
+
 
 def create_path(path: str):
     """Create path recursively"""
     Path(path).mkdir(parents=True, exist_ok=True)
+
+
+##################################################################################
+###                                command line                                ###
+##################################################################################
+
+
+def print_choices(choices: list):
+    """Print available choices
+    """
+    for i in range(len(choices)):
+        print(f"[{i}]:", choices[i])

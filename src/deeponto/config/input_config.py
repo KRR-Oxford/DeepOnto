@@ -17,7 +17,7 @@ import click
 from pyats.datastructures import NestedAttrDict
 
 from deeponto import SavedObj
-from deeponto.utils import banner_msg
+from deeponto.utils.logging import banner_msg
 
 
 class InputConfig(SavedObj):
