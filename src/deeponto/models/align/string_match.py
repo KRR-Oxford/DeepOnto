@@ -17,7 +17,7 @@ from typing import Optional, List, Set
 from textdistance import levenshtein
 from itertools import product
 
-from deeponto.onto.onto_text import Tokenizer
+from deeponto.onto.text import Tokenizer
 from deeponto.onto import Ontology
 from . import OntoAlign
 

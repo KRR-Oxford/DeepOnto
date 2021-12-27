@@ -17,7 +17,7 @@ from typing import Optional, List, Tuple
 
 from deeponto.utils import create_path
 from deeponto.onto import Ontology
-from deeponto.onto.onto_text import Tokenizer
+from deeponto.onto.text import Tokenizer
 from deeponto.models import OntoPipeline
 from . import StringMatch, EditSimilarity
 

@@ -27,7 +27,7 @@ import os
 
 from deeponto.onto import Ontology
 from deeponto.onto.mapping import *
-from deeponto.onto.onto_text import Tokenizer, text_utils
+from deeponto.onto.text import Tokenizer, text_utils
 from deeponto.utils.logging import create_logger, banner_msg
 
 
