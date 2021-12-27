@@ -21,6 +21,7 @@
 from itertools import cycle
 from typing import List, Tuple, Optional, Iterable
 from multiprocessing_on_dill import Process, Manager
+from pyats.datastructures import AttrDict
 import numpy as np
 import os
 
@@ -61,10 +62,33 @@ class OntoAlign:
         self.flag = next(self.flag_set)
 
     ##################################################################################
-    ###                        compute a single mapping                            ###
+    ###                        compute entity pair mappings                        ###
     ##################################################################################
 
-    def compute_score(self, src_ent_id: str, tgt_ent_id: str):
+    def pair_score(self, ent_name_pairs: List[Tuple[str, str]]):
+        """Compute entity pair mappings by fixing source and target sides, respectively
+        """
+        self.renew()
+        fixed_src_mappings = self.ent_pairs_mappings(ent_name_pairs)
+        self.switch()
+        fixed_tgt_mappings = self.ent_pairs_mappings(ent_name_pairs)
+        return AttrDict({"fixed_src": fixed_src_mappings, "fixed_tgt": fixed_tgt_mappings,})
+
+    def ent_pairs_mappings(self, ent_name_pairs: List[Tuple[str, str]]):
+        """Compute mappings for intput src-tgt entity pairs
+        """
+        prefix = self.flag.split("2")[1]  # src or tgt
+        # maximum number of mappings is the number of opposite ontology classes
+        max_num_mappings = len(getattr(self, f"{prefix}_onto").idx2class)
+        mappings = OntoMappings(flag=self.flag, n_best=max_num_mappings, rel=self.rel)
+        for src_ent_name, tgt_ent_name in ent_name_pairs:
+            src_ent_id = self.src_onto.idx2class[src_ent_name]
+            tgt_ent_id = self.tgt_onto.idx2class[tgt_ent_name]
+            score = self.ent_pair_score(src_ent_id, tgt_ent_id)
+            mappings.add(EntityMapping(src_ent_name, tgt_ent_name, self.rel, score))
+        return mappings
+
+    def ent_pair_score(self, src_ent_id: str, tgt_ent_id: str) -> float:
         """Compute mapping score between a cross-ontology entity pair
         """
         raise NotImplementedError
@@ -73,9 +97,10 @@ class OntoAlign:
     ###                        compute global mappings                             ###
     ##################################################################################
 
-    def global_matching(self, num_procs: Optional[int] = None):
+    def global_match(self, num_procs: Optional[int] = None):
         """Compute alignment for both src2tgt and tgt2src
         """
+        self.renew()
         self.global_mappings_for_onto_multi_procs(
             num_procs
         ) if num_procs else self.global_mappings_for_onto()
@@ -83,6 +108,12 @@ class OntoAlign:
         self.global_mappings_for_onto_multi_procs(
             num_procs
         ) if num_procs else self.global_mappings_for_onto()
+
+    def renew(self):
+        """Renew alignment direction to src2tgt
+        """
+        while self.flag != "src2tgt":
+            self.switch()
 
     def switch(self):
         """Switch alignment direction
@@ -129,7 +160,7 @@ class OntoAlign:
         for ent_mappings in return_dict.values():
             mappings.add_many(*ent_mappings)
         banner_msg("Task Finished")
-        mappings.save_instance(f"{self.saved_path}/{self.flag}")
+        mappings.save_instance(f"{self.saved_path}/global_match/{self.flag}")
 
     def global_mappings_for_onto(self):
         """Compute mappings for all entities in the current source ontology
@@ -141,7 +172,7 @@ class OntoAlign:
         mappings = self.current_global_mappings()
         mappings.add_many(*self.global_mappings_for_ent_chunk(self.src_onto.idx2class.keys()))
         banner_msg("Task Finished")
-        mappings.save_instance(f"{self.saved_path}/{self.flag}")
+        mappings.save_instance(f"{self.saved_path}/global_match/{self.flag}")
 
     def global_mappings_for_ent_chunk(self, src_ent_id_chunk: Iterable[int]):
         """Compute cross-ontology mappings for a chunk of source entities,
