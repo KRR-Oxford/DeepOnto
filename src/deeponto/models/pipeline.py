@@ -17,6 +17,7 @@ from typing import Optional
 from pyats.datastructures import AttrDict
 
 from deeponto import SavedObj
+from deeponto.onto import Ontology
 from deeponto.utils import detect_path, create_path
 from deeponto.config import InputConfig
 
@@ -47,9 +48,12 @@ class OntoPipeline:
         raise NotImplementedError
 
     @staticmethod
-    def from_saved(saved_obj_path: str) -> Optional[SavedObj]:
+    def from_saved(saved_obj_path: str, is_onto: bool = False) -> Optional[SavedObj]:
         if detect_path(saved_obj_path):
-            return SavedObj.from_saved(saved_obj_path)
+            if not is_onto:
+                return SavedObj.from_saved(saved_obj_path)
+            else:
+                return Ontology.from_saved(saved_obj_path)
         else:
             create_path(saved_obj_path)
             return None

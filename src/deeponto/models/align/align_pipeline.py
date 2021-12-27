@@ -17,15 +17,18 @@ from typing import Optional, List, Tuple
 
 from deeponto.utils import create_path
 from deeponto.onto import Ontology
-from deeponto.onto.mapping import OntoMappings
 from deeponto.onto.onto_text import Tokenizer
 from deeponto.models import OntoPipeline
 from . import StringMatch, EditSimilarity
 
-
+# implemented models
 learning_based_models = ["bertmap"]
 rule_based_models = ["string_match", "edit_sim"]
-modes = ["global_match", "pair_score"]
+multi_procs_models = ["string_match", "edit_sim"]
+implemented_models = learning_based_models + rule_based_models
+
+# support alignment modes
+supported_modes = ["global_match", "pair_score"]
 
 
 class OntoAlignPipeline(OntoPipeline):
@@ -61,17 +64,18 @@ class OntoAlignPipeline(OntoPipeline):
         """Run the whole pipeline
         """
         super().run()
-        
+
         # train the learning-based models
         if self.model_name in learning_based_models:
             self.model.train(**self.config.train)
-            
+
         # make prediction according mode
         if mode == "global_match":
             self.model.global_match(num_procs)
         elif mode == "pair_score":
             assert ent_name_pairs != None
-            src_maps, tgt_maps = self.model.pair_score(ent_name_pairs)
+            # return the mapping dict for subsequent evaluation
+            return self.model.pair_score(ent_name_pairs)
         else:
             raise ValueError(f"Unknown mode: {mode}, please choose from [global_match, scoring].")
 
@@ -79,10 +83,14 @@ class OntoAlignPipeline(OntoPipeline):
         """Load ontology from saved or new data path
         """
         saved_onto_path = getattr(self.paths, f"{flag}_onto")
-        onto = self.from_saved(saved_onto_path)
+        onto = self.from_saved(saved_onto_path, is_onto=True)
         # if nothing saved
         if not onto:
             onto = Ontology.from_new(new_onto_path, self.config.lab_props, self.tokenizer)
+            onto.save_instance(saved_onto_path)
+            print(f"Load `new` {flag} ontology from: {new_onto_path}")
+        else:
+            print(f"Load `saved` {flag} ontology from: {saved_onto_path}")
         return onto
 
     def load_model(self):

@@ -12,5 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from .onto_align import OntoAlign
-from .string_match import  StringMatch
+from .string_match import StringMatch
 from .edit_sim import EditSimilarity
+from .align_pipeline import (
+    OntoAlignPipeline,
+    learning_based_models,
+    rule_based_models,
+    multi_procs_models,
+    implemented_models,
+    supported_modes,
+)
