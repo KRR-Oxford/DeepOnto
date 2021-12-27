@@ -22,7 +22,7 @@ from pyats.datastructures import AttrDict
 from pathlib import Path
 
 from deeponto import SavedObj
-from .onto_text import Tokenizer, text_utils
+from .text import Tokenizer, text_utils
 
 
 class Ontology(SavedObj):
