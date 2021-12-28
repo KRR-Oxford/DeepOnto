@@ -43,7 +43,11 @@ DeepOnto is mainly extended from the following packages:
 
 ## Implemented Models
 
-- BERTMap (AAAI-22)
+| Name | Task | Type | Note |
+| :------------- | :--------------- | :-------------- |  :-------------- |
+| BERTMap | Ontology Matching (Equivalence) | Learning-based | Accepted in AAAI-22 |
+| StringMatch   | Ontology Matching (Equivalence) | Rule-based |  |
+| EditSimiarity   | Ontology Matching (Equivalence) | Rule-based |  |
 
 ## License
 
