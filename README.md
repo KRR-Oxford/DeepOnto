@@ -32,7 +32,7 @@ limitations under the License.
 
 ## About <!-- {docsify-ignore} -->
 
-DeepOnto aims to provide implemented deep learning models and an evaluation platform for various ontology engineering purposes.
+DeepOnto aims to provide implemented deep learning models and an evaluation platform for various ontology engineering purposes. The documentation is available at: https://krr-oxford.github.io/DeepOnto/#/.
 
 ## Essential Dependencies
 
