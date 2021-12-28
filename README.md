@@ -34,7 +34,7 @@ limitations under the License.
 
 DeepOnto aims to provide implemented deep learning models and an evaluation platform for various ontology engineering purposes. 
 
-> See documentation at: https://krr-oxford.github.io/DeepOnto/#/.
+> Documentation: https://krr-oxford.github.io/DeepOnto/#/.
 
 ## Essential Dependencies
 
