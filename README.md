@@ -16,7 +16,7 @@ limitations under the License.
 
 <p align="center">
   <a href="https://krr-oxford.github.io/DeepOnto/">
-    <img alt="deeponto" src="./docs/images/icon.svg">
+    <img alt="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/icon.svg">
   </a>
 </p>
 
