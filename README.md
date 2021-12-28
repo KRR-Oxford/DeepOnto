@@ -49,6 +49,8 @@ DeepOnto is mainly extended from the following packages:
 | StringMatch     | Ontology Matching (Equivalence) | Rule-based        |
 | EditSimiarity   | Ontology Matching (Equivalence) | Rule-based        |
 
+> See https://krr-oxford.github.io/DeepOnto/#/intro for quick usage.
+
 ## License
 
 Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.
