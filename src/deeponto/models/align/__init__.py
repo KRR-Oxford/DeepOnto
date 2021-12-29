@@ -14,11 +14,13 @@
 from .onto_align import OntoAlign
 from .string_match import StringMatch
 from .edit_sim import EditSimilarity
-from .align_pipeline import (
-    OntoAlignPipeline,
-    learning_based_models,
-    rule_based_models,
-    multi_procs_models,
-    implemented_models,
-    supported_modes,
-)
+from .align_pipeline import OntoAlignPipeline
+
+# implemented models
+learning_based_models = ["bertmap"]
+rule_based_models = ["string_match", "edit_sim"]
+multi_procs_models = ["string_match", "edit_sim"]
+implemented_models = learning_based_models + rule_based_models
+
+# support alignment modes
+supported_modes = ["global_match", "pair_score"]

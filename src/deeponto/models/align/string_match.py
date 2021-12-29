@@ -33,7 +33,16 @@ class StringMatch(OntoAlign):
         saved_path: str = "",
         use_edit_dist: bool = False,
     ):
-        super().__init__(src_onto, tgt_onto, tokenizer, cand_pool_size, "≡", n_best, saved_path)
+        super().__init__(
+            src_onto=src_onto,
+            tgt_onto=tgt_onto,
+            tokenizer=tokenizer,
+            cand_pool_size=cand_pool_size,
+            rel="≡",
+            n_best=n_best,
+            is_trainable=False,
+            saved_path=saved_path,
+        )
         self.use_edit_dist = use_edit_dist
 
     def ent_pair_score(self, src_ent_id: str, tgt_ent_id: str):
