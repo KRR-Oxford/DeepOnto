@@ -39,8 +39,13 @@ from deeponto.config import InputConfig
 @click.option("-s", "--src_onto_path", type=click.Path(exists=True), default=None)
 @click.option("-t", "--tgt_onto_path", type=click.Path(exists=True), default=None)
 @click.option("-c", "--config_path", type=click.Path(exists=True), default=None)
+@click.option("-f", "--ent_pair_file_path", type=click.Path(exists=True), default=None)
 def onto_match(
-    saved_path: str, config_path: str, src_onto_path: str, tgt_onto_path: str,
+    saved_path: str,
+    config_path: str,
+    src_onto_path: str,
+    tgt_onto_path: str,
+    ent_pair_file_path: str,
 ):
     banner_msg("Choose a Supported OM Mode")
     print_choices(supported_modes)
@@ -69,6 +74,7 @@ def onto_match(
     align_pipeline = OntoAlignPipeline(
         model_name, saved_path, config_path, src_onto_path, tgt_onto_path
     )
+    # TODO: think how to load entity pair files
     align_pipeline.run(mode, None, num_procs=num_procs)
 
 

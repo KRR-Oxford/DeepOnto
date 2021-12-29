@@ -21,15 +21,6 @@ from deeponto.onto.text import Tokenizer
 from deeponto.models import OntoPipeline
 from . import StringMatch, EditSimilarity
 
-# implemented models
-learning_based_models = ["bertmap"]
-rule_based_models = ["string_match", "edit_sim"]
-multi_procs_models = ["string_match", "edit_sim"]
-implemented_models = learning_based_models + rule_based_models
-
-# support alignment modes
-supported_modes = ["global_match", "pair_score"]
-
 
 class OntoAlignPipeline(OntoPipeline):
     def __init__(
@@ -66,7 +57,7 @@ class OntoAlignPipeline(OntoPipeline):
         super().run()
 
         # train the learning-based models
-        if self.model_name in learning_based_models:
+        if self.model.is_trainable:
             self.model.train(**self.config.train)
 
         # make prediction according mode

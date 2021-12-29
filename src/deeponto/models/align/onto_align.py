@@ -40,6 +40,7 @@ class OntoAlign:
         cand_pool_size: Optional[int] = 200,
         rel: str = "≡",
         n_best: Optional[int] = 10,
+        is_trainable: bool = False,
         saved_path: str = "",
     ):
 
@@ -55,6 +56,7 @@ class OntoAlign:
         self.new_mapping_list = lambda: EntityMappingList()
         self.logger = create_logger(f"{type(self).__name__}", saved_path=self.saved_path)
         self.n_best = n_best
+        self.is_trainable = is_trainable
 
         self.src2tgt_mappings = OntoMappings(flag="src2tgt", n_best=self.n_best, rel=self.rel)
         self.tgt2src_mappings = OntoMappings(flag="tgt2src", n_best=self.n_best, rel=self.rel)
