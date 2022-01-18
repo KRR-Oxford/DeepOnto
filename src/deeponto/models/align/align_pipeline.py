@@ -63,9 +63,15 @@ class OntoAlignPipeline(OntoPipeline):
         # make prediction according mode
         if mode == "global_match":
             self.model.global_match(num_procs)
+
+            # TODO: for refinement for bertmap
+            if self.model_name == "bertmap":
+                self.model.refinement()
+
         elif mode == "pair_score":
             assert ent_name_pairs != None
             # return the mapping dict for subsequent evaluation
+            # TODO: there are flaws of pair_score, check later
             return self.model.pair_score(ent_name_pairs)
         else:
             raise ValueError(f"Unknown mode: {mode}, please choose from [global_match, scoring].")

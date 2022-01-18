@@ -70,6 +70,7 @@ class OntoAlign:
     def pair_score(self, ent_name_pairs: List[Tuple[str, str]]):
         """Compute entity pair mappings by fixing source and target sides, respectively
         """
+        #TODO: there are flaws of code here, not thinking clearly (why switch sides?)
         self.renew()
         fixed_src_mappings = self.ent_pairs_mappings(ent_name_pairs)
         self.switch()
