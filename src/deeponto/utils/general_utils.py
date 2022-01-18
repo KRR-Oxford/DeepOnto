@@ -14,6 +14,7 @@
 """Providing useful utility functions"""
 from typing import Optional
 from pathlib import Path
+import pandas as pd
 import random
 import re
 import os
@@ -90,3 +91,16 @@ def print_choices(choices: list):
     """
     for i in range(len(choices)):
         print(f"[{i}]:", choices[i])
+
+
+##################################################################################
+###                              file processing                               ###
+##################################################################################
+
+na_vals = pd.io.parsers.readers.STR_NA_VALUES.difference({"NULL", "null", "n/a"})
+
+
+def read_tsv(file_path: str):
+    """Read tsv file as pandas dataframe without treating "null" as empty string.
+    """
+    return pd.read_csv(file_path, sep="\t", na_values=na_vals, keep_default_na=False)

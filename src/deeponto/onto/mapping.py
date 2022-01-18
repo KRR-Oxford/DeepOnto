@@ -16,11 +16,11 @@
 from __future__ import annotations
 
 from collections import defaultdict
-from typing import Optional
+from typing import Optional, List, Tuple
 from pyats.datastructures import AttrDict
 
 from deeponto import SavedObj
-from deeponto.utils import sort_dict_by_values
+from deeponto.utils import sort_dict_by_values, read_tsv
 
 
 ##################################################################################
@@ -75,7 +75,18 @@ class OntoMappings(SavedObj):
             ls.append(EntityMapping(src_ent_name, tgt_ent_name, self.rel, score))
         return ls
 
-    def tops(self):
+    def filtered_tops(self, threshold: float) -> List[Tuple[str, str]]:
+        """Return the top ranked mappings for each head entity with scores >= threshold,
+        output mappings are transformed to tuples
+        """
+        ls = []
+        for src_ent_name, v in self.ranked.items():
+            tgt_ent_name, score = list(v.items())[0]
+            if score >= threshold:
+                ls.append((src_ent_name, tgt_ent_name))
+        return ls
+
+    def tops(self) -> EntityMappingList:
         """Return the top ranked mappings for each head entity
         """
         ls = EntityMappingList()
@@ -87,7 +98,7 @@ class OntoMappings(SavedObj):
     def check_type(self, em: EntityMapping):
         if em.rel != self.rel:
             raise ValueError("Input mappings are not of the same type (relation).")
-        
+
     def check_existed(self, em: EntityMapping):
         return em.tail in self.ranked[em.head].keys()
 
@@ -114,6 +125,17 @@ class OntoMappings(SavedObj):
         else:
             self.ranked[em.head][em.tail] = em.score
         self.ranked[em.head] = sort_dict_by_values(self.ranked[em.head], top_k=self.n_best)
+
+    @staticmethod
+    def read_tsv_mappings(mapping_tsv_path: str, threshold: Optional[float] = 0.0):
+        """Read mappings from tsv files and return (head, tail) tuples which have scores >= threshold
+        """
+        df = read_tsv(mapping_tsv_path)
+        tuples = []
+        for _, dp in df.iterrows():
+            if dp["Score"] >= threshold:
+                tuples.append((dp["SrcEntity"], dp["TgtEntity"]))
+        return tuples
 
 
 class EntityMappingList(list):
@@ -154,6 +176,9 @@ class EntityMapping:
         self.tail = tgt_ent_name
         self.rel = rel
         self.score = score
+
+    def to_tuple(self):
+        return (self.head, self.tail)
 
     def __repr__(self):
         return f"EntityMapping({self.head} {self.rel} {self.tail}, {self.score})"
