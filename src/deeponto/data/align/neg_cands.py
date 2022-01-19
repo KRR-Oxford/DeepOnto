@@ -30,12 +30,14 @@ class OntoAlignNegCandsSampler:
     def __init__(
         self, src_onto: Ontology, tgt_onto: Ontology, tsv_mappings_path: str, tokenizer: Tokenizer
     ):
+        
         self.src_onto = src_onto
         self.tgt_onto = tgt_onto
+        
         # loaded mappings are served as +ve candiates (anchors)
-        pos_ent_pairs = OntoMappings.read_tsv_mappings(tsv_mappings_path)
-        self.pos_src2tgt = dict(pos_ent_pairs)
-        self.pos_tgt2src = dict([(y, x) for (x, y) in pos_ent_pairs])
+        # note that dict cannot be used here because multiple mappings are possible
+        self.pos_src2tgt = OntoMappings.read_tsv_mappings(tsv_mappings_path)
+        self.pos_tgt2src = [(y, x) for (x, y) in self.pos_src2tgt]
         self.tokenizer = tokenizer
 
         self.flag_set = cycle(["src2tgt", "tgt2src"])
@@ -83,7 +85,13 @@ class OntoAlignNegCandsSampler:
         # rel "?" means to-be-confirmed
         ent_pairs = OntoMappings(flag=self.flag, n_best=n_cands, rel="?")
 
-        for src_ent, tgt_ent in getattr(self, f"pos_{self.flag}").items():
+        for src_ent, tgt_ent in getattr(self, f"pos_{self.flag}"):
+            
+            # for multiple mappings, only need to add the ground truth:
+            if src_ent in ent_pairs.ranked.keys():
+                tbc_mapping = EntityMapping(src_ent, tgt_ent, rel="?", score=1.0)
+                ent_pairs.add(tbc_mapping)
+                continue
 
             # select n candidates for the src ent
             src_ent_id = self.src_onto.class2idx[src_ent]
