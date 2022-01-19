@@ -17,6 +17,7 @@ from typing import Optional, List, Tuple
 
 from deeponto.utils import create_path
 from deeponto.onto import Ontology
+from deeponto.onto.mapping import OntoMappings
 from deeponto.onto.text import Tokenizer
 from deeponto.models import OntoPipeline
 from . import StringMatch, EditSimilarity
@@ -49,7 +50,8 @@ class OntoAlignPipeline(OntoPipeline):
     def run(
         self,
         mode: str,
-        ent_name_pairs: Optional[List[Tuple[str, str]]] = None,
+        tbc_mappings: Optional[OntoMappings] = None,
+        tbc_flag: Optional[str] = None,
         num_procs: Optional[int] = None,
     ):
         """Run the whole pipeline
@@ -69,10 +71,9 @@ class OntoAlignPipeline(OntoPipeline):
                 self.model.refinement()
 
         elif mode == "pair_score":
-            assert ent_name_pairs != None
-            # return the mapping dict for subsequent evaluation
-            # TODO: there are flaws of pair_score, check later
-            return self.model.pair_score(ent_name_pairs)
+            assert tbc_mappings != None
+            self.model.pair_score(tbc_mappings, tbc_flag)
+            
         else:
             raise ValueError(f"Unknown mode: {mode}, please choose from [global_match, scoring].")
 

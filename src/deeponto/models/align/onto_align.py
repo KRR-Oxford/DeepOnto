@@ -21,7 +21,6 @@
 from itertools import cycle
 from typing import List, Tuple, Optional, Iterable
 from multiprocessing_on_dill import Process, Manager
-from pyats.datastructures import AttrDict
 import numpy as np
 import os
 
@@ -67,29 +66,27 @@ class OntoAlign:
     ###                        compute entity pair mappings                        ###
     ##################################################################################
 
-    def pair_score(self, ent_name_pairs: List[Tuple[str, str]]):
-        """Compute entity pair mappings by fixing source and target sides, respectively
-        """
-        #TODO: there are flaws of code here, not thinking clearly (why switch sides?)
-        self.renew()
-        fixed_src_mappings = self.ent_pairs_mappings(ent_name_pairs)
-        self.switch()
-        fixed_tgt_mappings = self.ent_pairs_mappings(ent_name_pairs)
-        return AttrDict({"fixed_src": fixed_src_mappings, "fixed_tgt": fixed_tgt_mappings,})
-
-    def ent_pairs_mappings(self, ent_name_pairs: List[Tuple[str, str]]):
+    def pair_score(self, tbc_mappings: OntoMappings, flag: str):
         """Compute mappings for intput src-tgt entity pairs
         """
+        self.logger.info(
+            f'Pair-score and rank input "{self.rel}" Mappings: {self.src_onto.owl.name} ==> {self.tgt_onto.owl.name}\n'
+        )
+        # change side according to given
+        while not self.flag == flag:
+            self.switch()
         prefix = self.flag.split("2")[1]  # src or tgt
         # maximum number of mappings is the number of opposite ontology classes
         max_num_mappings = len(getattr(self, f"{prefix}_onto").idx2class)
         mappings = OntoMappings(flag=self.flag, n_best=max_num_mappings, rel=self.rel)
-        for src_ent_name, tgt_ent_name in ent_name_pairs:
-            src_ent_id = self.src_onto.idx2class[src_ent_name]
-            tgt_ent_id = self.tgt_onto.idx2class[tgt_ent_name]
-            score = self.ent_pair_score(src_ent_id, tgt_ent_id)
-            mappings.add(EntityMapping(src_ent_name, tgt_ent_name, self.rel, score))
-        return mappings
+        for src_ent_name, tgt2score in tbc_mappings.ranked.items():
+            src_ent_id = self.src_onto.class2idx[src_ent_name]
+            for tgt_ent_name in tgt2score.keys():
+                tgt_ent_id = self.tgt_onto.class2idx[tgt_ent_name]
+                score = self.ent_pair_score(src_ent_id, tgt_ent_id)
+                mappings.add(EntityMapping(src_ent_name, tgt_ent_name, self.rel, score))
+        self.logger.info("Task Finished")
+        mappings.save_instance(f"{self.saved_path}/pair_score/{self.flag}")
 
     def ent_pair_score(self, src_ent_id: str, tgt_ent_id: str) -> float:
         """Compute mapping score between a cross-ontology entity pair
@@ -162,7 +159,7 @@ class OntoAlign:
         mappings = self.current_global_mappings()
         for ent_mappings in return_dict.values():
             mappings.add_many(*ent_mappings)
-        banner_msg("Task Finished")
+        self.logger.info("Task Finished")
         mappings.save_instance(f"{self.saved_path}/global_match/{self.flag}")
 
     def global_mappings_for_onto(self):
@@ -174,7 +171,7 @@ class OntoAlign:
         # save the output mappings
         mappings = self.current_global_mappings()
         mappings.add_many(*self.global_mappings_for_ent_chunk(self.src_onto.idx2class.keys()))
-        banner_msg("Task Finished")
+        self.logger.info("Task Finished")
         mappings.save_instance(f"{self.saved_path}/global_match/{self.flag}")
 
     def global_mappings_for_ent_chunk(self, src_ent_id_chunk: Iterable[int]):
@@ -200,10 +197,10 @@ class OntoAlign:
         src_ent_labs = self.src_onto.idx2labs[src_ent_id]
         src_ent_toks = self.tokenizer.tokenize_all(src_ent_labs)
         # TODO: could have more candidate selection methods in future
-        tgt_cands = self.tgt_onto.idf_select(
+        tgt_cand_ids = self.tgt_onto.idf_select(
             src_ent_toks, self.cand_pool_size
         )  # [(ent_id, idf_score)]
-        return tgt_cands
+        return tgt_cand_ids
 
     ##################################################################################
     ###                        other auxiliary functions                           ###
