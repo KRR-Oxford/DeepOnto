@@ -39,13 +39,15 @@ from deeponto.config import InputConfig
 @click.option("-s", "--src_onto_path", type=click.Path(exists=True), default=None)
 @click.option("-t", "--tgt_onto_path", type=click.Path(exists=True), default=None)
 @click.option("-c", "--config_path", type=click.Path(exists=True), default=None)
-@click.option("-f", "--ent_pair_file_path", type=click.Path(exists=True), default=None)
+@click.option("-m", "--tbh_maps_path", type=click.Path(exists=True), default=None)
+@click.option("-f", "--tbh_flag", type=str, default=None)
 def onto_match(
     saved_path: str,
     config_path: str,
     src_onto_path: str,
     tgt_onto_path: str,
-    ent_pair_file_path: str,
+    tbh_maps_path: str,
+    tbh_flag: str,
 ):
     banner_msg("Choose a Supported OM Mode")
     print_choices(supported_modes)
@@ -55,6 +57,7 @@ def onto_match(
     print_choices(implemented_models)
     model_name = implemented_models[click.prompt("Enter a number", type=int)]
 
+    num_procs = None
     if model_name in multi_procs_models and mode == "global_match":
         # TODO: multi-procs can be extended to pairwise mapping computation
         use_multi_procs = click.confirm(
@@ -62,8 +65,6 @@ def onto_match(
         )
         if use_multi_procs:
             num_procs = click.prompt("Enter the number of processes", type=int)
-        else:
-            num_procs = None
 
     if not config_path:
         banner_msg(f"Use Default Configs for {model_name}")
@@ -74,8 +75,14 @@ def onto_match(
     align_pipeline = OntoAlignPipeline(
         model_name, saved_path, config_path, src_onto_path, tgt_onto_path
     )
-    # TODO: think how to load entity pair files
-    align_pipeline.run(mode, None, num_procs=num_procs)
+
+    # load the to-be-confirmed mappings during pair-score mode
+    if mode == "pair_score":
+        assert tbh_maps_path != None
+        tbh_maps = SavedObj.from_saved(tbh_maps_path)
+        align_pipeline.run(mode, tbh_maps, tbh_flag, num_procs=num_procs)
+    else:
+        align_pipeline.run(mode, num_procs=num_procs)
 
 
 if __name__ == "__main__":

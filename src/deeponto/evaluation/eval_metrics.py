@@ -13,8 +13,10 @@
 # limitations under the License.
 """Define evaluation metrics for different tasks"""
 
-from typing import Optional, Iterable
+from typing import Optional, Iterable, Tuple, List
 from pyats.datastructures import AttrDict
+
+from deeponto.onto.mapping import OntoMappings
 
 ##################################################################################
 ###                       [Eval Case 1]: P, R, F1                              ###
@@ -68,5 +70,30 @@ def f1(pred: Iterable, ref: Iterable, null_ref: Optional[Iterable] = None):
 
 
 ##################################################################################
-###                       [Eval Case 2]: Hits@K                                ###
+###                       [Eval Case 2]: Hits@K & MRR                          ###
 ##################################################################################
+
+#TODO: check below algorithms after full deployment
+
+def hits_at_k(pred_maps: OntoMappings, ref_tuples: List[Tuple], k: int):
+    """Hits@K = # hits at top K / # testing samples 
+    """
+    n_hits = 0
+    for src_ent, tgt_ent in ref_tuples:
+        tgt2score = pred_maps.ranked[src_ent]
+        topk_tgt_cands = list(tgt2score.keys())[:k]
+        if tgt_ent in topk_tgt_cands:
+            n_hits += 1
+    return n_hits / len(ref_tuples)
+    
+    
+def mean_reciprocal_rank(pred_maps: OntoMappings, ref_tuples: List[Tuple]):
+    """MRR = (\sum_i 1 / rank_i) / # testing samples
+    """
+    sum_inv_ranks = 0
+    for src_ent, tgt_ent in ref_tuples:
+        tgt2score = pred_maps.ranked[src_ent]
+        tgt_cands = list(tgt2score.keys())
+        rank = tgt_cands.index(tgt_ent) + 1
+        sum_inv_ranks += 1 / rank 
+    return sum_inv_ranks / len(ref_tuples)
