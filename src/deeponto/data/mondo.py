@@ -11,3 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Providing useful utility functions regarding data"""
+
+from deeponto.utils import download_onto
+
+
+##################################################################################
+###                                data download                               ###
+##################################################################################
+
+mondo_url = "http://purl.obolibrary.org/obo/mondo/mondo-with-equivalents.owl"
+
+
+def download_mondo(saved_path: str):
+    """Download mondo ontology
+    """
+    return download_onto(mondo_url, saved_path)
