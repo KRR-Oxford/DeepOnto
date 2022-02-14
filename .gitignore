@@ -91,3 +91,6 @@ target/
 # pytest
 .pytest*
 testing/
+
+# data scripts 
+data_scripts/*.ipynb
