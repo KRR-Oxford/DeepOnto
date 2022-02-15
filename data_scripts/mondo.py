@@ -34,11 +34,11 @@ def mondo(saved_path: str):
     download_mondo(saved_path)
     # extract the mappings
     for map_prop, rel in [
-        ("equivalent_to", "="),  # owl:equivalentTo
+        #("equivalent_to", "="),  # owl:equivalentTo
         ("exactMatch", "="),  # sko:exactMatch
-        ("closeMatch", "="),  # sko:closeMatch
-        ("narrowMatch", ">"),  # sko:narrowMatch
-        ("broadMatch", "<"),  # sko:broadMatch
+        #("closeMatch", "="),  # sko:closeMatch
+        #("narrowMatch", ">"),  # sko:narrowMatch
+        #("broadMatch", "<"),  # sko:broadMatch
     ]:
         mapping_dir = f"{saved_path}/{map_prop}"
         if detect_path(mapping_dir):
