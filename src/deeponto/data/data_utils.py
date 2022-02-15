@@ -65,8 +65,8 @@ def extract_mappings(url: str, saved_path: str, map_prop: str, n_kept: int = 100
     onto_name = onto_name_from_url(url)
     owl = get_ontology(f"{saved_path}/{onto_name}").load()
     mappings = OntoMappings(flag=map_prop, n_best=n_kept, rel=rel)
-    mondo_classes = [c for c in owl.classes() if c.name.startswith('MONDO_')]
-    for cl in mondo_classes:
+    # mondo_classes = [c for c in owl.classes() if c.name.startswith('MONDO_')]
+    for cl in owl.classes():
         src_iri = abbr_iri(cl.iri, sep=sep)
         for match in getattr(cl, map_prop):
             if type(match) == str:  # some concepts are not updated in MONDO as a class
