@@ -59,6 +59,11 @@ class OntoMappings(SavedObj):
             }
         )
         return super().report(**self.info)
+    
+    def __len__(self):
+        """Total number of ranked mappings
+        """
+        return sum([len(map_dict) for map_dict in self.ranked.values()])
 
     def save_instance(self, saved_path):
         """save the current instance locally
@@ -186,9 +191,9 @@ class EntityMapping:
 
 class EquivalenceMapping(EntityMapping):
     def __init__(self, src_ent_name: str, tgt_ent_name: str, score: float):
-        super().__init__(src_ent_name, tgt_ent_name, "≡", score)  # ≡
+        super().__init__(src_ent_name, tgt_ent_name, "=", score)  # ≡
 
 
 class SubsumptionMapping(EntityMapping):
     def __init__(self, src_ent_name: str, tgt_ent_name: str, score: float):
-        super().__init__(src_ent_name, tgt_ent_name, "⊂", score)  # ⊂
+        super().__init__(src_ent_name, tgt_ent_name, "<", score)  # ⊂
