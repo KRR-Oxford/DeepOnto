@@ -18,7 +18,6 @@ import pandas as pd
 import random
 import re
 import os
-import urllib.request
 
 ##################################################################################
 ###                             element processing                             ###
@@ -106,26 +105,3 @@ def read_tsv(file_path: str):
     """Read tsv file as pandas dataframe without treating "null" as empty string.
     """
     return pd.read_csv(file_path, sep="\t", na_values=na_vals, keep_default_na=False)
-
-
-##################################################################################
-###                                data download                               ###
-##################################################################################
-
-
-def onto_name_from_url(url: str):
-    return url.split("/")[-1]
-
-
-def download_onto(url: str, saved_path: str):
-    """Download ontology from url
-    """
-    # by default the name is the last part of the url string
-    onto_name = onto_name_from_url(url)
-    onto_path = f"{saved_path}/{onto_name}"
-    if detect_path(onto_path):
-        print(f"Ontology: {onto_name} has been downloaded, skip the download process ...")
-    else:
-        create_path(saved_path)
-        urllib.request.urlretrieve(url, f"{onto_path}")
-    return onto_name

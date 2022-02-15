@@ -29,7 +29,7 @@ class Ontology(SavedObj):
     def __init__(self, owl_path: str):
         self.owl_path = owl_path
         self.owl = get_ontology(f"file://{owl_path}").load()
-        self.lab_probs = None
+        self.lab_props = None
         # dict attributes
         self.class2idx = None
         self.idx2class = None
@@ -50,9 +50,9 @@ class Ontology(SavedObj):
         # {class_iri: class_number}; {class_number: class_iri}
         onto.class2idx, onto.idx2class = onto.assign_class_numbers(onto.owl)
         # {class_number: [labels]}
-        onto.lab_probs = lab_props
+        onto.lab_props = lab_props
         onto.idx2labs, onto.num_labs = text_utils.ents_labs_from_props(
-            onto.owl.classes(), onto.class2idx, onto.lab_probs
+            onto.owl.classes(), onto.class2idx, onto.lab_props
         )
         onto.num_classes = len(onto.class2idx)
         onto.avg_labs = round(onto.num_labs / onto.num_classes, 2)
@@ -90,7 +90,7 @@ class Ontology(SavedObj):
             {
                 "owl_name": self.owl.name,
                 "num_classes": self.num_classes,
-                "labs_probs": self.lab_probs,
+                "labs_probs": self.lab_props,
                 "num_labs": self.num_labs,
                 "avg_labs": self.avg_labs,
                 "num_entries_inv_idx": self.num_entries_inv_idx,
