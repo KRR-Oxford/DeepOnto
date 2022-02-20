@@ -37,7 +37,6 @@ class BERTStaticSeqClassifer(BERTStatic):
             self.args.bert_checkpoint, output_hidden_states=True
         )
 
-
     def __call__(self, sent_pairs: List[Tuple[str, str]]):
         """Pipeline for (binary) sequence classification,
         returning the scores of being predicted as the positive class (index=1)
