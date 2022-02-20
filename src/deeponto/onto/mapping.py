@@ -84,12 +84,12 @@ class OntoMappings(SavedObj):
         """Return the top ranked mappings for each head entity with scores >= threshold,
         output mappings are transformed to tuples
         """
-        ls = []
+        ent_tuple_list = []
         for src_ent_name, v in self.ranked.items():
             tgt_ent_name, score = list(v.items())[0]
             if score >= threshold:
-                ls.append((src_ent_name, tgt_ent_name))
-        return ls
+                ent_tuple_list.append((src_ent_name, tgt_ent_name))
+        return ent_tuple_list
 
     def tops(self) -> EntityMappingList:
         """Return the top ranked mappings for each head entity
