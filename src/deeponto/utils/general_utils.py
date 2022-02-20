@@ -18,6 +18,8 @@ import pandas as pd
 import random
 import re
 import os
+import torch
+import numpy as np
 
 ##################################################################################
 ###                             element processing                             ###
@@ -105,3 +107,34 @@ def read_tsv(file_path: str):
     """Read tsv file as pandas dataframe without treating "null" as empty string.
     """
     return pd.read_csv(file_path, sep="\t", na_values=na_vals, keep_default_na=False)
+
+
+##################################################################################
+###                                 torch                                      ###
+##################################################################################
+
+
+def get_device(device_num: int = 0):
+    """Get a device (GPU or CPU) for the torch model
+    """
+    # If there's a GPU available...
+    if torch.cuda.is_available():
+        # Tell PyTorch to use the GPU.
+        device = torch.device(f"cuda:{device_num}")
+        print("There are %d GPU(s) available." % torch.cuda.device_count())
+        print("We will use the GPU:", torch.cuda.get_device_name(device_num))
+    # If not...
+    else:
+        print("No GPU available, using the CPU instead.")
+        device = torch.device("cpu")
+    return device
+
+
+def set_seed(seed_val: int = 888):
+    """Set random seed for reproducible results
+    """
+    random.seed(seed_val)
+    np.random.seed(seed_val)
+    torch.manual_seed(seed_val)
+    torch.cuda.manual_seed_all(seed_val)
+

@@ -24,6 +24,7 @@ class Tokenizer:
         """init with the input tokenizing method
         """
         self.tokenize = tokenize
+        self.type = None
 
     def __call__(self, texts):
         return self.tokenize(texts)
@@ -38,6 +39,7 @@ class Tokenizer:
         tokenizer = AutoTokenizer.from_pretrained(pretrained_path)
         inst = cls(tokenizer.tokenize)
         inst.tkz = tokenizer
+        inst.type = "pre-trained"
         return inst
 
     @classmethod
@@ -47,4 +49,5 @@ class Tokenizer:
         nlp = spacy.load(spacy_lib_path)
         inst = cls(lambda texts: [word.text for word in nlp(texts).doc])
         inst.nlp = nlp
+        inst.type = "rule-based"
         return inst

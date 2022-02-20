@@ -84,3 +84,15 @@ def extract_mappings(url: str, saved_path: str, map_prop: str, n_kept: int = 100
 
 def extract_mondo_mappings(saved_path: str, map_prop: str, n_kept: int = 100, rel: str = "="):
     return extract_mappings(mondo_url, saved_path, map_prop, n_kept, rel, sep="/")
+
+
+##################################################################################
+###                         split mappings pairwise                            ###
+##################################################################################
+
+def pairwise_mappings(integrated_mappings: OntoMappings):
+    """For an integrated ontology such as MONDO and UMLS, we extract pairwise
+    (ontology) mappings from its mappings, where there is an `intermediate concept`
+    that points to concepts of various individual ontologies.
+    """
+    # TODO: no need to do this yet because MONDO team provides mappings
