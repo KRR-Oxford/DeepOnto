@@ -13,6 +13,8 @@
 # limitations under the License.
 """Script for downloading and extracting mappings from Mondo 
         (https://mondo.monarchinitiative.org/)
+        
+    Feb 18: this script is not useful now because MONDO team has provided mappings for the users
 """
 
 import os
@@ -47,9 +49,11 @@ def mondo(saved_path: str):
                 + "if you want to override the existing mappings,"
                 + "delete the directory and re-run."
             )
+            mappings = OntoMappings.from_saved(f"{saved_path}/{map_prop}")
         else:
             mappings = extract_mondo_mappings(saved_path, map_prop, rel=rel)
             mappings.save_instance(f"{saved_path}/{map_prop}")
+    # split the mappings for pairwise ontologies
 
 
 if __name__ == "__main__":
