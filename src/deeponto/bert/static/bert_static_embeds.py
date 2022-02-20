@@ -31,7 +31,7 @@ class BERTStaticEmbeds(BERTStatic):
         self, bert_args: BERTArgs,
     ):
         super().__init__(bert_args)
-    
+
     def load_model(self):
         # load the pre-trained BERT (without downstream layers because we only need the embeddings)
         # output_hidden_states = True because we need hidden_states of each BERT layer to form embeddings
