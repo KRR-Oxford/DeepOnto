@@ -39,15 +39,15 @@ from deeponto.config import InputConfig
 @click.option("-s", "--src_onto_path", type=click.Path(exists=True), default=None)
 @click.option("-t", "--tgt_onto_path", type=click.Path(exists=True), default=None)
 @click.option("-c", "--config_path", type=click.Path(exists=True), default=None)
-@click.option("-m", "--tbh_maps_path", type=click.Path(exists=True), default=None)
-@click.option("-f", "--tbh_flag", type=str, default=None)
+@click.option("-m", "--to_be_scored_maps_path", type=click.Path(exists=True), default=None)
+@click.option("-f", "--to_be_scord_flag", type=str, default=None)
 def onto_match(
     saved_path: str,
     config_path: str,
     src_onto_path: str,
     tgt_onto_path: str,
-    tbh_maps_path: str,
-    tbh_flag: str,
+    to_be_scored_maps_path: str,
+    to_be_scord_flag: str,
 ):
     banner_msg("Choose a Supported OM Mode")
     print_choices(supported_modes)
@@ -78,9 +78,9 @@ def onto_match(
 
     # load the to-be-confirmed mappings during pair-score mode
     if mode == "pair_score":
-        assert tbh_maps_path != None
-        tbh_maps = SavedObj.from_saved(tbh_maps_path)
-        align_pipeline.run(mode, tbh_maps, tbh_flag, num_procs=num_procs)
+        assert to_be_scored_maps_path != None
+        tbh_maps = SavedObj.from_saved(to_be_scored_maps_path)
+        align_pipeline.run(mode, tbh_maps, to_be_scord_flag, num_procs=num_procs)
     else:
         align_pipeline.run(mode, num_procs=num_procs)
 
