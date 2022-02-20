@@ -138,3 +138,7 @@ class Ontology(SavedObj):
             info[f"example_{i+1}"] = examples[i]
         print(self.report(root_name="Selection.Info", **info))
         return cand_pool
+
+    def path_select(self, pool_size: int = 200) -> List[str]:
+        # TODO
+        pass
