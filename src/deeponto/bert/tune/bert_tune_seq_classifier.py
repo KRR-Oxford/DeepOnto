@@ -15,7 +15,7 @@
 Fine-tuning BERT with the classtext pair datasets extracted from ontologies
 Code inspired by: https://huggingface.co/transformers/training.html
 """
-from typing import List
+from typing import List, Tuple, Any
 
 import pandas as pd
 from datasets import Dataset
@@ -34,7 +34,7 @@ class BERTFineTuneSeqClassifier(BERTFineTune):
     def load_model(self):
         return AutoModelForSequenceClassification.from_pretrained(self.args.bert_checkpoint)
 
-    def load_dataset(self, data: List) -> Dataset:
+    def load_dataset(self, data: List[Tuple[str, str, Any]]) -> Dataset:
         """For sequence classification, we have two sentences (sent1, sent2, cls_label) as input
         """
         data_df = pd.DataFrame(data, columns=["sent1", "sent2", "labels"])
