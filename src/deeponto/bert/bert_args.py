@@ -13,30 +13,71 @@
 # limitations under the License.
 """Class for input arguments of a BERT model"""
 
-# import transformers
-from pyats.datastructures import AttrDict
+from transformers import TrainingArguments
+from typing import Optional
+import torch
+
 
 class BERTArgs:
-    
-    def __init__(self, 
-                 bert_checkpoint: str,
-                 # bert_class: str,
-                 n_epochs: float,
-                 batch_size: int,
-                 max_length: int,
-                 device_num: int,
-                 ):
-        
+    def __init__(
+        self,
+        bert_checkpoint: str,
+        output_dir: str,
+        num_epochs: float,
+        batch_size_for_training: int,
+        max_length: int,
+        device_num: int,
+        early_stop_patience: Optional[int],  # if not specified, no early stopping is performed
+        resume_from_ckp: Optional[bool],
+    ):
+
         # basic arguments
         self.bert_checkpoint = bert_checkpoint
-        # huggingface class models
-        # self.bert_classes = [x for x in transformers.__all__ if "AutoModel" in x]
-        # if not bert_class in self.bert_classes:
-        #     raise ValueError(f"{bert_class} is not one of the implemented BERT (transformers) class.")
-        
+
         # training arguments
-        self.train = AttrDict()
-        self.train.n_epochs = n_epochs
-        self.train.batch_size = batch_size
-        self.train.max_length = max_length
-        self.train.device_num = device_num
+        self.output_dir = output_dir
+        self.num_epochs = num_epochs
+        self.batch_size_for_training = batch_size_for_training
+        self.max_length = max_length
+        self.device_num = device_num
+        self.early_stop_patience = early_stop_patience
+        self.early_stop = True if early_stop_patience else False
+        self.resume_from_ckp = resume_from_ckp
+
+    def generate_training_args(
+        self,
+        training_data_size: int,
+        metric_for_best_model: Optional[str] = None,
+        greater_is_better: Optional[bool] = None,
+    ) -> TrainingArguments:
+
+        # regularizing the steps
+        epoch_steps = training_data_size // self.batch_size  # total steps of an epoch
+        if torch.cuda.device_count() > 0:
+            epoch_steps = epoch_steps // torch.cuda.device_count()  # to deal with multi-gpus case
+        # keep logging steps consisitent even for small batch size
+        # report logging on every 0.02 epoch
+        logging_steps = int(epoch_steps * 0.02)
+        # eval on every 0.1 epoch
+        eval_steps = 5 * logging_steps
+
+        return TrainingArguments(
+            output_dir=self.output_dir,
+            # max_steps=eval_steps*4 + 1,
+            num_train_epochs=self.num_epochs,
+            per_device_train_batch_size=self.batch_size,
+            per_device_eval_batch_size=self.batch_size,
+            warmup_ratio=0.0,
+            weight_decay=0.01,
+            logging_steps=logging_steps,
+            logging_dir=f"{self.output_dir}/tensorboard",
+            eval_steps=eval_steps,
+            evaluation_strategy="steps",
+            do_train=True,
+            do_eval=True,
+            save_steps=eval_steps,
+            load_best_model_at_end=True,
+            save_total_limit=1,
+            metric_for_best_model=metric_for_best_model,
+            greater_is_better=greater_is_better,
+        )
