@@ -6,14 +6,7 @@ from typing import List
 
 import pandas as pd
 from datasets import Dataset
-from sklearn.metrics import accuracy_score
-from transformers import (
-    AutoModelForSequenceClassification,
-    AutoTokenizer,
-    EarlyStoppingCallback,
-    Trainer,
-    TrainingArguments,
-)
+from transformers import AutoModelForSequenceClassification
 
 from deeponto.bert import BERTArgs
 from . import BERTFineTune
