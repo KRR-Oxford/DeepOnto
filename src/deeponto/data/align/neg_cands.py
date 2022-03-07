@@ -28,15 +28,19 @@ sampling_options = ["idf"]
 
 class OntoAlignNegCandsSampler:
     def __init__(
-        self, src_onto: Ontology, tgt_onto: Ontology, tsv_mappings_path: str, tokenizer: Tokenizer
+        self,
+        src_onto: Ontology,
+        tgt_onto: Ontology,
+        tsv_mappings_path: str,
+        tokenizer: Tokenizer,
     ):
-        
+
         self.src_onto = src_onto
         self.tgt_onto = tgt_onto
-        
+
         # loaded mappings are served as +ve candiates (anchors)
         # note that dict cannot be used here because multiple mappings are possible
-        self.pos_src2tgt = OntoMappings.read_tsv_mappings(tsv_mappings_path)
+        self.pos_src2tgt = OntoMappings.read_tsv_mappings(tsv_mappings_path=tsv_mappings_path).to_tuples()
         self.pos_tgt2src = [(y, x) for (x, y) in self.pos_src2tgt]
         self.tokenizer = tokenizer
 
@@ -86,7 +90,7 @@ class OntoAlignNegCandsSampler:
         ent_pairs = OntoMappings(flag=self.flag, n_best=n_cands, rel="?")
 
         for src_ent, tgt_ent in getattr(self, f"pos_{self.flag}"):
-            
+
             # for multiple mappings, only need to add the ground truth:
             if src_ent in ent_pairs.ranked.keys():
                 tbc_mapping = EntityMapping(src_ent, tgt_ent, rel="?", score=1.0)
