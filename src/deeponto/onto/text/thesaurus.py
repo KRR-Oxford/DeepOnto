@@ -192,6 +192,7 @@ class Thesaurus(SavedObj):
     @staticmethod
     def positive_sampling(synonym_groups: List[Set[str]], pos_num: Optional[int] = None):
         """Generate synonym pairs from each independent synonym group
+        (has be validated for getting the same results as in BERTMap repo)
         """
         pos_sample_pool = []
         for synonym_set in synonym_groups:
