@@ -59,7 +59,7 @@ class OntoMappings(SavedObj):
             }
         )
         return super().report(**self.info)
-    
+
     def __len__(self):
         """Total number of ranked mappings
         """
@@ -80,25 +80,21 @@ class OntoMappings(SavedObj):
             ls.append(EntityMapping(src_ent_name, tgt_ent_name, self.rel, score))
         return ls
 
-    def filtered_tops(self, threshold: float) -> List[Tuple[str, str]]:
+    def topKs(self, threshold: float = 0.0, K: int = 1) -> List[Tuple[str, str]]:
         """Return the top ranked mappings for each head entity with scores >= threshold,
         output mappings are transformed to tuples
         """
         ent_tuple_list = []
         for src_ent_name, v in self.ranked.items():
-            tgt_ent_name, score = list(v.items())[0]
-            if score >= threshold:
-                ent_tuple_list.append((src_ent_name, tgt_ent_name))
+            for tgt_ent_name, score in list(v.items())[:K]:
+                if score >= threshold:
+                    ent_tuple_list.append((src_ent_name, tgt_ent_name))
         return ent_tuple_list
 
-    def tops(self) -> EntityMappingList:
-        """Return the top ranked mappings for each head entity
+    def to_tuples(self) -> List[Tuple[str, str]]:
+        """Unravel the ranked dictionary to tuples
         """
-        ls = EntityMappingList()
-        for src_ent_name, v in self.ranked.items():
-            tgt_ent_name, score = list(v.items())[0]
-            ls.append(EntityMapping(src_ent_name, tgt_ent_name, self.rel, score))
-        return ls
+        return self.topKs(0.0, K=self.n_best)
 
     def check_type(self, em: EntityMapping):
         if em.rel != self.rel:
@@ -129,18 +125,27 @@ class OntoMappings(SavedObj):
             self.ranked[em.head][em.tail] = new_score
         else:
             self.ranked[em.head][em.tail] = em.score
-        self.ranked[em.head] = sort_dict_by_values(self.ranked[em.head], top_k=self.n_best)
+        # truncate if n_best is specified
+        if self.n_best:
+            self.ranked[em.head] = sort_dict_by_values(self.ranked[em.head], top_k=self.n_best)
 
-    @staticmethod
-    def read_tsv_mappings(mapping_tsv_path: str, threshold: Optional[float] = 0.0):
-        """Read mappings from tsv files and return (head, tail) tuples which have scores >= threshold
+    @classmethod
+    def read_tsv_mappings(
+        cls,
+        tsv_mappings_path: str,
+        threshold: Optional[float] = 0.0,
+        flag: str = "src2tgt",
+        rel: str = "=",
+        n_best: Optional[int] = None,
+    ):
+        """Read mappings from tsv files and preserve mappings with scores >= threshold
         """
-        df = read_tsv(mapping_tsv_path)
-        tuples = []
+        df = read_tsv(tsv_mappings_path)
+        onto_mappings = cls(flag, n_best, rel)
         for _, dp in df.iterrows():
             if dp["Score"] >= threshold:
-                tuples.append((dp["SrcEntity"], dp["TgtEntity"]))
-        return tuples
+                onto_mappings.add(EntityMapping(dp["SrcEntity"], dp["TgtEntity"], rel, dp["Score"]))
+        return onto_mappings
 
 
 class EntityMappingList(list):
