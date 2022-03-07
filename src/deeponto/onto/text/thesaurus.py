@@ -212,13 +212,18 @@ class Thesaurus(SavedObj):
         """
         neg_sample_pool = []
         # randomly select disjoint synonym group pairs from all
-        while len(neg_sample_pool) < neg_num:
+        for _ in range(neg_num):
             left, right = tuple(random.sample(synonym_groups, 2))
             # randomly choose one label from a synonym group
             left_label = random.choice(list(left))
             right_label = random.choice(list(right))
             neg_sample_pool.append((left_label, right_label))
-            neg_sample_pool = uniqify(neg_sample_pool)
+        # uniqify is too slow so we should avoid operating it too often
+        neg_sample_pool = uniqify(neg_sample_pool)
+        while len(neg_sample_pool) < neg_num:
+            neg_sample_pool += Thesaurus.random_negative_sampling(
+                synonym_groups, neg_num - len(neg_sample_pool)
+            )
         return neg_sample_pool
 
     @staticmethod
@@ -228,14 +233,19 @@ class Thesaurus(SavedObj):
         """
         neg_sample_pool = []
         # randomly select disjoint synonym group pairs from defined disjointness
-        while len(neg_sample_pool) < neg_num:
+        for _ in range(neg_num):
             disjoint_group = random.choice(disjoint_synonym_groups)
             left, right = tuple(random.sample(disjoint_group, 2))
             # randomly choose one label from a synonym group
             left_label = random.choice(list(left))
             right_label = random.choice(list(right))
             neg_sample_pool.append((left_label, right_label))
-            neg_sample_pool = uniqify(neg_sample_pool)
+        # uniqify is too slow so we should avoid operating it too often
+        neg_sample_pool = uniqify(neg_sample_pool)
+        while len(neg_sample_pool) < neg_num:
+            neg_sample_pool += Thesaurus.disjointness_negative_sampling(
+                disjoint_synonym_groups, neg_num - len(neg_sample_pool)
+            )
         return neg_sample_pool
 
     @staticmethod
@@ -267,11 +277,16 @@ class Thesaurus(SavedObj):
         """
         neg_sample_pool = []
         # randomly select disjoint synonym group pairs from all
-        while len(neg_sample_pool) < neg_num:
+        for _ in range(neg_num):
             left_class_pairs, right_class_pairs = tuple(random.sample(matched_synonym_groups, 2))
             # randomly choose one label from a synonym group
             left_label = random.choice(list(left_class_pairs[0]))  # choosing the src side
             right_label = random.choice(list(right_class_pairs[1]))  # choosing the tgt side
             neg_sample_pool.append((left_label, right_label))
-            neg_sample_pool = uniqify(neg_sample_pool)
+        # uniqify is too slow so we should avoid operating it too often
+        neg_sample_pool = uniqify(neg_sample_pool)
+        while len(neg_sample_pool) < neg_num:
+            neg_sample_pool += Thesaurus.random_negative_sampling_from_paired_groups(
+                matched_synonym_groups, neg_num - len(neg_sample_pool)
+            )
         return neg_sample_pool
