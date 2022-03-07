@@ -36,7 +36,7 @@ from __future__ import annotations
 import networkx as nx
 import itertools
 import random
-from typing import List, Set, Tuple, Optional, Iterable, TYPE_CHECKING
+from typing import List, Set, Tuple, Optional, TYPE_CHECKING
 from pyats.datastructures import AttrDict
 
 from deeponto import SavedObj
