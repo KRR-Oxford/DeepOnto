@@ -241,11 +241,14 @@ class Thesaurus(SavedObj):
     def positive_sampling_from_paired_groups(
         matched_synonym_groups: List[Tuple[Set[str], Set[str]]], pos_num: Optional[int] = None
     ):
-        """Generate synonym pairs from each paired synonym group
+        """Generate synonym pairs from each paired synonym group where identity synonyms are removed
         """
         pos_sample_pool = []
         for left_synonym_set, right_synonym_set in matched_synonym_groups:
-            synonym_pairs = list(itertools.product(left_synonym_set, right_synonym_set))
+            # sample cross-onto synonyms but removing identity synonyms
+            synonym_pairs = [
+                (l, r) for l, r in itertools.product(left_synonym_set, right_synonym_set) if l != r
+            ]
             pos_sample_pool += synonym_pairs
         pos_sample_pool = uniqify(pos_sample_pool)
         if (not pos_num) or (pos_num >= len(pos_sample_pool)):
