@@ -141,7 +141,7 @@ class OntoMappings(SavedObj):
         """Read mappings from tsv files and preserve mappings with scores >= threshold
         """
         df = read_tsv(tsv_mappings_path)
-        onto_mappings = cls(flag, n_best, rel)
+        onto_mappings = cls(flag=flag, n_best=n_best, rel=rel)
         for _, dp in df.iterrows():
             if dp["Score"] >= threshold:
                 onto_mappings.add(EntityMapping(dp["SrcEntity"], dp["TgtEntity"], rel, dp["Score"]))
