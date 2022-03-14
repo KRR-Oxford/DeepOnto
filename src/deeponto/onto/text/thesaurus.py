@@ -267,7 +267,11 @@ class Thesaurus(SavedObj):
             synonym_pairs = [
                 (l, r) for l, r in itertools.product(left_synonym_set, right_synonym_set) if l != r
             ]
-            pos_sample_pool += synonym_pairs
+            # append the reversed synonyms (preserve symmertry)
+            backward_synonym_pairs = [(r, l) for l, r in synonym_pairs]
+            pos_sample_pool += synonym_pairs + backward_synonym_pairs
+            forward += synonym_pairs
+            backward += backward_synonym_pairs
         pos_sample_pool = uniqify(pos_sample_pool)
         if (not pos_num) or (pos_num >= len(pos_sample_pool)):
             # return all the possible synonyms if no maximum limit
