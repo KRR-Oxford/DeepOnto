@@ -110,6 +110,9 @@ class TextSemanticsCorpora(SavedObj):
         self.negatives = uniqify(self.soft_negatives + self.hard_negatives)
         # we then remove the invalid negatives (which appear in the positives)
         self.negatives = self.remove_invalid_negatives(self.positives, self.negatives)
+        # TODO: the number of negatives does not strictly follow the ratio after uniqifying
+        # TODO: maybe it is better to down sample the negatives again here before fine-tuning
+        # TODO: will leave for future improvement
 
         # record the stats
         self.stats.num_positives = len(self.positives)
@@ -135,7 +138,7 @@ class TextSemanticsCorpora(SavedObj):
             banner_msg("Cross-onto Corpus from Src2Tgt Mappings")
             print(str(self.cross_onto_corpus))
         if self.comple_corpora:
-            print("Complemenatry Corpora from Auxiliary Ontologies")
+            banner_msg("Complemenatry Corpora from Auxiliary Ontologies")
             for cp_corpus in self.comple_corpora:
                 print(str(cp_corpus))
 
