@@ -82,12 +82,7 @@ class TextSemanticsCorpora(SavedObj):
         # complementary
         self.comple_corpora = []
         if self.aux_ontos:
-            for aux_onto in self.aux_ontos:
-                aux_corpus = TextSemanticsCorpusforOnto(
-                    aux_onto, self.thesaurus, self.neg_ratio, flag="aux"
-                )
-                self.comple_corpora.append(aux_corpus)
-                self.add_samples_from_sub_corpus(aux_corpus)
+            self.feed_auxiliary_ontos(*self.aux_ontos)
 
         if self.apply_transitivity:
             # copy and mark the individually retrieved samples as "isolated"
@@ -141,6 +136,27 @@ class TextSemanticsCorpora(SavedObj):
             banner_msg("Complemenatry Corpora from Auxiliary Ontologies")
             for cp_corpus in self.comple_corpora:
                 print(str(cp_corpus))
+    
+    def feed_auxiliary_ontos(self, *new_aux_ontos: Ontology, destroy_cache_in_src_and_tgt: bool = True):
+        """Feed auxiliary ontologies for data augmentation
+        """
+        
+        # TODO: At least for now when the auxiliary ontologies are fed, src-tgt data are all ready
+        if destroy_cache_in_src_and_tgt:
+            self.src_onto.destroy_owl_cache()
+            self.tgt_onto.destroy_owl_cache()
+            print("Cached entities are destroyed from SRC and TGT ontologies to" + 
+                  "avoid potential clashes before using auxiliary ontologies ...")
+            
+        for aux_onto in new_aux_ontos:
+            # we do not need to build inverted index for auxiliary ontologies
+            # reload in order to avoid collisions (see Ontology class for details)
+            aux_onto = aux_onto.reload_onto_without_inv_idx()
+            aux_corpus = TextSemanticsCorpusforOnto(
+                aux_onto, self.thesaurus, self.neg_ratio, flag="aux"
+            )
+            self.comple_corpora.append(aux_corpus)
+            self.add_samples_from_sub_corpus(aux_corpus)
 
     def add_samples_from_sub_corpus(
         self, sub_corpus: Union[TextSemanticsCorpusforOnto, TextSemanticsCorpusforMappings]
