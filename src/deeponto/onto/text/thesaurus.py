@@ -49,19 +49,20 @@ if TYPE_CHECKING:
 
 
 class Thesaurus(SavedObj):
-    def __init__(self):
+    def __init__(self, apply_transitivity: bool = False):
         # note that reflexivity and symmetricality have been assumed by
         # e.g., if a class C has labels {x, y}, we include (x, x), (y, y)
         # for reflexivity; and (x, y), (y, x) for symmetricality.
         self.sections = []
         self.merged_section = dict()
+        self.apply_transitivity = apply_transitivity
         super().__init__("thesaurus")
 
-    def __call__(self, *ontos: Ontology, apply_transitivity_to_each: bool = False):
+    def __call__(self, *ontos: Ontology):
         """Create a new Thesaurus for given ontologies
         """
-        self.__init__()
-        self.add_synonyms_from_ontos(*ontos, apply_transitivity_to_each=apply_transitivity_to_each)
+        self.__init__(self.apply_transitivity)
+        self.add_synonyms_from_ontos(*ontos)
         print(self)
 
     def __str__(self) -> str:
@@ -91,12 +92,13 @@ class Thesaurus(SavedObj):
     ###                   extract synonyms from an ontology                        ###
     ##################################################################################
 
-    def add_synonyms_from_ontos(self, *ontos: Ontology, apply_transitivity_to_each: bool = False):
-        """Add synonyms from each input ontology into a "section"
+    def add_synonyms_from_ontos(self, *ontos: Ontology) -> List[Set[str]]:
+        """Add synonyms from each input ontology into a "section",
+        return the resulting synonym groups
         """
         for onto in ontos:
             synonym_groups = [set(v) for v in onto.idx2labs.values()]
-            if apply_transitivity_to_each:
+            if self.apply_transitivity:
                 synonym_groups = self.merge_synonyms_by_transitivity(synonym_groups)
             new_section = AttrDict(
                 {
@@ -107,16 +109,13 @@ class Thesaurus(SavedObj):
                 }
             )
             self.sections.append(new_section)
-            print(f"Add {new_section.num_synonym_groups} synonyms from the following ontology:\n")
+            print(f"Add {new_section.num_synonym_groups} synonym groups from the following ontology:\n")
             print(f"{new_section.onto_info}")
         self.create_merged_section()
+        return synonym_groups
 
     def add_matched_synonyms_from_mappings(
-        self,
-        src_onto: Ontology,
-        tgt_onto: Ontology,
-        known_mappings: OntoMappings,
-        apply_transitivity_to_each: bool = False,
+        self, src_onto: Ontology, tgt_onto: Ontology, known_mappings: OntoMappings,
     ) -> List[Tuple[Set[str], Set[str]]]:
         """Add aligned synonym groups from given mappings. The merged synonyms are included as a section 
         and returning aligned but not merged src and tgt synonym groups with: (src_synonyms, tgt_synonyms) 
@@ -135,7 +134,7 @@ class Thesaurus(SavedObj):
             synonym_groups.append(
                 set(src_ent_labels + tgt_ent_labels)
             )  # form a synonym group without distinguishing ontology source
-        if apply_transitivity_to_each:
+        if self.apply_transitivity:
             synonym_groups = self.merge_synonyms_by_transitivity(synonym_groups)
         new_section = AttrDict(
             {
@@ -200,13 +199,13 @@ class Thesaurus(SavedObj):
             pos_sample_pool += synonym_pairs
         pos_sample_pool = uniqify(pos_sample_pool)
         if (not pos_num) or (pos_num >= len(pos_sample_pool)):
-            # return all the possible synonyms if no maximum limit
+            print("required number of positives >= maximum; return all retrieved samples instead ...")
             return pos_sample_pool
         else:
             return random.sample(pos_sample_pool, pos_num)
 
     @staticmethod
-    def random_negative_sampling(synonym_groups: List[Set[str]], neg_num: int):
+    def random_negative_sampling(synonym_groups: List[Set[str]], neg_num: int, max_iter: int = 10):
         """Soft (random) non-synonyms are defined as label pairs from two different synonym groups
         that are randomly selected
         """
@@ -220,33 +219,41 @@ class Thesaurus(SavedObj):
             neg_sample_pool.append((left_label, right_label))
         # uniqify is too slow so we should avoid operating it too often
         neg_sample_pool = uniqify(neg_sample_pool)
-        while len(neg_sample_pool) < neg_num:
+        while len(neg_sample_pool) < neg_num and max_iter > 0:
+            max_iter = max_iter - 1 # reduce the iteration to prevent exhausting loop
             neg_sample_pool += Thesaurus.random_negative_sampling(
-                synonym_groups, neg_num - len(neg_sample_pool)
-            )
+                synonym_groups, neg_num - len(neg_sample_pool), max_iter
+            ) 
+            neg_sample_pool = uniqify(neg_sample_pool)
         return neg_sample_pool
 
     @staticmethod
-    def disjointness_negative_sampling(disjoint_synonym_groups: List[List[Set[str]]], neg_num: int):
+    def disjointness_negative_sampling(
+        list_of_disjoint_synonym_groups: List[List[List[str]]], neg_num: int
+    ):
         """Hard (disjoint) non-synonyms are defined as label pairs from two different synonym groups
-        that are logically disjoint
+        that are logically disjoint; since these pairs are often of limited number, I adopt the same
+        way as in positive sampling where we first retrieve all the possible pairs.
+        
+        Each entry of the input is a group of different disjoint synonym groups
         """
+        # flatten the disjointness groups into all pairs of hard neagtives
         neg_sample_pool = []
-        # randomly select disjoint synonym group pairs from defined disjointness
-        for _ in range(neg_num):
-            disjoint_group = random.choice(disjoint_synonym_groups)
-            left, right = tuple(random.sample(disjoint_group, 2))
-            # randomly choose one label from a synonym group
-            left_label = random.choice(list(left))
-            right_label = random.choice(list(right))
-            neg_sample_pool.append((left_label, right_label))
-        # uniqify is too slow so we should avoid operating it too often
+        for disjoint_synonym_groups in list_of_disjoint_synonym_groups:
+            # compute catersian product for all possible combinations of disjoint synonym groups
+            catersian_product = list(itertools.product(disjoint_synonym_groups, disjoint_synonym_groups))
+            # filter those mapped to selfs
+            product_excluding_selfs = [pair for pair in catersian_product if pair[0] != pair[1]]
+            # for each pair of disjoint synonym groups, compute the product of their corresponding labels
+            product_of_disjoint_labels = [list(itertools.product(left_syn, right_syn)) for left_syn, right_syn in product_excluding_selfs]
+            product_of_disjoint_labels = list(itertools.chain.from_iterable(product_of_disjoint_labels))
+            neg_sample_pool += product_of_disjoint_labels
         neg_sample_pool = uniqify(neg_sample_pool)
-        while len(neg_sample_pool) < neg_num:
-            neg_sample_pool += Thesaurus.disjointness_negative_sampling(
-                disjoint_synonym_groups, neg_num - len(neg_sample_pool)
-            )
-        return neg_sample_pool
+        if neg_num > len(neg_sample_pool):
+            print("required number of negatives >= maximum; return all retrieved samples instead ...")
+            return neg_sample_pool
+        else:
+            return random.sample(neg_sample_pool, neg_num)
 
     @staticmethod
     def positive_sampling_from_paired_groups(
@@ -270,7 +277,7 @@ class Thesaurus(SavedObj):
 
     @staticmethod
     def random_negative_sampling_from_paired_groups(
-        matched_synonym_groups: List[Tuple[Set[str], Set[str]]], neg_num: int
+        matched_synonym_groups: List[Tuple[Set[str], Set[str]]], neg_num: int, max_iter: int = 10
     ):
         """Soft (random) non-synonyms are defined as label pairs from two different synonym groups
         that are randomly selected from oposite ontologies
@@ -285,8 +292,10 @@ class Thesaurus(SavedObj):
             neg_sample_pool.append((left_label, right_label))
         # uniqify is too slow so we should avoid operating it too often
         neg_sample_pool = uniqify(neg_sample_pool)
-        while len(neg_sample_pool) < neg_num:
+        while len(neg_sample_pool) < neg_num and max_iter > 0:
+            max_iter = max_iter - 1 # reduce the iteration to prevent exhausting loop
             neg_sample_pool += Thesaurus.random_negative_sampling_from_paired_groups(
-                matched_synonym_groups, neg_num - len(neg_sample_pool)
+                matched_synonym_groups, neg_num - len(neg_sample_pool), max_iter
             )
+            neg_sample_pool = uniqify(neg_sample_pool)
         return neg_sample_pool
