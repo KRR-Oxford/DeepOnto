@@ -270,8 +270,6 @@ class Thesaurus(SavedObj):
             # append the reversed synonyms (preserve symmertry)
             backward_synonym_pairs = [(r, l) for l, r in synonym_pairs]
             pos_sample_pool += synonym_pairs + backward_synonym_pairs
-            forward += synonym_pairs
-            backward += backward_synonym_pairs
         pos_sample_pool = uniqify(pos_sample_pool)
         if (not pos_num) or (pos_num >= len(pos_sample_pool)):
             # return all the possible synonyms if no maximum limit
