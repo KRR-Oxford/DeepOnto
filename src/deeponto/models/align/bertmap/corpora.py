@@ -17,13 +17,17 @@ from __future__ import annotations
 
 from typing import Optional, List, Union
 from pyats.datastructures import AttrDict
+from contextlib import redirect_stdout
 
 from deeponto.onto.text import Thesaurus, text_utils
 from deeponto.onto import Ontology
 from deeponto.onto.mapping import OntoMappings
 from deeponto import SavedObj
-from deeponto.utils import uniqify
+from deeponto.utils import uniqify, create_path
 from deeponto.utils.logging import banner_msg
+
+# Although all the below corpus classes inherit SavedObj, it's not efficient to save everything
+# instead, saving only the sampled data and statistics seems more reasonable
 
 
 class TextSemanticsCorpora(SavedObj):
@@ -49,7 +53,7 @@ class TextSemanticsCorpora(SavedObj):
 
         self.stats = AttrDict(
             {
-                "transitivie": self.apply_transitivity,
+                "transitivity": self.apply_transitivity,
                 "num_known_mappings": len(self.known_mappings.to_tuples())
                 if self.known_mappings
                 else "N/A",
@@ -90,12 +94,15 @@ class TextSemanticsCorpora(SavedObj):
             self.soft_negatives_isolated = self.soft_negatives
             # self.hard_negatives_isolated = self.hard_negatives
             # only the merged section is needed in this case because all synonym groups are merged by transitivity
-            self.positives = Thesaurus.positive_sampling(self.thesaurus.merged_section)
+            self.positives = Thesaurus.positive_sampling(
+                self.thesaurus.merged_section.synonym_groups
+            )
             # however, the hard negatives rely on individual ontology structure, so we keep the hard negatives
             # and amend more soft negatives
             total_neg_num = self.neg_ratio * len(self.positives)
             self.soft_negatives = Thesaurus.random_negative_sampling(
-                self.thesaurus.merged_section, neg_num=total_neg_num - len(self.hard_negatives)
+                self.thesaurus.merged_section.synonym_groups,
+                neg_num=total_neg_num - len(self.hard_negatives),
             )
 
         self.positives = uniqify(self.positives)
@@ -120,6 +127,21 @@ class TextSemanticsCorpora(SavedObj):
     def __str__(self) -> str:
         return super().report(**self.stats)
 
+    def save_instance(self, saved_path):
+        """Save only the generated samples and corresponding statistics
+        """
+        create_path(saved_path)
+        saved_data = {
+            "stats": self.stats,
+            "positives": self.positives,
+            "negatives": self.negatives,
+        }
+        self.save_json(saved_data, saved_path + "/txtsem.json")
+        # also save the corpora construction report
+        with open(saved_path + "/report.txt", "w+") as f:
+            with redirect_stdout(f):
+                self.report_sub_corpora_info()
+
     def report_sub_corpora_info(self):
         """Print individual sub-corpora information
         """
@@ -136,18 +158,23 @@ class TextSemanticsCorpora(SavedObj):
             banner_msg("Complemenatry Corpora from Auxiliary Ontologies")
             for cp_corpus in self.comple_corpora:
                 print(str(cp_corpus))
-    
-    def feed_auxiliary_ontos(self, *new_aux_ontos: Ontology, destroy_cache_in_src_and_tgt: bool = True):
+
+    def feed_auxiliary_ontos(
+        self, *new_aux_ontos: Ontology, destroy_cache_in_src_and_tgt: bool = True
+    ):
         """Feed auxiliary ontologies for data augmentation
         """
-        
+
         # TODO: At least for now when the auxiliary ontologies are fed, src-tgt data are all ready
         if destroy_cache_in_src_and_tgt:
             self.src_onto.destroy_owl_cache()
             self.tgt_onto.destroy_owl_cache()
-            print("Cached entities are destroyed from SRC and TGT ontologies to" + 
-                  "avoid potential clashes before using auxiliary ontologies ...")
-            
+            print(
+                "Cached entities are destroyed from SRC and TGT ontologies to"
+                + "avoid potential clashes (because of Owlready2 implementation)"
+                "before using auxiliary ontologies ..."
+            )
+
         for aux_onto in new_aux_ontos:
             # we do not need to build inverted index for auxiliary ontologies
             # reload in order to avoid collisions (see Ontology class for details)
@@ -206,8 +233,9 @@ class TextSemanticsCorpusforOnto(SavedObj):
             self.synonym_field, neg_num=(total_neg_num - len(self.hard_negatives))
         )
         self.negatives = self.soft_negatives + self.hard_negatives
-        
+
         self.stats = {
+            "transitivity": self.thesaurus.apply_transitivity,
             "onto": self.onto.owl.name,
             "flag": self.flag,
             "num_positives": len(self.positives),
@@ -215,12 +243,12 @@ class TextSemanticsCorpusforOnto(SavedObj):
             "num_soft_negatives": len(self.soft_negatives),
             "num_hard_negatives": len(self.hard_negatives),
         }
-        
+
         super().__init__(f"txtsem.corpus.onto")
 
     def __str__(self):
         info = "---------- Ontology ----------\n" + str(self.onto) + "\n"
-        info += "---------- Intra-onto Corpus ----------\n"+ self.report(**self.stats)
+        info += "---------- Intra-onto Corpus ----------\n" + self.report(**self.stats)
         return info
 
 
@@ -255,14 +283,15 @@ class TextSemanticsCorpusforMappings(SavedObj):
         )
         self.hard_negatives = []
         self.negatives = self.soft_negatives
-        
+
         self.stats = {
+            "transitivity": self.thesaurus.apply_transitivity,
             "src_onto": self.src_onto.owl.name,
             "tgt_onto": self.tgt_onto.owl.name,
             "flag": self.flag,
             "num_positives": len(self.positives),
             "num_negatives": len(self.negatives),
-            "num_known_mappings": len(self.known_mappings.to_tuples())
+            "num_known_mappings": len(self.known_mappings.to_tuples()),
         }
 
         super().__init__(f"txtsem.corpus.maps")
@@ -270,5 +299,5 @@ class TextSemanticsCorpusforMappings(SavedObj):
     def __str__(self):
         info = "---------- SRC Ontology ----------\n" + str(self.src_onto) + "\n"
         info += "---------- TGT Ontology ----------\n" + str(self.tgt_onto) + "\n"
-        info += "---------- Cross-onto Corpus ----------\n"+ self.report(**self.stats)
+        info += "---------- Cross-onto Corpus ----------\n" + self.report(**self.stats)
         return info

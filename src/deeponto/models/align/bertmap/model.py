@@ -17,10 +17,16 @@ from typing import Optional, List, Set
 from textdistance import levenshtein
 from itertools import product
 
+
 from deeponto.bert import BERTArgs
+from deeponto.bert.tune import BERTFineTuneSeqClassifier
 from deeponto.onto.text import Tokenizer
 from deeponto.onto import Ontology
 from deeponto.onto.mapping import OntoMappings
+from deeponto.utils import detect_path, create_path
+from deeponto.utils.logging import banner_msg
+from deeponto import SavedObj
+from .corpora import TextSemanticsCorpora
 from .. import OntoAlign
 
 
@@ -35,8 +41,9 @@ class BERTMap(OntoAlign):
         n_best: Optional[int] = 10,
         saved_path: str = "",
         known_mappings: Optional[OntoMappings] = None,  # cross-ontology corpus if provided
-        aux_onto: Optional[Ontology] = None,  # complementary corpus if provided
+        aux_ontos: Optional[List[Ontology]] = None,  # complementary corpus if provided
         apply_transitivity: bool = False,  # obtain more synonyms/non-synonyms by applying transitivity?
+        neg_ratio: int = 4,
     ):
         super().__init__(
             src_onto=src_onto,
@@ -48,20 +55,42 @@ class BERTMap(OntoAlign):
             is_trainable=True,
             saved_path=saved_path,
         )
-        self.args = bert_args
+        self.bert_args = bert_args
         self.known_mappings = known_mappings
-        self.aux_onto = aux_onto
+        self.aux_ontos = aux_ontos
         self.apply_transitivity = apply_transitivity
+        self.neg_ratio = neg_ratio
+
+        # text semantics corpora
+        self.corpora_path = self.saved_path + "/corpora"
+        self.corpora_data = None
+
 
     def build_text_semantics_corpora(self):
-        pass
+        banner_msg("Text Semantics Corpora")
+        if not detect_path(self.corpora_path):
+            print("Create new text semantics corpora ...")
+            text_semantics_corpora = TextSemanticsCorpora(
+                src_onto=self.src_onto,
+                tgt_onto=self.tgt_onto,
+                known_mappings=self.known_mappings,
+                aux_ontos=self.aux_ontos,
+                apply_transitivity=self.apply_transitivity,
+                neg_ratio=self.neg_ratio,
+            )
+            text_semantics_corpora.save_instance(self.corpora_path)
+        else:
+            print("found an existing corpora directory, delete it and re-run if it's empty")
+        self.corpora_data = SavedObj.load_json(self.corpora_path + "/txtsem.json")
+        print("Corpora statistics:")
+        SavedObj.print_json(self.corpora_data.stats)
 
     def intra_onto_corpus(self):
         pass
-    
+
     def cross_onto_corpus(self):
         pass
-    
+
     def complmentary_corpus(self):
         pass
 
