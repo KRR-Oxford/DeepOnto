@@ -41,6 +41,7 @@ from pyats.datastructures import AttrDict
 
 from deeponto import SavedObj
 from deeponto.utils import uniqify
+from deeponto.utils.logging import banner_msg
 
 # to avoid circular imports
 if TYPE_CHECKING:
@@ -109,6 +110,7 @@ class Thesaurus(SavedObj):
                 }
             )
             self.sections.append(new_section)
+            banner_msg("Updating Thesaurus (from Ontos)")
             print(f"Add {new_section.num_synonym_groups} synonym groups from the following ontology:\n")
             print(f"{new_section.onto_info}")
         self.create_merged_section()
@@ -145,6 +147,7 @@ class Thesaurus(SavedObj):
             }
         )
         self.sections.append(new_section)
+        banner_msg("Updating Thesaurus (from Mappings)")
         print(
             f"Add {new_section.num_synonym_groups} synonym groups from the mappings of following ontologies:\n"
         )
