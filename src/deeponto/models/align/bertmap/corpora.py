@@ -133,8 +133,8 @@ class TextSemanticsCorpora(SavedObj):
         create_path(saved_path)
         saved_data = {
             "stats": self.stats,
-            "positives": self.positives,
-            "negatives": self.negatives,
+            "positives": [(pos[0], pos[1], 1) for pos in self.positives],
+            "negatives": [(neg[0], neg[1], 0) for neg in self.negatives],
         }
         self.save_json(saved_data, saved_path + "/txtsem.json")
         # also save the corpora construction report

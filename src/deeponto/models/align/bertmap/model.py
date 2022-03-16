@@ -16,6 +16,7 @@
 from typing import Optional, List, Set
 from textdistance import levenshtein
 from itertools import product
+from pyats.datastructures import AttrDict
 
 
 from deeponto.bert import BERTArgs
@@ -63,10 +64,12 @@ class BERTMap(OntoAlign):
 
         # text semantics corpora
         self.corpora_path = self.saved_path + "/corpora"
-        self.corpora_data = None
+        self.corpora_data = self.get_corpora_data()
 
 
-    def build_text_semantics_corpora(self):
+    def get_corpora_data(self):
+        """Load corpora data from new construction or saved directory
+        """
         banner_msg("Text Semantics Corpora")
         if not detect_path(self.corpora_path):
             print("Create new text semantics corpora ...")
@@ -79,20 +82,14 @@ class BERTMap(OntoAlign):
                 neg_ratio=self.neg_ratio,
             )
             text_semantics_corpora.save_instance(self.corpora_path)
+            print("Save the corpora data and construction report ...")
         else:
-            print("found an existing corpora directory, delete it and re-run if it's empty")
-        self.corpora_data = SavedObj.load_json(self.corpora_path + "/txtsem.json")
-        print("Corpora statistics:")
-        SavedObj.print_json(self.corpora_data.stats)
-
-    def intra_onto_corpus(self):
-        pass
-
-    def cross_onto_corpus(self):
-        pass
-
-    def complmentary_corpus(self):
-        pass
+            print("found an existing corpora directory, delete it and re-run if it's empty ...")
+            print("if constructed, check details in `report.txt` ...")
+        corpora_data = AttrDict(SavedObj.load_json(self.corpora_path + "/txtsem.json"))
+        print("corpora statistics:")
+        SavedObj.print_json(corpora_data.stats)
+        return corpora_data
 
     def ent_pair_score(self, src_ent_id: str, tgt_ent_id: str):
         """Compute mapping score between a cross-ontology entity pair
