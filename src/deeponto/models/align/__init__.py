@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from .onto_align import OntoAlign
+from .bertmap.model import BERTMap
 from .string_match import StringMatch
 from .edit_sim import EditSimilarity
 from .align_pipeline import OntoAlignPipeline

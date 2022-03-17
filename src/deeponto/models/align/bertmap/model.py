@@ -17,17 +17,18 @@ from typing import Optional, List, Set
 from textdistance import levenshtein
 from itertools import product
 from pyats.datastructures import AttrDict
-
+from sklearn.model_selection import train_test_split
 
 from deeponto.bert import BERTArgs
 from deeponto.bert.tune import BERTFineTuneSeqClassifier
 from deeponto.onto.text import Tokenizer
+from deeponto.onto.text.thesaurus import Thesaurus
 from deeponto.onto import Ontology
 from deeponto.onto.mapping import OntoMappings
-from deeponto.utils import detect_path, create_path
+from deeponto.utils import detect_path, create_path, uniqify
 from deeponto.utils.logging import banner_msg
 from deeponto import SavedObj
-from .corpora import TextSemanticsCorpora
+from .corpora import TextSemanticsCorpora, TextSemanticsCorpusforMappings
 from .. import OntoAlign
 
 
@@ -41,8 +42,10 @@ class BERTMap(OntoAlign):
         cand_pool_size: Optional[int] = 200,
         n_best: Optional[int] = 10,
         saved_path: str = "",
-        known_mappings: Optional[OntoMappings] = None,  # cross-ontology corpus if provided
-        aux_ontos: Optional[List[Ontology]] = None,  # complementary corpus if provided
+        train_mappings: Optional[OntoMappings] = None,  # cross-ontology corpus if provided
+        validation_mappings: Optional[OntoMappings] = None,  # for validation
+        test_mappings: Optional[OntoMappings] = None,  # TODO: we may not need the testing data
+        aux_ontos: List[Ontology] = [],  # complementary corpus if provided
         apply_transitivity: bool = False,  # obtain more synonyms/non-synonyms by applying transitivity?
         neg_ratio: int = 4,
     ):
@@ -57,22 +60,30 @@ class BERTMap(OntoAlign):
             saved_path=saved_path,
         )
         self.bert_args = bert_args
-        self.known_mappings = known_mappings
+        self.known_mappings = train_mappings
         self.aux_ontos = aux_ontos
         self.apply_transitivity = apply_transitivity
         self.neg_ratio = neg_ratio
+        self.val_mappings = validation_mappings
+        self.test_mappings = test_mappings
 
         # text semantics corpora
         self.corpora_path = self.saved_path + "/corpora"
-        self.corpora_data = self.get_corpora_data()
+        self.main_corpora, self.val_maps_corpus, self.test_maps_corpus = None, None, None
+        self.construct_corpora()
 
+        # fine-tuning data from corpora
+        self.fine_tune_data_path = self.saved_path + "/fine_tune/data"
+        self.fine_tune_data = None
+        self.load_fine_tune_data(split_ratio=0.1)
 
-    def get_corpora_data(self):
+    def construct_corpora(self):
         """Load corpora data from new construction or saved directory
         """
+        # Text Semantics Corpora
         banner_msg("Text Semantics Corpora")
         if not detect_path(self.corpora_path):
-            print("Create new text semantics corpora ...")
+            print("Create text semantics corpora for *train-val* in fine-tuning ...")
             text_semantics_corpora = TextSemanticsCorpora(
                 src_onto=self.src_onto,
                 tgt_onto=self.tgt_onto,
@@ -81,15 +92,90 @@ class BERTMap(OntoAlign):
                 apply_transitivity=self.apply_transitivity,
                 neg_ratio=self.neg_ratio,
             )
-            text_semantics_corpora.save_instance(self.corpora_path)
-            print("Save the corpora data and construction report ...")
+            text_semantics_corpora.save_instance(self.corpora_path, flag="train-val")
+            print("Save the training corpora data and construction report ...")
+            if self.val_mappings:
+                print("Create text semantics corpora for *val* (from mappings) in fine-tuning ...")
+                validation_corpus = TextSemanticsCorpusforMappings(
+                    src_onto=self.src_onto,
+                    tgt_onto=self.tgt_onto,
+                    onto_mappings=self.val_mappings,
+                    thesaurus=Thesaurus(apply_transitivity=self.apply_transitivity),
+                )
+                validation_corpus.save_instance(self.corpora_path, flag="val.maps")
+                print("Save the validation corpora data and construction report ...")
+            if self.test_mappings:
+                print(
+                    "Create text semantics corpora for *testing* (from mappings) in fine-tuning ..."
+                )
+                testing_corpus = TextSemanticsCorpusforMappings(
+                    src_onto=self.src_onto,
+                    tgt_onto=self.tgt_onto,
+                    onto_mappings=self.test_mappings,
+                    thesaurus=Thesaurus(apply_transitivity=self.apply_transitivity),
+                )
+                testing_corpus.save_instance(self.corpora_path, flag="test.maps")
+                print("Save the testing corpora data and construction report ...")
         else:
             print("found an existing corpora directory, delete it and re-run if it's empty ...")
             print("if constructed, check details in `report.txt` ...")
-        corpora_data = AttrDict(SavedObj.load_json(self.corpora_path + "/txtsem.json"))
-        print("corpora statistics:")
-        SavedObj.print_json(corpora_data.stats)
-        return corpora_data
+        print("Loading the constructed corpora data ...")
+        self.main_corpora = AttrDict(SavedObj.load_json(self.corpora_path + "/train-val.json"))
+        banner_msg("Corpora Statistics (Train-Val)")
+        SavedObj.print_json(self.main_corpora.stats)
+        if detect_path(self.corpora_path + "/val.maps.json"):
+            self.val_maps_corpus = AttrDict(
+                SavedObj.load_json(self.corpora_path + "/val.maps.json")
+            )
+            banner_msg("Corpora Statistics (Val-Maps)")
+            SavedObj.print_json(self.val_maps_corpus.stats)
+        if detect_path(self.corpora_path + "/test.maps.json"):
+            self.test_maps_corpus = AttrDict(
+                SavedObj.load_json(self.corpora_path + "/test.maps.json")
+            )
+            banner_msg("Corpora Statistics (Test-Maps)")
+            SavedObj.print_json(self.test_maps_corpus.stats)
+
+    def load_fine_tune_data(self, split_ratio: float = 0.1):
+        """Get data for fine-tuning from the corpora
+        """
+        banner_msg("Fine-tuning Data")
+        if not detect_path(self.fine_tune_data_path):
+            fine_tune_data = AttrDict()
+            fine_tune_data.stats = dict()
+            print(
+                f"Splitting main corpora into training and validation ({split_ratio * 100}%) data ..."
+            )
+            main_data = self.main_corpora.positives + self.main_corpora.negatives
+            main_train, main_val = train_test_split(main_data, test_size=split_ratio)
+            fine_tune_data.train = main_train
+            fine_tune_data.val = main_val
+            fine_tune_data.test = []
+            if self.val_maps_corpus:
+                print("Get additional validation data from validation mappings ...")
+                # TODO: we do not care about duplicates here because label pairs from mappings are of higher importance
+                fine_tune_data.val += (
+                    self.val_maps_corpus.positives + self.val_maps_corpus.negatives
+                )
+            if self.test_maps_corpus:
+                print("Get additional testing data from testing mappings ...")
+                print(
+                    "\t=> These testing mapppings do not make any decision on model selection ..."
+                )
+                fine_tune_data.test += (
+                    self.test_maps_corpus.positives + self.test_maps_corpus.negatives
+                )
+            fine_tune_data.stats["n_train"] = len(fine_tune_data.train)
+            fine_tune_data.stats["n_val"] = len(fine_tune_data.val)
+            fine_tune_data.stats["n_test"] = len(fine_tune_data.test)
+            create_path(self.fine_tune_data_path)
+            SavedObj.save_json(fine_tune_data, self.fine_tune_data_path + "/data.json")
+        else:
+            print(
+                "found an existing fine-tune data directory, delete it and re-run if it's empty ..."
+            )
+        self.fine_tune_data = AttrDict(SavedObj.load_json(self.fine_tune_data_path + "/data.json"))
+        SavedObj.print_json(self.fine_tune_data.stats)
 
     def ent_pair_score(self, src_ent_id: str, tgt_ent_id: str):
         """Compute mapping score between a cross-ontology entity pair

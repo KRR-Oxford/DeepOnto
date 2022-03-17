@@ -36,7 +36,7 @@ class TextSemanticsCorpora(SavedObj):
         src_onto: Ontology,
         tgt_onto: Ontology,
         known_mappings: Optional[OntoMappings] = None,
-        aux_ontos: Optional[List[Ontology]] = None,
+        aux_ontos: List[Ontology] = [],
         apply_transitivity: bool = False,
         neg_ratio: int = 4,
     ):
@@ -127,7 +127,7 @@ class TextSemanticsCorpora(SavedObj):
     def __str__(self) -> str:
         return super().report(**self.stats)
 
-    def save_instance(self, saved_path):
+    def save_instance(self, saved_path, flag="txtsem"):
         """Save only the generated samples and corresponding statistics
         """
         create_path(saved_path)
@@ -136,9 +136,9 @@ class TextSemanticsCorpora(SavedObj):
             "positives": [(pos[0], pos[1], 1) for pos in self.positives],
             "negatives": [(neg[0], neg[1], 0) for neg in self.negatives],
         }
-        self.save_json(saved_data, saved_path + "/txtsem.json")
+        self.save_json(saved_data, saved_path + f"/{flag}.json")
         # also save the corpora construction report
-        with open(saved_path + "/report.txt", "w+") as f:
+        with open(saved_path + f"/{flag}.report.txt", "w+") as f:
             with redirect_stdout(f):
                 self.report_sub_corpora_info()
 
@@ -250,6 +250,21 @@ class TextSemanticsCorpusforOnto(SavedObj):
         info = "---------- Ontology ----------\n" + str(self.onto) + "\n"
         info += "---------- Intra-onto Corpus ----------\n" + self.report(**self.stats)
         return info
+    
+    def save_instance(self, saved_path, flag="txtsem.onto"):
+        """Save only the generated samples and corresponding statistics
+        """
+        create_path(saved_path)
+        saved_data = {
+            "stats": self.stats,
+            "positives": [(pos[0], pos[1], 1) for pos in self.positives],
+            "negatives": [(neg[0], neg[1], 0) for neg in self.negatives],
+        }
+        self.save_json(saved_data, saved_path + f"/{flag}.json")
+        # also save the construction report
+        with open(saved_path + f"/{flag}.report.txt", "w+") as f:
+            with redirect_stdout(f):
+                print(self)
 
 
 class TextSemanticsCorpusforMappings(SavedObj):
@@ -257,20 +272,20 @@ class TextSemanticsCorpusforMappings(SavedObj):
         self,
         src_onto: Ontology,
         tgt_onto: Ontology,
-        known_mappings: OntoMappings,
+        onto_mappings: OntoMappings,
         thesaurus: Thesaurus,
         neg_ratio: int = 4,
     ):
         self.src_onto = src_onto
         self.tgt_onto = tgt_onto
-        self.known_mappings = known_mappings
+        self.onto_mappings = onto_mappings
         self.thesaurus = thesaurus
         self.neg_ratio = neg_ratio
         self.flag = "src2tgt"
 
         # extract synonyms from mappings and add it into the thesaurus
         self.cross_onto_synonym_field = thesaurus.add_matched_synonyms_from_mappings(
-            self.src_onto, self.tgt_onto, self.known_mappings
+            self.src_onto, self.tgt_onto, self.onto_mappings
         )
         self.positives = Thesaurus.positive_sampling_from_paired_groups(
             self.cross_onto_synonym_field
@@ -291,7 +306,7 @@ class TextSemanticsCorpusforMappings(SavedObj):
             "flag": self.flag,
             "num_positives": len(self.positives),
             "num_negatives": len(self.negatives),
-            "num_known_mappings": len(self.known_mappings.to_tuples()),
+            "num_mappings": len(self.onto_mappings.to_tuples()),
         }
 
         super().__init__(f"txtsem.corpus.maps")
@@ -301,3 +316,18 @@ class TextSemanticsCorpusforMappings(SavedObj):
         info += "---------- TGT Ontology ----------\n" + str(self.tgt_onto) + "\n"
         info += "---------- Cross-onto Corpus ----------\n" + self.report(**self.stats)
         return info
+
+    def save_instance(self, saved_path, flag="txtsem.maps"):
+        """Save only the generated samples and corresponding statistics
+        """
+        create_path(saved_path)
+        saved_data = {
+            "stats": self.stats,
+            "positives": [(pos[0], pos[1], 1) for pos in self.positives],
+            "negatives": [(neg[0], neg[1], 0) for neg in self.negatives],
+        }
+        self.save_json(saved_data, saved_path + f"/{flag}.json")
+        # also save the construction report
+        with open(saved_path + f"/{flag}.report.txt", "w+") as f:
+            with redirect_stdout(f):
+                print(self)

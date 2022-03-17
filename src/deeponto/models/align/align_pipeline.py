@@ -20,7 +20,8 @@ from deeponto.onto import Ontology
 from deeponto.onto.mapping import OntoMappings
 from deeponto.onto.text import Tokenizer
 from deeponto.models import OntoPipeline
-from . import StringMatch, EditSimilarity
+from deeponto.bert import BERTArgs
+from . import StringMatch, EditSimilarity, BERTMap
 
 
 class OntoAlignPipeline(OntoPipeline):
@@ -60,7 +61,7 @@ class OntoAlignPipeline(OntoPipeline):
 
         # train the learning-based models
         if self.model.is_trainable:
-            self.model.train(**self.config.train)
+            self.model.train()
 
         # make prediction according mode
         if mode == "global_match":
@@ -73,7 +74,7 @@ class OntoAlignPipeline(OntoPipeline):
         elif mode == "pair_score":
             assert tbc_mappings != None
             self.model.pair_score(tbc_mappings, tbc_flag)
-            
+
         else:
             raise ValueError(f"Unknown mode: {mode}, please choose from [global_match, scoring].")
 
@@ -100,7 +101,61 @@ class OntoAlignPipeline(OntoPipeline):
 
         # load the model according to model name
         if self.model_name == "bertmap":
-            pass
+            # get arguments for BERT
+            self.paths.bert = self.complete_path("bert")
+            self.bert_args = BERTArgs(
+                bert_checkpoint=self.config.bert.pretrained_path,
+                output_dir=self.paths.bert,
+                num_epochs=float(self.config.bert.num_epochs),
+                batch_size_for_training=self.config.bert.batch_size_for_training,
+                batch_size_for_prediction=self.config.bert.batch_size_for_prediction,
+                max_length=self.config.bert.max_length,
+                device_num=self.config.bert.device_num,
+                early_stop_patience=self.config.bert.early_stop_patience,
+                resume_from_ckp=self.config.bert.resume_from_ckp,
+            )
+
+            # load mappings if any
+            ref_mappings = {"train": None, "val": None, "test": None}
+            if self.config.corpora.train_mappings_path:
+                ref_mappings["train"] = OntoMappings.read_tsv_mappings(
+                    self.config.corpora.train_mappings_path
+                )
+            if self.config.corpora.val_mappings_path:
+                ref_mappings["val"] = OntoMappings.read_tsv_mappings(
+                    self.config.corpora.val_mappings_path
+                )
+            if self.config.corpora.test_mappings_path:
+                ref_mappings["test"] = OntoMappings.read_tsv_mappings(
+                    self.config.corpora.test_mappings_path
+                )
+
+            # load auxiliary ontologies if any
+            aux_ontos = []
+            aux_count = 0
+            for aux_onto_path in self.config.corpora.aux_onto_paths:
+                aux_flag = f"aux_{aux_count}"
+                self.paths[f"{aux_flag}_onto"] = self.complete_path(f"{aux_flag}_onto")
+                aux_ontos.append(self.load_onto(flag=aux_flag, new_onto_path=aux_onto_path))
+                aux_count += 1
+
+            # build the BERTMap model
+            align_model = BERTMap(
+                src_onto=self.src_onto,
+                tgt_onto=self.tgt_onto,
+                tokenizer=self.tokenizer,
+                bert_args=self.bert_args,
+                cand_pool_size=self.config.search.cand_pool_size,
+                n_best=self.config.search.n_best,
+                saved_path=self.paths.model,
+                train_mappings=ref_mappings["train"],
+                validation_mappings=ref_mappings["val"],
+                test_mappings=ref_mappings["test"],
+                aux_ontos=aux_ontos,
+                apply_transitivity=self.config.corpora.apply_transitivity,
+                neg_ratio=self.config.corpora.neg_ratio,
+            )
+
         elif self.model_name == "string_match":
             align_model = StringMatch(
                 src_onto=self.src_onto,
@@ -110,6 +165,7 @@ class OntoAlignPipeline(OntoPipeline):
                 n_best=self.config.search.n_best,
                 saved_path=self.paths.model,
             )
+
         elif self.model_name == "edit_sim":
             align_model = EditSimilarity(
                 src_onto=self.src_onto,
@@ -119,6 +175,7 @@ class OntoAlignPipeline(OntoPipeline):
                 n_best=self.config.search.n_best,
                 saved_path=self.paths.model,
             )
+
         else:
             raise ValueError(f"{self.model_name} is not an implemented model.")
 
