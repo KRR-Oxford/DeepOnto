@@ -15,7 +15,7 @@
 Fine-tuning BERT with the classtext pair datasets extracted from ontologies
 Code inspired by: https://huggingface.co/transformers/training.html
 """
-from typing import List, Tuple, Any
+from typing import List, Tuple, Any, Optional
 
 import pandas as pd
 from datasets import Dataset
@@ -27,7 +27,11 @@ from . import BERTFineTune
 
 class BERTFineTuneSeqClassifier(BERTFineTune):
     def __init__(
-        self, bert_args: BERTArgs, train_data: List, val_data: List, test_data: List,
+        self,
+        bert_args: BERTArgs,
+        train_data: List,
+        val_data: List,
+        test_data: Optional[List] = None,
     ):
         super().__init__(bert_args, train_data, val_data, test_data)
 

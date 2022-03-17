@@ -13,7 +13,7 @@
 # limitations under the License.
 """Class for BERT trainer"""
 
-from typing import List
+from typing import List, Optional
 
 from datasets import Dataset
 from sklearn.metrics import accuracy_score
@@ -25,7 +25,11 @@ from deeponto.onto.text import Tokenizer
 
 class BERTFineTune:
     def __init__(
-        self, bert_args: BERTArgs, train_data: List, val_data: List, test_data: List,
+        self,
+        bert_args: BERTArgs,
+        train_data: List,
+        val_data: List,
+        test_data: Optional[List] = None,
     ):
 
         self.args = bert_args
@@ -38,7 +42,9 @@ class BERTFineTune:
         # load data (max_length is used for truncation)
         self.train_data = self.load_dataset(train_data)
         self.val_data = self.load_dataset(val_data)
-        self.test_data = self.load_dataset(test_data)
+        self.test_data = None
+        if test_data:
+            self.test_data = self.load_dataset(test_data)
 
         # intialize the transformers.Trainer
         # TODO: more arguments are expected if we use more metrics
