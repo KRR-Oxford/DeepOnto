@@ -47,12 +47,13 @@ class BERTFineTune:
             self.test_data = self.load_dataset(test_data)
         print(
             f"Loaded # of data: [train]={len(self.train_data)};"
-            + "[val]={len(self.val_data)}; [test]={len(self.test_data)};"
+            + f"[val]={len(self.val_data)}; [test]={len(self.test_data)};"
         )
 
         # intialize the transformers.Trainer
         # TODO: more arguments are expected if we use more metrics
         self.train_args = self.args.generate_training_args(training_data_size=len(self.train_data))
+        # print(self.train_args)
         self.trainer = Trainer(
             model=self.model,
             args=self.train_args,
