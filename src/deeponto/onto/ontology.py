@@ -96,7 +96,7 @@ class Ontology(SavedObj):
             {
                 "owl_name": self.owl.name,
                 "num_classes": self.num_classes,
-                "labs_probs": self.lab_props,
+                "lab_probs": self.lab_props,
                 "num_labs": self.num_labs,
                 "avg_labs": self.avg_labs,
                 "num_entries_inv_idx": self.num_entries_inv_idx,
