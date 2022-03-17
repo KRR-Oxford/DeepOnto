@@ -31,10 +31,11 @@ class BERTStatic:
 
         # load the pre-trained BERT model and set it to eval mode (static)
         self.model = self.load_model()
+        print(f"Load a BERT model from: {self.args.bert_checkpoint}")
         self.model.eval()
 
         # load the model into the GPU/CPU device
-        self.device = get_device(device_num=self.args.train.device_num)
+        self.device = get_device(device_num=self.args.device_num)
         self.model.to(self.device)
 
     def load_model(self):
@@ -49,6 +50,6 @@ class BERTStatic:
             sents,
             padding=True,
             return_tensors="pt",
-            max_length=self.args.train.max_length,
+            max_length=self.args.max_length,
             truncation=True,
         ).to(self.device)
