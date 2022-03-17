@@ -44,7 +44,7 @@ class BERTFineTuneSeqClassifier(BERTFineTune):
         data_df = pd.DataFrame(data, columns=["sent1", "sent2", "labels"])
         dataset = Dataset.from_pandas(data_df)
         dataset = dataset.map(
-            lambda examples: self.tokenizer(
+            lambda examples: self.tokenizer.tkz(
                 examples["sent1"],
                 examples["sent2"],
                 max_length=self.args.max_length,

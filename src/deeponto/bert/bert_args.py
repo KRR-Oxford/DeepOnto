@@ -14,7 +14,7 @@
 """Class for input arguments of a BERT model"""
 
 from transformers import TrainingArguments
-from typing import Optional
+from typing import Optional, Union
 import torch
 
 
@@ -29,7 +29,7 @@ class BERTArgs:
         max_length: int,
         device_num: int,
         early_stop_patience: Optional[int],  # if not specified, no early stopping is performed
-        resume_from_ckp: Optional[bool],
+        resume_from_ckp: Optional[Union[bool, str]],  # None; True; specific_checkpoint_dir
     ):
 
         # basic arguments
@@ -54,7 +54,7 @@ class BERTArgs:
     ) -> TrainingArguments:
 
         # regularizing the steps
-        epoch_steps = training_data_size // self.batch_size  # total steps of an epoch
+        epoch_steps = training_data_size // self.batch_size_for_training  # total steps of an epoch
         if torch.cuda.device_count() > 0:
             epoch_steps = epoch_steps // torch.cuda.device_count()  # to deal with multi-gpus case
         # keep logging steps consisitent even for small batch size
@@ -67,8 +67,8 @@ class BERTArgs:
             output_dir=self.output_dir,
             # max_steps=eval_steps*4 + 1,
             num_train_epochs=self.num_epochs,
-            per_device_train_batch_size=self.batch_size,
-            per_device_eval_batch_size=self.batch_size,
+            per_device_train_batch_size=self.batch_size_for_training,
+            per_device_eval_batch_size=self.batch_size_for_training,
             warmup_ratio=0.0,
             weight_decay=0.01,
             logging_steps=logging_steps,
