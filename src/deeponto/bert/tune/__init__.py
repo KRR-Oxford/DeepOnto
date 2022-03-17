@@ -11,6 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from .tokenizer import Tokenizer
-from .thesaurus import Thesaurus
-from . import text_utils
+
+from .bert_tune import BERTFineTune
+from .bert_tune_seq_classifier import BERTFineTuneSeqClassifier

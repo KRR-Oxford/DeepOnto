@@ -11,7 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Class for handling the ontology in owlready2 format"""
+"""Class for handling the ontology in owlready2 format
+
+Known issues for owlready2:
+- No new object will be created when loading ontologies of the same IRIs 
+    - Solution: beforing handling the second owl of same IRI, destroy the cache in the first one
+
+"""
 
 from __future__ import annotations
 
@@ -97,6 +103,18 @@ class Ontology(SavedObj):
             }
         )
         return super().report(**self.info)
+    
+    def destroy_owl_cache(self):
+        """Owlready2 does *not* create a new object when IRI coincide, to make sure we are 
+        operating on the correct owl object, we need to destroy the previous cached entities
+        """
+        self.owl._destroy_cached_entities()
+        
+    def reload_onto_without_inv_idx(self):
+        """Destroy the previous cached entities and reload the owl object
+        """
+        self.destroy_owl_cache()
+        return Ontology.from_new(self.owl_path, self.lab_props)
 
     @staticmethod
     def assign_class_numbers(owl_onto):
