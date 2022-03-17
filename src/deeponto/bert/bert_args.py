@@ -25,6 +25,7 @@ class BERTArgs:
         output_dir: str,
         num_epochs: float,
         batch_size_for_training: int,
+        batch_size_for_prediction: int,
         max_length: int,
         device_num: int,
         early_stop_patience: Optional[int],  # if not specified, no early stopping is performed
@@ -38,6 +39,7 @@ class BERTArgs:
         self.output_dir = output_dir
         self.num_epochs = num_epochs
         self.batch_size_for_training = batch_size_for_training
+        self.batch_size_for_prediction = batch_size_for_prediction
         self.max_length = max_length
         self.device_num = device_num
         self.early_stop_patience = early_stop_patience

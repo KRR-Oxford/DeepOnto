@@ -34,7 +34,7 @@ class BERTFineTuneSeqClassifier(BERTFineTune):
     def load_model(self):
         return AutoModelForSequenceClassification.from_pretrained(self.args.bert_checkpoint)
 
-    def load_dataset(self, data: List[List[str, str, Any]]) -> Dataset:
+    def load_dataset(self, data: List[Tuple[str, str, Any]]) -> Dataset:
         """For sequence classification, we have two sentences (sent1, sent2, cls_label) as input
         """
         data_df = pd.DataFrame(data, columns=["sent1", "sent2", "labels"])
