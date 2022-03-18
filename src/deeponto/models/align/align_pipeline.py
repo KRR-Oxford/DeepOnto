@@ -102,7 +102,7 @@ class OntoAlignPipeline(OntoPipeline):
         # load the model according to model name
         if self.model_name == "bertmap":
             # get arguments for BERT
-            self.paths.bert = self.complete_path("bert")
+            self.paths.bert = self.complete_path("bertmap/fine_tune/model")
             self.bert_args = BERTArgs(
                 bert_checkpoint=self.config.bert.pretrained_path,
                 output_dir=self.paths.bert,
@@ -131,13 +131,13 @@ class OntoAlignPipeline(OntoPipeline):
                 )
 
             # load auxiliary ontologies if any
-            aux_ontos = []
-            aux_count = 0
-            for aux_onto_path in self.config.corpora.aux_onto_paths:
-                aux_flag = f"aux_{aux_count}"
-                self.paths[f"{aux_flag}_onto"] = self.complete_path(f"{aux_flag}_onto")
-                aux_ontos.append(self.load_onto(flag=aux_flag, new_onto_path=aux_onto_path))
-                aux_count += 1
+            # aux_ontos = []
+            # aux_count = 0
+            # for aux_onto_path in self.config.corpora.aux_onto_paths:
+            #     aux_flag = f"aux_{aux_count}"
+            #     self.paths[f"{aux_flag}_onto"] = self.complete_path(f"{aux_flag}_onto")
+            #     aux_ontos.append(self.load_onto(flag=aux_flag, new_onto_path=aux_onto_path))
+            #     aux_count += 1
 
             # build the BERTMap model
             align_model = BERTMap(
@@ -151,10 +151,19 @@ class OntoAlignPipeline(OntoPipeline):
                 train_mappings=ref_mappings["train"],
                 validation_mappings=ref_mappings["val"],
                 test_mappings=ref_mappings["test"],
-                aux_ontos=aux_ontos,
+                aux_onto_paths=self.config.corpora.aux_onto_paths,
                 apply_transitivity=self.config.corpora.apply_transitivity,
                 neg_ratio=self.config.corpora.neg_ratio,
+                apply_string_match=self.config.search.apply_string_match,
             )
+            
+            # save the auxiliary ontologies locally for record
+            aux_count = 0
+            for aux_onto in align_model.aux_ontos:
+                aux_flag = f"aux_{aux_count}"
+                self.paths[f"{aux_flag}_onto"] = self.complete_path(f"{aux_flag}_onto")
+                aux_onto.save_instance(self.paths[f"{aux_flag}_onto"])
+                aux_count += 1
 
         elif self.model_name == "string_match":
             align_model = StringMatch(

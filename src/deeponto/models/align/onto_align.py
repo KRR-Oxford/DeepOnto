@@ -18,9 +18,10 @@
 
 """
 
-from itertools import cycle
+from itertools import cycle, chain
 from typing import List, Tuple, Optional, Iterable
 from multiprocessing_on_dill import Process, Manager
+from pyats.datastructures import AttrDict
 import numpy as np
 import os
 
@@ -206,14 +207,16 @@ class OntoAlign:
     ###                        other auxiliary functions                           ###
     ##################################################################################
 
-    def lab_products_for_ent(self, src_ent_id: int) -> Tuple[List[str], List[str], List[int]]:
+    def lab_products_for_ent(
+        self, src_ent_id: int, tgt_cands: List[Tuple[str, float]]
+    ) -> Tuple[List[Tuple[str, str]], List[int]]:
         """Compute Catesian Product between a source entity's labels and its selected 
         target entities' labels, with each block length recorded
         """
         src_sents, tgt_sents = [], []
         product_lens = []
         src_ent_labs = self.src_onto.idx2labs[src_ent_id]
-        tgt_cands = self.idf_select_for_ent(src_ent_id)
+        # tgt_cands = self.idf_select_for_ent(src_ent_id)
         for tgt_cand_id, _ in tgt_cands:
             tgt_ent_labs = self.tgt_onto.idx2labs[tgt_cand_id]
             src_out, tgt_out = text_utils.lab_product(src_ent_labs, tgt_ent_labs)
@@ -221,4 +224,30 @@ class OntoAlign:
             product_lens.append(len(src_out))
             src_sents += src_out
             tgt_sents += tgt_out
-        return src_sents, tgt_sents, product_lens
+        return list(zip(src_sents, tgt_sents)), product_lens
+
+    def batched_lab_products_for_ent(
+        self, src_ent_id: int, tgt_cands: List[Tuple[str, float]], batch_size: int
+    ):
+        """Compute the batched Catesian Product between a source entity's labels and its selected 
+        target entities' labels; batches are distributed according to block lengths
+        """
+        lab_products, product_lens = self.lab_products_for_ent(src_ent_id, tgt_cands)
+        batches = []
+        cur_batch = AttrDict({"labs": [], "lens": []})
+        cur_lab_pointer = 0
+        for i in range(len(product_lens)):  # which is the size of candidate pool
+            cur_length = product_lens[i]
+            cur_labs = lab_products[cur_lab_pointer : cur_lab_pointer + cur_length]
+            cur_batch.labs += cur_labs
+            cur_batch.lens.append(cur_length)
+            # collect when the batch is full or for the last set of label pairs
+            if sum(cur_batch.lens) > batch_size or i == len(product_lens) - 1:
+                # deep copy is necessary for dictionary data
+                batches.append(cur_batch)
+                cur_batch = AttrDict({"labs": [], "lens": []})
+            cur_lab_pointer += cur_length
+        # small check for the algorithm
+        assert lab_products == list(chain.from_iterable([b.labs for b in batches]))
+        assert product_lens == list(chain.from_iterable([b.lens for b in batches]))
+        return batches
