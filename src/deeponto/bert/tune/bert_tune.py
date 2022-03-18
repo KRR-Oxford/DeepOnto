@@ -41,13 +41,17 @@ class BERTFineTune:
 
         # load data (max_length is used for truncation)
         self.train_data = self.load_dataset(train_data)
+        self.train_size = len(self.train_data)
         self.val_data = self.load_dataset(val_data)
+        self.val_size = len(self.val_data)
         self.test_data = None
+        self.test_size = -1
         if test_data:
             self.test_data = self.load_dataset(test_data)
+            self.test_size = len(self.test_data)
         print(
-            f"Loaded # of data: [train]={len(self.train_data)};"
-            + f"[val]={len(self.val_data)}; [test]={len(self.test_data)};"
+            f"Loaded # of data: [train]={self.train_size};"
+            + f"[val]={self.val_size}; [test]={self.test_size};"
         )
 
         # intialize the transformers.Trainer
