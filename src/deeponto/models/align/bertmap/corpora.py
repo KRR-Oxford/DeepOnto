@@ -11,7 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Script for BERTMap's Text Semantics Corpora"""
+"""Script for BERTMap's Text Semantics Corpora
+
+*An importance notice*: to avoid that the auxiliary ontology might have the same IRI 
+as the SRC or TGT ontologies so that OwlReady2 cannot distinguish them, we load aux ontos
+only after we have built (intra-onto / cross-onto) corpora for SRC and TGT ontologies
+"""
 
 from __future__ import annotations
 
@@ -36,7 +41,7 @@ class TextSemanticsCorpora(SavedObj):
         src_onto: Ontology,
         tgt_onto: Ontology,
         known_mappings: Optional[OntoMappings] = None,
-        aux_ontos: List[Ontology] = [],
+        aux_onto_paths: List[str] = [],
         apply_transitivity: bool = False,
         neg_ratio: int = 4,
     ):
@@ -44,7 +49,8 @@ class TextSemanticsCorpora(SavedObj):
         self.tgt_onto = tgt_onto
         self.known_mappings = known_mappings
         # list of auxiliary ontologies
-        self.aux_ontos = aux_ontos
+        self.aux_onto_paths = aux_onto_paths
+        self.aux_ontos = []
         self.apply_transitivity = apply_transitivity
         self.neg_ratio = neg_ratio
         self.positives = []
@@ -57,7 +63,7 @@ class TextSemanticsCorpora(SavedObj):
                 "num_known_mappings": len(self.known_mappings.to_tuples())
                 if self.known_mappings
                 else "N/A",
-                "num_aux_ontos": len(self.aux_ontos) if self.aux_ontos else "N/A",
+                "num_aux_ontos": len(self.aux_onto_paths) if self.aux_onto_paths else "N/A",
             }
         )  # storing the statistics of corpora
 
@@ -85,8 +91,8 @@ class TextSemanticsCorpora(SavedObj):
 
         # complementary
         self.comple_corpora = []
-        if self.aux_ontos:
-            self.feed_auxiliary_ontos(*self.aux_ontos)
+        if self.aux_onto_paths:
+            self.feed_auxiliary_ontos(*self.aux_onto_paths)
 
         if self.apply_transitivity:
             # copy and mark the individually retrieved samples as "isolated"
@@ -160,7 +166,7 @@ class TextSemanticsCorpora(SavedObj):
                 print(str(cp_corpus))
 
     def feed_auxiliary_ontos(
-        self, *new_aux_ontos: Ontology, destroy_cache_in_src_and_tgt: bool = True
+        self, *new_aux_onto_paths: str, destroy_cache_in_src_and_tgt: bool = True
     ):
         """Feed auxiliary ontologies for data augmentation
         """
@@ -175,13 +181,14 @@ class TextSemanticsCorpora(SavedObj):
                 "before using auxiliary ontologies ..."
             )
 
-        for aux_onto in new_aux_ontos:
+        for aux_onto_path in new_aux_onto_paths:
             # we do not need to build inverted index for auxiliary ontologies
             # reload in order to avoid collisions (see Ontology class for details)
-            aux_onto = aux_onto.reload_onto_without_inv_idx()
+            aux_onto = Ontology.from_new(aux_onto_path)
             aux_corpus = TextSemanticsCorpusforOnto(
                 aux_onto, self.thesaurus, self.neg_ratio, flag="aux"
             )
+            self.aux_ontos.append(aux_onto)
             self.comple_corpora.append(aux_corpus)
             self.add_samples_from_sub_corpus(aux_corpus)
 
