@@ -104,17 +104,17 @@ class Ontology(SavedObj):
         )
         return super().report(**self.info)
     
-    def destroy_owl_cache(self):
-        """Owlready2 does *not* create a new object when IRI coincide, to make sure we are 
-        operating on the correct owl object, we need to destroy the previous cached entities
-        """
-        self.owl._destroy_cached_entities()
+    # def destroy_owl_cache(self):
+    #     """Owlready2 does *not* create a new object when IRI coincide, to make sure we are 
+    #     operating on the correct owl object, we need to destroy the previous cached entities
+    #     """
+    #     self.owl._destroy_cached_entities()
         
-    def reload_onto_without_inv_idx(self):
-        """Destroy the previous cached entities and reload the owl object
-        """
-        self.destroy_owl_cache()
-        return Ontology.from_new(self.owl_path, self.lab_props)
+    # def reload_onto_without_inv_idx(self):
+    #     """Destroy the previous cached entities and reload the owl object
+    #     """
+    #     self.destroy_owl_cache()
+    #     return Ontology.from_new(self.owl_path, self.lab_props)
 
     @staticmethod
     def assign_class_numbers(owl_onto):
