@@ -127,23 +127,23 @@ class BERTMap(OntoAlign):
                 )
         else:
             print("found an existing BERT model directory, delete it and re-run if it's empty ...")
-            best_checkpoint = 0
-            for file in os.listdir(self.fine_tune_model_path):
-                # only 1 checkpoint is saved so the latest one is the best
-                if file.startswith("checkpoint"):
-                    trainer_state = SavedObj.load_json(
-                        f"{self.fine_tune_model_path}/{file}/trainer_state.json"
-                    )
-                    checkpoint = int(
-                        trainer_state["best_model_checkpoint"].split("/")[-1].split("-")[-1]
-                    )
-                    if checkpoint > best_checkpoint:
-                        best_checkpoint = checkpoint
-                        print(f"found new checkpoint: {best_checkpoint} ...")
-            banner_msg(f"Found Saved Best Checkpoint: {best_checkpoint}")
-            self.bert_args.bert_checkpoint = (
-                f"{self.fine_tune_model_path}/checkpoint-{best_checkpoint}"
-            )
+        best_checkpoint = 0
+        for file in os.listdir(self.fine_tune_model_path):
+            # only 1 checkpoint is saved so the latest one is the best
+            if file.startswith("checkpoint"):
+                trainer_state = SavedObj.load_json(
+                    f"{self.fine_tune_model_path}/{file}/trainer_state.json"
+                )
+                checkpoint = int(
+                    trainer_state["best_model_checkpoint"].split("/")[-1].split("-")[-1]
+                )
+                if checkpoint > best_checkpoint:
+                    best_checkpoint = checkpoint
+                    print(f"found new checkpoint: {best_checkpoint} ...")
+        banner_msg(f"Found Saved Best Checkpoint: {best_checkpoint}")
+        self.bert_args.bert_checkpoint = (
+            f"{self.fine_tune_model_path}/checkpoint-{best_checkpoint}"
+        )
         self.bert_classifier = BERTStaticSeqClassifer(self.bert_args)
 
     def construct_corpora(self):
