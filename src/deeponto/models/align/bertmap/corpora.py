@@ -41,7 +41,7 @@ class TextSemanticsCorpora(SavedObj):
         src_onto: Ontology,
         tgt_onto: Ontology,
         known_mappings: Optional[OntoMappings] = None,
-        aux_onto_paths: List[str] = [],
+        aux_ontos: List[Ontology] = [],
         apply_transitivity: bool = False,
         neg_ratio: int = 4,
     ):
@@ -49,8 +49,7 @@ class TextSemanticsCorpora(SavedObj):
         self.tgt_onto = tgt_onto
         self.known_mappings = known_mappings
         # list of auxiliary ontologies
-        self.aux_onto_paths = aux_onto_paths
-        self.aux_ontos = []
+        self.aux_ontos = aux_ontos
         self.apply_transitivity = apply_transitivity
         self.neg_ratio = neg_ratio
         self.positives = []
@@ -63,7 +62,7 @@ class TextSemanticsCorpora(SavedObj):
                 "num_known_mappings": len(self.known_mappings.to_tuples())
                 if self.known_mappings
                 else "N/A",
-                "num_aux_ontos": len(self.aux_onto_paths) if self.aux_onto_paths else "N/A",
+                "num_aux_ontos": len(self.aux_ontos) if self.aux_ontos else "N/A",
             }
         )  # storing the statistics of corpora
 
@@ -91,8 +90,8 @@ class TextSemanticsCorpora(SavedObj):
 
         # complementary
         self.comple_corpora = []
-        if self.aux_onto_paths:
-            self.feed_auxiliary_ontos(*self.aux_onto_paths)
+        if self.aux_ontos:
+            self.feed_auxiliary_ontos(*self.aux_ontos)
 
         if self.apply_transitivity:
             # copy and mark the individually retrieved samples as "isolated"
@@ -165,26 +164,20 @@ class TextSemanticsCorpora(SavedObj):
             for cp_corpus in self.comple_corpora:
                 print(str(cp_corpus))
 
-    def feed_auxiliary_ontos(
-        self, *new_aux_onto_paths: str, destroy_cache_in_src_and_tgt: bool = True
-    ):
+    def feed_auxiliary_ontos(self, *new_aux_ontos: Ontology):
         """Feed auxiliary ontologies for data augmentation
         """
-
-        # TODO: At least for now when the auxiliary ontologies are fed, src-tgt data are all ready
-        if destroy_cache_in_src_and_tgt:
-            self.src_onto.destroy_owl_cache()
-            self.tgt_onto.destroy_owl_cache()
-            print(
-                "Cached entities are destroyed from SRC and TGT ontologies to"
-                + "avoid potential clashes (because of Owlready2 implementation)"
-                "before using auxiliary ontologies ..."
-            )
-
-        for aux_onto_path in new_aux_onto_paths:
-            # we do not need to build inverted index for auxiliary ontologies
-            # reload in order to avoid collisions (see Ontology class for details)
-            aux_onto = Ontology.from_new(aux_onto_path)
+        for aux_onto in new_aux_ontos:
+            if (
+                aux_onto.owl.base_iri == self.src_onto.owl.base_iri
+                or aux_onto.owl.base_iri == self.tgt_onto.owl.base_iri
+            ):
+                raise ValueError(
+                    "The loaded auxiliary ontology has the same IRI as SRC or TGT ontology " + 
+                    "which makes it having a duplicated owl object (because Owlready2 can load) " +
+                    "just one ontology of the same IRI; Please delete the auxiliary ontology dir " +
+                    "and modify its IRI to a temporarily fake one and it will not affect BERTMap alignment"
+                )
             aux_corpus = TextSemanticsCorpusforOnto(
                 aux_onto, self.thesaurus, self.neg_ratio, flag="aux"
             )
@@ -257,7 +250,7 @@ class TextSemanticsCorpusforOnto(SavedObj):
         info = "---------- Ontology ----------\n" + str(self.onto) + "\n"
         info += "---------- Intra-onto Corpus ----------\n" + self.report(**self.stats)
         return info
-    
+
     def save_instance(self, saved_path, flag="txtsem.onto"):
         """Save only the generated samples and corresponding statistics
         """

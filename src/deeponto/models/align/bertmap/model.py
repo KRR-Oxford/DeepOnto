@@ -16,6 +16,11 @@
 *An importance notice*: to avoid that the auxiliary ontology might have the same IRI 
 as the SRC or TGT ontologies so that OwlReady2 cannot distinguish them, we load aux ontos
 only after we have built (intra-onto / cross-onto) corpora for SRC and TGT ontologies
+
+*Another interesting fact*: since cross-onto corpora do not depend on the owl object after
+parsing into our Ontology class, so even destroying the SRC and TGT owls will not make a 
+difference for creating validation and testing mapping corpora
+
 """
 
 import os
@@ -52,7 +57,7 @@ class BERTMap(OntoAlign):
         train_mappings: Optional[OntoMappings] = None,  # cross-ontology corpus if provided
         validation_mappings: Optional[OntoMappings] = None,  # for validation
         test_mappings: Optional[OntoMappings] = None,  # TODO: we may not need the testing data
-        aux_onto_paths: List[str] = [],  # complementary corpus if provided
+        aux_ontos: List[Ontology] = [],  # complementary corpus if provided
         apply_transitivity: bool = False,  # obtain more synonyms/non-synonyms by applying transitivity?
         neg_ratio: int = 4,
         apply_string_match: bool = True,
@@ -71,8 +76,7 @@ class BERTMap(OntoAlign):
         self.known_mappings = train_mappings
         self.val_mappings = validation_mappings
         self.test_mappings = test_mappings
-        self.aux_onto_paths = aux_onto_paths
-        self.aux_ontos = []
+        self.aux_ontos = aux_ontos
         self.apply_transitivity = apply_transitivity
         self.neg_ratio = neg_ratio
         self.apply_string_match = apply_string_match
@@ -148,18 +152,20 @@ class BERTMap(OntoAlign):
         # Text Semantics Corpora
         banner_msg("Text Semantics Corpora")
         if not detect_path(self.corpora_path):
+            
             print("Create text semantics corpora for *train-val* in fine-tuning ...")
             text_semantics_corpora = TextSemanticsCorpora(
                 src_onto=self.src_onto,
                 tgt_onto=self.tgt_onto,
                 known_mappings=self.known_mappings,
-                aux_onto_paths=self.aux_onto_paths,
+                aux_ontos=self.aux_ontos,
                 apply_transitivity=self.apply_transitivity,
                 neg_ratio=self.neg_ratio,
             )
             text_semantics_corpora.save_instance(self.corpora_path, flag="train-val")
             self.aux_ontos = text_semantics_corpora.aux_ontos
-            print("Save the training corpora data and construction report ...")
+            print("Save the main corpora data and construction report ...")
+            
             if self.val_mappings:
                 print("Create text semantics corpora for *val* (from mappings) in fine-tuning ...")
                 validation_corpus = TextSemanticsCorpusforMappings(
@@ -170,6 +176,7 @@ class BERTMap(OntoAlign):
                 )
                 validation_corpus.save_instance(self.corpora_path, flag="val.maps")
                 print("Save the validation corpora data and construction report ...")
+                
             if self.test_mappings:
                 print(
                     "Create text semantics corpora for *testing* (from mappings) in fine-tuning ..."
@@ -182,6 +189,7 @@ class BERTMap(OntoAlign):
                 )
                 testing_corpus.save_instance(self.corpora_path, flag="test.maps")
                 print("Save the testing corpora data and construction report ...")
+        
         else:
             print("found an existing corpora directory, delete it and re-run if it's empty ...")
             print("if constructed, check details in `report.txt` ...")
