@@ -22,7 +22,7 @@ sys.path.append(main_dir)
 import click
 
 from deeponto import SavedObj
-from deeponto.utils import print_choices
+from deeponto.utils import print_choices, set_seed
 from deeponto.utils.logging import banner_msg
 from deeponto.models.align import (
     OntoAlignPipeline,
@@ -35,7 +35,7 @@ from deeponto.config import InputConfig
 
 
 @click.command()
-@click.option("-o", "--saved_path", type=click.Path())
+@click.option("-o", "--saved_path", type=click.Path(exists=True), default=".")
 @click.option("-s", "--src_onto_path", type=click.Path(exists=True), default=None)
 @click.option("-t", "--tgt_onto_path", type=click.Path(exists=True), default=None)
 @click.option("-c", "--config_path", type=click.Path(exists=True), default=None)
@@ -49,6 +49,8 @@ def onto_match(
     to_be_scored_maps_path: str,
     to_be_scord_flag: str,
 ):
+    set_seed(42)
+    
     banner_msg("Choose a Supported OM Mode")
     print_choices(supported_modes)
     mode = supported_modes[click.prompt("Enter a number", type=int)]
@@ -82,6 +84,7 @@ def onto_match(
         tbh_maps = SavedObj.from_saved(to_be_scored_maps_path)
         align_pipeline.run(mode, tbh_maps, to_be_scord_flag, num_procs=num_procs)
     else:
+        pass
         align_pipeline.run(mode, num_procs=num_procs)
 
 
