@@ -52,6 +52,10 @@ def sort_dict_by_values(dic: dict, desc: bool = True, top_k: Optional[int] = Non
     return dict(sorted_items[:top_k])
 
 
+def evenly_divide(start, end, num_splits: int):
+    step = (end - start) / num_splits
+    return [start + step * i for i in range(num_splits + 1)]
+
 ##################################################################################
 ###                                 randomness                                 ###
 ##################################################################################
