@@ -11,10 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Utility functions for exploring an ontology graph"""
 
 from owlready2.entity import EntityClass
 from typing import List
 import math
+
 
 ##################################################################################
 ###                                subsumption                                 ###
@@ -22,7 +24,8 @@ import math
 
 
 def superclasses_of(ent: EntityClass) -> List[EntityClass]:
-    """ return super-classes of an entity class but excluding non-entity classes such as restrictions
+    """ return super-classes of an entity class but excluding non-entity classes 
+    such as existential axioms
     """
     supclasses = set()
     for supclass in ent.is_a:
@@ -33,7 +36,8 @@ def superclasses_of(ent: EntityClass) -> List[EntityClass]:
 
 
 def subclasses_of(ent: EntityClass) -> List[EntityClass]:
-    """ return sub-classes of an entity class but excluding non-entity classes such as restrictions
+    """ return sub-classes of an entity class but excluding non-entity classes 
+    such as existential axioms
     """
     subclasses = set()
     for subclass in ent.subclasses():
