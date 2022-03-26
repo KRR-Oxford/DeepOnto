@@ -23,21 +23,27 @@ difference for creating validation and testing mapping corpora
 
 """
 
+from __future__ import annotations
+
 import os
 import itertools
 import torch
 from typing import Optional, List
 from pyats.datastructures import AttrDict
 from sklearn.model_selection import train_test_split
+import subprocess
 
+import deeponto
 from deeponto.bert import BERTArgs
 from deeponto.bert.static import BERTStaticSeqClassifer
 from deeponto.bert.tune import BERTFineTuneSeqClassifier
-from deeponto.onto.text import Tokenizer
-from deeponto.onto.text.thesaurus import Thesaurus
+from deeponto.onto.text import Tokenizer, Thesaurus
+from deeponto.onto.text.text_utils import unfold_iri, abbr_iri
+from deeponto.onto.graph import IterativeMappingExtension
 from deeponto.onto import Ontology
 from deeponto.onto.mapping import OntoMappings
-from deeponto.utils import detect_path, create_path
+from deeponto.evaluation.align_eval import global_match_select, pred_thresholding
+from deeponto.utils import detect_path, create_path, uniqify
 from deeponto.utils.logging import banner_msg
 from deeponto import SavedObj
 from .corpora import TextSemanticsCorpora, TextSemanticsCorpusforMappings
@@ -95,6 +101,17 @@ class BERTMap(OntoAlign):
         self.fine_tune_model_path = self.saved_path + "/fine_tune/model"
         self.bert_classifier = None
 
+        # Refinement initialization
+        self.global_match_dir = self.saved_path + "/global_match"
+        self.global_match_refined_dir = self.saved_path + "/global_match_refined"
+        self.map_extender = None
+        # if validation mappings are not provided, we use the default hyperparams
+        self.best_hyperparams = {"threshold": 0.999, "map_type": "src2tgt"}
+
+    ##################################################################################
+    ###                            Corpora & Fine-tune                             ###
+    ##################################################################################
+
     def train(self):
         """BERT synonym classifier fine-tuning
         """
@@ -141,9 +158,7 @@ class BERTMap(OntoAlign):
                     best_checkpoint = checkpoint
                     print(f"found new checkpoint: {best_checkpoint} ...")
         banner_msg(f"Found Saved Best Checkpoint: {best_checkpoint}")
-        self.bert_args.bert_checkpoint = (
-            f"{self.fine_tune_model_path}/checkpoint-{best_checkpoint}"
-        )
+        self.bert_args.bert_checkpoint = f"{self.fine_tune_model_path}/checkpoint-{best_checkpoint}"
         self.bert_classifier = BERTStaticSeqClassifer(self.bert_args)
 
     def construct_corpora(self):
@@ -152,7 +167,7 @@ class BERTMap(OntoAlign):
         # Text Semantics Corpora
         banner_msg("Text Semantics Corpora")
         if not detect_path(self.corpora_path):
-            
+
             print("Create text semantics corpora for *train-val* in fine-tuning ...")
             text_semantics_corpora = TextSemanticsCorpora(
                 src_onto=self.src_onto,
@@ -165,7 +180,7 @@ class BERTMap(OntoAlign):
             text_semantics_corpora.save_instance(self.corpora_path, flag="train-val")
             self.aux_ontos = text_semantics_corpora.aux_ontos
             print("Save the main corpora data and construction report ...")
-            
+
             if self.val_mappings:
                 print("Create text semantics corpora for *val* (from mappings) in fine-tuning ...")
                 validation_corpus = TextSemanticsCorpusforMappings(
@@ -176,7 +191,7 @@ class BERTMap(OntoAlign):
                 )
                 validation_corpus.save_instance(self.corpora_path, flag="val.maps")
                 print("Save the validation corpora data and construction report ...")
-                
+
             if self.test_mappings:
                 print(
                     "Create text semantics corpora for *testing* (from mappings) in fine-tuning ..."
@@ -189,7 +204,7 @@ class BERTMap(OntoAlign):
                 )
                 testing_corpus.save_instance(self.corpora_path, flag="test.maps")
                 print("Save the testing corpora data and construction report ...")
-        
+
         else:
             print("found an existing corpora directory, delete it and re-run if it's empty ...")
             print("if constructed, check details in `report.txt` ...")
@@ -251,15 +266,201 @@ class BERTMap(OntoAlign):
         self.fine_tune_data = AttrDict(SavedObj.load_json(self.fine_tune_data_path + "/data.json"))
         SavedObj.print_json(self.fine_tune_data.stats)
 
-    def string_match(self, src_ent_id: str, tgt_ent_id: str):
+    ##################################################################################
+    ###                            Mapping Refinement                              ###
+    ##################################################################################
+
+    def select_which_to_refine(
+        self,
+        train_ref_path: Optional[str],
+        val_ref_path: Optional[str],
+        test_ref_path: Optional[str],
+        null_ref_path: Optional[str],
+        consider_all_full_scored_mappings: bool = False,
+        num_procs: int = 10,
+    ):
+        """Do hyperparam tuning on validation set before choosing which 
+        {src2tgt, tgt2src, combined} mappings to be refined
+        """
+        # use default mapping type for extension if no validation available
+        if not val_ref_path:
+            print("Validation mappings are not provided; use default mapping type: src2tgt")
+            return self.best_hyperparams["map_type"]  # which by default is "src2tgt"
+
+        # validate and choose the best mapping type for mapping extension
+        if detect_path(self.global_match_dir + "/best_hyperparams.val.json"):
+            print(
+                "found an existing hyperparam results on validation set,"
+                + " delete it and re-run if it's empty ..."
+            )
+        else:
+            global_match_select(
+                self.global_match_dir,
+                train_ref_path,
+                val_ref_path,
+                test_ref_path,
+                null_ref_path,
+                consider_all_full_scored_mappings,
+                num_procs,
+            )
+        self.best_hyperparams = SavedObj.load_json(
+            self.global_match_dir + "/best_hyperparams.val.json"
+        )
+        banner_msg("Best Validation Hyperparams Before Refinement")
+        del self.best_hyperparams["best_f1"]
+        SavedObj.print_json(self.best_hyperparams)
+        return self.best_hyperparams["map_type"]
+
+    def refinement(self, map_type_to_extend: str):
+        """Apply mapping refinement as a post-processing for the scored mappings
+        """
+
+        ############################## Mapping Extensions #############################
+        banner_msg(f"Mapping Refinement: Extension ({map_type_to_extend})")
+        src2tgt_maps = OntoMappings.from_saved(self.global_match_dir + "/src2tgt")
+        tgt2src_maps = OntoMappings.from_saved(self.global_match_dir + "/tgt2src")
+
+        # we extend on both src2tgt and tgt2src if combined is the best
+        logmap_lines = []
+        map_file_path_to_refine = ""
+        if map_type_to_extend == "src2tgt" or map_type_to_extend == "combined":
+            self.mapping_extension(src2tgt_maps, "src2tgt")
+            src2tgt_maps_extended = OntoMappings.from_saved(
+                self.global_match_refined_dir + "/src2tgt.extended"
+            )
+            # for logmap repair formatting
+            logmap_lines += BERTMap.repair_formatting(
+                src2tgt_maps_extended,
+                self.best_hyperparams["threshold"],
+                self.global_match_refined_dir + f"/src2tgt.extended",
+            )
+            map_file_path_to_refine = (
+                self.global_match_refined_dir + f"/src2tgt.extended/src2tgt.logmap.txt"
+            )
+        elif map_type_to_extend == "tgt2src" or map_type_to_extend == "combined":
+            self.mapping_extension(tgt2src_maps, "tgt2src")
+            tgt2src_maps_extended = OntoMappings.from_saved(
+                self.global_match_refined_dir + "/tgt2src.extended"
+            )
+            # for logmap repair formatting
+            logmap_lines += BERTMap.repair_formatting(
+                tgt2src_maps_extended,
+                self.best_hyperparams["threshold"],
+                self.global_match_refined_dir + f"/tgt2src.extended",
+            )
+            map_file_path_to_refine = (
+                self.global_match_refined_dir + f"/tgt2src.extended/tgt2src.logmap.txt"
+            )
+        else:
+            raise ValueError(f"Unknown mapping type: {map_type_to_extend} ...")
+
+        # for logmap repair formatting when type=combined; we merge src2tgt and tgt2src
+        if map_type_to_extend == "combined":
+            logmap_lines = uniqify(logmap_lines)
+            with open(self.global_match_refined_dir + "/combined.logmap.txt", "w+") as f:
+                f.writelines(logmap_lines)
+            map_file_path_to_refine = self.global_match_refined_dir + f"/combined.logmap.txt"
+
+        ############################## Mapping Repair #############################
+        banner_msg(f"Mapping Refinement: Repair ({map_type_to_extend})")
+        self.mapping_repair(
+            formatted_file_path=map_file_path_to_refine,
+            output_dir=self.global_match_refined_dir,
+            map_type_to_repair=map_type_to_extend,
+        )
+
+    def mapping_extension(self, selected_maps: OntoMappings, map_type_to_extend: str):
+        """Apply the iterative mapping extension algorithm
+        """
+        if detect_path(self.global_match_refined_dir + f"/{map_type_to_extend}.extended"):
+            print(
+                f"found existing extended {map_type_to_extend} mappings; skip mapping extension ..."
+            )
+            return
+        self.map_extender = IterativeMappingExtension(
+            self.src_onto, self.tgt_onto, selected_maps, self.ent_pair_score, 0.9, self.logger
+        )
+        self.map_extender.run_extension(max_iter=10)
+        self.map_extender.onto_mappings.save_instance(
+            self.global_match_refined_dir + f"/{map_type_to_extend}.extended"
+        )
+        self.logger.info("Mapping Extension Finished\n")
+
+    @staticmethod
+    def repair_formatting(onto_mappings: OntoMappings, best_val_threshold: float, output_dir: str):
+        """Formatting the mappings into LogMap format
+        """
+        preds = pred_thresholding(onto_mappings, best_val_threshold, True)
+        lines = []
+        for src_ent_name, tgt_ent_name in preds:
+            src_ent_iri = unfold_iri(src_ent_name)
+            tgt_ent_iri = unfold_iri(tgt_ent_name)
+            if onto_mappings.flag == "src2tgt":
+                score = onto_mappings.ranked[src_ent_name][tgt_ent_name]
+            elif onto_mappings.flag == "tgt2src":
+                score = onto_mappings.ranked[tgt_ent_name][src_ent_name]
+            else:
+                raise ValueError(f"Unknown mapping flag: {onto_mappings.flag}")
+            lines.append(f"{src_ent_iri}|{tgt_ent_iri}|=|{score}|CLS\n")
+        formatted_file = output_dir + f"/{onto_mappings.flag}.logmap.txt"
+        with open(formatted_file, "w+") as f:
+            f.writelines(lines)
+        return lines
+
+    def mapping_repair(self, formatted_file_path: str, output_dir: str, map_type_to_repair: str):
+        """Apply java commands of LogMap DEBUGGER
+        """
+        if detect_path(self.global_match_refined_dir + f"/{map_type_to_repair}.repaired"):
+            print(
+                f"found existing extended {map_type_to_repair} mappings; skip mapping repair ..."
+            )
+            return
+        # apply java commands of LogMap DEBUGGER
+        repair_tool_dir = deeponto.__file__.replace("__init__.py", "models/align/logmap_java")
+        src_onto_path = os.path.abspath(self.src_onto.owl_path)
+        tgt_onto_path = os.path.abspath(self.tgt_onto.owl_path)
+        repair_saved_path = os.path.abspath(f"{output_dir}/{map_type_to_repair}.repaired")
+        formatted_file_path = os.path.abspath(formatted_file_path)
+        create_path(repair_saved_path)
+        repair_command = (
+            f"java -jar {repair_tool_dir}/logmap-matcher-4.0.jar DEBUGGER "
+            + f"file:{src_onto_path} file:{tgt_onto_path} TXT {formatted_file_path}"
+            + f" {repair_saved_path} false true"
+        )
+        self.logger.info(f"Run the following java command for repair:\n{repair_command}")
+        repair_process = subprocess.Popen(repair_command.split(" "))
+        try:
+            _, _ = repair_process.communicate(timeout=120)
+        except subprocess.TimeoutExpired:
+            repair_process.kill()
+            _, _ = repair_process.communicate()
+            
+        repaired_file = f"{output_dir}/{map_type_to_repair}.repaired/mappings_repaired_with_LogMap.tsv"
+        with open(repaired_file, "r") as f:
+            lines = f.readlines()
+        formatted_repaired_file = f"{output_dir}/{map_type_to_repair}.repaired/{map_type_to_repair}.maps.tsv"
+        with open(formatted_repaired_file, "w+") as f:
+            f.write("SrcEntity\tTgtEntity\tScore\n")
+            for line in lines:
+                src_ent_iri, tgt_ent_iri, score = line.split("\t")
+                src_ent_name = abbr_iri(src_ent_iri)
+                tgt_ent_name = abbr_iri(tgt_ent_iri)
+                f.write(f"{src_ent_name}\t{tgt_ent_name}\t{score}")
+        repaired_mappings = OntoMappings.read_tsv_mappings(formatted_repaired_file, flag=map_type_to_repair)
+        repaired_mappings.save_instance(repair_saved_path)
+        self.logger.info("Mapping Repair Finished\n")
+
+    ##################################################################################
+    ###                            Mapping Computation                             ###
+    ##################################################################################
+
+    def string_match(self, src_ent_labs: List[str], tgt_ent_labs: List[str]):
         """Predict `easy` mappings by applying string-matching
         """
-        src_ent_labs = self.src_onto.idx2labs[src_ent_id]
-        tgt_ent_labs = self.tgt_onto.idx2labs[tgt_ent_id]
         overlap_labs = set(src_ent_labs).intersection(set(tgt_ent_labs))
         return int(len(overlap_labs) > 0)
 
-    def ent_pair_score(self, src_ent_id: str, tgt_ent_id: str):
+    def ent_pair_score(self, src_ent_id: int, tgt_ent_id: int):
         """Compute mapping score between a cross-ontology entity pair
         """
         src_ent_labs = self.src_onto.idx2labs[src_ent_id]
@@ -270,7 +471,7 @@ class BERTMap(OntoAlign):
             if prelim_score == 1.0:
                 return prelim_score
         # apply BERT classifier and define mapping score := Average(SynonymScores)
-        src_tgt_lab_product = itertools.product(src_ent_labs, tgt_ent_labs)
+        src_tgt_lab_product = list(itertools.product(src_ent_labs, tgt_ent_labs))
         # only one element tensor is able to be extracted as a scalar by .item()
         return torch.mean(self.bert_classifier(src_tgt_lab_product)).item()
 
