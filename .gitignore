@@ -94,3 +94,6 @@ testing/
 
 # data scripts 
 data_scripts/*.ipynb
+
+# logmap redundancy
+logmap-log.out
