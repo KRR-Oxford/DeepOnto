@@ -67,9 +67,15 @@ class OntoAlignPipeline(OntoPipeline):
         if mode == "global_match":
             self.model.global_match(num_procs)
 
-            # TODO: for refinement for bertmap
+            # mapping refinement for bertmap
             if self.model_name == "bertmap":
-                self.model.refinement()
+                map_type = self.model.select_which_to_refine(
+                    self.config.corpora.train_mappings_path,
+                    self.config.corpora.val_mappings_path,
+                    self.config.corpora.test_mappings_path,
+                    self.config.corpora.null_mappings_path
+                )
+                self.model.refinement(map_type)
 
         elif mode == "pair_score":
             assert tbc_mappings != None

@@ -29,6 +29,7 @@ from deeponto.onto import Ontology
 from deeponto.onto.mapping import *
 from deeponto.onto.text import Tokenizer, text_utils
 from deeponto.utils.logging import create_logger, banner_msg
+from deeponto.utils import detect_path
 
 
 class OntoAlign:
@@ -49,7 +50,7 @@ class OntoAlign:
         self.tokenizer = tokenizer
         self.cand_pool_size = cand_pool_size
         self.rel = rel
-        self.saved_path = saved_path
+        self.saved_path = os.path.abspath(saved_path)  # absolute path is needed for java repair
         self.set_mapping = lambda src_ent_name, tgt_ent_name, mapping_score: EntityMapping(
             src_ent_name, tgt_ent_name, self.rel, mapping_score
         )
@@ -86,7 +87,7 @@ class OntoAlign:
                 tgt_ent_id = self.tgt_onto.class2idx[tgt_ent_name]
                 score = self.ent_pair_score(src_ent_id, tgt_ent_id)
                 mappings.add(EntityMapping(src_ent_name, tgt_ent_name, self.rel, score))
-        self.logger.info("Task Finished")
+        self.logger.info("Task Finished\n")
         mappings.save_instance(f"{self.saved_path}/pair_score/{self.flag}")
 
     def ent_pair_score(self, src_ent_id: str, tgt_ent_id: str) -> float:
@@ -102,13 +103,20 @@ class OntoAlign:
         """Compute alignment for both src2tgt and tgt2src
         """
         self.renew()
-        self.global_mappings_for_onto_multi_procs(
-            num_procs
-        ) if num_procs else self.global_mappings_for_onto()
+        if not detect_path(f"{self.saved_path}/global_match/src2tgt"):
+            self.global_mappings_for_onto_multi_procs(
+                num_procs
+            ) if num_procs else self.global_mappings_for_onto()
+        else:
+            print("found saved src2tgt mappings; delete it and re-run if empty or incomplete ...")
         self.switch()
-        self.global_mappings_for_onto_multi_procs(
-            num_procs
-        ) if num_procs else self.global_mappings_for_onto()
+        if not detect_path(f"{self.saved_path}/global_match/tgt2src"):
+            self.global_mappings_for_onto_multi_procs(
+                num_procs
+            ) if num_procs else self.global_mappings_for_onto()
+        else:
+            print("found saved tgt2src mappings; delete it and re-run if empty or incomplete ...")
+        self.renew()
 
     def renew(self):
         """Renew alignment direction to src2tgt
@@ -160,7 +168,7 @@ class OntoAlign:
         mappings = self.current_global_mappings()
         for ent_mappings in return_dict.values():
             mappings.add_many(*ent_mappings)
-        self.logger.info("Task Finished")
+        self.logger.info("Task Finished\n")
         mappings.save_instance(f"{self.saved_path}/global_match/{self.flag}")
 
     def global_mappings_for_onto(self):
@@ -172,7 +180,7 @@ class OntoAlign:
         # save the output mappings
         mappings = self.current_global_mappings()
         mappings.add_many(*self.global_mappings_for_ent_chunk(self.src_onto.idx2class.keys()))
-        self.logger.info("Task Finished")
+        self.logger.info("Task Finished\n")
         mappings.save_instance(f"{self.saved_path}/global_match/{self.flag}")
 
     def global_mappings_for_ent_chunk(self, src_ent_id_chunk: Iterable[int]):
