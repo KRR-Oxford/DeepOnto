@@ -27,7 +27,7 @@ def pred_thresholding(
 ):
 
     # load prediction mappings from the saved directory
-    filtered_pred = pred_maps.topKs(threshold, K=1)
+    filtered_pred = pred_maps.topKs(threshold, K=1)  # K=1 means 1-1
     if consider_all_full_scored_mappings:
         full_score_pred = pred_maps.topKs(1.0, K=pred_maps.n_best)
         filtered_pred = list(set(filtered_pred + full_score_pred))
