@@ -21,6 +21,7 @@ Known issues for owlready2:
 
 from __future__ import annotations
 
+import os
 from typing import Optional, List
 from collections import defaultdict
 from owlready2 import get_ontology
@@ -33,7 +34,7 @@ from .text import Tokenizer, text_utils
 
 class Ontology(SavedObj):
     def __init__(self, owl_path: str):
-        self.owl_path = owl_path
+        self.owl_path = os.path.abspath(owl_path)
         self.owl = get_ontology(f"file://{owl_path}").load()
         self.lab_props = None
         # dict attributes
