@@ -38,6 +38,7 @@ from deeponto.bert import BERTArgs
 from deeponto.bert.static import BERTStaticSeqClassifer
 from deeponto.bert.tune import BERTFineTuneSeqClassifier
 from deeponto.onto.text import Tokenizer, Thesaurus
+from deeponto.onto.text.text_semantics_corpora import TextSemanticsCorpora, TextSemanticsCorpusforMappings
 from deeponto.onto.text.text_utils import unfold_iri, abbr_iri
 from deeponto.onto.graph import IterativeMappingExtension
 from deeponto.onto import Ontology
@@ -46,8 +47,7 @@ from deeponto.evaluation.align_eval import global_match_select, pred_thresholdin
 from deeponto.utils import detect_path, create_path, uniqify
 from deeponto.utils.logging import banner_msg
 from deeponto import SavedObj
-from .corpora import TextSemanticsCorpora, TextSemanticsCorpusforMappings
-from .. import OntoAlign
+from . import OntoAlign
 
 
 class BERTMap(OntoAlign):
