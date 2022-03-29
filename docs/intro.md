@@ -15,10 +15,37 @@ Example usage of `onto_match.py`:
 
 ```
 python onto_match.py \
---saved_path "./om_experiments" \  
+--saved_path "./om_fma2snomed" \  
 --src_onto "./data/fma.owl" \
 --tgt_onto "./data/snomed.owl" \
 --config_path "./config/bertmap.json"
 ```
+
+**Step 2**: Choose `global_match` and any implemented OM model.
+
+```
+######################################################################
+###                   Choose a Supported OM Mode                   ###
+######################################################################
+
+[0]: global_match
+[1]: pair_score
+Enter a number: 0
+
+######################################################################
+###                 Choose an Implemented OM Model                 ###
+######################################################################
+
+[0]: bertmap
+[1]: string_match
+[2]: edit_sim
+Enter a number: 0
+```
+
+Then the script will do the followings:
+- Load and parse the input ontologies;
+- Train the scoring function with constructed data if the selected model is learning-based;
+- Globally compute the mappings and apply any refinement steps if any.
+
 
 ### Pair Scoring
