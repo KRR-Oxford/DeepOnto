@@ -7,7 +7,7 @@ There are two modes for Ontology Alignment (or Matching; OM): `global_match` and
 
 ### Global Matching
 
-In this mode, the OM model is expected to search for all plausible class pairs \\((c \in C, c' \in C')\\) where $$C$$ and $$C'$$ are sets of classes of the source ontology $$O$$ and the target ontology $$O'$$, respectively. To search and compute mappings globally, the OM model needs to address (1) how semantically close two classes are; (2) how to search efficiently (naive traversal takes $$O(n^2)$$). Futher refinement such as extension and repair are also popular for postprocessing.
+In this mode, the OM model is expected to search for all plausible class pairs <img src="https://render.githubusercontent.com/render/math?math=(c \in C, c' \in C')"> where $C$ and $C'$ are sets of classes of the source ontology $$O$$ and the target ontology $$O'$$, respectively. To search and compute mappings globally, the OM model needs to address *(1)* how semantically close two classes are; *(2)* how to search efficiently (naive traversal takes $$O(n^2)$$). Futher refinement such as extension and repair are also popular for postprocessing.
 
 Example usage of `onto_match.py`:
 
