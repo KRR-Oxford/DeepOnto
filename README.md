@@ -45,12 +45,12 @@ DeepOnto is mainly extended from the following packages:
 
 ## Implemented Models
 
-| Name                | Task                            | Type              |
-| :-------------      | :---------------                | :--------------   |
-| BERTMap             | Ontology Matching (Equivalence) | Learning-based    |
-| StringMatch         | Ontology Matching (Equivalence) | Rule-based        |
-| EditSimiarity       | Ontology Matching (Equivalence) | Rule-based        |
-| BERTSubs (no ready) | Ontology Matching (Subsumption) | Learning-based    |
+| Name                 | Task                            | Type              |
+| :-------------       | :---------------                | :--------------   |
+| BERTMap              | Ontology Matching (Equivalence) | Learning-based    |
+| StringMatch          | Ontology Matching (Equivalence) | Rule-based        |
+| EditSimiarity        | Ontology Matching (Equivalence) | Rule-based        |
+| BERTSubs (not ready) | Ontology Matching (Subsumption) | Learning-based    |
 
 > See https://krr-oxford.github.io/DeepOnto/#/intro for quick usage.
 
