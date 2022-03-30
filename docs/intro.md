@@ -1,4 +1,4 @@
-## Ontology Alignment (or Matching)
+## Ontology Alignment
 
 There are two modes for Ontology Alignment (or Matching; OM): `global_match` and `pair_score`. `global_match` aims to compute mappings given two input ontologies and `pair_score` is for scoring provided class pairs. 
 
