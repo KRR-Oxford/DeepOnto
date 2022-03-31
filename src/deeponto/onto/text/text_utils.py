@@ -36,15 +36,17 @@ BIOCLINICAL_BERT = "emilyalsentzer/Bio_ClinicalBERT"
 ##################################################################################
 
 
-def abbr_iri(ent_iri: str, sep="#"):
+def abbr_iri(ent_iri: str):
     """Return the abbreviated iri of an entity given the base iri of its ontology
     e.g., onto_iri#fragment => onto_prefix:fragment
     """
-    if sep == "#" or sep == "/":
-        # split on the last occurrence of "#" or "/""
-        # e.g.1. http://www.ihtsdo.org/snomed#concept -> http://www.ihtsdo.org/snomed#
-        # e.g.2. http://snomed.info/id/228178000 -> http://snomed.info/id/
-        base_iri = ent_iri.replace(ent_iri.split(sep)[-1], "")
+    sep = "#"  # separators are either "#" or "/""
+    if sep == "#" and not "#" in ent_iri:
+        sep = "/"
+    # split on the last occurrence of "#" or "/""
+    # e.g.1. http://www.ihtsdo.org/snomed#concept -> http://www.ihtsdo.org/snomed#
+    # e.g.2. http://snomed.info/id/228178000 -> http://snomed.info/id/
+    base_iri = ent_iri.replace(ent_iri.split(sep)[-1], "")
 
     if namespaces[base_iri] != "":
         return ent_iri.replace(base_iri, namespaces[base_iri])
