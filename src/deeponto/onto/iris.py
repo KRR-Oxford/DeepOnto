@@ -23,7 +23,11 @@ namespaces["http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#"] = "nci:"
 namespaces["http://www.ihtsdo.org/snomed#"] = "snomed:"
 
 # most recent version of SNOMED (accessed on May 2021)
-namespaces["http://snomed.info/id/"] = "snomed_new:"
+namespaces["http://snomed.info/id/"] = "snomed_may2021:"
+
+# new largebio
+namespaces["http://purl.org/sig/ont/fma/"] = "fma_2019:"
+# nci has obo: prefix so skip it
 
 # Mondo
 namespaces["http://linkedlifedata.com/resource/umls/id/"] = "umls:"
