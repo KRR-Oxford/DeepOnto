@@ -17,3 +17,4 @@ limitations under the License.
 - **Getting started**
   - [About](/)
   - [Quick start](intro.md)
+  - [Models](model.md)

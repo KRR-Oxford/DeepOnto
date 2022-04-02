@@ -1,0 +1,33 @@
+{
+    "lab_props": [
+        "label"
+    ],
+    "tokenizer": {
+        "type": "pretrained",
+        "path": "emilyalsentzer/Bio_ClinicalBERT"
+    },
+    "search": {
+        "n_best": 10,
+        "cand_pool_size": 200,
+        "apply_string_match": true
+    },
+    "corpora": {
+        "apply_transitivity": false,
+        "neg_ratio": 4,
+        "train_mappings_path": null,
+        "val_mappings_path": null,
+        "test_mappings_path": null,
+        "null_mappings_path": null,
+        "aux_onto_paths": []
+    },
+    "bert": {
+        "pretrained_path": "emilyalsentzer/Bio_ClinicalBERT",
+        "max_length": 128,
+        "num_epochs": 3.0,
+        "batch_size_for_training": 64,
+        "batch_size_for_prediction": 128,
+        "early_stop_patience": null,
+        "resume_from_ckp": null,
+        "device_num": 0
+    }
+}
