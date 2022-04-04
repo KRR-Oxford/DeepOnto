@@ -37,8 +37,8 @@ namespaces["http://identifiers.org/snomedct/"] = "snomedct:"
 namespaces["http://purl.obolibrary.org/obo/"] = "obo:"
 namespaces["http://www.orpha.net/ORDO/"] = "ordo:"
 namespaces["http://www.ebi.ac.uk/efo/"] = "efo:"
-namespaces["https://omim.org/entry/"] = "omim:"
-namespaces["https://omim.org/phenotypicSeries/"] = "omimps:"  # follow the naming convention as in MONDO
+namespaces["http://omim.org/entry/"] = "omim:"
+namespaces["http://www.omim.org/phenotypicSeries/"] = "omimps:"  # follow the naming convention as in MONDO
 namespaces["http://identifiers.org/meddra/"] = "meddra:"
 namespaces["http://identifiers.org/medgen/"] = "medgen:"
 
