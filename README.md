@@ -36,6 +36,8 @@ DeepOnto aims to provide implemented deep learning models and an evaluation plat
 
 > Documentation: https://krr-oxford.github.io/DeepOnto/#/.
 
+> Github Repository: https://github.com/KRR-Oxford/DeepOnto.
+
 ## Essential Dependencies
 
 DeepOnto is mainly extended from the following packages:
