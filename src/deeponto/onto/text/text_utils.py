@@ -114,10 +114,15 @@ def prep_labs(ent: EntityClass, lab_prop: str) -> List[str]:
     Returns:
         list: cleaned labels of the input entity
     """
-    raw_labels = getattr(ent, lab_prop)
-    assert isinstance(raw_labels, IndividualValueList)
-    cleaned_labels = [lab.lower().replace("_", " ") for lab in raw_labels]
-    return cleaned_labels
+    try:
+        raw_labels = getattr(ent, lab_prop)
+        assert isinstance(raw_labels, IndividualValueList)
+        cleaned_labels = [lab.lower().replace("_", " ") for lab in raw_labels]
+        return cleaned_labels
+    except:
+        # when input label cannot be retrieved (annotation property not defined)
+        # we return an empty label list
+        return []
 
 
 ##################################################################################
