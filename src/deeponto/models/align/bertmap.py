@@ -486,9 +486,11 @@ class BERTMap(OntoAlign):
 
         # for string_match
         if self.apply_string_match:
+            src_ent_labs = self.src_onto.idx2labs[src_ent_id]
             for tgt_cand_id, _ in tgt_cands:
                 tgt_ent_name = self.tgt_onto.idx2class[tgt_cand_id]
-                mapping_score = self.string_match(src_ent_id, tgt_cand_id)
+                tgt_ent_labs = self.tgt_onto.idx2labs[tgt_cand_id]
+                mapping_score = self.string_match(src_ent_labs, tgt_ent_labs)
                 if mapping_score > 0:
                     # save mappings only with positive mapping scores
                     mappings_for_ent.append(
