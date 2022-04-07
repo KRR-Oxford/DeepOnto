@@ -34,7 +34,7 @@ from deeponto.utils import print_choices
 @click.option("-r", "--ref_path", type=click.Path(exists=True))
 @click.option("-n", "--null_ref_path", type=click.Path(exists=True), default=None)
 @click.option("-t", "--threshold", type=float, default=0.0)
-@click.option("-c", "--consider_all_full_scored", type=bool, default=False)
+@click.option("-c", "--consider_all_full_scored", type=bool, default=True)
 @click.option("-k", "--hits_at", multiple=True, default=[1, 5, 10, 30, 100])
 def main(
     saved_path: str,
