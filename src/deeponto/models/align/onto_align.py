@@ -213,7 +213,7 @@ class OntoAlign:
         for src_ent_id in src_ent_id_chunk:
             src_ent_name = self.src_onto.idx2class[src_ent_id]
             if src_ent_name in mappings.ranked.keys():
-                print(f"skip prediction for {src_ent_name} as already computed ...")
+                self.logger.info(f"skip prediction for {src_ent_name} as already computed ...")
                 continue
             cur_mappings = self.global_mappings_for_ent(src_ent_id)
             mappings.add_many(*cur_mappings)
