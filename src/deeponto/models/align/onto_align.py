@@ -59,8 +59,8 @@ class OntoAlign:
         self.n_best = n_best
         self.is_trainable = is_trainable
 
-        self.src2tgt_mappings = OntoMappings(flag="src2tgt", n_best=self.n_best, rel=self.rel)
-        self.tgt2src_mappings = OntoMappings(flag="tgt2src", n_best=self.n_best, rel=self.rel)
+        self.src2tgt_mappings = self.load_mappings("src2tgt", "global_match")
+        self.tgt2src_mappings = self.load_mappings("tgt2src", "global_match")
         self.flag_set = cycle(["src2tgt", "tgt2src"])
         self.flag = next(self.flag_set)
 
@@ -80,7 +80,10 @@ class OntoAlign:
         prefix = self.flag.split("2")[1]  # src or tgt
         # maximum number of mappings is the number of opposite ontology classes
         max_num_mappings = len(getattr(self, f"{prefix}_onto").idx2class)
-        mappings = OntoMappings(flag=self.flag, n_best=max_num_mappings, rel=self.rel)
+        # temp = self.n_best
+        self.n_best = max_num_mappings  # change n_best to all possible mappings
+        mappings = self.load_mappings(flag, "pair_score")
+        # self.n_best = temp
         for src_ent_name, tgt2score in tbc_mappings.ranked.items():
             src_ent_id = self.src_onto.class2idx[src_ent_name]
             for tgt_ent_name in tgt2score.keys():
@@ -103,19 +106,19 @@ class OntoAlign:
         """Compute alignment for both src2tgt and tgt2src
         """
         self.renew()
-        if not detect_path(f"{self.saved_path}/global_match/src2tgt"):
-            self.global_mappings_for_onto_multi_procs(
-                num_procs
-            ) if num_procs else self.global_mappings_for_onto()
-        else:
-            print("found saved src2tgt mappings; delete it and re-run if empty or incomplete ...")
+        # if not detect_path(f"{self.saved_path}/global_match/src2tgt"):
+        self.global_mappings_for_onto_multi_procs(
+            num_procs
+        ) if num_procs else self.global_mappings_for_onto()
+        # else:
+        #     print("found saved src2tgt mappings; delete it and re-run if empty or incomplete ...")
         self.switch()
-        if not detect_path(f"{self.saved_path}/global_match/tgt2src"):
-            self.global_mappings_for_onto_multi_procs(
-                num_procs
-            ) if num_procs else self.global_mappings_for_onto()
-        else:
-            print("found saved tgt2src mappings; delete it and re-run if empty or incomplete ...")
+        # if not detect_path(f"{self.saved_path}/global_match/tgt2src"):
+        self.global_mappings_for_onto_multi_procs(
+            num_procs
+        ) if num_procs else self.global_mappings_for_onto()
+        # else:
+        #    print("found saved tgt2src mappings; delete it and re-run if empty or incomplete ...")
         self.renew()
 
     def renew(self):
@@ -133,6 +136,16 @@ class OntoAlign:
     def current_global_mappings(self):
         return getattr(self, f"{self.flag}_mappings")
 
+    def load_mappings(self, flag: str, mode: str):
+        """Create a new OntoMappings or load from saved one if any ...
+        """
+        flag_mappings = OntoMappings(flag=flag, n_best=self.n_best, rel=self.rel)
+        saved_mappigs_path = f"{self.saved_path}/{mode}/{flag}"
+        if detect_path(saved_mappigs_path):
+            flag_mappings = OntoMappings.from_saved(saved_mappigs_path)
+            print(f"found existing {flag} mappings, skip predictions for the saved classes ...")
+        return flag_mappings
+
     def global_mappings_for_onto_multi_procs(self, num_procs: int):
         """Compute mappings for all entities in the current source ontology but distributed
         to multiple processes
@@ -144,7 +157,9 @@ class OntoAlign:
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
         def async_compute(proc_idx: int, return_dict: dict, src_ent_id_chunk: Iterable[int]):
-            return_dict[proc_idx] = self.global_mappings_for_ent_chunk(src_ent_id_chunk)
+            return_dict[proc_idx] = self.global_mappings_for_ent_chunk(
+                src_ent_id_chunk, intermediate_saving=False
+            )
 
         self.logger.info(
             f'Compute "{self.rel}" Mappings: {self.src_onto.owl.name} ==> {self.tgt_onto.owl.name}\n'
@@ -178,18 +193,34 @@ class OntoAlign:
             f'Compute "{self.rel}" Mappings: {self.src_onto.owl.name} ==> {self.tgt_onto.owl.name}\n'
         )
         # save the output mappings
-        mappings = self.current_global_mappings()
-        mappings.add_many(*self.global_mappings_for_ent_chunk(self.src_onto.idx2class.keys()))
+        self.global_mappings_for_ent_chunk(self.src_onto.idx2class.keys())
         self.logger.info("Task Finished\n")
+        # saving the last batch
+        mappings = self.current_global_mappings()
         mappings.save_instance(f"{self.saved_path}/global_match/{self.flag}")
 
-    def global_mappings_for_ent_chunk(self, src_ent_id_chunk: Iterable[int]):
+    def global_mappings_for_ent_chunk(
+        self,
+        src_ent_id_chunk: Iterable[int],
+        save_step: int = 100,
+        intermediate_saving: bool = True,
+    ):
         """Compute cross-ontology mappings for a chunk of source entities,
         Note: save time especially for evaluating on Hits@K, MRR, etc.
         """
+        mappings = self.current_global_mappings()
         mappings_for_chunk = []
         for src_ent_id in src_ent_id_chunk:
-            mappings_for_chunk += self.global_mappings_for_ent(src_ent_id)
+            src_ent_name = self.src_onto.idx2class[src_ent_id]
+            if src_ent_name in mappings.ranked.keys():
+                print(f"skip prediction for {src_ent_name} as already computed ...")
+                continue
+            cur_mappings = self.global_mappings_for_ent(src_ent_id)
+            mappings.add_many(*cur_mappings)
+            mappings_for_chunk.append(cur_mappings)
+            if intermediate_saving and src_ent_id % save_step == 0:
+                mappings.save_instance(f"{self.saved_path}/global_match/{self.flag}")
+                self.logger.info("Save currently computed mappings ...")
         return mappings_for_chunk
 
     def global_mappings_for_ent(self, src_ent_id: int) -> EntityMappingList:
