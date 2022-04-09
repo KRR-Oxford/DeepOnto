@@ -103,7 +103,7 @@ class BERTMap(OntoAlign):
 
         # Refinement initialization
         self.global_match_dir = self.saved_path + "/global_match"
-        self.global_match_refined_dir = self.saved_path + "/global_match_refined"
+        self.global_match_refined_dir = self.global_match_dir + "/refined"
         self.map_extender = None
         # if validation mappings are not provided, we use the default hyperparams
         self.best_hyperparams = {"threshold": 0.999, "map_type": "src2tgt"}
@@ -448,6 +448,8 @@ class BERTMap(OntoAlign):
                 f.write(f"{src_ent_name}\t{tgt_ent_name}\t{score}")
         repaired_mappings = OntoMappings.read_tsv_mappings(formatted_repaired_file, flag=map_type_to_repair)
         repaired_mappings.save_instance(repair_saved_path)
+        # Save another copy of output mappings 
+        repaired_mappings.save_instance(self.global_match_dir + "/final_outputs")
         self.logger.info("Mapping Repair Finished\n")
 
     ##################################################################################
