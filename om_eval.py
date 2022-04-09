@@ -34,7 +34,6 @@ from deeponto.utils import print_choices
 @click.option("-r", "--ref_path", type=click.Path(exists=True))
 @click.option("-n", "--null_ref_path", type=click.Path(exists=True), default=None)
 @click.option("-t", "--threshold", type=float, default=0.0)
-@click.option("-c", "--consider_all_full_scored", type=bool, default=True)
 @click.option("-k", "--hits_at", multiple=True, default=[1, 5, 10, 30, 100])
 def main(
     saved_path: str,
@@ -42,7 +41,6 @@ def main(
     ref_path: str,
     null_ref_path: Optional[str],
     threshold: float,
-    consider_all_full_scored: bool,
     hits_at: List[int],
 ):
 
@@ -52,7 +50,7 @@ def main(
 
     if mode == "global_match":
         results = global_match_eval(
-            pred_path, ref_path, null_ref_path, threshold, consider_all_full_scored
+            pred_path, ref_path, null_ref_path, threshold
         )
     elif mode == "pair_score":
         results = pair_score_eval(pred_path, ref_path, *hits_at)

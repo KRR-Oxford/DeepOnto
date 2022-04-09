@@ -22,16 +22,10 @@ from deeponto.utils.logging import banner_msg
 from deeponto.evaluation.eval_metrics import *
 
 
-def pred_thresholding(
-    pred_maps: OntoMappings, threshold: float, consider_all_full_scored_mappings: bool = False
-):
+def pred_thresholding(pred_maps: OntoMappings, threshold: float):
 
-    # load prediction mappings from the saved directory
-    filtered_pred = pred_maps.topKs(threshold, K=1)  # K=1 means 1-1
-    if consider_all_full_scored_mappings:
-        full_score_pred = pred_maps.topKs(1.0, K=pred_maps.n_best)
-        filtered_pred = list(set(filtered_pred + full_score_pred))
-
+    # load all prediction mappings from the saved directory
+    filtered_pred = pred_maps.topKs(threshold, K=pred_maps.n_best)
     if pred_maps.flag == "tgt2src":
         # reverse (head, tail) to match src2tgt
         filtered_pred = [(y, x) for (x, y) in filtered_pred]
@@ -44,7 +38,6 @@ def global_match_eval(
     ref_path: str,
     null_ref_path: Optional[str],
     threshold: float,
-    consider_all_full_scored_mappings: bool = False,
     processed_pred: Optional[List[Tuple[str, str]]] = None,
     flag: str = "",
 ):
@@ -59,7 +52,7 @@ def global_match_eval(
     # load prediction mappings from the saved directory
     if not processed_pred:
         pred_maps = OntoMappings.from_saved(pred_path)
-        pred = pred_thresholding(pred_maps, threshold, consider_all_full_scored_mappings)
+        pred = pred_thresholding(pred_maps, threshold)
     else:
         pred = processed_pred
 
@@ -79,7 +72,6 @@ def global_match_select(
     val_ref_path: str,
     test_ref_path: Optional[str],
     null_ref_path: Optional[str],
-    consider_all_full_scored_mappings: bool = False,
     num_procs: int = 10,
 ):
 
@@ -95,12 +87,8 @@ def global_match_select(
     pred_batches = []
     for threshold in thresholds:
         threshold = round(threshold, 6)
-        src2tgt_pred = pred_thresholding(
-            src2tgt_pred_maps, threshold, consider_all_full_scored_mappings
-        )
-        tgt2src_pred = pred_thresholding(
-            tgt2src_pred_maps, threshold, consider_all_full_scored_mappings
-        )
+        src2tgt_pred = pred_thresholding(src2tgt_pred_maps, threshold)
+        tgt2src_pred = pred_thresholding(tgt2src_pred_maps, threshold)
         combined_pred = uniqify(src2tgt_pred + tgt2src_pred)
         pred_batches.append((src2tgt_pred, tgt2src_pred, combined_pred, threshold))
 
@@ -132,23 +120,20 @@ def global_match_select(
         eval_results[thr] = dict()
         preds = {"src2tgt": src2tgt, "tgt2src": tgt2src, "combined": combined}
         for flag in mapping_types:
-            eval_results[thr][flag] = (
-                pool.apply_async(
-                    global_match_eval,
-                    args=(
-                        None,
-                        val_ref_path,
-                        merged_null_ref_path,
-                        thr,
-                        consider_all_full_scored_mappings,
-                        preds[flag],
-                        flag,
-                    ),
-                )
+            eval_results[thr][flag] = pool.apply_async(
+                global_match_eval,
+                args=(
+                    None,
+                    val_ref_path,
+                    merged_null_ref_path,
+                    thr,
+                    preds[flag],
+                    flag,
+                ),
             )
     pool.close()
     pool.join()
-    
+
     best_results = {
         "threshold": 0.0,
         "map_type": None,
@@ -164,7 +149,7 @@ def global_match_select(
                 best_results["threshold"] = thr
                 best_results["map_type"] = map_type
                 best_results["best_f1"] = scores["f_score"]
-                
+
     banner_msg("Best Hyperparameters for Validation")
     SavedObj.save_json(serialized_eval_results, global_match_dir + "/results.val.json")
     SavedObj.print_json(best_results)
