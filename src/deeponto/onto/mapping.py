@@ -84,6 +84,8 @@ class OntoMappings(SavedObj):
         """Return the top ranked mappings for each head entity with scores >= threshold,
         output mappings are transformed to tuples
         """
+        # NOTE: when K = None, slicing automatically gives the whole length
+        # i.e., ls[:None] == ls[:len(ls)]
         ent_tuple_list = []
         for src_ent_name, v in self.ranked.items():
             for tgt_ent_name, score in list(v.items())[:K]:
