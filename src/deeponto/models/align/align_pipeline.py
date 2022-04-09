@@ -13,7 +13,8 @@
 # limitations under the License.
 """Class for running implemented models."""
 
-from typing import Optional, List, Tuple
+from typing import Optional
+import torch
 
 from deeponto.utils import create_path
 from deeponto.onto import Ontology
@@ -62,6 +63,7 @@ class OntoAlignPipeline(OntoPipeline):
         # train the learning-based models
         if self.model.is_trainable:
             self.model.train()
+            torch.cuda.empty_cache()
 
         # make prediction according mode
         if mode == "global_match":
@@ -69,6 +71,7 @@ class OntoAlignPipeline(OntoPipeline):
 
             # mapping refinement for bertmap
             if self.model_name == "bertmap":
+                torch.cuda.empty_cache()
                 map_type = self.model.select_which_to_refine(
                     self.config.corpora.train_mappings_path,
                     self.config.corpora.val_mappings_path,
@@ -80,6 +83,7 @@ class OntoAlignPipeline(OntoPipeline):
         elif mode == "pair_score":
             assert tbc_mappings != None
             self.model.pair_score(tbc_mappings, tbc_flag)
+            torch.cuda.empty_cache()
 
         else:
             raise ValueError(f"Unknown mode: {mode}, please choose from [global_match, scoring].")
