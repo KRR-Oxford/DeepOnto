@@ -40,6 +40,7 @@ def global_match_eval(
     threshold: float,
     processed_pred: Optional[List[Tuple[str, str]]] = None,
     flag: str = "",
+    show_more_f_scores: bool = False,
 ):
     """Eval on Precision, Recall, and F-score (most general OM eval)
     """
@@ -61,6 +62,11 @@ def global_match_eval(
     null_ref = OntoMappings.read_tsv_mappings(null_ref_path).to_tuples() if null_ref_path else None
 
     results = f1(pred, ref, null_ref)
+    if show_more_f_scores:
+        results_favour_recall = f_score(pred, ref, beta=2, null_ref=null_ref)
+        results_favour_precision = f_score(pred, ref, beta=0.5, null_ref=null_ref)
+        results["f_2"] = results_favour_recall["f_score"]
+        results["f_0.5"] = results_favour_precision["f_score"]
     SavedObj.print_json(results)
 
     return results
