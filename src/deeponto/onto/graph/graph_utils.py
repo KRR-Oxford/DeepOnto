@@ -15,6 +15,7 @@
 
 from owlready2.entity import EntityClass
 from typing import List
+from collections import defaultdict
 import math
 
 
@@ -23,15 +24,18 @@ import math
 ##################################################################################
 
 
-def superclasses_of(ent: EntityClass) -> List[EntityClass]:
+def superclasses_of(ent: EntityClass, ignore_root: bool = True) -> List[EntityClass]:
     """ return super-classes of an entity class but excluding non-entity classes 
     such as existential axioms
     """
     supclasses = set()
     for supclass in ent.is_a:
         # ignore the root class Thing
-        if isinstance(supclass, EntityClass) and supclass.name != "Thing":
-            supclasses.add(supclass)
+        if isinstance(supclass, EntityClass):
+            if ignore_root and supclass.name == "Thing":
+                continue
+            else:
+                supclasses.add(supclass)
     return list(supclasses)
 
 
@@ -72,3 +76,34 @@ def depth_min(ent: EntityClass) -> int:
         if super_d < d_min:
             d_min = super_d
     return d_min + 1
+
+
+def neighbours_of(
+    anchor_ent: EntityClass,
+    explored: list = [],
+    hob: int = 1,
+    max_hob: int = 5,
+):
+    """Compute neighbours of an anchor entity up to max_hob
+    """
+    neighbours = defaultdict(list)
+    
+    # return if have explored
+    if anchor_ent in explored:
+        return neighbours
+    
+    # explore neighbours by 1-hob
+    neighbours[hob] += superclasses_of(anchor_ent) + subclasses_of(anchor_ent)
+    neighbours[hob] = list(set(neighbours[hob]))
+    explored.append(anchor_ent)
+    
+    # return if too far from the anchor
+    if hob == max_hob:
+        return neighbours
+    
+    # for each 1-hob neighbour, add their 1-hob neighbours as 2-hob neighbours
+    # recursion applied to seek for neighbours up to max_hob
+    for n in neighbours[hob]:
+        neighbours.update(neighbours_of(n, explored, hob + 1))
+    
+    return neighbours
