@@ -56,7 +56,8 @@ class AnchoredOntoMappings(SavedObj):
         self.n_best = n_best
         self.rel = rel
         # save mappings in disjoint partitions to prevent overriding keys (src entities)
-        self.ranked = defaultdict(dict)
+        self.anchor2cand = defaultdict(dict)
+        self.cand2anchor = defaultdict(list)
         self.add_many(*anchor_cand_pairs)
         super().__init__(f"{self.flag}.anchored.maps")
 
@@ -66,7 +67,7 @@ class AnchoredOntoMappings(SavedObj):
                 "flag": self.flag,
                 "relation": self.rel,
                 "n_best": self.n_best,
-                "num_anchors": len(self.ranked),
+                "num_anchors": len(self.anchor2cand),
                 "num_maps": len(self),
             }
         )
@@ -75,14 +76,14 @@ class AnchoredOntoMappings(SavedObj):
     def __len__(self):
         """Total number of ranked mappings
         """
-        return sum([len(map_dict) for map_dict in self.ranked.values()])
+        return sum([len(map_dict) for map_dict in self.anchor2cand.values()])
 
     def save_instance(self, saved_path):
         """save the current instance locally
         """
         super().save_instance(saved_path)
         # also save a readable format of the ranked alignment set
-        self.save_json(self.ranked, saved_path + f"/{self.saved_name}.json")
+        self.save_json(self.anchor2cand, saved_path + f"/{self.saved_name}.json")
 
     def add(self, anchor_map: EntityMapping, cand_map: EntityMapping):
         """Given an anchor mapping, add a new candidate mapping or add an existing 
@@ -91,7 +92,7 @@ class AnchoredOntoMappings(SavedObj):
         self.validate_input(anchor_map, cand_map)
         # average the mapping scores if already existed
         if self.check_existed(anchor_map, cand_map):
-            old_score = self.ranked[anchor_map.head, anchor_map.tail][cand_map.tail]
+            old_score = self.anchor2cand[anchor_map.head, anchor_map.tail][cand_map.tail]
             print(f"Found an existing mapping...")
             print(f"\t[Old]: {EntityMapping(cand_map.head, cand_map.tail, self.rel, old_score)}")
             print(
@@ -99,19 +100,35 @@ class AnchoredOntoMappings(SavedObj):
             )
             new_score = (old_score + cand_map.score) / 2
             print(f"\t ==> update score to {new_score}")
-            self.ranked[anchor_map.head, anchor_map.tail][cand_map.tail] = new_score
+            self.anchor2cand[anchor_map.head, anchor_map.tail][cand_map.tail] = new_score
         else:
-            self.ranked[anchor_map.head, anchor_map.tail][cand_map.tail] = cand_map.score
+            self.anchor2cand[anchor_map.head, anchor_map.tail][cand_map.tail] = cand_map.score
+        self.cand2anchor[cand_map.head, cand_map.tail].append(anchor_map.tail)
         # rank according to mapping scores and preserve n_best (if specified)
-        self.ranked[anchor_map.head, anchor_map.tail] = sort_dict_by_values(
-            self.ranked[anchor_map.head, anchor_map.tail], top_k=self.n_best
+        self.anchor2cand[anchor_map.head, anchor_map.tail] = sort_dict_by_values(
+            self.anchor2cand[anchor_map.head, anchor_map.tail], top_k=self.n_best
         )
-        
+
     def add_many(self, *anchor_cand_pairs: Tuple[EntityMapping, EntityMapping]):
         """Add a list of anchor-cand mapping pairs while keeping the ranking
         """
         for anchor_map, cand_map in anchor_cand_pairs:
             self.add(anchor_map, cand_map)
+
+    def fill_scored_maps(self, scored_onto_maps: OntoMappings):
+        """Fill mapping score from scored onto mappings
+        """
+        assert self.flag == scored_onto_maps.flag
+        num_valid = 0
+        for src_ent_name, v in scored_onto_maps.ranked.items():
+            for tgt_ent_name, score in v.items():
+                if self.cand2anchor[src_ent_name, tgt_ent_name]:
+                    num_valid += 1
+                    for anchor_tail in self.cand2anchor[src_ent_name, tgt_ent_name]:
+                        self.anchor2cand[src_ent_name, anchor_tail][tgt_ent_name] = score
+        print(
+            f"{num_valid}/{len(scored_onto_maps)} of scored mappings are filled to corresponding anchors."
+        )
 
     def validate_input(self, anchor_map: EntityMapping, cand_map: EntityMapping):
         if anchor_map.rel != self.rel or cand_map.rel != self.rel:
@@ -122,7 +139,7 @@ class AnchoredOntoMappings(SavedObj):
             )
 
     def check_existed(self, anchor_map: EntityMapping, cand_map: EntityMapping):
-        return cand_map.tail in self.ranked[anchor_map.head, anchor_map.tail].keys()
+        return cand_map.tail in self.anchor2cand[anchor_map.head, anchor_map.tail].keys()
 
 
 class OntoMappings(SavedObj):
@@ -215,13 +232,13 @@ class OntoMappings(SavedObj):
             self.ranked[em.head][em.tail] = em.score
         # rank according to mapping scores and preserve n_best (if specified)
         self.ranked[em.head] = sort_dict_by_values(self.ranked[em.head], top_k=self.n_best)
-        
+
     def add_many(self, *ems: EntityMapping):
         """Add a list of new mappings while keeping the ranking
         """
         for em in ems:
             self.add(em)
-        
+
     def validate_input(self, em: EntityMapping):
         if em.rel != self.rel:
             raise ValueError("Input mappings are not of the same type (relation).")
