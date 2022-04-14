@@ -78,6 +78,23 @@ def depth_min(ent: EntityClass) -> int:
     return d_min + 1
 
 
+def ancestors_of(ent: EntityClass):
+    """Return all the ancestors of a class (except for the root ThingClass)
+    """
+    ancestors  = superclasses_of(ent)
+    for parent in ancestors:
+        ancestors += ancestors_of(parent)
+    return ancestors
+
+def descendants_of(ent: EntityClass):
+    """Return all the descendents of a class
+    """
+    descendants  = subclasses_of(ent)
+    for child in descendants:
+        descendants += descendants_of(child)
+    return descendants
+
+
 def neighbours_of(
     anchor_ent: EntityClass,
     explored: list = [],

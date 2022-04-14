@@ -73,6 +73,8 @@ class Ontology(SavedObj):
     def from_saved(cls, saved_path: str) -> Optional[Ontology]:
         try:
             onto = cls.load_pkl(saved_path)
+            owl_file_name = onto.owl_path.split("/")[-1]
+            onto.owl_path = saved_path + "/" + owl_file_name
             onto.owl = get_ontology(f"file://{onto.owl_path}").load()
             return onto
         except:
