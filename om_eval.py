@@ -22,10 +22,10 @@ sys.path.append(main_dir)
 import click
 
 from deeponto import SavedObj
-from deeponto.evaluation.align_eval import global_match_eval, pair_score_eval
+from deeponto.evaluation.align_eval import global_match_eval, local_rank_eval
 from deeponto.utils.logging import banner_msg
 from deeponto.evaluation.eval_metrics import *
-from deeponto.models.align import supported_modes
+from deeponto.models.align import eval_modes
 from deeponto.utils import print_choices
 
 @click.command()
@@ -33,6 +33,7 @@ from deeponto.utils import print_choices
 @click.option("-p", "--pred_path", type=click.Path(exists=True))
 @click.option("-r", "--ref_path", type=click.Path(exists=True))
 @click.option("-n", "--null_ref_path", type=click.Path(exists=True), default=None)
+@click.option("-a", "--ref_anchor_path", type=click.Path(exists=True), default=None)
 @click.option("-t", "--threshold", type=float, default=0.0)
 @click.option("-k", "--hits_at", multiple=True, default=[1, 5, 10, 30, 100])
 @click.option("-s", "--show_more_f_scores", type=bool, default=False)
@@ -40,24 +41,25 @@ def main(
     saved_path: str,
     pred_path: str,
     ref_path: str,
+    ref_anchor_path: Optional[str],
     null_ref_path: Optional[str],
     threshold: float,
     hits_at: List[int],
     show_more_f_scores: bool,
 ):
 
-    banner_msg("Choose a Supported OM Mode")
-    print_choices(supported_modes)
-    mode = supported_modes[click.prompt("Enter a number", type=int)]
+    banner_msg("Choose a Evaluation Mode")
+    print_choices(eval_modes)
+    mode = eval_modes[click.prompt("Enter a number", type=int)]
 
     if mode == "global_match":
         results = global_match_eval(
             pred_path, ref_path, null_ref_path, threshold, show_more_f_scores
         )
-    elif mode == "pair_score":
-        results = pair_score_eval(pred_path, ref_path, *hits_at)
+    elif mode == "local_rank":
+        results = local_rank_eval(pred_path, ref_anchor_path, ref_path, *hits_at)
     else:
-        raise ValueError(f"Unknown mode: {mode}, choices are: {supported_modes}.")
+        raise ValueError(f"Unknown mode: {mode}, choices are: {eval_modes}.")
         
     SavedObj.save_json(results, saved_path + f"/{mode}.results.json")
 
