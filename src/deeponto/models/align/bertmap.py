@@ -487,11 +487,12 @@ class BERTMap(OntoAlign):
     def fixed_src_ent_pair_score(self, src_ent_id: int, tgt_cand_ids: List[int]):
         """Compute mapping scores between a source entity and a batch of target entities
         """
-        mappings_for_ent = super().global_mappings_for_ent(src_ent_id)
+        mappings_for_ent = super().fixed_src_ent_pair_score(src_ent_id, tgt_cand_ids)
         # get source entity contents
         src_ent_name = self.src_onto.idx2class[src_ent_id]
         # follow naming convention in global_match_for_ent and add dummy cand selection scores
         tgt_cands = [(t, 1.0) for t in tgt_cand_ids]
+        tgt_cands_for_bert = []
 
         # for string_match
         if self.apply_string_match:
@@ -505,8 +506,11 @@ class BERTMap(OntoAlign):
                     mappings_for_ent.append(
                         self.set_mapping(src_ent_name, tgt_ent_name, mapping_score)
                     )
+                else:
+                    tgt_cands_for_bert.append((tgt_cand_id, 1.0))
 
         # for bert synonym classifier
+        tgt_cands = tgt_cands_for_bert
         labs_batches = self.batched_lab_products_for_ent(
             src_ent_id, tgt_cands, self.bert_args.batch_size_for_prediction
         )  # [{"labs": [], "lens": []}]
@@ -520,9 +524,13 @@ class BERTMap(OntoAlign):
                 idx = i + batch_base_idx
                 tgt_ent_name = self.tgt_onto.idx2class[tgt_cands[idx][0]]
                 mappings_for_ent.append(self.set_mapping(src_ent_name, tgt_ent_name, score.item()))
+            batch_base_idx += len(
+                labs_batch.lens
+            )  # num of lens is exactly the num of tgt candidates in this batch
 
+        mappings_for_ent = mappings_for_ent.sorted()
         self.logger.info(f"[{self.flag}: {src_ent_id}] {mappings_for_ent}\n")
-        return mappings_for_ent.sorted()
+        return mappings_for_ent
 
     def global_mappings_for_ent(self, src_ent_id: int):
         """Compute cross-ontology mappings for a source entity

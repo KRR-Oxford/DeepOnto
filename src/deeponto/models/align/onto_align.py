@@ -88,13 +88,14 @@ class OntoAlign:
             src_ent_id = self.src_onto.class2idx[src_ent_name]
             tgt_cand_ids = [self.tgt_onto.class2idx[t] for t in tgt2score.keys()]
             pred_maps = self.fixed_src_ent_pair_score(src_ent_id, tgt_cand_ids)
+            mappings.add_many(*pred_maps)
         self.logger.info("Task Finished\n")
         mappings.save_instance(f"{self.saved_path}/pair_score/{self.flag}")
         
     def fixed_src_ent_pair_score(self, src_ent_id: int, tgt_cand_ids: List[int]):
         """Compute mapping scores between a source entity and a batch of target entities
         """
-        banner_msg(f"Compute Mappings for Entity {src_ent_id} ({self.flag}) w.r.t given candidates")
+        banner_msg(f"Compute Mappings for Entity {src_ent_id} ({self.flag})")
         mappings_for_ent = self.new_mapping_list()
         # TODO: followed by individual implementations
         return mappings_for_ent
@@ -148,6 +149,7 @@ class OntoAlign:
         flag_mappings = OntoMappings(flag=flag, n_best=self.n_best, rel=self.rel)
         saved_mappigs_path = f"{self.saved_path}/{mode}/{flag}"
         if detect_path(saved_mappigs_path):
+            # raise ValueError(saved_mappigs_path)
             flag_mappings = OntoMappings.from_saved(saved_mappigs_path)
             print(f"found existing {flag} mappings, skip predictions for the saved classes ...")
         return flag_mappings

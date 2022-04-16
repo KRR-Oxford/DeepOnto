@@ -59,13 +59,15 @@ class StringMatch(OntoAlign):
     def fixed_src_ent_pair_score(self, src_ent_id: int, tgt_cand_ids: List[int]):
         """Compute mapping scores between a source entity and a batch of target entities
         """
-        mappings_for_ent = super().global_mappings_for_ent(src_ent_id)
+        mappings_for_ent = super().fixed_src_ent_pair_score(src_ent_id, tgt_cand_ids)
         src_ent_name = self.src_onto.idx2class[src_ent_id]
         for tgt_cand_id in tgt_cand_ids:
             tgt_cand_name = self.tgt_onto.idx2class[tgt_cand_id]
-            score = self.pair_score(src_ent_id, tgt_cand_id)
-            mappings_for_ent.add(self.set_mapping(src_ent_name, tgt_cand_name, score))
-        return mappings_for_ent.sorted()
+            score = self.ent_pair_score(src_ent_id, tgt_cand_id)
+            mappings_for_ent.append(self.set_mapping(src_ent_name, tgt_cand_name, score))
+        mappings_for_ent = mappings_for_ent.sorted()
+        self.logger.info(f"[{self.flag}: {src_ent_id}] {mappings_for_ent}\n")
+        return mappings_for_ent
 
     def global_mappings_for_ent(self, src_ent_id: int):
         """Compute cross-ontology mappings for a source entity
