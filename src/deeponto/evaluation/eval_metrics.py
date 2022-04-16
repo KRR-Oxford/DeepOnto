@@ -14,9 +14,8 @@
 """Define evaluation metrics for different tasks"""
 
 from typing import Optional, Iterable, Tuple, List
-from pyats.datastructures import AttrDict
 
-from deeponto.onto.mapping import OntoMappings
+from deeponto.onto.mapping import OntoMappings, AnchoredOntoMappings
 
 ##################################################################################
 ###                       [Eval Case 1]: P, R, F1                              ###
@@ -59,7 +58,7 @@ def f_score(pred: Iterable, ref: Iterable, beta: float, null_ref: Optional[Itera
     R = recall(pred, ref)
     beta_sqr = beta ** 2
     F_beta = ((1 + beta_sqr) * P * R) / (beta_sqr * P + R)
-    return AttrDict({"P": round(P, 3), "R": round(R, 3), "f_score": round(F_beta, 3)})
+    return {"P": round(P, 3), "R": round(R, 3), "f_score": round(F_beta, 3)}
 
 
 def f1(pred: Iterable, ref: Iterable, null_ref: Optional[Iterable] = None):
@@ -73,27 +72,28 @@ def f1(pred: Iterable, ref: Iterable, null_ref: Optional[Iterable] = None):
 ###                       [Eval Case 2]: Hits@K & MRR                          ###
 ##################################################################################
 
-#TODO: check below algorithms after full deployment
+# TODO: check below algorithms after full deployment
 
-def hits_at_k(pred_maps: OntoMappings, ref_tuples: List[Tuple], k: int):
+
+def hits_at_k(pred_maps: AnchoredOntoMappings, ref_tuples: List[Tuple], k: int):
     """Hits@K = # hits at top K / # testing samples 
     """
     n_hits = 0
     for src_ent, tgt_ent in ref_tuples:
-        tgt2score = pred_maps.ranked[src_ent]
+        tgt2score = pred_maps.anchor2cand[src_ent, tgt_ent]
         topk_tgt_cands = list(tgt2score.keys())[:k]
         if tgt_ent in topk_tgt_cands:
             n_hits += 1
     return n_hits / len(ref_tuples)
-    
-    
-def mean_reciprocal_rank(pred_maps: OntoMappings, ref_tuples: List[Tuple]):
+
+
+def mean_reciprocal_rank(pred_maps: AnchoredOntoMappings, ref_tuples: List[Tuple]):
     """MRR = (\sum_i 1 / rank_i) / # testing samples
     """
     sum_inv_ranks = 0
     for src_ent, tgt_ent in ref_tuples:
-        tgt2score = pred_maps.ranked[src_ent]
+        tgt2score = pred_maps.anchor2cand[src_ent, tgt_ent]
         tgt_cands = list(tgt2score.keys())
         rank = tgt_cands.index(tgt_ent) + 1
-        sum_inv_ranks += 1 / rank 
+        sum_inv_ranks += 1 / rank
     return sum_inv_ranks / len(ref_tuples)

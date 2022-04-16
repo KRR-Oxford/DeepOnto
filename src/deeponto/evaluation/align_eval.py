@@ -162,7 +162,7 @@ def global_match_select(
     SavedObj.save_json(best_results, global_match_dir + "/best_hyperparams.val.json")
 
 
-def pair_score_eval(pred_path: str, ref_path: str, *ks: int):
+def local_rank_eval(pred_path: str, ref_anchor_path: str, ref_path: str, *ks: int):
     """Eval on Hits@K, MRR (estimating OM performance) 
     """
 
@@ -170,14 +170,17 @@ def pair_score_eval(pred_path: str, ref_path: str, *ks: int):
 
     # load prediction mappings from the saved directory
     pred_maps = OntoMappings.from_saved(pred_path)
+    ref_anchor_maps = AnchoredOntoMappings.from_saved(ref_anchor_path)
+    ref_anchor_maps.fill_scored_maps(pred_maps)
+    # print(ref_anchor_maps.anchor2cand)
 
     # load reference mappings and (opt) null mappings
     ref = OntoMappings.read_tsv_mappings(ref_path, 0.0).to_tuples()
 
     results = dict()
-    results["MRR"] = mean_reciprocal_rank(pred_maps, ref)
+    results["MRR"] = mean_reciprocal_rank(ref_anchor_maps, ref)
     for k in ks:
-        results[f"Hits@{k}"] = hits_at_k(pred_maps, ref, k)
+        results[f"Hits@{k}"] = hits_at_k(ref_anchor_maps, ref, k)
     SavedObj.print_json(results)
 
     return results
