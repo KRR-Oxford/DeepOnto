@@ -108,7 +108,7 @@ class OntoAlignNegCandsSampler:
             SavedObj.print_json(sample_stats)
 
         self.current_anchor_mappings().save_instance(f"./{self.flag}.rank/for_eval")
-        self.current_anchor_mappings().unscored_cand_maps().save_instance(f"./{self.flag}/for_score")
+        self.current_anchor_mappings().unscored_cand_maps().save_instance(f"./{self.flag}.rank/for_score")
         SavedObj.save_json(self.stats, f"./{self.flag}.rank/stats.json")
 
     def renew(self):
