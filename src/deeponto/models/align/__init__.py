@@ -25,3 +25,4 @@ implemented_models = learning_based_models + rule_based_models
 
 # support alignment modes
 supported_modes = ["global_match", "pair_score"]
+eval_modes = ["global_match", "local_rank"]
