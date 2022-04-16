@@ -13,6 +13,7 @@
 # limitations under the License.
 """Provide functions for generating negative candidates"""
 
+from typing import Optional
 from itertools import cycle
 import random
 
@@ -36,6 +37,7 @@ class OntoAlignNegCandsSampler:
         src_onto: Ontology,
         tgt_onto: Ontology,
         ref_mappings_path: str,
+        null_ref_mappings_path: Optional[str],
         rel: str,
         tokenizer: Tokenizer,
         max_hobs: int = 5,
@@ -55,17 +57,29 @@ class OntoAlignNegCandsSampler:
             tsv_mappings_path=ref_mappings_path, rel=self.rel
         ).to_tuples()
         self.pos_tgt2src = [(y, x) for (x, y) in self.pos_src2tgt]
+        self.null_src2tgt = []
+        self.null_tgt2src = []
+        if null_ref_mappings_path:
+            self.null_src2tgt = OntoMappings.read_tsv_mappings(
+                tsv_mappings_path=null_ref_mappings_path, rel=self.rel
+            ).to_tuples()
+            self.null_tgt2src = [(y, x) for (x, y) in self.null_src2tgt]
+        self.pos_src2tgt = list(set(self.pos_src2tgt) - set(self.null_src2tgt))
+        self.pos_tgt2src = list(set(self.pos_tgt2src) - set(self.null_tgt2src))
+
         self.tokenizer = tokenizer
 
         # init the reference anchored mappings
         self.src2tgt_anchored_mappings = AnchoredOntoMappings(
             flag="src2tgt", n_best=None, rel=self.rel
         )
+        self.src2tgt_ref_dict = defaultdict(list)
         self.init_anchors()
         self.switch()
         self.tgt2src_anchored_mappings = AnchoredOntoMappings(
             flag="tgt2src", n_best=None, rel=self.rel
         )
+        self.tgt2src_ref_dict = defaultdict(list)
         self.init_anchors()
         self.renew()
 
@@ -79,10 +93,15 @@ class OntoAlignNegCandsSampler:
     def init_anchors(self):
         """Add all the reference anchor mappings as a candidate mapping first
         """
+        # init anchor maps and anchor dict
         anchored_maps = self.current_anchor_mappings()
+        ref_dict = self.current_ref_dict()
         for ref_src_ent_name, ref_tgt_ent_name in getattr(self, f"pos_{self.flag}"):
             anchor_map = EntityMapping(ref_src_ent_name, ref_tgt_ent_name, self.rel, 0.0)
             anchored_maps.add(anchor_map, anchor_map)
+            ref_dict[ref_src_ent_name].append(ref_tgt_ent_name)
+        for null_ref_src_name, null_ref_tgt_ent_name in getattr(self, f"null_{self.flag}"):
+            ref_dict[null_ref_src_name].append(null_ref_tgt_ent_name)
 
     def sample(self, **strategy2nums):
         """Sample for both src2tgt and tgt2src sides
@@ -99,7 +118,12 @@ class OntoAlignNegCandsSampler:
         for ref_src_ent_name, ref_tgt_ent_name in getattr(self, f"pos_{self.flag}"):
             banner_msg(f"CandMaps for ({ref_src_ent_name}, {ref_tgt_ent_name})")
             anchor_map = EntityMapping(ref_src_ent_name, ref_tgt_ent_name, self.rel, 0.0)
-            tgt_cand_names, sample_stats = self.mixed_sample(ref_tgt_ent_name, **strategy2nums)
+            excluded_ref_tgts = self.current_ref_dict()[ref_src_ent_name]
+            if len(excluded_ref_tgts) > 1:
+                print("One-to-many reference mappings detected ...")
+            tgt_cand_names, sample_stats = self.mixed_sample(
+                ref_tgt_ent_name, excluded_ref_tgts, **strategy2nums
+            )
             self.stats[str((ref_src_ent_name, ref_tgt_ent_name))] = sample_stats
             for tgt_cand_name in tgt_cand_names:
                 cand_map = EntityMapping(ref_src_ent_name, tgt_cand_name, self.rel, 0.0)
@@ -107,8 +131,18 @@ class OntoAlignNegCandsSampler:
             print("Candidate mappings statistics:")
             SavedObj.print_json(sample_stats)
 
+        # candidate mappings are never the null reference mappings
+        assert not set(getattr(self, f"null_{self.flag}")).intersection(
+            set(self.current_anchor_mappings().cand2anchor.keys())
+        )
+        assert set(getattr(self, f"pos_{self.flag}")).intersection(
+            set(self.current_anchor_mappings().cand2anchor.keys())
+        ) == set(getattr(self, f"pos_{self.flag}"))
+
         self.current_anchor_mappings().save_instance(f"./{self.flag}.rank/for_eval")
-        self.current_anchor_mappings().unscored_cand_maps().save_instance(f"./{self.flag}.rank/for_score")
+        self.current_anchor_mappings().unscored_cand_maps().save_instance(
+            f"./{self.flag}.rank/for_score"
+        )
         SavedObj.save_json(self.stats, f"./{self.flag}.rank/stats.json")
 
     def renew(self):
@@ -126,11 +160,14 @@ class OntoAlignNegCandsSampler:
     def current_anchor_mappings(self):
         return getattr(self, f"{self.flag}_anchored_mappings")
 
+    def current_ref_dict(self):
+        return getattr(self, f"{self.flag}_ref_dict")
+
     ##################################################################################
     ###                            sampling stratgies                              ###
     ##################################################################################
 
-    def mixed_sample(self, ref_tgt_ent_name, **strategy2nums):
+    def mixed_sample(self, ref_tgt_ent_name, excluded_ref_tgts, **strategy2nums):
         """Randomly select specified candidates for each strategy;
         amend random samples if not meeting the number
         """
@@ -144,18 +181,24 @@ class OntoAlignNegCandsSampler:
             if strategy in sampling_options:
                 sampler = getattr(self, f"{strategy}_sample")
                 # for ith iteration, the worst case is when (i-1)*n_cands are duplicated
+                # and len(excluded_ref_tgts) to be removed
                 # so we generate i*n_cands candidates first and prune the rest
                 # another edge case is when sampled candidates are not sufficient
                 # but we have covered the worst case for the duplicates
-                cur_tgt_cands = sampler(ref_tgt_ent_name, i * n_cands)
-                # remove the duplicated candidates and prune the tail
-                cur_tgt_cands = list(set(cur_tgt_cands) - set(all_tgt_cand_names))[:n_cands]
+                cur_tgt_cands = sampler(ref_tgt_ent_name, (i * n_cands) + len(excluded_ref_tgts))
+                # remove the duplicated candidates (and excluded refs) and prune the tail
+                cur_tgt_cands = list(
+                    set(cur_tgt_cands) - set(all_tgt_cand_names) - set(excluded_ref_tgts)
+                )[:n_cands]
                 stats[strategy] += len(cur_tgt_cands)
                 # use random samples for complementation if not enough
                 while len(cur_tgt_cands) < n_cands:
                     amend_cands = self.random_sample(ref_tgt_ent_name, n_cands - len(cur_tgt_cands))
                     amend_cands = list(
-                        set(amend_cands) - set(all_tgt_cand_names) - set(cur_tgt_cands)
+                        set(amend_cands)
+                        - set(all_tgt_cand_names)
+                        - set(cur_tgt_cands)
+                        - set(excluded_ref_tgts)
                     )
                     cur_tgt_cands += amend_cands
                 assert len(cur_tgt_cands) == n_cands
