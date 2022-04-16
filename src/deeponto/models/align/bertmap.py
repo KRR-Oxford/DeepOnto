@@ -276,7 +276,6 @@ class BERTMap(OntoAlign):
         val_ref_path: Optional[str],
         test_ref_path: Optional[str],
         null_ref_path: Optional[str],
-        consider_all_full_scored_mappings: bool = False,
         num_procs: int = 10,
     ):
         """Do hyperparam tuning on validation set before choosing which 
@@ -300,7 +299,6 @@ class BERTMap(OntoAlign):
                 val_ref_path,
                 test_ref_path,
                 null_ref_path,
-                consider_all_full_scored_mappings,
                 num_procs,
             )
         self.best_hyperparams = SavedObj.load_json(
@@ -390,7 +388,7 @@ class BERTMap(OntoAlign):
     def repair_formatting(onto_mappings: OntoMappings, best_val_threshold: float, output_dir: str):
         """Formatting the mappings into LogMap format
         """
-        preds = pred_thresholding(onto_mappings, best_val_threshold, True)
+        preds = pred_thresholding(onto_mappings, best_val_threshold)
         lines = []
         for src_ent_name, tgt_ent_name in preds:
             src_ent_iri = unfold_iri(src_ent_name)
@@ -446,7 +444,9 @@ class BERTMap(OntoAlign):
                 src_ent_name = abbr_iri(src_ent_iri)
                 tgt_ent_name = abbr_iri(tgt_ent_iri)
                 f.write(f"{src_ent_name}\t{tgt_ent_name}\t{score}")
-        repaired_mappings = OntoMappings.read_tsv_mappings(formatted_repaired_file, flag=map_type_to_repair)
+                
+        # after repair the direction is always src2tgt
+        repaired_mappings = OntoMappings.read_tsv_mappings(formatted_repaired_file, flag="final_output")
         repaired_mappings.save_instance(repair_saved_path)
         # Save another copy of output mappings 
         repaired_mappings.save_instance(self.global_match_dir + "/final_outputs")
@@ -532,9 +532,13 @@ class BERTMap(OntoAlign):
 
         for idx, score in zip(n_best_idxs, n_best_scores):
             # ignore too small values or intial values (-1.0) for dummy mappings
-            if score.item() >= 0.01:
+            if score.item() >= 0.0:
                 tgt_ent_name = self.tgt_onto.idx2class[tgt_cands[idx.item()][0]]
                 mappings_for_ent.append(self.set_mapping(src_ent_name, tgt_ent_name, score.item()))
+        
+        # add a dummy mapping for this entity if no mappings found
+        if not mappings_for_ent:
+            mappings_for_ent.append(self.set_mapping(src_ent_name, "NullEntity", 0.0))
 
         # output only the top (k=n_best) scored mappings
         n_best_mappings_for_ent = mappings_for_ent.top_k(self.n_best)
