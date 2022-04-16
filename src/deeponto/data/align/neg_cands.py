@@ -83,7 +83,7 @@ class OntoAlignNegCandsSampler:
         self.init_anchors()
         self.renew()
 
-        self.stats = defaultdict(lambda: {"random": 0})
+        self.stats = dict()
 
         # arguments for neighbour sampling
         self.max_hobs = max_hobs
