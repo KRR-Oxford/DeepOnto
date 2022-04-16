@@ -84,12 +84,18 @@ class OntoAlign:
         self.n_best = max_num_mappings  # change n_best to all possible mappings
         mappings = self.load_mappings(flag, "pair_score")
         # self.n_best = temp
+        i = 0
         for src_ent_name, tgt2score in tbc_mappings.ranked.items():
             src_ent_id = self.src_onto.class2idx[src_ent_name]
+            pred_maps = EntityMappingList()
             for tgt_ent_name in tgt2score.keys():
                 tgt_ent_id = self.tgt_onto.class2idx[tgt_ent_name]
                 score = self.ent_pair_score(src_ent_id, tgt_ent_id)
-                mappings.add(EntityMapping(src_ent_name, tgt_ent_name, self.rel, score))
+                pred_map = EntityMapping(src_ent_name, tgt_ent_name, self.rel, score)
+                mappings.add(pred_map)
+                pred_maps.append(pred_map)
+            self.logger.info(f"[ScoredMaps for {src_ent_name} ({i})]: {str(pred_maps)}")
+            i += 1
         self.logger.info("Task Finished\n")
         mappings.save_instance(f"{self.saved_path}/pair_score/{self.flag}")
 
