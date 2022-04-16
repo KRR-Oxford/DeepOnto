@@ -18,6 +18,8 @@ from typing import List
 from collections import defaultdict
 import math
 
+from deeponto import SavedObj
+
 
 ##################################################################################
 ###                                subsumption                                 ###
@@ -81,46 +83,42 @@ def depth_min(ent: EntityClass) -> int:
 def ancestors_of(ent: EntityClass):
     """Return all the ancestors of a class (except for the root ThingClass)
     """
-    ancestors  = superclasses_of(ent)
+    ancestors = superclasses_of(ent)
     for parent in ancestors:
         ancestors += ancestors_of(parent)
     return ancestors
 
+
 def descendants_of(ent: EntityClass):
     """Return all the descendents of a class
     """
-    descendants  = subclasses_of(ent)
+    descendants = subclasses_of(ent)
     for child in descendants:
         descendants += descendants_of(child)
     return descendants
 
 
-def neighbours_of(
-    anchor_ent: EntityClass,
-    explored: list = [],
-    hob: int = 1,
-    max_hob: int = 5,
-):
+def neighbours_of(anchor_ent: EntityClass, max_hob: int = 5, ignore_root: bool = True):
     """Compute neighbours of an anchor entity up to max_hob
+    in Breadth First Search style which ensures determined outputs
     """
     neighbours = defaultdict(list)
-    
-    # return if have explored
-    if anchor_ent in explored:
-        return neighbours
-    
-    # explore neighbours by 1-hob
-    neighbours[hob] += superclasses_of(anchor_ent) + subclasses_of(anchor_ent)
-    neighbours[hob] = list(set(neighbours[hob]))
-    explored.append(anchor_ent)
-    
-    # return if too far from the anchor
-    if hob == max_hob:
-        return neighbours
-    
-    # for each 1-hob neighbour, add their 1-hob neighbours as 2-hob neighbours
-    # recursion applied to seek for neighbours up to max_hob
-    for n in neighbours[hob]:
-        neighbours.update(neighbours_of(n, explored, hob + 1))
-    
+    frontier = [anchor_ent]
+    explored = []
+    hob = 1
+
+    while hob <= max_hob:
+        cur_hob_neighbours = []
+        for ent in frontier:
+            cur_hob_neighbours += superclasses_of(ent, ignore_root) + subclasses_of(ent)
+            cur_hob_neighbours = list(set(cur_hob_neighbours))
+            explored.append(ent)
+        neighbours[hob] = cur_hob_neighbours
+        frontier = list(set(cur_hob_neighbours) - set(explored))
+        hob += 1
+
+    stats = {k: len(v) for k, v in neighbours.items()}
+    print(f"Numbers of neighbours at each hob away from entity: {str(anchor_ent)}")
+    SavedObj.print_json(stats)
+
     return neighbours

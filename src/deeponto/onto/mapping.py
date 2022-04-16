@@ -83,15 +83,18 @@ class AnchoredOntoMappings(SavedObj):
         """
         super().save_instance(saved_path)
         # also save a readable format of the ranked alignment set
-        self.save_json(self.anchor2cand, saved_path + f"/{self.saved_name}.json")
+        anchor2cand_json = {str(k): v for k, v in self.anchor2cand.items()}
+        self.save_json(anchor2cand_json, saved_path + f"/{self.saved_name}.json")
 
-    def add(self, anchor_map: EntityMapping, cand_map: EntityMapping):
+    def add(self, anchor_map: EntityMapping, cand_map: EntityMapping, allow_existed: bool = True):
         """Given an anchor mapping, add a new candidate mapping or add an existing 
         candidate mapping to update mapping score (take average) while keeping the ranking
         """
         self.validate_input(anchor_map, cand_map)
         # average the mapping scores if already existed
         if self.check_existed(anchor_map, cand_map):
+            if not allow_existed:
+                raise ValueError("Duplicate mapping not allowed ...")
             old_score = self.anchor2cand[anchor_map.head, anchor_map.tail][cand_map.tail]
             print(f"Found an existing mapping...")
             print(f"\t[Old]: {EntityMapping(cand_map.head, cand_map.tail, self.rel, old_score)}")
@@ -129,6 +132,15 @@ class AnchoredOntoMappings(SavedObj):
         print(
             f"{num_valid}/{len(scored_onto_maps)} of scored mappings are filled to corresponding anchors."
         )
+
+    def unscored_cand_maps(self) -> OntoMappings:
+        """Return all candidate mappings with no scores and anchors (so that duplicates will be merged)
+        """
+        unscored_cands = OntoMappings(self.flag, self.n_best, self.rel)
+        for cand_tup in self.cand2anchor.keys():
+            cand_map = EntityMapping(cand_tup[0], cand_tup[1], self.rel, 0.0)
+            unscored_cands.add(cand_map)
+        return unscored_cands
 
     def validate_input(self, anchor_map: EntityMapping, cand_map: EntityMapping):
         if anchor_map.rel != self.rel or cand_map.rel != self.rel:
