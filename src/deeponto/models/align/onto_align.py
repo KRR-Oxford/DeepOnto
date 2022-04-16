@@ -84,11 +84,19 @@ class OntoAlign:
         self.n_best = max_num_mappings  # change n_best to all possible mappings
         mappings = self.load_mappings(flag, "pair_score")
         # self.n_best = temp
+        i = 0
         for src_ent_name, tgt2score in tbc_mappings.ranked.items():
+            if src_ent_name in mappings.ranked.keys():
+                self.logger.info(f"skip prediction for {src_ent_name} as already computed ...")
+                continue
             src_ent_id = self.src_onto.class2idx[src_ent_name]
             tgt_cand_ids = [self.tgt_onto.class2idx[t] for t in tgt2score.keys()]
             pred_maps = self.fixed_src_ent_pair_score(src_ent_id, tgt_cand_ids)
             mappings.add_many(*pred_maps)
+            # intermediate saving for every 100 entities
+            if i % 100 == 0:
+                mappings.save_instance(f"{self.saved_path}/pair_score/{self.flag}")
+            i += 1
         self.logger.info("Task Finished\n")
         mappings.save_instance(f"{self.saved_path}/pair_score/{self.flag}")
         
