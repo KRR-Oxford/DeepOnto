@@ -15,6 +15,7 @@ import click
 @click.option("-s", "--src_onto_path", type=click.Path())
 @click.option("-t", "--tgt_onto_path", type=click.Path())
 @click.option("-r", "--ref_mappings_path", type=click.Path())
+@click.option("-n", "--null_ref_mappings_path", type=click.Path())
 @click.option(
     "-tp", "--tokenizer_path", type=click.Path(), default="emilyalsentzer/Bio_ClinicalBERT"
 )
@@ -28,6 +29,7 @@ def main(
     src_onto_path: str,
     tgt_onto_path: str,
     ref_mappings_path: str,
+    null_ref_mappings_path: str,
     tokenizer_path: str,
     idf_sample_num: int,
     neighbour_sample_num: int,
@@ -44,6 +46,7 @@ def main(
         src_onto,
         tgt_onto,
         ref_mappings_path,
+        null_ref_mappings_path,
         rel="=",
         tokenizer=tokenizer,
         max_hobs=max_hobs,
