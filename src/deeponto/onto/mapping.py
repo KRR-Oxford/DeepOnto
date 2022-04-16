@@ -129,6 +129,9 @@ class AnchoredOntoMappings(SavedObj):
                     num_valid += 1
                     for anchor_tail in self.cand2anchor[src_ent_name, tgt_ent_name]:
                         self.anchor2cand[src_ent_name, anchor_tail][tgt_ent_name] = score
+                    self.anchor2cand[src_ent_name, anchor_tail] = sort_dict_by_values(
+                        self.anchor2cand[src_ent_name, anchor_tail], top_k=self.n_best
+                    )
         print(
             f"{num_valid}/{len(scored_onto_maps)} of scored mappings are filled to corresponding anchors."
         )
@@ -284,10 +287,15 @@ class EntityMappingList(list):
         else:
             raise TypeError("Only Entity Mapping can be added to the list.")
 
-    def top_k(self, k: int):
+    def topKs(self, k: int):
         """Return top K scored mappings from the list
         """
         return EntityMappingList(sorted(self, key=lambda x: x.score, reverse=True))[:k]
+    
+    def sorted(self):
+        """Return the sorted entity mapping list
+        """
+        return self.topKs(k=len(self))
 
     def __getitem__(self, item):
         result = list.__getitem__(self, item)
