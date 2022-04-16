@@ -45,7 +45,7 @@ class StringMatch(OntoAlign):
         )
         self.use_edit_dist = use_edit_dist
 
-    def ent_pair_score(self, src_ent_id: str, tgt_ent_id: str):
+    def ent_pair_score(self, src_ent_id: int, tgt_ent_id: int):
         """Compute mapping score between a cross-ontology entity pair
         """
         src_ent_labs = self.src_onto.idx2labs[src_ent_id]
@@ -55,6 +55,17 @@ class StringMatch(OntoAlign):
         else:
             mapping_score = self.max_norm_edit_sim(src_ent_labs, tgt_ent_labs)
         return mapping_score
+
+    def fixed_src_ent_pair_score(self, src_ent_id: int, tgt_cand_ids: List[int]):
+        """Compute mapping scores between a source entity and a batch of target entities
+        """
+        mappings_for_ent = super().global_mappings_for_ent(src_ent_id)
+        src_ent_name = self.src_onto.idx2class[src_ent_id]
+        for tgt_cand_id in tgt_cand_ids:
+            tgt_cand_name = self.tgt_onto.idx2class[tgt_cand_id]
+            score = self.pair_score(src_ent_id, tgt_cand_id)
+            mappings_for_ent.add(self.set_mapping(src_ent_name, tgt_cand_name, score))
+        return mappings_for_ent.sorted()
 
     def global_mappings_for_ent(self, src_ent_id: int):
         """Compute cross-ontology mappings for a source entity
@@ -71,7 +82,7 @@ class StringMatch(OntoAlign):
                 # save mappings only with positive mapping scores
                 mappings_for_ent.append(self.set_mapping(src_ent_name, tgt_ent_name, mapping_score))
         # output only the top (k=n_best) scored mappings
-        n_best_mappings_for_ent = mappings_for_ent.top_k(self.n_best)
+        n_best_mappings_for_ent = mappings_for_ent.topKs(self.n_best)
         self.logger.info(f"[{self.flag}: {src_ent_id}] {n_best_mappings_for_ent}\n")
         return n_best_mappings_for_ent
 

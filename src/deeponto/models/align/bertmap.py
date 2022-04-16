@@ -38,7 +38,10 @@ from deeponto.bert import BERTArgs
 from deeponto.bert.static import BERTStaticSeqClassifer
 from deeponto.bert.tune import BERTFineTuneSeqClassifier
 from deeponto.onto.text import Tokenizer, Thesaurus
-from deeponto.onto.text.text_semantics_corpora import TextSemanticsCorpora, TextSemanticsCorpusforMappings
+from deeponto.onto.text.text_semantics_corpora import (
+    TextSemanticsCorpora,
+    TextSemanticsCorpusforMappings,
+)
 from deeponto.onto.text.text_utils import unfold_iri, abbr_iri
 from deeponto.onto.graph import IterativeMappingExtension
 from deeponto.onto import Ontology
@@ -409,9 +412,7 @@ class BERTMap(OntoAlign):
         """Apply java commands of LogMap DEBUGGER
         """
         if detect_path(self.global_match_refined_dir + f"/{map_type_to_repair}.repaired"):
-            print(
-                f"found existing extended {map_type_to_repair} mappings; skip mapping repair ..."
-            )
+            print(f"found existing extended {map_type_to_repair} mappings; skip mapping repair ...")
             return
         # apply java commands of LogMap DEBUGGER
         repair_tool_dir = deeponto.__file__.replace("__init__.py", "models/align/logmap_java")
@@ -432,11 +433,15 @@ class BERTMap(OntoAlign):
         except subprocess.TimeoutExpired:
             repair_process.kill()
             _, _ = repair_process.communicate()
-            
-        repaired_file = f"{output_dir}/{map_type_to_repair}.repaired/mappings_repaired_with_LogMap.tsv"
+
+        repaired_file = (
+            f"{output_dir}/{map_type_to_repair}.repaired/mappings_repaired_with_LogMap.tsv"
+        )
         with open(repaired_file, "r") as f:
             lines = f.readlines()
-        formatted_repaired_file = f"{output_dir}/{map_type_to_repair}.repaired/{map_type_to_repair}.maps.tsv"
+        formatted_repaired_file = (
+            f"{output_dir}/{map_type_to_repair}.repaired/{map_type_to_repair}.maps.tsv"
+        )
         with open(formatted_repaired_file, "w+") as f:
             f.write("SrcEntity\tTgtEntity\tScore\n")
             for line in lines:
@@ -444,11 +449,13 @@ class BERTMap(OntoAlign):
                 src_ent_name = abbr_iri(src_ent_iri)
                 tgt_ent_name = abbr_iri(tgt_ent_iri)
                 f.write(f"{src_ent_name}\t{tgt_ent_name}\t{score}")
-                
+
         # after repair the direction is always src2tgt
-        repaired_mappings = OntoMappings.read_tsv_mappings(formatted_repaired_file, flag="final_output")
+        repaired_mappings = OntoMappings.read_tsv_mappings(
+            formatted_repaired_file, flag="final_output"
+        )
         repaired_mappings.save_instance(repair_saved_path)
-        # Save another copy of output mappings 
+        # Save another copy of output mappings
         repaired_mappings.save_instance(self.global_match_dir + "/final_outputs")
         self.logger.info("Mapping Repair Finished\n")
 
@@ -477,6 +484,46 @@ class BERTMap(OntoAlign):
         # only one element tensor is able to be extracted as a scalar by .item()
         return torch.mean(self.bert_classifier(src_tgt_lab_product)).item()
 
+    def fixed_src_ent_pair_score(self, src_ent_id: int, tgt_cand_ids: List[int]):
+        """Compute mapping scores between a source entity and a batch of target entities
+        """
+        mappings_for_ent = super().global_mappings_for_ent(src_ent_id)
+        # get source entity contents
+        src_ent_name = self.src_onto.idx2class[src_ent_id]
+        # follow naming convention in global_match_for_ent and add dummy cand selection scores
+        tgt_cands = [(t, 1.0) for t in tgt_cand_ids]
+
+        # for string_match
+        if self.apply_string_match:
+            src_ent_labs = self.src_onto.idx2labs[src_ent_id]
+            for tgt_cand_id, _ in tgt_cands:
+                tgt_ent_name = self.tgt_onto.idx2class[tgt_cand_id]
+                tgt_ent_labs = self.tgt_onto.idx2labs[tgt_cand_id]
+                mapping_score = self.string_match(src_ent_labs, tgt_ent_labs)
+                if mapping_score > 0:
+                    # save mappings only with positive mapping scores
+                    mappings_for_ent.append(
+                        self.set_mapping(src_ent_name, tgt_ent_name, mapping_score)
+                    )
+
+        # for bert synonym classifier
+        labs_batches = self.batched_lab_products_for_ent(
+            src_ent_id, tgt_cands, self.bert_args.batch_size_for_prediction
+        )  # [{"labs": [], "lens": []}]
+        batch_base_idx = 0  # after each batch, the base index will be increased by # of covered target candidates
+
+        for labs_batch in labs_batches:
+            batch_scores = self.bert_classifier(labs_batch.labs)
+            pooled_scores = self.batch_pooling(batch_scores, labs_batch.lens)
+            for i in range(len(pooled_scores)):
+                score = pooled_scores[i]
+                idx = i + batch_base_idx
+                tgt_ent_name = self.tgt_onto.idx2class[tgt_cands[idx][0]]
+                mappings_for_ent.append(self.set_mapping(src_ent_name, tgt_ent_name, score.item()))
+
+        self.logger.info(f"[{self.flag}: {src_ent_id}] {mappings_for_ent}\n")
+        return mappings_for_ent.sorted()
+
     def global_mappings_for_ent(self, src_ent_id: int):
         """Compute cross-ontology mappings for a source entity
         """
@@ -501,7 +548,7 @@ class BERTMap(OntoAlign):
                     # output only the top (k=n_best) scored mappings
             # return the mappings if there are any string match results
             if len(mappings_for_ent) > 0:
-                n_best_mappings_for_ent = mappings_for_ent.top_k(self.n_best)
+                n_best_mappings_for_ent = mappings_for_ent.topKs(self.n_best)
                 self.logger.info(f"[{self.flag}: {src_ent_id}] {n_best_mappings_for_ent}\n")
                 return n_best_mappings_for_ent
 
@@ -535,13 +582,13 @@ class BERTMap(OntoAlign):
             if score.item() >= 0.0:
                 tgt_ent_name = self.tgt_onto.idx2class[tgt_cands[idx.item()][0]]
                 mappings_for_ent.append(self.set_mapping(src_ent_name, tgt_ent_name, score.item()))
-        
+
         # add a dummy mapping for this entity if no mappings found
         if not mappings_for_ent:
             mappings_for_ent.append(self.set_mapping(src_ent_name, "NullEntity", 0.0))
 
         # output only the top (k=n_best) scored mappings
-        n_best_mappings_for_ent = mappings_for_ent.top_k(self.n_best)
+        n_best_mappings_for_ent = mappings_for_ent.topKs(self.n_best)
         self.logger.info(f"[{self.flag}: {src_ent_id}] {n_best_mappings_for_ent}\n")
         return n_best_mappings_for_ent
 
