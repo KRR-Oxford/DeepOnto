@@ -178,9 +178,9 @@ def local_rank_eval(pred_path: str, ref_anchor_path: str, ref_path: str, *ks: in
     ref = OntoMappings.read_tsv_mappings(ref_path, 0.0).to_tuples()
 
     results = dict()
-    results["MRR"] = mean_reciprocal_rank(ref_anchor_maps, ref)
+    results["MRR"] = round(mean_reciprocal_rank(ref_anchor_maps, ref), 3)
     for k in ks:
-        results[f"Hits@{k}"] = hits_at_k(ref_anchor_maps, ref, k)
+        results[f"Hits@{k}"] = round(hits_at_k(ref_anchor_maps, ref, k), 3)
     SavedObj.print_json(results)
 
     return results
