@@ -118,6 +118,8 @@ class OntoAlignNegCandsSampler:
         for ref_src_ent_name, ref_tgt_ent_name in getattr(self, f"pos_{self.flag}"):
             banner_msg(f"CandMaps for ({ref_src_ent_name}, {ref_tgt_ent_name})")
             anchor_map = EntityMapping(ref_src_ent_name, ref_tgt_ent_name, self.rel, 0.0)
+            # excluding all the reference target classes for the same reference source class 
+            # as negative candidates
             excluded_ref_tgts = self.current_ref_dict()[ref_src_ent_name]
             if len(excluded_ref_tgts) > 1:
                 print("One-to-many reference mappings detected ...")
@@ -177,15 +179,16 @@ class OntoAlignNegCandsSampler:
         total_n_cands = 0
         for strategy, n_cands in strategy2nums.items():
             i += 1
-            total_n_cands += n_cands
             if strategy in sampling_options:
                 sampler = getattr(self, f"{strategy}_sample")
-                # for ith iteration, the worst case is when (i-1)*n_cands are duplicated
-                # and len(excluded_ref_tgts) to be removed
-                # so we generate i*n_cands candidates first and prune the rest
-                # another edge case is when sampled candidates are not sufficient
-                # but we have covered the worst case for the duplicates
-                cur_tgt_cands = sampler(ref_tgt_ent_name, (i * n_cands) + len(excluded_ref_tgts))
+                # for ith iteration, the worst case is when all n_cands are duplicated
+                # or should be excluded from other reference targets so we generate 
+                # NOTE:  total_n_cands + n_cands + len(excluded_ref_tgts) 
+                # candidates first and prune the rest; another edge case is when sampled 
+                # candidates are not sufficient and we use random sample to meet n_cands
+                cur_tgt_cands = sampler(
+                    ref_tgt_ent_name, total_n_cands + n_cands + len(excluded_ref_tgts)
+                )
                 # remove the duplicated candidates (and excluded refs) and prune the tail
                 cur_tgt_cands = list(
                     set(cur_tgt_cands) - set(all_tgt_cand_names) - set(excluded_ref_tgts)
@@ -205,6 +208,7 @@ class OntoAlignNegCandsSampler:
                 if strategy != "random":
                     stats["random"] += n_cands - stats[strategy]
                 all_tgt_cand_names += cur_tgt_cands
+                total_n_cands += n_cands
             else:
                 raise ValueError(f"Invalid sampling trategy: {strategy}.")
         assert len(all_tgt_cand_names) == total_n_cands
