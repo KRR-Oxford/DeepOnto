@@ -252,8 +252,8 @@ class OntoAlignNegCandsSampler:
         # print(self.tgt_onto.owl.search(iri=unfold_iri(ref_tgt_ent_name)))
 
         # for subsumption mapping, ancestors or descendants will be avoided
-        ref_tgt_ancestors = ancestors_of(ref_tgt_ent) if self.avoid_ancestors else []
-        ref_tgt_descendants = descendants_of(ref_tgt_ent) if self.avoid_descendents else []
+        ref_tgt_ancestors = thing_class_ancestors_of(ref_tgt_ent) if self.avoid_ancestors else []
+        ref_tgt_descendants = thing_class_descendants_of(ref_tgt_ent) if self.avoid_descendents else []
         # avoid also "self"
         avoid_neighbors = set([ref_tgt_ent] + ref_tgt_ancestors + ref_tgt_descendants)
 
