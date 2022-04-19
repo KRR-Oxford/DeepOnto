@@ -13,7 +13,7 @@
 # limitations under the License.
 """Utility functions for exploring an ontology graph"""
 
-from owlready2.entity import EntityClass
+from owlready2.entity import ThingClass
 from typing import List
 from collections import defaultdict
 import math
@@ -26,14 +26,14 @@ from deeponto import SavedObj
 ##################################################################################
 
 
-def superclasses_of(ent: EntityClass, ignore_root: bool = True) -> List[EntityClass]:
+def super_thing_classes_of(ent: ThingClass, ignore_root: bool = True) -> List[ThingClass]:
     """ return super-classes of an entity class but excluding non-entity classes 
     such as existential axioms
     """
     supclasses = set()
     for supclass in ent.is_a:
         # ignore the root class Thing
-        if isinstance(supclass, EntityClass):
+        if isinstance(supclass, ThingClass):
             if ignore_root and supclass.name == "Thing":
                 continue
             else:
@@ -41,21 +41,21 @@ def superclasses_of(ent: EntityClass, ignore_root: bool = True) -> List[EntityCl
     return list(supclasses)
 
 
-def subclasses_of(ent: EntityClass) -> List[EntityClass]:
+def sub_thing_classes_of(ent: ThingClass) -> List[ThingClass]:
     """ return sub-classes of an entity class but excluding non-entity classes 
     such as existential axioms
     """
     subclasses = set()
     for subclass in ent.subclasses():
-        if isinstance(subclass, EntityClass):
+        if isinstance(subclass, ThingClass):
             subclasses.add(subclass)
     return list(subclasses)
 
 
-def depth_max(ent: EntityClass) -> int:
+def depth_max(ent: ThingClass) -> int:
     """ get te maximum depth of a class to the root
     """
-    supclasses = superclasses_of(ent=ent)
+    supclasses = super_thing_classes_of(ent=ent)
     if len(supclasses) == 0:
         return 0
     d_max = 0
@@ -66,10 +66,10 @@ def depth_max(ent: EntityClass) -> int:
     return d_max + 1
 
 
-def depth_min(ent: EntityClass) -> int:
+def depth_min(ent: ThingClass) -> int:
     """Get te minimum depth of a class to the root
     """
-    supclasses = superclasses_of(ent=ent)
+    supclasses = super_thing_classes_of(ent=ent)
     if len(supclasses) == 0:
         return 0
     d_min = math.inf
@@ -80,25 +80,27 @@ def depth_min(ent: EntityClass) -> int:
     return d_min + 1
 
 
-def ancestors_of(ent: EntityClass):
-    """Return all the ancestors of a class (except for the root ThingClass)
+#TODO: debug cannot assert isistance
+def thing_class_ancestors_of(ent: ThingClass, include_self: bool=False):
+    """Return all the ancestors (restricted to EntityClass) of a class 
+    (except for the root ThingClass)
     """
-    ancestors = superclasses_of(ent)
-    for parent in ancestors:
-        ancestors += ancestors_of(parent)
-    return ancestors
+    ancestors = [a for a in ent.ancestors() if isinstance(a, ThingClass)]
+    if not include_self:
+        ancestors.remove(ent)
+    return list(set(ancestors))
 
 
-def descendants_of(ent: EntityClass):
-    """Return all the descendents of a class
+def thing_class_descendants_of(ent: ThingClass, include_self: bool=False):
+    """Return all the descendents (restricted to EntityClass) of a class 
     """
-    descendants = subclasses_of(ent)
-    for child in descendants:
-        descendants += descendants_of(child)
-    return descendants
+    descendants = [a for a in ent.descendants() if isinstance(a, ThingClass)]
+    if not include_self:
+        descendants.remove(ent)
+    return list(set(descendants))
 
 
-def neighbours_of(anchor_ent: EntityClass, max_hob: int = 5, ignore_root: bool = True):
+def neighbours_of(anchor_ent: ThingClass, max_hob: int = 5, ignore_root: bool = True):
     """Compute neighbours of an anchor entity up to max_hob
     in Breadth First Search style which ensures determined outputs
     """
@@ -110,7 +112,7 @@ def neighbours_of(anchor_ent: EntityClass, max_hob: int = 5, ignore_root: bool =
     while hob <= max_hob:
         cur_hob_neighbours = []
         for ent in frontier:
-            cur_hob_neighbours += superclasses_of(ent, ignore_root) + subclasses_of(ent)
+            cur_hob_neighbours += super_thing_classes_of(ent, ignore_root) + sub_thing_classes_of(ent)
             cur_hob_neighbours = list(set(cur_hob_neighbours))
             explored.append(ent)
         neighbours[hob] = cur_hob_neighbours

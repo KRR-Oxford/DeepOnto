@@ -124,10 +124,10 @@ class IterativeMappingExtension:
         tgt_ent = self.tgt_onto.owl.search(iri=unfold_iri(tgt_ent_name))[0]
 
         cand_pairs = list(
-            product(superclasses_of(src_ent), superclasses_of(tgt_ent))
+            product(super_thing_classes_of(src_ent), super_thing_classes_of(tgt_ent))
         )  # parent pairs
         cand_pairs += list(
-            product(subclasses_of(src_ent), subclasses_of(tgt_ent))
+            product(sub_thing_classes_of(src_ent), sub_thing_classes_of(tgt_ent))
         )  # children pairs
         num_explored = 0
         num_undervalued = 0
