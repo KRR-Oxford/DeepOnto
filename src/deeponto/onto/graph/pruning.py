@@ -52,13 +52,21 @@ def preserve_classes(
                 if not abbr_iri(cl.iri) in preserved_class_names:
                     if keep_hierarchy:
                         print(f"Link SubClasses and SuperClasses of the about-to-delete class: {abbr_iri(cl.iri)}")
+                        # save the children and parents first
                         children = list(set(cl.subclasses()))
                         parents = list(set(cl.is_a))
+                        # for each child, delete the class itself as a parent
+                        # and add the class's parents as parents
+                        # e.g., if A <subs> B <subs> C and B needs to be removed
+                        # then construct A <subs> C and let B alone (use OWLAPI to delete)
                         for ch in children:
                             ch.is_a += parents
-                            ch.is_a.remove(cl)
+                            ch.is_a.remove(cl)  # isolate cl from its child
+                        # isolate cl from its parents
                         cl.is_a.clear()
                     if apply_destroy:
+                        # owlready2 destroy_entity has some unknown issue reporting
+                        # use OWLAPI instead to delete the class to fulfill pruning
                         destroy_entity(cl)
                     count += 1
         except:
