@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from owlready2.entity import EntityClass
+from owlready2.entity import ThingClass
 from owlready2.prop import IndividualValueList
 from typing import Iterable, List, Dict, Tuple
 
@@ -82,7 +82,7 @@ def lab_product(src_ent_labs: List[str], tgt_ent_labs: List[str]) -> Tuple[List,
 
 
 def ents_labs_from_props(
-    ents: Iterable[EntityClass], ents2idx: Dict, lab_props: List[str] = ["label"]
+    ents: Iterable[ThingClass], ents2idx: Dict, lab_props: List[str] = ["label"]
 ):
     """Extract unique and cleaned labels (for a group of entities) given the input annotational properties;
     entities are represented by their numbers according to {ents2idx}
@@ -96,14 +96,14 @@ def ents_labs_from_props(
     return ents_labels, num_labels
 
 
-def ent_labs_from_props(ent: EntityClass, lab_props: List[str] = ["label"]):
+def ent_labs_from_props(ent: ThingClass, lab_props: List[str] = ["label"]):
     """Extract unique and cleaned labels (for an entity) given the input annotational properties
     """
     ent_labels = list(chain(*[prep_labs(ent, lp) for lp in lab_props]))
     return uniqify(ent_labels)
 
 
-def prep_labs(ent: EntityClass, lab_prop: str) -> List[str]:
+def prep_labs(ent: ThingClass, lab_prop: str) -> List[str]:
     """Preprocess the texts of a class given by a particular property including
     underscores removal and lower-casing.
 
@@ -131,7 +131,7 @@ def prep_labs(ent: EntityClass, lab_prop: str) -> List[str]:
 
 
 def sib_labs(
-    ents: Iterable[EntityClass], lab_props: List[str] = ["label"]
+    ents: Iterable[ThingClass], lab_props: List[str] = ["label"]
 ) -> List[List[List[str]]]:
     """Return all the sibling label groups with size > 1 and no duplicates
     """
@@ -145,14 +145,14 @@ def sib_labs(
     return list(map(lambda dis_group: [list(syn_group) for syn_group in dis_group], sib_lables))
 
 
-def child_labs(ent: EntityClass, lab_props: List[str] = ["label"]) -> Tuple[Tuple[str]]:
+def child_labs(ent: ThingClass, lab_props: List[str] = ["label"]) -> Tuple[Tuple[str]]:
     """Return labels of child entity classes, ensuring that no label groups are duplicated 
     """
     return tuple(
         set(
             tuple(ent_labs_from_props(child, lab_props))
             for child in ent.subclasses()
-            if isinstance(child, EntityClass)
+            if isinstance(child, ThingClass)
         )
     )
 
