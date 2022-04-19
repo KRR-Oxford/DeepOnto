@@ -31,7 +31,12 @@ def overlap_count(onto: Ontology, preserved_class_names: List[str]):
     return len(set(class_name_set).intersection(preserved_class_names))
 
 
-def preserve_classes(onto: Ontology, preserved_class_names: List[str], keep_hierarchy: bool = True):
+def preserve_classes(
+    onto: Ontology,
+    preserved_class_names: List[str],
+    keep_hierarchy: bool = True,
+    apply_destroy: bool = True,
+):
     """Preserve only the provided entity classes while keeping the relative hierarchy 
     by linking the parents and children of the deleted classes
     """
@@ -45,17 +50,17 @@ def preserve_classes(onto: Ontology, preserved_class_names: List[str], keep_hier
         try:
             for cl in onto.owl.classes():
                 if not abbr_iri(cl.iri) in preserved_class_names:
-                        if keep_hierarchy:
-                            children = list(cl.subclasses())
-                            parents = list(cl.is_a)
-                            for ch in children:
-                                ch.is_a += parents
-                                ch.is_a.remove(cl)
-                            cl.is_a = []
-                            destroy_entity(cl)
-                        else:
-                            destroy_entity(cl)
-                        count += 1
+                    if keep_hierarchy:
+                        print(f"Link SubClasses and SuperClasses of the about-to-delete class: {abbr_iri(cl.iri)}")
+                        children = list(set(cl.subclasses()))
+                        parents = list(set(cl.is_a))
+                        for ch in children:
+                            ch.is_a += parents
+                            ch.is_a.remove(cl)
+                        cl.is_a.clear()
+                    if apply_destroy:
+                        destroy_entity(cl)
+                    count += 1
         except:
             print(f"Process: {count}/{num_destroyed}")
         # print(f"Process: {count}/{num_destroyed}")
