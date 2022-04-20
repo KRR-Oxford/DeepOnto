@@ -83,7 +83,10 @@ def global_match_select(
 
     # grid search the following mapping thresholds and mappings
     thresholds = (
-        evenly_divide(0, 0.8, 8) + evenly_divide(0.9, 0.97, 7) + evenly_divide(0.98, 0.999, 19)
+        evenly_divide(0, 0.8, 8)
+        + evenly_divide(0.9, 0.97, 7)
+        + evenly_divide(0.98, 0.999, 19)
+        + evenly_divide(0.9991, 0.9995, 4)
     )
     mapping_types = ["src2tgt", "tgt2src", "combined"]
 
@@ -128,14 +131,7 @@ def global_match_select(
         for flag in mapping_types:
             eval_results[thr][flag] = pool.apply_async(
                 global_match_eval,
-                args=(
-                    None,
-                    val_ref_path,
-                    merged_null_ref_path,
-                    thr,
-                    preds[flag],
-                    flag,
-                ),
+                args=(None, val_ref_path, merged_null_ref_path, thr, preds[flag], flag,),
             )
     pool.close()
     pool.join()
