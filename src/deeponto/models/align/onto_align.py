@@ -30,6 +30,7 @@ from deeponto.onto.mapping import *
 from deeponto.onto.text import Tokenizer, text_utils
 from deeponto.utils.logging import create_logger, banner_msg
 from deeponto.utils import detect_path
+from deeponto.evaluation.align_eval import global_match_select
 
 
 class OntoAlign:
@@ -42,6 +43,8 @@ class OntoAlign:
         rel: str = "≡",
         n_best: Optional[int] = 10,
         is_trainable: bool = False,
+        is_val_model_select: bool = False,
+        default_hyperparams: Optional[dict] = None,
         saved_path: str = "",
     ):
 
@@ -58,11 +61,17 @@ class OntoAlign:
         self.logger = create_logger(f"{type(self).__name__}", saved_path=self.saved_path)
         self.n_best = n_best
         self.is_trainable = is_trainable
+        self.is_val_model_select = is_val_model_select
 
         self.src2tgt_mappings = self.load_mappings("src2tgt", "global_match")
         self.tgt2src_mappings = self.load_mappings("tgt2src", "global_match")
         self.flag_set = cycle(["src2tgt", "tgt2src"])
         self.flag = next(self.flag_set)
+        
+        # for hyperparam/model selection
+        self.global_match_dir = self.saved_path + "/global_match"
+        # if validation mappings are not provided, we use the default hyperparams
+        self.best_hyperparams = default_hyperparams
 
     ##################################################################################
     ###                        compute entity pair mappings                        ###
@@ -257,6 +266,45 @@ class OntoAlign:
             src_ent_toks, self.cand_pool_size
         )  # [(ent_id, idf_score)]
         return tgt_cand_ids
+    
+    def hyperparams_select(
+        self,
+        train_ref_path: Optional[str],
+        val_ref_path: Optional[str],
+        test_ref_path: Optional[str],
+        null_ref_path: Optional[str],
+        num_procs: int = 10,
+    ):
+        """Do hyperparam tuning on validation set before choosing which 
+        {src2tgt, tgt2src, combined} mappings to be refined
+        """
+        # use default mapping type for extension if no validation available
+        if not val_ref_path:
+            print("Validation mappings are not provided; use default mapping type: src2tgt")
+            return self.best_hyperparams["map_type"]  # which by default is "src2tgt"
+
+        # validate and choose the best mapping type for mapping extension
+        if detect_path(self.global_match_dir + "/best_hyperparams.val.json"):
+            print(
+                "found an existing hyperparam results on validation set,"
+                + " delete it and re-run if it's empty ..."
+            )
+        else:
+            global_match_select(
+                self.global_match_dir,
+                train_ref_path,
+                val_ref_path,
+                test_ref_path,
+                null_ref_path,
+                num_procs,
+            )
+        self.best_hyperparams = SavedObj.load_json(
+            self.global_match_dir + "/best_hyperparams.val.json"
+        )
+        banner_msg("Best Validation Hyperparams Before Refinement")
+        del self.best_hyperparams["best_f1"]
+        SavedObj.print_json(self.best_hyperparams)
+        return self.best_hyperparams["map_type"]
 
     ##################################################################################
     ###                        other auxiliary functions                           ###

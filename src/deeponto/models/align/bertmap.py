@@ -79,6 +79,8 @@ class BERTMap(OntoAlign):
             rel="≡",
             n_best=n_best,
             is_trainable=True,
+            is_val_model_select=True,
+            default_hyperparams={"threshold": 0.999, "map_type": "src2tgt"},
             saved_path=saved_path,
         )
         self.bert_args = bert_args
@@ -105,7 +107,8 @@ class BERTMap(OntoAlign):
         self.bert_classifier = None
 
         # Refinement initialization
-        self.global_match_dir = self.saved_path + "/global_match"
+        # NOTE: init of global_match_dir is moved on OntoAlign Class
+        # self.global_match_dir = self.saved_path + "/global_match"  
         self.global_match_refined_dir = self.global_match_dir + "/refined"
         self.map_extender = None
         # if validation mappings are not provided, we use the default hyperparams
@@ -272,45 +275,6 @@ class BERTMap(OntoAlign):
     ##################################################################################
     ###                            Mapping Refinement                              ###
     ##################################################################################
-
-    def select_which_to_refine(
-        self,
-        train_ref_path: Optional[str],
-        val_ref_path: Optional[str],
-        test_ref_path: Optional[str],
-        null_ref_path: Optional[str],
-        num_procs: int = 10,
-    ):
-        """Do hyperparam tuning on validation set before choosing which 
-        {src2tgt, tgt2src, combined} mappings to be refined
-        """
-        # use default mapping type for extension if no validation available
-        if not val_ref_path:
-            print("Validation mappings are not provided; use default mapping type: src2tgt")
-            return self.best_hyperparams["map_type"]  # which by default is "src2tgt"
-
-        # validate and choose the best mapping type for mapping extension
-        if detect_path(self.global_match_dir + "/best_hyperparams.val.json"):
-            print(
-                "found an existing hyperparam results on validation set,"
-                + " delete it and re-run if it's empty ..."
-            )
-        else:
-            global_match_select(
-                self.global_match_dir,
-                train_ref_path,
-                val_ref_path,
-                test_ref_path,
-                null_ref_path,
-                num_procs,
-            )
-        self.best_hyperparams = SavedObj.load_json(
-            self.global_match_dir + "/best_hyperparams.val.json"
-        )
-        banner_msg("Best Validation Hyperparams Before Refinement")
-        del self.best_hyperparams["best_f1"]
-        SavedObj.print_json(self.best_hyperparams)
-        return self.best_hyperparams["map_type"]
 
     def refinement(self, map_type_to_extend: str):
         """Apply mapping refinement as a post-processing for the scored mappings
