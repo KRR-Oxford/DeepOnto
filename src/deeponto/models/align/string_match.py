@@ -41,6 +41,8 @@ class StringMatch(OntoAlign):
             rel="≡",
             n_best=n_best,
             is_trainable=False,
+            is_val_model_select=True,
+            default_hyperparams={"threshold": 0.9, "map_type": "src2tgt"},
             saved_path=saved_path,
         )
         self.use_edit_dist = use_edit_dist

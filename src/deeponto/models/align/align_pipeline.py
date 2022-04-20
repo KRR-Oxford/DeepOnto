@@ -68,16 +68,16 @@ class OntoAlignPipeline(OntoPipeline):
         # make prediction according mode
         if mode == "global_match":
             self.model.global_match(num_procs)
+            map_type = self.model.hyperparams_select(
+                self.config.corpora.train_mappings_path,
+                self.config.corpora.val_mappings_path,
+                self.config.corpora.test_mappings_path,
+                self.config.corpora.null_mappings_path
+            )
 
             # mapping refinement for bertmap
             if self.model_name == "bertmap":
                 torch.cuda.empty_cache()
-                map_type = self.model.select_which_to_refine(
-                    self.config.corpora.train_mappings_path,
-                    self.config.corpora.val_mappings_path,
-                    self.config.corpora.test_mappings_path,
-                    self.config.corpora.null_mappings_path
-                )
                 self.model.refinement(map_type)
 
         elif mode == "pair_score":
