@@ -233,7 +233,7 @@ class OntoAlign:
                 continue
             cur_mappings = self.global_mappings_for_ent(src_ent_id)
             mappings.add_many(*cur_mappings)
-            mappings_for_chunk.append(cur_mappings)
+            mappings_for_chunk += cur_mappings
             if intermediate_saving and src_ent_id % save_step == 0:
                 mappings.save_instance(f"{self.saved_path}/global_match/{self.flag}")
                 self.logger.info("Save currently computed mappings ...")
