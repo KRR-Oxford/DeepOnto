@@ -69,6 +69,8 @@ def preserve_classes(
                         # use OWLAPI instead to delete the class to fulfill pruning
                         destroy_entity(cl)
                     count += 1
+            if not apply_destroy:
+                break
         except:
             print(f"Process: {count}/{num_destroyed}")
         # print(f"Process: {count}/{num_destroyed}")
