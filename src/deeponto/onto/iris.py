@@ -19,7 +19,7 @@ namespaces = defaultdict(str)
 
 # largebio
 namespaces["http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#"] = "fma:"
-namespaces["http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#"] = "nci:"
+namespaces["http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#"] = "ncit:"
 namespaces["http://www.ihtsdo.org/snomed#"] = "snomed:"
 
 # most recent version of SNOMED (accessed on May 2021)
