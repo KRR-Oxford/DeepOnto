@@ -53,11 +53,13 @@ def sub_thing_classes_of(ent: ThingClass) -> List[ThingClass]:
 
 
 def depth_max(ent: ThingClass) -> int:
-    """ get te maximum depth of a class to the root
+    """ get te maximum depth of a class (including only named 
+    classes in the path) to the root
     """
     supclasses = super_thing_classes_of(ent=ent)
+    # with only Thing Class
     if len(supclasses) == 0:
-        return 0
+        return 1
     d_max = 0
     for super_c in supclasses:
         super_d = depth_max(ent=super_c)
@@ -67,11 +69,13 @@ def depth_max(ent: ThingClass) -> int:
 
 
 def depth_min(ent: ThingClass) -> int:
-    """Get te minimum depth of a class to the root
+    """Get te minimum depth of a class (including only named 
+    classes in the path) to the root
     """
     supclasses = super_thing_classes_of(ent=ent)
+    # with only Thing Class
     if len(supclasses) == 0:
-        return 0
+        return 1
     d_min = math.inf
     for super_c in supclasses:
         super_d = depth_min(ent=super_c)
