@@ -2,7 +2,7 @@
 
 There are two modes for Ontology Alignment (or Matching; OM): `global_match` and `pair_score`. `global_match` aims to compute mappings given two input ontologies and `pair_score` is for scoring provided class pairs. 
 
-> Precision, Recall, and F1 are frequently used in evaluating `global_match` whereas ranking-based metrics like Hits@K and MRR are used in evaluating `pair_score`.
+> Precision, Recall, and F1 are frequently used in evaluating `global_match` whereas ranking-based metrics like Hits@K and MRR are used in evaluating `pair_score`. See our incoming publication (to-be-updated) for detailed guidance of ontology matching evaluation.
 
 
 ### Global Matching
@@ -15,9 +15,9 @@ Example usage of `onto_match.py`:
 
 ```
 python onto_match.py \
---saved_path "./om_fma2snomed" \  
---src_onto "./data/fma.owl" \
---tgt_onto "./data/snomed.owl" \
+--saved_path "./onto_match_experiment" \  
+--src_onto "./data/src_onto.owl" \
+--tgt_onto "./data/tgt_onto.owl" \
 --config_path "./config/bertmap.json"
 ```
 
@@ -49,3 +49,5 @@ Then the script will do the followings:
 
 
 ### Pair Scoring
+
+In this mode, the OM model is expected to compute the matching scores for input class pairs. Compared to Global Matching, an extra argument for unscored mappings is needed
