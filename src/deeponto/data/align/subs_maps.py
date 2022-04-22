@@ -25,12 +25,18 @@ class SubsumptionMappingGenerator(FlaggedObj):
         self,
         src_onto: Ontology,
         tgt_onto: Ontology,
-        equiv_mappings_path: str
+        equiv_mappings_path: str,
+        map_ratio: int = 1,
     ):
-        self.src_onto = src_onto
-        self.tgt_onto = tgt_onto
+        super().__init__(src_onto, tgt_onto)
         self.equiv_pairs = OntoMappings.read_tsv_mappings(equiv_mappings_path).to_tuples()
-        super().__init__()
+        self.map_ratio = map_ratio
+        
+    def generate_from_equiv_pair(self, src_ent_name: str, tgt_ent_name: str):
+        
+        pass
+        src_iri = unfold_iri(src_ent_name)
+        
 
     def equiv_src_iris(self):
         """Return iris of the source classes from the equivalence mapping

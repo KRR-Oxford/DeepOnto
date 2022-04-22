@@ -13,10 +13,19 @@
 # limitations under the License.
 """Super class for objects that need to switch src2tgt and tgt2src flags"""
 
+from __future__ import annotations
+from typing import TYPE_CHECKING
 from itertools import cycle
+from deeponto.onto import Ontology
+
+# to avoid circular imports
+if TYPE_CHECKING:
+    from deeponto.onto import Ontology
 
 class FlaggedObj:
-    def __init__(self):
+    def __init__(self, src_onto: Ontology, tgt_onto: Ontology):
+        self.src_onto = src_onto
+        self.tgt_onto = tgt_onto
         self.flag_set = cycle(["src2tgt", "tgt2src"])
         self.flag = next(self.flag_set)
 

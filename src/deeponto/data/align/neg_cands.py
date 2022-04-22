@@ -44,11 +44,9 @@ class NegativeCandidateGenerator(FlaggedObj):
         avoid_descendents: bool = False,
     ):
 
-        self.src_onto = src_onto
-        self.tgt_onto = tgt_onto
+        super().__init__(src_onto, tgt_onto)
         self.rel = rel
-        super().__init__()
-
+        
         # loaded mappings are served as +ve candiates (anchors)
         # note that dict cannot be used here because multiple mappings are possible
         self.pos_src2tgt = OntoMappings.read_tsv_mappings(
