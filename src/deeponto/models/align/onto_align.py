@@ -49,8 +49,8 @@ class OntoAlign(FlaggedObj):
         saved_path: str = "",
     ):
 
-        self.src_onto = src_onto
-        self.tgt_onto = tgt_onto
+        super().__init__(src_onto, tgt_onto)
+        
         self.tokenizer = tokenizer
         self.cand_pool_size = cand_pool_size
         self.rel = rel
@@ -66,9 +66,6 @@ class OntoAlign(FlaggedObj):
 
         self.src2tgt_mappings = self.load_mappings("src2tgt", "global_match")
         self.tgt2src_mappings = self.load_mappings("tgt2src", "global_match")
-        # self.flag_set = cycle(["src2tgt", "tgt2src"])
-        # self.flag = next(self.flag_set)
-        super().__init__()
         
         # for hyperparam/model selection
         self.global_match_dir = self.saved_path + "/global_match"
