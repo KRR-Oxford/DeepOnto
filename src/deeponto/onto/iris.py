@@ -22,12 +22,10 @@ namespaces["http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0
 namespaces["http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#"] = "ncit_largebio:"
 namespaces["http://www.ihtsdo.org/snomed#"] = "snomed_largebio:"
 
-# most recent version of SNOMED (accessed on May 2021)
-namespaces["http://snomed.info/id/"] = "snomed_may2021:"
-
-# new largebio
-namespaces["http://purl.org/sig/ont/fma/"] = "fma_2019:"
+# UMLS: new largebio
+namespaces["http://purl.org/sig/ont/fma/"] = "fma:"
 # nci has obo: prefix so skip it
+namespaces["http://snomed.info/id/"] = "snomed:"
 
 # Mondo
 namespaces["http://linkedlifedata.com/resource/umls/id/"] = "umls:"
