@@ -18,9 +18,9 @@ from collections import defaultdict
 namespaces = defaultdict(str)
 
 # largebio
-namespaces["http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#"] = "fma:"
-namespaces["http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#"] = "ncit:"
-namespaces["http://www.ihtsdo.org/snomed#"] = "snomed:"
+namespaces["http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#"] = "fma_largebio:"
+namespaces["http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#"] = "ncit_largebio:"
+namespaces["http://www.ihtsdo.org/snomed#"] = "snomed_largebio:"
 
 # most recent version of SNOMED (accessed on May 2021)
 namespaces["http://snomed.info/id/"] = "snomed_may2021:"
