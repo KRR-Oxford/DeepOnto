@@ -100,4 +100,5 @@ logmap-log.out
 
 # experiments
 experiments/
-run.sh
+run.mondo.sh
+run.umls.sh
