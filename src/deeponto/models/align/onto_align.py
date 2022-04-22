@@ -18,7 +18,7 @@
 
 """
 
-from itertools import cycle, chain
+from itertools import chain
 from typing import List, Tuple, Optional, Iterable
 from multiprocessing_on_dill import Process, Manager
 from pyats.datastructures import AttrDict
@@ -31,9 +31,10 @@ from deeponto.onto.text import Tokenizer, text_utils
 from deeponto.utils.logging import create_logger, banner_msg
 from deeponto.utils import detect_path
 from deeponto.evaluation.align_eval import global_match_select
+from deeponto import FlaggedObj
 
 
-class OntoAlign:
+class OntoAlign(FlaggedObj):
     def __init__(
         self,
         src_onto: Ontology,
@@ -65,8 +66,9 @@ class OntoAlign:
 
         self.src2tgt_mappings = self.load_mappings("src2tgt", "global_match")
         self.tgt2src_mappings = self.load_mappings("tgt2src", "global_match")
-        self.flag_set = cycle(["src2tgt", "tgt2src"])
-        self.flag = next(self.flag_set)
+        # self.flag_set = cycle(["src2tgt", "tgt2src"])
+        # self.flag = next(self.flag_set)
+        super().__init__()
         
         # for hyperparam/model selection
         self.global_match_dir = self.saved_path + "/global_match"
@@ -144,18 +146,6 @@ class OntoAlign:
         # else:
         #    print("found saved tgt2src mappings; delete it and re-run if empty or incomplete ...")
         self.renew()
-
-    def renew(self):
-        """Renew alignment direction to src2tgt
-        """
-        while self.flag != "src2tgt":
-            self.switch()
-
-    def switch(self):
-        """Switch alignment direction
-        """
-        self.src_onto, self.tgt_onto = self.tgt_onto, self.src_onto
-        self.flag = next(self.flag_set)
 
     def current_global_mappings(self):
         return getattr(self, f"{self.flag}_mappings")

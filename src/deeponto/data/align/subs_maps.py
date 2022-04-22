@@ -14,7 +14,32 @@
 """Generate Subsumption Mappings from Equivalence Mappings"""
 
 
-class SubsumptionMappingGenerator:
-    
-    def __init__(self):
-        pass
+from deeponto.onto.text.text_utils import unfold_iri
+from deeponto.onto import Ontology
+from deeponto.onto.mapping import OntoMappings
+from deeponto import FlaggedObj
+
+
+class SubsumptionMappingGenerator(FlaggedObj):
+    def __init__(
+        self,
+        src_onto: Ontology,
+        tgt_onto: Ontology,
+        equiv_mappings_path: str
+    ):
+        self.src_onto = src_onto
+        self.tgt_onto = tgt_onto
+        self.equiv_pairs = OntoMappings.read_tsv_mappings(equiv_mappings_path).to_tuples()
+        super().__init__()
+
+    def equiv_src_iris(self):
+        """Return iris of the source classes from the equivalence mapping
+        for downstream class deletion
+        """
+        return [unfold_iri(p[0]) for p in self.equiv_pairs]
+
+    def equiv_tgt_iris(self):
+        """Return iris of the target classes from the equivalence mapping
+        for downstream class deletion
+        """
+        return [unfold_iri(p[1]) for p in self.equiv_pairs]

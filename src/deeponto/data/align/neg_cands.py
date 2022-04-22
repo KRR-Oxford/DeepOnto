@@ -14,7 +14,6 @@
 """Provide functions for generating negative candidates"""
 
 from typing import Optional
-from itertools import cycle
 import random
 
 from deeponto.onto import Ontology
@@ -24,14 +23,14 @@ from deeponto.onto.text.text_utils import unfold_iri, abbr_iri
 from deeponto.onto.mapping import OntoMappings, EntityMapping, AnchoredOntoMappings
 from deeponto.utils import uniqify
 from deeponto.utils.logging import banner_msg
-from deeponto import SavedObj
+from deeponto import SavedObj, FlaggedObj
 
 
 # TODO: to be updated constantly
 sampling_options = ["random", "idf", "neighbour"]
 
 
-class NegativeCandidateGenerator:
+class NegativeCandidateGenerator(FlaggedObj):
     def __init__(
         self,
         src_onto: Ontology,
@@ -48,8 +47,7 @@ class NegativeCandidateGenerator:
         self.src_onto = src_onto
         self.tgt_onto = tgt_onto
         self.rel = rel
-        self.flag_set = cycle(["src2tgt", "tgt2src"])
-        self.flag = next(self.flag_set)
+        super().__init__()
 
         # loaded mappings are served as +ve candiates (anchors)
         # note that dict cannot be used here because multiple mappings are possible
@@ -146,18 +144,6 @@ class NegativeCandidateGenerator:
             f"./{self.flag}.rank/for_score"
         )
         SavedObj.save_json(self.stats, f"./{self.flag}.rank/stats.json")
-
-    def renew(self):
-        """Renew alignment direction to src2tgt
-        """
-        while self.flag != "src2tgt":
-            self.switch()
-
-    def switch(self):
-        """Switch alignment direction
-        """
-        self.src_onto, self.tgt_onto = self.tgt_onto, self.src_onto
-        self.flag = next(self.flag_set)
 
     def current_anchor_mappings(self):
         return getattr(self, f"{self.flag}_anchored_mappings")
