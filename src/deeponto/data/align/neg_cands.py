@@ -31,7 +31,7 @@ from deeponto import SavedObj
 sampling_options = ["random", "idf", "neighbour"]
 
 
-class OntoAlignNegCandsSampler:
+class NegativeCandidateGenerator:
     def __init__(
         self,
         src_onto: Ontology,
