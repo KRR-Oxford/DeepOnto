@@ -11,6 +11,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Super class for objects that need to switch src2tgt and tgt2src flags"""
 
-from .saved_obj import SavedObj
-from .flagged_obj import FlaggedObj
+from itertools import cycle
+
+class FlaggedObj:
+    def __init__(self):
+        self.flag_set = cycle(["src2tgt", "tgt2src"])
+        self.flag = next(self.flag_set)
+
+    def renew(self):
+        """Renew alignment direction to src2tgt
+        """
+        while self.flag != "src2tgt":
+            self.switch()
+
+    def switch(self):
+        """Switch alignment direction
+        """
+        self.src_onto, self.tgt_onto = self.tgt_onto, self.src_onto
+        self.flag = next(self.flag_set)
