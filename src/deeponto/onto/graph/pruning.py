@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, List
 from deeponto.onto.text.text_utils import abbr_iri
-from owlready2 import destroy_entity
+from owlready2 import destroy_entity, ThingClass
 
 # to avoid circular imports
 if TYPE_CHECKING:
@@ -35,7 +35,7 @@ def preserve_classes(
     onto: Ontology,
     preserved_class_names: List[str],
     keep_hierarchy: bool = True,
-    apply_destroy: bool = True,
+    apply_destroy: bool = False,
 ):
     """Preserve only the provided entity classes while keeping the relative hierarchy 
     by linking the parents and children of the deleted classes
@@ -50,20 +50,7 @@ def preserve_classes(
         try:
             for cl in onto.owl.classes():
                 if not abbr_iri(cl.iri) in preserved_class_names:
-                    if keep_hierarchy:
-                        print(f"Link SubClasses and SuperClasses of the about-to-delete class: {abbr_iri(cl.iri)}")
-                        # save the children and parents first
-                        children = list(set(cl.subclasses()))
-                        parents = list(set(cl.is_a))
-                        # for each child, delete the class itself as a parent
-                        # and add the class's parents as parents
-                        # e.g., if A <subs> B <subs> C and B needs to be removed
-                        # then construct A <subs> C and let B alone (use OWLAPI to delete)
-                        for ch in children:
-                            ch.is_a += parents
-                            ch.is_a.remove(cl)  # isolate cl from its child
-                        # isolate cl from its parents
-                        cl.is_a.clear()
+                    isolate_class(cl, keep_hierarchy)
                     if apply_destroy:
                         # owlready2 destroy_entity has some unknown issue reporting
                         # use OWLAPI instead to delete the class to fulfill pruning
@@ -76,3 +63,23 @@ def preserve_classes(
         # print(f"Process: {count}/{num_destroyed}")
     print(f"Finished: {count}/{num_destroyed}")
     return onto
+
+
+def isolate_class(cl: ThingClass, keep_hierarchy: bool = True):
+    """Isolate an entity class from its parents and chilren and optionally
+    reconstruct the hierarchy between them (parent <subs> child)
+    """
+    # save the children and parents first
+    children = list(set(cl.subclasses()))
+    parents = list(set(cl.is_a))
+    # for each child, delete the class itself as a parent
+    # and add the class's parents as parents
+    # e.g., if A <subs> B <subs> C and B needs to be removed
+    # then construct A <subs> C and let B alone (use OWLAPI to delete)
+    if keep_hierarchy:
+        print(f"Link SubClasses and SuperClasses of the isolated class: {abbr_iri(cl.iri)}")
+        for ch in children:
+            ch.is_a += parents
+            ch.is_a.remove(cl)  # isolate cl from its child
+    # isolate cl from its parents
+    cl.is_a.clear()

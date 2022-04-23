@@ -38,7 +38,16 @@ def main(
     avoid_ancestors: bool,
     avoid_descendents: bool,
 ):
-    lab_props = ["label", "hasExactSynonym", "exactMatch", "alternative_term", "symbol"]
+    lab_props = [
+        "label",
+        "hasExactSynonym",
+        "exactMatch",
+        "alternative_term",
+        "symbol",
+        "P90",
+        "prefLabel",
+        "altLabel",
+    ]
     tokenizer = Tokenizer.from_pretrained(tokenizer_path)
     src_onto = Ontology.from_new(src_onto_path, lab_props, tokenizer)
     tgt_onto = Ontology.from_new(tgt_onto_path, lab_props, tokenizer)
@@ -54,6 +63,9 @@ def main(
         avoid_descendents=avoid_descendents,
     )
 
-    sampler.sample(neighbour=neighbour_sample_num, idf=idf_sample_num, random=random_sample_num)
+    sampler.sample_for_all_one_side(
+        neighbour=neighbour_sample_num, idf=idf_sample_num, random=random_sample_num
+    )
+
 
 main()
