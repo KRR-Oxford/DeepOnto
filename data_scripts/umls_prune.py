@@ -9,13 +9,11 @@ from deeponto.onto.text.text_utils import unfold_iri
 from deeponto import SavedObj
 from deeponto.onto.graph.pruning import preserve_classes
 import pandas as pd
-
-from collections import defaultdict
-from itertools import chain
+from deeponto.utils import detect_path
 
 import click
 
-fma_name = lambda id: f"fma:{id}"
+fma_name = lambda id: f"fma:fma{id}"
 ncit_name = lambda id: f"ncit_largebio:" + id
 snomed_name = lambda id: f"snomed:{id}"
 naming = {
@@ -33,7 +31,10 @@ def main(onto_path, scui_path, destroy):
     onto = Ontology.from_new(onto_path)
     name_method = naming[onto.owl.name]
     valid_ent_names = [name_method(s) for s in scuis]
-    saved_iris = SavedObj.load_json("./umls_iris.json")
+    if detect_path("./umls_iris.json"):
+        saved_iris = SavedObj.load_json("./umls_iris.json")
+    else:
+        saved_iris = dict()
     saved_iris[onto.owl.name] = [
         unfold_iri(n) for n in valid_ent_names
     ]
