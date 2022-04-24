@@ -67,18 +67,22 @@ class OntoAlignPipeline(OntoPipeline):
 
         # make prediction according mode
         if mode == "global_match":
-            self.model.global_match(num_procs)
+            self.model.global_match(
+                num_procs=num_procs,
+                match_src2tgt=self.config.search.match_src2tgt,
+                match_tgt2src=self.config.search.match_tgt2src,
+            )
             map_type = self.model.hyperparams_select(
                 self.config.corpora.train_mappings_path,
                 self.config.corpora.val_mappings_path,
                 self.config.corpora.test_mappings_path,
-                self.config.corpora.null_mappings_path
+                self.config.corpora.null_mappings_path,
             )
 
             # mapping refinement for bertmap
             if self.model_name == "bertmap":
                 torch.cuda.empty_cache()
-                self.model.refinement(map_type)
+                self.model.refinement(map_type, self.config.search.extension_threshold)
 
         elif mode == "pair_score":
             assert tbc_mappings != None
@@ -169,7 +173,6 @@ class OntoAlignPipeline(OntoPipeline):
                 neg_ratio=self.config.corpora.neg_ratio,
                 apply_string_match=self.config.search.apply_string_match,
             )
-            
 
         elif self.model_name == "string_match":
             align_model = StringMatch(

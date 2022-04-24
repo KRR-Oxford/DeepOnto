@@ -91,13 +91,17 @@ def global_match_select(
     mapping_types = ["src2tgt", "tgt2src", "combined"]
 
     # load src2tgt and tgt2src mappings
-    src2tgt_pred_maps = OntoMappings.from_saved(global_match_dir + "/src2tgt")
-    tgt2src_pred_maps = OntoMappings.from_saved(global_match_dir + "/tgt2src")
+    src2tgt_pred_maps = None
+    tgt2src_pred_maps = None
+    if detect_path(global_match_dir + "/src2tgt"):
+        src2tgt_pred_maps = OntoMappings.from_saved(global_match_dir + "/src2tgt")
+    if detect_path(global_match_dir + "/tgt2src"):
+        tgt2src_pred_maps = OntoMappings.from_saved(global_match_dir + "/tgt2src")
     pred_batches = []
     for threshold in thresholds:
         threshold = round(threshold, 6)
-        src2tgt_pred = pred_thresholding(src2tgt_pred_maps, threshold)
-        tgt2src_pred = pred_thresholding(tgt2src_pred_maps, threshold)
+        src2tgt_pred = pred_thresholding(src2tgt_pred_maps, threshold) if src2tgt_pred_maps else []
+        tgt2src_pred = pred_thresholding(tgt2src_pred_maps, threshold) if tgt2src_pred_maps else []
         combined_pred = uniqify(src2tgt_pred + tgt2src_pred)
         pred_batches.append((src2tgt_pred, tgt2src_pred, combined_pred, threshold))
 
@@ -128,11 +132,24 @@ def global_match_select(
     for src2tgt, tgt2src, combined, thr in pred_batches:
         eval_results[thr] = dict()
         preds = {"src2tgt": src2tgt, "tgt2src": tgt2src, "combined": combined}
-        for flag in mapping_types:
-            eval_results[thr][flag] = pool.apply_async(
-                global_match_eval,
-                args=(None, val_ref_path, merged_null_ref_path, thr, preds[flag], flag,),
-            )
+        for map_type in mapping_types:
+            if preds[map_type]:
+                eval_results[thr][map_type] = pool.apply_async(
+                    global_match_eval,
+                    args=(
+                        None,
+                        val_ref_path,
+                        merged_null_ref_path,
+                        thr,
+                        preds[map_type],
+                        map_type,
+                    ),
+                )
+            else:
+                eval_results[thr][map_type] = pool.apply_async(
+                    lambda _: {"P": -1, "R": -1, "f_score": -1},
+                    args=(None,)
+                )
     pool.close()
     pool.join()
 
@@ -147,7 +164,7 @@ def global_match_select(
         for map_type, scores in results.items():
             scores = scores.get()
             serialized_eval_results[thr][map_type] = scores
-            if scores["f_score"] >= best_results["best_f1"]:
+            if scores["f_score"] > best_results["best_f1"]:
                 best_results["threshold"] = thr
                 best_results["map_type"] = map_type
                 best_results["best_f1"] = scores["f_score"]
