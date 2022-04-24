@@ -27,6 +27,7 @@ from __future__ import annotations
 
 from typing import Optional, Callable, TYPE_CHECKING
 from itertools import product
+import random
 
 # to avoid circular imports
 if TYPE_CHECKING:
@@ -115,7 +116,7 @@ class IterativeMappingExtension:
             temp_map.score = score
             return temp_map
 
-    def one_hob_extend(self, src_ent_name: str, tgt_ent_name: str):
+    def one_hob_extend(self, src_ent_name: str, tgt_ent_name: str, maximum_pairs: int = 200):
         """1-hop mapping extension, the assumption is given a highly confident mapping,
         the corresponding classes' parents and children are likely to be matched.
         """
@@ -129,6 +130,11 @@ class IterativeMappingExtension:
         cand_pairs += list(
             product(sub_thing_classes_of(src_ent), sub_thing_classes_of(tgt_ent))
         )  # children pairs
+        print(f"detect {len(cand_pairs)} pairs for extension ...")
+        if len(cand_pairs) > maximum_pairs:
+            temp = len(cand_pairs)
+            cand_pairs = random.sample(cand_pairs, maximum_pairs)
+            print(f"sample {len(cand_pairs)}/{temp} pairs for extension ...")
         num_explored = 0
         num_undervalued = 0
         num_added = 0
