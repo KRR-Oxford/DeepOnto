@@ -78,11 +78,12 @@ class OntoAlignPipeline(OntoPipeline):
                 self.config.corpora.test_mappings_path,
                 self.config.corpora.null_mappings_path,
             )
+            torch.cuda.empty_cache()
 
             # mapping refinement for bertmap
             if self.model_name == "bertmap":
-                torch.cuda.empty_cache()
                 self.model.refinement(map_type, self.config.search.extension_threshold)
+                torch.cuda.empty_cache()
 
         elif mode == "pair_score":
             assert tbc_mappings != None

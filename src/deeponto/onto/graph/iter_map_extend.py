@@ -116,7 +116,7 @@ class IterativeMappingExtension:
             temp_map.score = score
             return temp_map
 
-    def one_hob_extend(self, src_ent_name: str, tgt_ent_name: str, maximum_pairs: int = 200):
+    def one_hob_extend(self, src_ent_name: str, tgt_ent_name: str, maximum_pairs: int = 500):
         """1-hop mapping extension, the assumption is given a highly confident mapping,
         the corresponding classes' parents and children are likely to be matched.
         """
