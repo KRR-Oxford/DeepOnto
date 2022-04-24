@@ -108,7 +108,7 @@ class BERTMap(OntoAlign):
 
         # Refinement initialization
         # NOTE: init of global_match_dir is moved on OntoAlign Class
-        # self.global_match_dir = self.saved_path + "/global_match"  
+        # self.global_match_dir = self.saved_path + "/global_match"
         self.global_match_refined_dir = self.global_match_dir + "/refined"
         self.map_extender = None
         # if validation mappings are not provided, we use the default hyperparams
@@ -276,20 +276,20 @@ class BERTMap(OntoAlign):
     ###                            Mapping Refinement                              ###
     ##################################################################################
 
-    def refinement(self, map_type_to_extend: str):
+    def refinement(self, map_type_to_extend: str, extension_threshold: float):
         """Apply mapping refinement as a post-processing for the scored mappings
         """
 
         ############################## Mapping Extensions #############################
         banner_msg(f"Mapping Refinement: Extension ({map_type_to_extend})")
-        src2tgt_maps = OntoMappings.from_saved(self.global_match_dir + "/src2tgt")
-        tgt2src_maps = OntoMappings.from_saved(self.global_match_dir + "/tgt2src")
 
         # we extend on both src2tgt and tgt2src if combined is the best
         logmap_lines = []
         map_file_path_to_refine = ""
+
         if map_type_to_extend == "src2tgt" or map_type_to_extend == "combined":
-            self.mapping_extension(src2tgt_maps, "src2tgt")
+            src2tgt_maps = OntoMappings.from_saved(self.global_match_dir + "/src2tgt")
+            self.mapping_extension(src2tgt_maps, "src2tgt", extension_threshold)
             src2tgt_maps_extended = OntoMappings.from_saved(
                 self.global_match_refined_dir + "/src2tgt.extended"
             )
@@ -302,8 +302,10 @@ class BERTMap(OntoAlign):
             map_file_path_to_refine = (
                 self.global_match_refined_dir + f"/src2tgt.extended/src2tgt.logmap.txt"
             )
-        elif map_type_to_extend == "tgt2src" or map_type_to_extend == "combined":
-            self.mapping_extension(tgt2src_maps, "tgt2src")
+
+        if map_type_to_extend == "tgt2src" or map_type_to_extend == "combined":
+            tgt2src_maps = OntoMappings.from_saved(self.global_match_dir + "/tgt2src")
+            self.mapping_extension(tgt2src_maps, "tgt2src", extension_threshold)
             tgt2src_maps_extended = OntoMappings.from_saved(
                 self.global_match_refined_dir + "/tgt2src.extended"
             )
@@ -316,8 +318,6 @@ class BERTMap(OntoAlign):
             map_file_path_to_refine = (
                 self.global_match_refined_dir + f"/tgt2src.extended/tgt2src.logmap.txt"
             )
-        else:
-            raise ValueError(f"Unknown mapping type: {map_type_to_extend} ...")
 
         # for logmap repair formatting when type=combined; we merge src2tgt and tgt2src
         if map_type_to_extend == "combined":
@@ -334,7 +334,9 @@ class BERTMap(OntoAlign):
             map_type_to_repair=map_type_to_extend,
         )
 
-    def mapping_extension(self, selected_maps: OntoMappings, map_type_to_extend: str):
+    def mapping_extension(
+        self, selected_maps: OntoMappings, map_type_to_extend: str, extension_threshold: float
+    ):
         """Apply the iterative mapping extension algorithm
         """
         if detect_path(self.global_match_refined_dir + f"/{map_type_to_extend}.extended"):
@@ -343,7 +345,12 @@ class BERTMap(OntoAlign):
             )
             return
         self.map_extender = IterativeMappingExtension(
-            self.src_onto, self.tgt_onto, selected_maps, self.ent_pair_score, 0.9, self.logger
+            self.src_onto,
+            self.tgt_onto,
+            selected_maps,
+            self.ent_pair_score,
+            extension_threshold,
+            self.logger,
         )
         self.map_extender.run_extension(max_iter=10)
         self.map_extender.onto_mappings.save_instance(

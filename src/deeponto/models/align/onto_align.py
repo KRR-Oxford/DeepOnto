@@ -50,7 +50,7 @@ class OntoAlign(FlaggedObj):
     ):
 
         super().__init__(src_onto, tgt_onto)
-        
+
         self.tokenizer = tokenizer
         self.cand_pool_size = cand_pool_size
         self.rel = rel
@@ -66,7 +66,7 @@ class OntoAlign(FlaggedObj):
 
         self.src2tgt_mappings = self.load_mappings("src2tgt", "global_match")
         self.tgt2src_mappings = self.load_mappings("tgt2src", "global_match")
-        
+
         # for hyperparam/model selection
         self.global_match_dir = self.saved_path + "/global_match"
         # if validation mappings are not provided, we use the default hyperparams
@@ -107,7 +107,7 @@ class OntoAlign(FlaggedObj):
             i += 1
         self.logger.info("Task Finished\n")
         mappings.save_instance(f"{self.saved_path}/pair_score/{self.flag}")
-        
+
     def fixed_src_ent_pair_score(self, src_ent_id: int, tgt_cand_ids: List[int]):
         """Compute mapping scores between a source entity and a batch of target entities
         """
@@ -125,23 +125,24 @@ class OntoAlign(FlaggedObj):
     ###                        compute global mappings                             ###
     ##################################################################################
 
-    def global_match(self, num_procs: Optional[int] = None):
+    def global_match(
+        self,
+        num_procs: Optional[int] = None,
+        match_src2tgt: bool = True,
+        match_tgt2src: bool = True,
+    ):
         """Compute alignment for both src2tgt and tgt2src
         """
         self.renew()
-        # if not detect_path(f"{self.saved_path}/global_match/src2tgt"):
-        self.global_mappings_for_onto_multi_procs(
-            num_procs
-        ) if num_procs else self.global_mappings_for_onto()
-        # else:
-        #     print("found saved src2tgt mappings; delete it and re-run if empty or incomplete ...")
+        if match_src2tgt:
+            self.global_mappings_for_onto_multi_procs(
+                num_procs
+            ) if num_procs else self.global_mappings_for_onto()
         self.switch()
-        # if not detect_path(f"{self.saved_path}/global_match/tgt2src"):
-        self.global_mappings_for_onto_multi_procs(
-            num_procs
-        ) if num_procs else self.global_mappings_for_onto()
-        # else:
-        #    print("found saved tgt2src mappings; delete it and re-run if empty or incomplete ...")
+        if match_tgt2src:
+            self.global_mappings_for_onto_multi_procs(
+                num_procs
+            ) if num_procs else self.global_mappings_for_onto()
         self.renew()
 
     def current_global_mappings(self):
@@ -253,7 +254,7 @@ class OntoAlign(FlaggedObj):
             src_ent_toks, self.cand_pool_size
         )  # [(ent_id, idf_score)]
         return tgt_cand_ids
-    
+
     def hyperparams_select(
         self,
         train_ref_path: Optional[str],
