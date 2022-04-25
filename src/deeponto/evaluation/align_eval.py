@@ -175,7 +175,7 @@ def global_match_select(
     SavedObj.save_json(best_results, global_match_dir + "/best_hyperparams.val.json")
 
 
-def local_rank_eval(pred_path: str, ref_anchor_path: str, ref_path: str, *ks: int):
+def local_rank_eval(pred_path: str, ref_anchor_path: str, *ks: int):
     """Eval on Hits@K, MRR (estimating OM performance) 
     """
 
@@ -188,7 +188,8 @@ def local_rank_eval(pred_path: str, ref_anchor_path: str, ref_path: str, *ks: in
     # print(ref_anchor_maps.anchor2cand)
 
     # load reference mappings and (opt) null mappings
-    ref = OntoMappings.read_tsv_mappings(ref_path, 0.0).to_tuples()
+    # ref = OntoMappings.read_tsv_mappings(ref_path, 0.0).to_tuples()
+    ref = list(ref_anchor_maps.anchor2cand.keys())
 
     results = dict()
     results["MRR"] = round(mean_reciprocal_rank(ref_anchor_maps, ref), 3)
