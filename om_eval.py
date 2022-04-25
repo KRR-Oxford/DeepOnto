@@ -57,7 +57,7 @@ def main(
             pred_path, ref_path, null_ref_path, threshold, show_more_f_scores
         )
     elif mode == "local_rank":
-        results = local_rank_eval(pred_path, ref_anchor_path, ref_path, *hits_at)
+        results = local_rank_eval(pred_path, ref_anchor_path, *hits_at)
     else:
         raise ValueError(f"Unknown mode: {mode}, choices are: {eval_modes}.")
         
