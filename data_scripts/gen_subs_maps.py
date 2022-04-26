@@ -57,6 +57,6 @@ def main(
     # isolate and reconstruct hierarchy
     preserved_names = [abbr_iri(x) for x in preserved_iris[tgt_onto.owl.name]]
     tgt_onto = preserve_classes(tgt_onto, preserved_names, keep_hierarchy=True, apply_destroy=False)
-    tgt_onto.owl.save(f"./{tgt_onto.owl.name}.subs.owl")
+    tgt_onto.owl.save(f"./{tgt_onto.owl.name}.isolated.owl")
 
 main()
