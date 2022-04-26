@@ -201,29 +201,40 @@ class NegativeCandidateGenerator(FlaggedObj):
     def random_sample(self, ref_tgt_ent_name, n_cands: int):
         """Randomly select n target candidates
         """
+        ref_tgt_ent = self.tgt_onto.owl.search(iri=unfold_iri(ref_tgt_ent_name))[0]
+        # for subsumption mapping, ancestors or descendants will be avoided
+        avoided_family = self.avoided_family_of(ref_tgt_ent)
+        avoided_names = [abbr_iri(m.iri) for m in avoided_family]  
+              
         all_tgt_ent_names = list(self.tgt_onto.class2idx.keys())
-        all_tgt_ent_names.remove(ref_tgt_ent_name)
+        all_tgt_ent_names = list(set(all_tgt_ent_names) - set(avoided_names))
+        
+        assert not ref_tgt_ent_name in all_tgt_ent_names
         return random.sample(all_tgt_ent_names, n_cands)
 
     def idf_sample(self, ref_tgt_ent_name, n_cands: int):
         """Sample negative candidates using inverted index-based idf scoring
         """
+        ref_tgt_ent = self.tgt_onto.owl.search(iri=unfold_iri(ref_tgt_ent_name))[0]
+        # for subsumption mapping, ancestors or descendants will be avoided
+        avoided_family = self.avoided_family_of(ref_tgt_ent)
+        avoided_names = [abbr_iri(m.iri) for m in avoided_family]
+        
         # select n candidates for the target entity
         ref_tgt_ent_id = self.tgt_onto.class2idx[ref_tgt_ent_name]
         ref_tgt_ent_labs = self.tgt_onto.idx2labs[ref_tgt_ent_id]
         ref_tgt_ent_toks = self.tokenizer.tokenize_all(ref_tgt_ent_labs)
         # sample 1 more candidate to prevent when reference target is included
         tgt_cand_ids = self.tgt_onto.idf_select(
-            ref_tgt_ent_toks, n_cands + 1
+            ref_tgt_ent_toks, n_cands + len(avoided_family)
         )  # [(ent_id, idf_score)]
 
         # unzip to list of ids
         tgt_cand_ids = list(list(zip(*tgt_cand_ids))[0])
-        # remove the positive pair if included
-        if ref_tgt_ent_id in tgt_cand_ids:
-            tgt_cand_ids.remove(ref_tgt_ent_id)
-
         tgt_cand_names = [self.tgt_onto.idx2class[i] for i in tgt_cand_ids]
+        # ref-tgt is considered to be avoided as well
+        tgt_cand_names = list(set(tgt_cand_names) - set(avoided_names))
+        
         assert not ref_tgt_ent_name in tgt_cand_names
         return tgt_cand_names[:n_cands]
 
@@ -236,17 +247,14 @@ class NegativeCandidateGenerator(FlaggedObj):
         # print(self.tgt_onto.owl.search(iri=unfold_iri(ref_tgt_ent_name)))
 
         # for subsumption mapping, ancestors or descendants will be avoided
-        ref_tgt_ancestors = thing_class_ancestors_of(ref_tgt_ent) if self.avoid_ancestors else []
-        ref_tgt_descendants = thing_class_descendants_of(ref_tgt_ent) if self.avoid_descendents else []
-        # avoid also "self"
-        avoid_neighbors = set([ref_tgt_ent] + ref_tgt_ancestors + ref_tgt_descendants)
+        avoided_family = self.avoided_family_of(ref_tgt_ent)
 
         ref_tgt_neighbours = neighbours_of(ref_tgt_ent, max_hob=self.max_hobs, ignore_root=True)
         tgt_cand_names = []
         hob = 1
         # extract from the nearest neighbours until enough candidates or max hob
         while len(tgt_cand_names) < n_cands and hob <= self.max_hobs:
-            neighbours_of_cur_hob = list(set(ref_tgt_neighbours[hob]) - avoid_neighbors)
+            neighbours_of_cur_hob = list(set(ref_tgt_neighbours[hob]) - avoided_family)
             # if by adding neighbours of current hob the require number will be met
             # we randomly pick among them
             if len(neighbours_of_cur_hob) > n_cands - len(tgt_cand_names):
@@ -262,3 +270,16 @@ class NegativeCandidateGenerator(FlaggedObj):
         assert len(tgt_cand_names) <= n_cands
         assert not ref_tgt_ent_name in tgt_cand_names
         return tgt_cand_names
+
+    def avoided_family_of(self, ent: ThingClass):
+        """Compute the (direct) family members of an entity class
+        which should be avoided in subsumption matching
+        """
+        family = [ent]
+        if self.avoid_ancestors:
+            print("avoid ancestors for subsumption matching ...")
+            family += thing_class_ancestors_of(ent)
+        if self.avoid_descendents:
+            family += thing_class_descendants_of(ent)
+            print("avoid descendants for subsumption matching ...")
+        return set(family)
