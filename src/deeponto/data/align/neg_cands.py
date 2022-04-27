@@ -39,7 +39,7 @@ class NegativeCandidateGenerator(FlaggedObj):
         null_ref_mappings_path: Optional[str],
         rel: str,
         tokenizer: Tokenizer,
-        max_hobs: int = 5,
+        max_hops: int = 5,
         avoid_ancestors: bool = False,
         avoid_descendents: bool = False,
     ):
@@ -82,7 +82,7 @@ class NegativeCandidateGenerator(FlaggedObj):
         self.stats = dict()
 
         # arguments for neighbour sampling
-        self.max_hobs = max_hobs
+        self.max_hops = max_hops
         self.avoid_ancestors = avoid_ancestors
         self.avoid_descendents = avoid_descendents
 
@@ -239,7 +239,7 @@ class NegativeCandidateGenerator(FlaggedObj):
         return tgt_cand_names[:n_cands]
 
     def neighbour_sample(self, ref_tgt_ent_name, n_cands: int):
-        """Sample negative candidates from nearest nearest (starting from 1-hob)
+        """Sample negative candidates from nearest nearest (starting from 1-hop)
         """
 
         # select n candidates for the target entity
@@ -249,22 +249,22 @@ class NegativeCandidateGenerator(FlaggedObj):
         # for subsumption mapping, ancestors or descendants will be avoided
         avoided_family = self.avoided_family_of(ref_tgt_ent)
 
-        ref_tgt_neighbours = neighbours_of(ref_tgt_ent, max_hob=self.max_hobs, ignore_root=True)
+        ref_tgt_neighbours = neighbours_of(ref_tgt_ent, max_hop=self.max_hops, ignore_root=True)
         tgt_cand_names = []
-        hob = 1
-        # extract from the nearest neighbours until enough candidates or max hob
-        while len(tgt_cand_names) < n_cands and hob <= self.max_hobs:
-            neighbours_of_cur_hob = list(set(ref_tgt_neighbours[hob]) - avoided_family)
-            # if by adding neighbours of current hob the require number will be met
+        hop = 1
+        # extract from the nearest neighbours until enough candidates or max hop
+        while len(tgt_cand_names) < n_cands and hop <= self.max_hops:
+            neighbours_of_cur_hop = list(set(ref_tgt_neighbours[hop]) - avoided_family)
+            # if by adding neighbours of current hop the require number will be met
             # we randomly pick among them
-            if len(neighbours_of_cur_hob) > n_cands - len(tgt_cand_names):
-                neighbours_of_cur_hob = random.sample(
-                    neighbours_of_cur_hob, n_cands - len(tgt_cand_names)
+            if len(neighbours_of_cur_hop) > n_cands - len(tgt_cand_names):
+                neighbours_of_cur_hop = random.sample(
+                    neighbours_of_cur_hop, n_cands - len(tgt_cand_names)
                 )
             # some neighbour
-            tgt_cand_names += [abbr_iri(tgt_cand.iri) for tgt_cand in neighbours_of_cur_hob]
+            tgt_cand_names += [abbr_iri(tgt_cand.iri) for tgt_cand in neighbours_of_cur_hop]
             tgt_cand_names = uniqify(tgt_cand_names)
-            hob += 1
+            hop += 1
 
         # tgt_cand_names = [abbr_iri(tgt_cand.iri) for tgt_cand in tgt_cands]
         assert len(tgt_cand_names) <= n_cands

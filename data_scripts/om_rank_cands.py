@@ -58,7 +58,7 @@ def main(
         null_ref_mappings_path,
         rel="=",
         tokenizer=tokenizer,
-        max_hobs=max_hobs,
+        max_hops=max_hobs,
         avoid_ancestors=avoid_ancestors,
         avoid_descendents=avoid_descendents,
     )

@@ -104,27 +104,27 @@ def thing_class_descendants_of(ent: ThingClass, include_self: bool=False):
     return list(set(descendants))
 
 
-def neighbours_of(anchor_ent: ThingClass, max_hob: int = 5, ignore_root: bool = True):
-    """Compute neighbours of an anchor entity up to max_hob
+def neighbours_of(anchor_ent: ThingClass, max_hop: int = 5, ignore_root: bool = True):
+    """Compute neighbours of an anchor entity up to max_hop
     in Breadth First Search style which ensures determined outputs
     """
     neighbours = defaultdict(list)
     frontier = [anchor_ent]
     explored = []
-    hob = 1
+    hop = 1
 
-    while hob <= max_hob:
-        cur_hob_neighbours = []
+    while hop <= max_hop:
+        cur_hop_neighbours = []
         for ent in frontier:
-            cur_hob_neighbours += super_thing_classes_of(ent, ignore_root) + sub_thing_classes_of(ent)
-            cur_hob_neighbours = list(set(cur_hob_neighbours))
+            cur_hop_neighbours += super_thing_classes_of(ent, ignore_root) + sub_thing_classes_of(ent)
+            cur_hop_neighbours = list(set(cur_hop_neighbours))
             explored.append(ent)
-        neighbours[hob] = cur_hob_neighbours
-        frontier = list(set(cur_hob_neighbours) - set(explored))
-        hob += 1
+        neighbours[hop] = cur_hop_neighbours
+        frontier = list(set(cur_hop_neighbours) - set(explored))
+        hop += 1
 
     stats = {k: len(v) for k, v in neighbours.items()}
-    print(f"Numbers of neighbours at each hob away from entity: {str(anchor_ent)}")
+    print(f"Numbers of neighbours at each hop away from entity: {str(anchor_ent)}")
     SavedObj.print_json(stats)
 
     return neighbours
