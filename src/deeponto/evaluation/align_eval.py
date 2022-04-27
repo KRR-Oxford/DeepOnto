@@ -161,10 +161,11 @@ def global_match_select(
     serialized_eval_results = dict()
     for thr, results in eval_results.items():
         serialized_eval_results[thr] = dict()
-        for map_type, scores in results.items():
+        for map_type in ["combined", "src2tgt", "tgt2src"]:
+            scores = results[map_type]
             scores = scores.get()
             serialized_eval_results[thr][map_type] = scores
-            if scores["f_score"] > best_results["best_f1"]:
+            if scores["f_score"] >= best_results["best_f1"]:
                 best_results["threshold"] = thr
                 best_results["map_type"] = map_type
                 best_results["best_f1"] = scores["f_score"]

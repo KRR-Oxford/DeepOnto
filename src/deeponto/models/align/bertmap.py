@@ -400,7 +400,7 @@ class BERTMap(OntoAlign):
         self.logger.info(f"Run the following java command for repair:\n{repair_command}")
         repair_process = subprocess.Popen(repair_command.split(" "))
         try:
-            _, _ = repair_process.communicate(timeout=120)
+            _, _ = repair_process.communicate(timeout=600)
         except subprocess.TimeoutExpired:
             repair_process.kill()
             _, _ = repair_process.communicate()
