@@ -1,6 +1,15 @@
 {
     "lab_props": [
-        "label", "hasExactSynonym", "exactMatch", "alternative_term", "symbol", "P90", "prefLabel", "altLabel", "synonym", "preferred_name"
+        "label",
+        "hasExactSynonym",
+        "exactMatch",
+        "alternative_term",
+        "symbol",
+        "P90",
+        "prefLabel",
+        "altLabel",
+        "synonym",
+        "preferred_name"
     ],
     "tokenizer": {
         "type": "pretrained",
