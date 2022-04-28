@@ -21,6 +21,7 @@ from pyats.datastructures import AttrDict
 
 from deeponto import SavedObj
 from deeponto.utils import sort_dict_by_values, read_tsv
+from deeponto.onto.text.text_utils import abbr_iri
 
 
 ##################################################################################
@@ -276,7 +277,11 @@ class OntoMappings(SavedObj):
         onto_mappings = cls(flag=flag, n_best=n_best, rel=rel)
         for _, dp in df.iterrows():
             if dp["Score"] >= threshold:
-                onto_mappings.add(EntityMapping(dp["SrcEntity"], dp["TgtEntity"], rel, dp["Score"]))
+                onto_mappings.add(
+                    EntityMapping(
+                        abbr_iri(dp["SrcEntity"]), abbr_iri(dp["TgtEntity"]), rel, dp["Score"]
+                    )
+                )
         return onto_mappings
 
 
@@ -291,7 +296,7 @@ class EntityMappingList(list):
         """Return top K scored mappings from the list
         """
         return EntityMappingList(sorted(self, key=lambda x: x.score, reverse=True))[:k]
-    
+
     def sorted(self):
         """Return the sorted entity mapping list
         """
