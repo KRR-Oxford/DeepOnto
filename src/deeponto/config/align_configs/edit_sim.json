@@ -1,6 +1,15 @@
 {
     "lab_props": [
-        "label"
+        "label",
+        "hasExactSynonym",
+        "exactMatch",
+        "alternative_term",
+        "symbol",
+        "P90",
+        "prefLabel",
+        "altLabel",
+        "synonym",
+        "preferred_name"
     ],
     "tokenizer": {
         "type": "pretrained",
@@ -8,6 +17,8 @@
     },
     "search": {
         "n_best": 10,
-        "cand_pool_size": 200
+        "cand_pool_size": 200,
+        "match_src2tgt": true,
+        "match_tgt2src": true
     }
 }
