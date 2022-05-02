@@ -1,4 +1,4 @@
-Besides model development and implementation, DeepOnto also aims to contribute new Ontology Matching (OM) resources and comprehensive evaluation workaround. In this page, provide download links to our datasets and instructions of data usage.
+Besides model development and implementation, DeepOnto also aims to contribute new Ontology Matching (OM) resources and comprehensive evaluation workaround. In this page, we provide download links to our datasets and instructions for data usage.
 
 ## LargeBioMedData 
 
