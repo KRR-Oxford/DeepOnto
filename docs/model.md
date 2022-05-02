@@ -33,9 +33,9 @@
   - `early_stop_patience`: the number of patiences for early stopping, default is `None`.
   - `device_num`: the id of GPU device for mapping prediction; for fine-tuning, it by default uses multiple GPUs.
 
-## EditSimiarity
+## EditSimiarity & StringMatch
 
-`EditSimiarity` is a simple rule-based ontology alignment system that computes the normalized edit similarities (1 - normalized edit distance) between class labels and use the maximum of them as the mappping score. It performs surprisingly well for ontology pairs that have a similar naming scheme.
+`EditSimiarity` is a simple rule-based ontology alignment system that computes the normalized edit similarities (1 - normalized edit distance) between class labels and use the maximum of them as the mappping score. It performs surprisingly well for ontology pairs that have a similar naming scheme. `StringMatch` is a special case of `EditSimiarity` that considers only mapping scores of 1.0.
 
 ### Configurations
 > See an example `config` file in `./config/edit_sim.json`.
