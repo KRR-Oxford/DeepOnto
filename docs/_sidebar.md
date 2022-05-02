@@ -18,3 +18,4 @@ limitations under the License.
   - [About](/)
   - [Quick start](intro.md)
   - [Models](model.md)
+  - [OM Resources](om_resources.md)
