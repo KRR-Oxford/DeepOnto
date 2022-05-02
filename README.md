@@ -58,9 +58,9 @@ DeepOnto is mainly extended from the following packages:
 
 ## Ontology Matchng Resources
 
-- `LargeBiomedData` for equivalence and subsumption ontology matching
-    -  Zenodo link: https://doi.org/10.5281/zenodo.6510087;
-    -  Instructions: https://krr-oxford.github.io/DeepOnto/#/om_resources.
+**LargeBiomedData** for equivalence and subsumption ontology matching:
+-  Zenodo link: https://doi.org/10.5281/zenodo.6510087;
+-  Instructions: https://krr-oxford.github.io/DeepOnto/#/om_resources.
 
 ## License
 
