@@ -36,7 +36,7 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
 
 <p align="center">
   <a href="https://krr-oxford.github.io/DeepOnto/">
-    <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/icon.svg">
+    <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/largebiomeddata.svg">
   </a>
 </p>
 
