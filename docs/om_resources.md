@@ -32,13 +32,12 @@ Statistics for the subsumption matching set-ups. Note that each subsumption matc
 The downloaded datasets include `Mondo.zip` and `UMLS.zip` for resources constructed from Mondo and UMLS, respectively.
 Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. Detailed structure is presented in the following figure. Note for candidate mappings, we generate `for_eval` and `for_score` folders for evaluation and mapping scoring purposes; for users who wish to directly use the generated candidates for each reference mapping without depending on DeepOnto, they can use the file at: `.../for_eval/src2tgt.anchored.maps.json`.
 
+<br/>
 <p align="center">
-  <a href="https://krr-oxford.github.io/DeepOnto/">
+  <a href="https://doi.org/10.5281/zenodo.6510087">
     <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/largebiomeddata.svg">
   </a>
 </p>
-
-
 
 ## Appendix: Abbreviations of URIs/IRIs
 
