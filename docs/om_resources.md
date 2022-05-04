@@ -4,7 +4,7 @@ Besides model development and implementation, DeepOnto also aims to contribute n
 
 The `LargeBioMedData` provides five ontology pairs for both equivalence and subsumption ontology matching.
 
-> Download link: https://doi.org/10.5281/zenodo.6510087.
+> Download link: https://doi.org/10.5281/zenodo.6516125.
 
 > See detailed resource construction and evaluation methods in our paper: link-to-be-updated
 
