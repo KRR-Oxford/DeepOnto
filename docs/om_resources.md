@@ -1,14 +1,16 @@
 Besides model development and implementation, DeepOnto also aims to contribute new Ontology Matching (OM) resources and comprehensive evaluation workaround. In this page, we provide download links to our datasets and instructions for data usage.
 
-## LargeBioMedData 
+## Bio-ML
 
-The `LargeBioMedData` provides five ontology pairs for both equivalence and subsumption ontology matching.
+The `Bio-ML` dataset provides five ontology pairs for both equivalence and subsumption ontology matching.
 
-> Download link: https://doi.org/10.5281/zenodo.6516125.
+> Download link: https://doi.org/10.5281/zenodo.6516125 (CC BY 4.0 International).
 
 > See detailed resource construction and evaluation methods in our paper: link-to-be-updated
 
-Statistics for the equivalence matching set-ups.
+> OAEI track: https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/ 
+
+Statistics for the equivalence matching set-ups. In the **Category** column, "Disease" indicates that the Mondo data are mainly about disease concepts, while "Body", "Pharm", and "Neoplas" denote semantic types of "Body Part, Organ, or Organ Components", "Pharmacologic Substance", and "Neoplastic Process" in UMLS, respectively.
 
 | Source | Task        | Category | #Classes      | #RefMaps (equiv) | #Annot.  | AvgDepths |
 |--------|-------------|----------|---------------|------------------|----------|-----------|
