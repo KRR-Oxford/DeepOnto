@@ -36,7 +36,7 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
 
 <br/>
 <p align="center">
-  <a href="https://doi.org/10.5281/zenodo.6510087">
+  <a href="https://doi.org/10.5281/zenodo.6516125">
     <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/largebiomeddata.svg">
   </a>
 </p>
