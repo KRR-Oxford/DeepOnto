@@ -41,7 +41,7 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
   </a>
 </p>
 
-## Appendix: Abbreviations of URIs/IRIs
+## Appendix
 
 For readability, the following URIs/IRIs are abbreviated in the reference and candidate mappings included in the OM resources in accordance with other implementations in DeepOnto (see `src/deeponto/onto/iris.py`).
 
