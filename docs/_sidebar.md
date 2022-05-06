@@ -19,4 +19,4 @@ limitations under the License.
   - [Quick start](intro.md)
   - [OM Models](om_models.md)
   - [OM Resources](om_resources.md)
-  <!-- - [Ontology Processing](onto.md) -->
+  - [Data Structures](data_structures.md)
