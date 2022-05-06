@@ -45,7 +45,7 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
 
 There are two evaluation schemes (**local ranking** and **global matching**) and two data split settings (**unsupervised** and **(semi-)supervised**).
 
-- For local ranking, an OM model is required to rank candidates in the saved json file `.../for_eval/src2tgt.anchored.maps.json` which is essentially a dictionary with each reference mapping (in the form of class tuple string) as a key and its corresponding candidates (100 negatives + 1 positive classes from the target ontology). `Hits@K` and `MRR` are used as evaluation metrics. Note that the candidates are separately generated w.r.t the testing mapping in each data split setting.
+- For local ranking, an OM model is required to rank candidates in the saved json file `.../for_eval/src2tgt.anchored.maps.json` which is essentially a dictionary with each reference mapping (in the form of class tuple string) as a key and its corresponding candidates (100 negative + 1 positive classes from the target ontology). `Hits@K` and `MRR` are used as evaluation metrics. Note that the candidates are separately generated w.r.t the testing mapping in each data split setting.
 
 - For global matching, an OM model is required to output full mappings and compare them with the reference mappings using `Precision`, `Recall`, and `F1`. Note that when computing these scores, mappings that are not in the testing set (validation set for both data split settings and train+validation set for the semi-supervised setting) should be ignored by substraction from both system output and reference mappings 
 
