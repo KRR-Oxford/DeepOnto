@@ -2,6 +2,8 @@
 
 `BERTMap` is a BERT-based ontology alignment system. It defines a thesarus from class labels of input ontologies to construct text semantics corpora for fine-tunig a BERT classifier. Such classifier is used for computing cross-ontology mappings that indicate domain equivalence. Structure-based mapping extension and logic-based mapping repair are used for refining the scored mappings in the `global_match` mode.
 
+> NOTE: because of the limitations of the `owlready2` library (only unique IRIs are allowed), if loading ontologies of the same IRI, e.g., as auxiliary sources for complementary corpus construction, the users need to manually change the IRIs of such ontologies for successful loading.
+
 ### Configurations
 > See an example `config` file in `./config/bertmap.json`.
 
