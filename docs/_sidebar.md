@@ -17,5 +17,6 @@ limitations under the License.
 - **Getting started**
   - [About](/)
   - [Quick start](intro.md)
-  - [Models](model.md)
+  - [OM Models](om_models.md)
   - [OM Resources](om_resources.md)
+  <!-- - [Ontology Processing](onto.md) -->
