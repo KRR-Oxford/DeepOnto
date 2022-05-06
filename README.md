@@ -45,6 +45,8 @@ DeepOnto is mainly extended from the following packages:
 - [OwlReady2](https://owlready2.readthedocs.io/) for basic ontology processing.
 - [Transformers](https://github.com/huggingface/transformers) for pre-trained language models.
 
+> See `requirement.txt` for other dependencies.
+
 ## Implemented Models
 
 | Name                 | Task                            | Type              |
