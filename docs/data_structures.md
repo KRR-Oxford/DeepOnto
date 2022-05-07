@@ -71,7 +71,7 @@ candidates = onto.idf_select(toks)
 
 ```
 
-## Mappings
+## Mapping
 
 > Source file: `deeponto/onto/mapping.py`
 
