@@ -36,8 +36,38 @@ onto.save_instance("./saved")
 # reload the ontology without repeated processing
 onto = Ontology.from_saved("./saved")
 
+# see onto.__dict__ for useful information
 ```
 
+**Use the inverted index for candidate selection**
+
+```python
+from deeponto.onto import Ontology
+from deeponto.onto.text import Tokenizer
+
+# use the sub-word tokenizer pre-trained with BERT
+tokz = Tokenizer.from_pretrained("bert-base-uncased") 
+
+onto = Ontology.from_new(
+  onto_path="./onto_files/pizza.owl", 
+  lab_props=["label", "hasExactSynonym", "prefLabel"],
+  tokenizer=tokz 
+)
+
+# onto.class2idx: {class_name: class_index}
+# onto.idx2class: {class_index: class_name}
+
+# get the preprocessed labels for a class of index 10 in this ontology
+# for Ontology Matching, the class should be retrieved from another ontology
+labs = onto.idx2labs[10]
+
+# tokens from the class labels
+toks = tokz.tokenize_all(labs)
+
+# retrieve ontology classes with idf scores
+candidates = onto.idf_select(toks)
+
+```
 
 
 
