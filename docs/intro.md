@@ -19,9 +19,7 @@ limitations under the License.
 
 There are two modes for Ontology Alignment (a.k.a. Ontology Matching; OM): `global_match` and `pair_score`. `global_match` aims to compute mappings given two input ontologies and `pair_score` is for scoring provided class pairs. 
 
-<p class="tip">
-    Precision, Recall, and F1 are frequently used in evaluating `global_match` whereas ranking-based metrics like Hits@K and MRR are used in evaluating `pair_score`. See our incoming publication (to-be-updated) for detailed guidance of ontology matching evaluation.  
-</p>
+> Precision, Recall, and F1 are frequently used in evaluating `global_match` whereas ranking-based metrics like Hits@K and MRR are used in evaluating `pair_score`. See our incoming publication (to-be-updated) for detailed guidance of ontology matching evaluation.  
 
 
 ### Global Matching
