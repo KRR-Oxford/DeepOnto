@@ -30,7 +30,7 @@ Example usage of `onto_match.py` for global matching:
 
 **Step 1**: Run the script with specified output directory, source and target ontologies, and configuration file (if not provided, default minimal configurations are used).
 
-```
+```bash
 python onto_match.py \
 --saved_path "./onto_match_experiment" \  
 --src_onto "./data/src_onto.owl" \
@@ -40,7 +40,7 @@ python onto_match.py \
 
 **Step 2**: Choose `global_match` and any implemented OM model.
 
-```
+```bash
 ######################################################################
 ###                   Choose a Supported OM Mode                   ###
 ######################################################################
@@ -89,7 +89,7 @@ Example usage of `onto_match.py` for pair scoring:
 
 **Step 1**: Run the script with specified output directory, source and target ontologies, configuration file (if not provided, default minimal configurations are used), path to the unscored mappings (saved using `OntoMappings` data structure), and the flag of the unscored mappings (`src2tgt` (resp. `tgt2src`) if the input mappings are organized as `(src_class, tgt_class)` pairs (resp. `(tgt_class, src_class)` pairs)).
 
-```
+```bash
 python onto_match.py \
 --saved_path ./onto_match_experiment \  
 --src_onto ./data/src_onto.owl \
@@ -101,7 +101,7 @@ python onto_match.py \
 
 **Step 2**: Choose `global_match` and any implemented OM model.
 
-```
+```bash
 ######################################################################
 ###                   Choose a Supported OM Mode                   ###
 ######################################################################
