@@ -145,7 +145,7 @@ onto_maps = OntoMappings.from_saved("./src2tgt_maps")
 
 ```
 
-`AnchoredOntoMappings` is the data structure for the collection of entity mappings w.r.t. each anchor mapping. For example, to generate negative candidates for each reference mapping for *local ranking evaluation* (see link-to-be-updated), we need to use the reference class pair as a double-key and add candidate mapping correspondingly.
+`AnchoredOntoMappings` is the data structure for the collection of candidate mappings w.r.t. each anchor mapping. For example, to generate negative candidates for each reference mapping (as an anchor) for *local ranking evaluation* (see link-to-be-updated), we need to use the reference class pair as a double-key and add candidate mapping correspondingly.
 
 ```python
 from deeponto.onto.mapping import AnchoredOntoMappings
