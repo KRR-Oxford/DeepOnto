@@ -34,8 +34,6 @@ limitations under the License.
 
 DeepOnto aims to provide implemented deep learning models and an evaluation platform for various ontology engineering purposes. 
 
-<p class="warn">Like docsify-themeable? Be sure to check out <a href="https://jhildenbiddle.github.io/docsify-tabs" target="_blank" rel="noopener">docsify-tabs</a>!</p>
-
 > Documentation: https://krr-oxford.github.io/DeepOnto/#/.
 
 > Github Repository: https://github.com/KRR-Oxford/DeepOnto.
