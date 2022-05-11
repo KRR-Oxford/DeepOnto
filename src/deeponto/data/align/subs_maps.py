@@ -18,7 +18,12 @@ from collections import defaultdict
 from typing import Tuple
 
 from deeponto.onto.text.text_utils import unfold_iri, abbr_iri
-from deeponto.onto.graph.graph_utils import super_thing_classes_of, sub_thing_classes_of, thing_class_descendants_of, thing_class_ancestors_of
+from deeponto.onto.graph.graph_utils import (
+    super_thing_classes_of,
+    sub_thing_classes_of,
+    thing_class_descendants_of,
+    thing_class_ancestors_of,
+)
 from deeponto.onto import Ontology
 from deeponto.utils import uniqify
 from deeponto.onto.mapping import OntoMappings
@@ -70,7 +75,7 @@ class SubsumptionMappingGenerator:
         self.construct_status = defaultdict(
             lambda: False
         )  # keep track which entites are marked for construction
-        
+
     def renew_subs(self):
         self.sub_pairs = []
         self.hop_record = dict()
@@ -177,7 +182,7 @@ class SubsumptionMappingGenerator:
             if not self.delete_status[tgt_ent_name]:
                 preserved.append(unfold_iri(tgt_ent_name))
         return preserved
-    
+
     def validate_subs(self, subs_pair: Tuple[str]):
         """Validate if a subsumption mapping based on the equivalent mappings
         """
@@ -187,10 +192,10 @@ class SubsumptionMappingGenerator:
             subs_related = lambda e: thing_class_ancestors_of(e)
         elif self.rel == ">":
             subs_related = lambda e: thing_class_descendants_of(e)
-        
+
         for equiv_tgt_name in self.equiv_maps.ranked[src_ent_name].keys():
             equiv_tgt = self.tgt_onto.owl.search(iri=unfold_iri(equiv_tgt_name))[0]
             if tgt_ent in subs_related(equiv_tgt):
                 return True
-            
+
         return False
