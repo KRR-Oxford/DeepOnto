@@ -14,128 +14,183 @@
 """Generate Subsumption Mappings from Equivalence Mappings"""
 
 import random
-from pyats.datastructures import AttrDict
+from collections import defaultdict
+from typing import Tuple
 
 from deeponto.onto.text.text_utils import unfold_iri, abbr_iri
-from deeponto.onto.graph.graph_utils import super_thing_classes_of
+from deeponto.onto.graph.graph_utils import super_thing_classes_of, sub_thing_classes_of, thing_class_descendants_of, thing_class_ancestors_of
 from deeponto.onto import Ontology
 from deeponto.utils import uniqify
 from deeponto.onto.mapping import OntoMappings
-from deeponto import FlaggedObj
+
+subs_rels = ["<", ">"]  # "<" means broadMatch (IS-A); ">" means narrowMatch (more specific)
 
 
-class SubsumptionMappingGenerator(FlaggedObj):
+class SubsumptionMappingGenerator:
     def __init__(
         self,
         src_onto: Ontology,
         tgt_onto: Ontology,
+        rel: str,
         equiv_mappings_path: str,
-        map_ratio: int = 1,
-        delete_equiv_src: bool = False,
-        delete_equiv_tgt: bool = True,
+        max_subs_ratio: int = 1,  # maximum subsumption mappings generated form an equiv mapping
+        # delete_equiv_src: bool = False,
+        is_delete_equiv_tgt: bool = True,
+        max_hop: int = 3,  # maximum hops between a subsumption class pair
     ):
-        super().__init__(src_onto, tgt_onto)
-        self.src2tgt = AttrDict()
-        self.tgt2src = AttrDict()
-        self.init_memory_bank()
-        self.src2tgt.equivs = OntoMappings.read_tsv_mappings(equiv_mappings_path).to_tuples()
-        self.switch()
-        self.init_memory_bank()
-        self.renew()
-        self.tgt2src.equivs = [(y, x) for (x, y) in self.src2tgt.equivs]
-        self.map_ratio = map_ratio
-        self.delete_equiv_src = delete_equiv_src  # delete the source equiv class or not
-        self.delete_equiv_tgt = delete_equiv_tgt  # delete the target equiv class or not
+        # super().__init__(src_onto, tgt_onto)
+        self.src_onto = src_onto
+        self.tgt_onto = tgt_onto
+        self.rel = rel
+        # the move function is either towards ancestors or descendants
+        if self.rel == "<":
+            self.move = lambda x: super_thing_classes_of(x)
+        elif self.rel == ">":
+            self.move = lambda x: sub_thing_classes_of(x)
+        else:
+            raise ValueError(f"Unknown subsumption relation: {self.rel}")
+        self.max_hop = max_hop
 
-    def init_memory_bank(self):
-        cur_bank = getattr(self, self.flag)
-        cur_bank.equivs = []
-        cur_bank.subs = []
-        cur_bank.constructed = {self.src_onto.owl.name: [], self.tgt_onto.owl.name: []}
-        cur_bank.deleted = {self.src_onto.owl.name: [], self.tgt_onto.owl.name: []}
+        self.equiv_maps = OntoMappings.read_tsv_mappings(equiv_mappings_path)
+        self.equiv_pairs = self.equiv_maps.to_tuples()
+        # easy check for equivalence mappings
+        check_pair = random.choice(self.equiv_pairs)
+        assert check_pair[0] in self.src_onto.class2idx.keys()
+        assert check_pair[1] in self.tgt_onto.class2idx.keys()
 
-    def generate_all_is_a_maps(self):
-        """Generate ${map_raio} (direct 1-hob) subsumption mappings from the 
-        equivalence mappings while fixing the source side
-        """
-        left, right = self.flag.split("2")[0], self.flag.split("2")[1]
-        print(f"generate subsumption mappings from {right} side with {left} side fixed")
-        print(
-            f"delete SRC equiv class: {self.delete_equiv_src};",
-            f"delete TGT equiv class: {self.delete_equiv_tgt}",
-        )
-        # if a target entity has been involved in a subsumption mapping
-        # mark the rest of equiv mappings that involve it as invalid
-        cur_bank = getattr(self, self.flag)
-        for ref_src_ent_name, ref_tgt_ent_name in cur_bank.equivs:
-            # skip if the src/tgt class of an equiv mapping is opted to be deleted
-            # and it has been involved in a subsumption mapping
-            # NOTE: do not delete what have been constructed
-            if (
-                ref_src_ent_name in cur_bank.constructed[self.src_onto.owl.name]
-                and self.delete_equiv_src
-            ) or (
-                ref_tgt_ent_name in cur_bank.constructed[self.tgt_onto.owl.name]
-                and self.delete_equiv_tgt
-            ):
-                continue
-            cur_subs = self.generate_is_a_map_from_equiv_pair(ref_src_ent_name, ref_tgt_ent_name)
-            cur_bank.constructed[self.src_onto.owl.name] += [src for src, _ in cur_subs]
-            cur_bank.constructed[self.tgt_onto.owl.name] += [tgt for _, tgt in cur_subs]
-            cur_bank.subs += cur_subs
-        cur_bank.subs = uniqify(cur_bank.subs)
+        self.sub_pairs = []
+        self.hop_record = dict()  # record at how many hops is each subs pair constructed
+        self.max_subs_ratio = max_subs_ratio
 
-    def generate_is_a_map_from_equiv_pair(self, src_ent_name: str, tgt_ent_name: str):
-        """Generate a (direct 1-hob) subsumption (IS-A) mapping from an equivalence mapping
-        while fixing the source side
-        """
-        cur_bank = getattr(self, self.flag)
-        # src_ent = self.src_onto.owl.search(iri=unfold_iri(src_ent_name))[0]
-        tgt_ent = self.tgt_onto.owl.search(iri=unfold_iri(tgt_ent_name))[0]
-        parents_of_tgt_ent = super_thing_classes_of(tgt_ent)
+        #  self.delete_equiv_src = delete_equiv_src  # delete the source equiv class or not
+        self.is_delete_equiv_tgt = is_delete_equiv_tgt  # delete the target equiv class or not
+        self.delete_status = defaultdict(
+            lambda: False
+        )  # keep track which entites are marked for deletion
+        self.construct_status = defaultdict(
+            lambda: False
+        )  # keep track which entites are marked for construction
         
+    def renew_subs(self):
+        self.sub_pairs = []
+        self.hop_record = dict()
+        self.delete_status = defaultdict(
+            lambda: False
+        )  # keep track which entites are marked for deletion
+        self.construct_status = defaultdict(
+            lambda: False
+        )  # keep track which entites are marked for construction
+        print("Initialize new subsumption generation record ...")
+
+    def static_subs_construct(self):
+        """A *static* algorithm for subsumption mapping construction:
+        1. mark all equiv targets as to be deleted;
+        2. skip all these equiv targets in subs construction.
+        This algorithm is *static* because the class marking is performed
+        before subsumption mapping construction.
+        """
+        self.renew_subs()
+        # (1) mark all equiv targets as to be deleted
+        if self.is_delete_equiv_tgt:
+            for _, tgt_equiv in self.equiv_pairs:
+                self.delete_status[tgt_equiv] = True
+
+        for src_equiv, tgt_equiv in self.equiv_pairs:
+            self.sub_pairs += self.subs_from_an_equiv(src_equiv, tgt_equiv)
+        # remove duplicates
+        self.sub_pairs = uniqify(self.sub_pairs)
+
+    def online_subs_construct(self):
+        """An *online* algorithm for subsumption mapping construction:
+        1. an equiv pair is skipped if the target side is marked constructed;
+        2. a subs pair is skipped if the target side is marked deleted.
+        This algorithm is *online* because the class marking is performed for
+        each equiv pair instantly.
+        """
+        self.renew_subs()
+        for src_equiv, tgt_equiv in self.equiv_pairs:
+            # (1) an equiv pair is skipped if the target side is marked constructed
+            if self.is_delete_equiv_tgt and self.construct_status[tgt_equiv]:
+                continue
+            # get subs pairs from current equiv pair
+            cur_subs = self.subs_from_an_equiv(src_equiv, tgt_equiv)
+            # if any subs are generated, mark the target class for deletion
+            if self.is_delete_equiv_tgt and cur_subs:
+                self.delete_status[tgt_equiv] = True
+            # feed to the final output
+            self.sub_pairs += cur_subs
+        # remove duplicates
+        self.sub_pairs = uniqify(self.sub_pairs)
+
+    def subs_from_an_equiv(self, src_ent_name: str, tgt_ent_name: str):
+        """Generate subsumption candidates (thus mappings) from the target ontology 
+        based on an equivalence mappings; this method adopts BFS to search valid
+        ancestors or descendants (of the target equiv class) that are not marked as
+        to be deleted. The deletion-marked list is updated outside this method.
+        """
+        tgt_ent = self.tgt_onto.owl.search(iri=unfold_iri(tgt_ent_name))[0]
         # NOTE: do not construct what have been deleted
-        valid_parent_names = []
-        for p in parents_of_tgt_ent:
-            p_name = abbr_iri(p.iri)
-            if not p_name in cur_bank.deleted[self.tgt_onto.owl.name]:
-                valid_parent_names.append(p_name)
+        valid_neighbours = []
+        frontier = [tgt_ent]
+        explored = []
+        hop = 1
+        num_added = 0
+        while len(valid_neighbours) < self.max_subs_ratio and hop <= self.max_hop:
+            cur_hop_neighbours = []
+            for ent in frontier:
+                neighbours_of_ent = self.move(ent)
+                for neighbour in neighbours_of_ent:
+                    neighbour_name = abbr_iri(neighbour.iri)
+                    # deleted targets were updated outside of this method
+                    # (2) a subs pair is skipped if the target side is marked deleted
+                    if self.is_delete_equiv_tgt and self.delete_status[neighbour_name]:
+                        continue
+                    self.hop_record[src_ent_name, neighbour_name] = hop
+                    valid_neighbours.append(neighbour_name)
+                    print(f"found ({tgt_ent_name} {self.rel}) {neighbour_name} at {hop} hops ...")
+                    # update the construction status for the neighbour (target side)
+                    self.construct_status[neighbour_name] = True
+                    num_added += 1
+                    if num_added == self.max_subs_ratio:
+                        break
+                cur_hop_neighbours += neighbours_of_ent
+                explored.append(ent)
+            # renew the frontier to the next hops neighbours along the correct direction
+            frontier = list(set(cur_hop_neighbours) - set(explored))
+            hop += 1
 
-        if len(valid_parent_names) > self.map_ratio:
-            valid_parent_names = random.sample(valid_parent_names, self.map_ratio)
-        subs_pairs = [(src_ent_name, p_name) for p_name in valid_parent_names]
-        assert len(subs_pairs) == len(set(subs_pairs))
-        if subs_pairs:
-            if self.delete_equiv_src:
-                cur_bank.deleted[self.src_onto.owl.name].append(src_ent_name)
-            if self.delete_equiv_tgt:
-                cur_bank.deleted[self.tgt_onto.owl.name].append(tgt_ent_name)
-        return subs_pairs
+        # combine target neighbours with source entity to form subsumption mappings
+        subs_pairs = [(src_ent_name, neighbour_name) for neighbour_name in valid_neighbours]
+        # assert len(subs_pairs) == len(set(subs_pairs))
 
-    def deleted_equiv_src_iris(self):
-        """Return iris of the source classes from the *used* equivalence mapping
-        for downstream class deletion
-        """
-        cur_bank = getattr(self, self.flag)
-        return [unfold_iri(s) for s in cur_bank.deleted[self.src_onto.owl.name]]
+        # NOTE: this is an ad-hoc online deletion process
+        # if self.is_delete_equiv_tgt:
+        #     self.deleted_tgts.append(tgt_ent_name)
 
-    def deleted_equiv_tgt_iris(self):
-        """Return iris of the target classes from the *used* equivalence mapping
-        for downstream class deletion
-        """
-        cur_bank = getattr(self, self.flag)
-        return [unfold_iri(t) for t in cur_bank.deleted[self.tgt_onto.owl.name]]
-
-    def preserved_src_iris(self):
-        """Return iris of the source classes that should be preserved (not used for 
-        constructing the subsumption mappings)
-        """
-        all_src_iris = set([unfold_iri(x) for x in self.src_onto.class2idx.keys()])
-        return list(all_src_iris - set(self.deleted_equiv_src_iris()))
+        return uniqify(subs_pairs)
 
     def preserved_tgt_iris(self):
-        """Return iris of the target classes that should be preserved (not used for 
-        constructing the subsumption mappings)
+        """Return target class IRIs that are not marked for deletion
         """
-        all_tgt_iris = set([unfold_iri(x) for x in self.tgt_onto.class2idx.keys()])
-        return list(all_tgt_iris - set(self.deleted_equiv_tgt_iris()))
+        preserved = []
+        for tgt_ent_name in self.tgt_onto.class2idx.keys():
+            if not self.delete_status[tgt_ent_name]:
+                preserved.append(unfold_iri(tgt_ent_name))
+        return preserved
+    
+    def validate_subs(self, subs_pair: Tuple[str]):
+        """Validate if a subsumption mapping based on the equivalent mappings
+        """
+        src_ent_name, tgt_ent_name = subs_pair
+        tgt_ent = self.tgt_onto.owl.search(iri=unfold_iri(tgt_ent_name))[0]
+        if self.rel == "<":
+            subs_related = lambda e: thing_class_ancestors_of(e)
+        elif self.rel == ">":
+            subs_related = lambda e: thing_class_descendants_of(e)
+        
+        for equiv_tgt_name in self.equiv_maps.ranked[src_ent_name].keys():
+            equiv_tgt = self.tgt_onto.owl.search(iri=unfold_iri(equiv_tgt_name))[0]
+            if tgt_ent in subs_related(equiv_tgt):
+                return True
+            
+        return False
