@@ -38,7 +38,7 @@ DeepOnto aims to provide implemented deep learning models and an evaluation plat
 
 > Github Repository: https://github.com/KRR-Oxford/DeepOnto. 
 
-> PyPI: https://pypi.org/project/deeponto/. 
+> PyPI: https://pypi.org/project/deeponto/. (not fully ready)
 
 ## Essential Dependencies
 
