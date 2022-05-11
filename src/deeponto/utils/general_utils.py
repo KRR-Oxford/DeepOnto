@@ -20,6 +20,7 @@ import re
 import os
 import torch
 import numpy as np
+import subprocess
 
 ##################################################################################
 ###                             element processing                             ###
@@ -142,3 +143,17 @@ def set_seed(seed_val: int = 888):
     torch.manual_seed(seed_val)
     torch.cuda.manual_seed_all(seed_val)
 
+
+##################################################################################
+###                                 java                                       ###
+##################################################################################
+
+def run_jar(command: str):
+    """Run jar command using subprocess
+    """
+    proc = subprocess.Popen(command.split(" "))
+    try:
+        _, _ = proc.communicate(timeout=600)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        _, _ = proc.communicate()
