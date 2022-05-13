@@ -98,7 +98,10 @@ class SubsumptionMappingGenerator:
         # (1) mark all equiv targets as to be deleted
         if self.is_delete_equiv_tgt:
             for _, tgt_equiv in self.equiv_pairs:
-                self.delete_status[tgt_equiv] = True
+                tgt_equiv_ent = self.tgt_onto.owl.search(iri=unfold_iri(tgt_equiv))[0]
+                # mark deleted only if any subs can be generated
+                if self.move(tgt_equiv_ent):
+                    self.delete_status[tgt_equiv] = True
 
         for src_equiv, tgt_equiv in self.equiv_pairs:
             self.sub_pairs += self.subs_from_an_equiv(src_equiv, tgt_equiv)
