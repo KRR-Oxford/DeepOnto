@@ -15,7 +15,8 @@
 
 import random
 from collections import defaultdict
-from typing import Tuple
+from typing import Tuple, Optional
+import pandas as pd
 
 from deeponto.onto.text.text_utils import unfold_iri, abbr_iri
 from deeponto.onto.graph.graph_utils import (
@@ -38,10 +39,10 @@ class SubsumptionMappingGenerator:
         tgt_onto: Ontology,
         rel: str,
         equiv_mappings_path: str,
-        max_subs_ratio: int = 1,  # maximum subsumption mappings generated form an equiv mapping
+        max_subs_ratio: Optional[int] = 1,  # maximum subsumption mappings generated form an equiv mapping
         # delete_equiv_src: bool = False,
         is_delete_equiv_tgt: bool = True,
-        max_hop: int = 3,  # maximum hops between a subsumption class pair
+        max_hop: int = 1,  # maximum hops between a subsumption class pair
     ):
         # super().__init__(src_onto, tgt_onto)
         self.src_onto = src_onto
@@ -63,9 +64,10 @@ class SubsumptionMappingGenerator:
         assert check_pair[0] in self.src_onto.class2idx.keys()
         assert check_pair[1] in self.tgt_onto.class2idx.keys()
 
-        self.sub_pairs = []
+        self.subs_pairs = []
         self.hop_record = dict()  # record at how many hops is each subs pair constructed
-        self.max_subs_ratio = max_subs_ratio
+        # for None, define it as the number of all target classes
+        self.max_subs_ratio = max_subs_ratio if max_subs_ratio else len(self.tgt_onto.class2idx)
 
         #  self.delete_equiv_src = delete_equiv_src  # delete the source equiv class or not
         self.is_delete_equiv_tgt = is_delete_equiv_tgt  # delete the target equiv class or not
@@ -77,7 +79,7 @@ class SubsumptionMappingGenerator:
         )  # keep track which entites are marked for construction
 
     def renew_subs(self):
-        self.sub_pairs = []
+        self.subs_pairs = []
         self.hop_record = dict()
         self.delete_status = defaultdict(
             lambda: False
@@ -104,9 +106,9 @@ class SubsumptionMappingGenerator:
                     self.delete_status[tgt_equiv] = True
 
         for src_equiv, tgt_equiv in self.equiv_pairs:
-            self.sub_pairs += self.subs_from_an_equiv(src_equiv, tgt_equiv)
+            self.subs_pairs += self.subs_from_an_equiv(src_equiv, tgt_equiv)
         # remove duplicates
-        self.sub_pairs = uniqify(self.sub_pairs)
+        self.subs_pairs = uniqify(self.subs_pairs)
 
     def online_subs_construct(self):
         """An *online* algorithm for subsumption mapping construction:
@@ -126,9 +128,9 @@ class SubsumptionMappingGenerator:
             if self.is_delete_equiv_tgt and cur_subs:
                 self.delete_status[tgt_equiv] = True
             # feed to the final output
-            self.sub_pairs += cur_subs
+            self.subs_pairs += cur_subs
         # remove duplicates
-        self.sub_pairs = uniqify(self.sub_pairs)
+        self.subs_pairs = uniqify(self.subs_pairs)
 
     def subs_from_an_equiv(self, src_ent_name: str, tgt_ent_name: str):
         """Generate subsumption candidates (thus mappings) from the target ontology 
@@ -176,6 +178,16 @@ class SubsumptionMappingGenerator:
         #     self.deleted_tgts.append(tgt_ent_name)
 
         return uniqify(subs_pairs)
+    
+    def subs_pairs_to_tsv(self, saved_path: str):
+        """Save the computed subs_pairs in .tsv
+        """
+        df = pd.DataFrame(columns=["SrcEntity", "TgtEntity", "Score",  "Relation", "Hop"])
+        i = 0
+        for subs_pair in self.subs_pairs:
+            df.loc[i] = [subs_pair[0], subs_pair[1], 1.0, self.rel, self.hop_record[subs_pair]]
+            i += 1
+        df.to_csv(saved_path + "/subs_maps.tsv", sep="\t", index=False)
 
     def preserved_tgt_iris(self):
         """Return target class IRIs that are not marked for deletion
