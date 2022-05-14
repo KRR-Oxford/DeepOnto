@@ -137,7 +137,6 @@ Example usage of `onto_prune.py` for ontology pruning:
 **Step 1**: Run the script with the specified output directory, the path to the source ontology to be pruned, and the file of preserved class IRIs where each line states a class IRI.
 
 ```python
-
 python onto_prune.py \
 --saved_path ./pruned_onto \  
 --src_onto_path ./data/src_onto.owl
@@ -154,7 +153,6 @@ Example usage of `om_subs.py` script for inter-ontology subsumption mapping cons
 **Step 1**: Run the script with the specified output directory, the paths to the source and target ontologies, the path to the equivalence mappings between source and target ontologies (a `.tsv` file with columns "SrcEntity", "TgtEntity", and "Score"), the subsumption relation (`"<"` or `">"` for IS-A and the inverse of IS-A), the maximum number of subsumption mappings generated for each equivalence mappping, the decision of deleting the target side classes of the *used* equivalence mapppings, the maximum number of hops for hierarchy search.
 
 ```bash
-
 python om_subs.py \
 --saved_path ./subs \  
 --src_onto_path ./data/src_onto.owl \
@@ -164,7 +162,6 @@ python om_subs.py \
 --max_subs_ratio 1 \ 
 --is_delete_equiv_tgt True \
 --max_hop 1
-
 ```
 
 If `is_delete_equiv_tgt` is set to be `True`, then it means we are corrupting the equivalence mappings (that are *used* for generating any subsumption mappings) by deleting their target side classes to prevent an OM system from inferring subsumptions directly from the equivalence mappings. 
@@ -178,7 +175,6 @@ In principle, `online` will generate more subsumption mappings than `static` bec
 **Step 2**: Choose which algorithm to be used.
 
 ```bash
-
 ######################################################################
 ###                    Choose a Generation Type                    ###
 ######################################################################
@@ -186,7 +182,6 @@ In principle, `online` will generate more subsumption mappings than `static` bec
 [0]: static
 [1]: online
 Enter a number: 0
-
 ```
 **Step 3**: If `is_delete_equiv_tgt` is set to be `True`, use the `onto_prune.py` script described [above](https://krr-oxford.github.io/DeepOnto/#/intro?id=ontology-pruning) to delete the corresponding classes.
 
