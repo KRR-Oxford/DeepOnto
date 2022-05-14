@@ -22,7 +22,7 @@ The `Bio-ML` dataset provides five ontology pairs for both equivalence and subsu
 
 > Download link: https://doi.org/10.5281/zenodo.6516125 (CC BY 4.0 International).
 
-> See detailed resource construction and evaluation methods in our paper: link-to-be-updated
+> See detailed resource construction and evaluation methods in our paper: https://arxiv.org/abs/2205.03447.
 
 > OAEI track: https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/ 
 
