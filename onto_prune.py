@@ -35,4 +35,5 @@ def onto_prune(
     pruner = OntoPruner(saved_path, src_onto_path, preserved_iris_path, preserve_strategy)
     pruner.run()
 
-onto_prune()
+if __name__ == "__main__":
+    onto_prune()
