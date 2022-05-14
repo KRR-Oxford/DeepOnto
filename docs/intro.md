@@ -145,7 +145,7 @@ python onto_prune.py \
 
 ```
 
-## Inter-ontology Subsumption Mapping Construction
+## Subsumption Mappings
 
 To construct inter-ontology subsumption mappings, we could utilize the inter-ontology equivalence mappings as the anchors. Specifically, we fix the source class of the equivalence mapping, and search for the ancestors (or descendants) of the target class, combining them with the source class to form the subsumption mappings. 
 
