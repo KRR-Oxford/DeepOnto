@@ -37,7 +37,7 @@ from deeponto.utils import print_choices
 @click.option("-t", "--threshold", type=float, default=0.0)
 @click.option("-k", "--hits_at", multiple=True, default=[1, 5, 10, 30, 100])
 @click.option("-s", "--show_more_f_scores", type=bool, default=False)
-def main(
+def onto_match_eval(
     saved_path: str,
     pred_path: str,
     ref_path: str,
@@ -65,4 +65,4 @@ def main(
 
 
 if __name__ == "__main__":
-    main()
+    onto_match_eval()
