@@ -125,7 +125,7 @@ Then the script will do the followings:
 - Train the scoring function with constructed data if the selected model is learning-based;
 - Compute the scores for the input mappings and save the results in `./${exp_dir}/${model_name}/pair_score/${flag}` using `OntoMappings.save_instance()`. 
 
-
+--------------------------------
 ## Ontology Pruning
 
 The script `onto_prune.py` is used to prune an ontology by preserving classes according to a list of class IRIs while keeping the hierarchy. Specifically, if a class's IRI is not present in the input IRI list, then any axioms it involves will be deleted, and its parents will be asserted to be the parents of its children, so as to preserve the hierarchy. 
@@ -137,14 +137,13 @@ Example usage of `onto_prune.py` for ontology pruning:
 **Step 1**: Run the script with the specified output directory, the path to the source ontology to be pruned, and the file of preserved class IRIs where each line states a class IRI.
 
 ```python
-
 python onto_prune.py \
 --saved_path ./pruned_onto \  
 --src_onto_path ./data/src_onto.owl
 --preserved_iris_path ./preserved_class_iris.txt
 
 ```
-
+--------------------------------
 ## Subsumption Mappings
 
 To construct inter-ontology subsumption mappings, we could utilize the inter-ontology equivalence mappings as the anchors. Specifically, we fix the source class of the equivalence mapping, and search for the ancestors (or descendants) of the target class, combining them with the source class to form the subsumption mappings. 
@@ -154,7 +153,6 @@ Example usage of `om_subs.py` script for inter-ontology subsumption mapping cons
 **Step 1**: Run the script with the specified output directory, the paths to the source and target ontologies, the path to the equivalence mappings between source and target ontologies (a `.tsv` file with columns "SrcEntity", "TgtEntity", and "Score"), the subsumption relation (`"<"` or `">"` for IS-A and the inverse of IS-A), the maximum number of subsumption mappings generated for each equivalence mappping, the decision of deleting the target side classes of the *used* equivalence mapppings, the maximum number of hops for hierarchy search.
 
 ```bash
-
 python om_subs.py \
 --saved_path ./subs \  
 --src_onto_path ./data/src_onto.owl \
@@ -164,12 +162,11 @@ python om_subs.py \
 --max_subs_ratio 1 \ 
 --is_delete_equiv_tgt True \
 --max_hop 1
-
 ```
 
 If `is_delete_equiv_tgt` is set to be `True`, then it means we are corrupting the equivalence mappings (that are *used* for generating any subsumption mappings) by deleting their target side classes to prevent an OM system from inferring subsumptions directly from the equivalence mappings. 
 
-There are two ways (`static` or `online`) of doing subsumption mapping construction with class deletion considered. By choosing `static`, target classes present in the equivalence mappings will be marked for deletion first unless they have no ancestors (resp. descendants) for `"<"` (resp. for ">") that can be used for constructing subsumption mappings; then it starts generating subsumption mappings and exclude those with target classes marked deleted. By choosing `online`, the deletion and construction are operated instantly for each iteration over the traversal of equivalence mappings; target classes of the equivalence mappings will not be omitted from deletion if they have been included in the subsumption mappings generated in the previous iterations.
+There are two ways (`static` or `online`) of doing subsumption mapping construction with class deletion considered. By choosing `static`, target classes present in the equivalence mappings will be marked for deletion first unless they have no ancestors (resp. descendants) for `"<"` (resp. for `">"`) that can be used for constructing subsumption mappings; then it starts generating subsumption mappings and exclude those with target classes marked deleted. By choosing `online`, the deletion and construction are operated instantly for each iteration over the traversal of equivalence mappings; target classes of the equivalence mappings will not be omitted from deletion if they have been included in the subsumption mappings generated in the previous iterations.
 
 In principle, `online` will generate more subsumption mappings than `static` because less classes are marked for deletion. However, `online` is less stable than `static` because it can be affected by the order of the equivalence mappings during traversal.
 
@@ -178,7 +175,6 @@ In principle, `online` will generate more subsumption mappings than `static` bec
 **Step 2**: Choose which algorithm to be used.
 
 ```bash
-
 ######################################################################
 ###                    Choose a Generation Type                    ###
 ######################################################################
@@ -186,8 +182,7 @@ In principle, `online` will generate more subsumption mappings than `static` bec
 [0]: static
 [1]: online
 Enter a number: 0
-
 ```
-
+**Step 3**: If `is_delete_equiv_tgt` is set to be `True`, use the `onto_prune.py` script described [above](https://krr-oxford.github.io/DeepOnto/#/intro?id=ontology-pruning) to delete the corresponding classes.
 
 
