@@ -40,9 +40,8 @@ def abbr_iri(ent_iri: str):
     """Return the abbreviated iri of an entity given the base iri of its ontology
     e.g., onto_iri#fragment => onto_prefix:fragment
     """
-    sep = "#"  # separators are either "#" or "/""
-    if sep == "#" and not "#" in ent_iri:
-        sep = "/"
+    # separators are either "#" or "/""
+    sep = "/" if not "#" in ent_iri else "#"
     # split on the last occurrence of "#" or "/""
     # e.g.1. http://www.ihtsdo.org/snomed#concept -> http://www.ihtsdo.org/snomed#
     # e.g.2. http://snomed.info/id/228178000 -> http://snomed.info/id/
@@ -59,6 +58,10 @@ def unfold_iri(ent_abbr_iri: str):
     """Unfold the abbreviated iri of an entity given the base iri of its ontology
     e.g., onto_iri#fragment <= onto_prefix:fragment
     """
+    # no unfolding needed for already complete iris
+    if "http://" in ent_abbr_iri or "https://" in ent_abbr_iri:
+        return ent_abbr_iri
+    
     base_abbr_iri = ent_abbr_iri.split(":")[0] + ":"
     if base_abbr_iri in inv_namespaces.keys():
         return ent_abbr_iri.replace(base_abbr_iri, inv_namespaces[base_abbr_iri])
