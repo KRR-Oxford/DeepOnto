@@ -35,13 +35,22 @@ limitations under the License.
       repo: '',
       loadSidebar: true,
       subMaxLevel: 2,
-      homepage: 'https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/README.md'
-    }
+      homepage: 'https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/README.md',
+      pagination:{
+        previousText: 'Previous',
+        nextText: 'Next',
+        crossChapter: true,
+        crossChapterText: true
+        }
+     }
   </script>
   <!-- Docsify v4 -->
   <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.js"></script>
   <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/@alertbox/docsify-footer/dist/docsify-footer.min.js"></script>
+  <script src="//unpkg.com/docsify-pagination/dist/docsify-pagination.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-sidebar-collapse/dist/docsify-sidebar-collapse.min.js"></script>
 </body>
 </html>
