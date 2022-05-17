@@ -60,7 +60,7 @@ def unfold_iri(ent_abbr_iri: str):
     e.g., onto_iri#fragment <= onto_prefix:fragment
     """
     base_abbr_iri = ent_abbr_iri.split(":")[0] + ":"
-    if inv_namespaces[base_abbr_iri] != "":
+    if base_abbr_iri in inv_namespaces.keys():
         return ent_abbr_iri.replace(base_abbr_iri, inv_namespaces[base_abbr_iri])
         # change nothing if no full iri is available
     else:
