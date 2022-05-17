@@ -48,7 +48,7 @@ def abbr_iri(ent_iri: str):
     # e.g.2. http://snomed.info/id/228178000 -> http://snomed.info/id/
     base_iri = ent_iri.replace(ent_iri.split(sep)[-1], "")
 
-    if namespaces[base_iri] != "":
+    if base_iri in namespaces.keys():
         return ent_iri.replace(base_iri, namespaces[base_iri])
     else:
         # change nothing if no abbreviation is available
