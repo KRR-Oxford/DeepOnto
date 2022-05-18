@@ -31,12 +31,12 @@ from deeponto.utils.general_utils import print_choices
 
 @click.command()
 @click.option("-o", "--saved_path", type=click.Path(exists=True), default=".")
-@click.option("-s", "--src_onto_path", type=click.Path(exists=True))
-@click.option("-t", "--tgt_onto_path", type=click.Path(exists=True))
-@click.option("-e", "--equiv_maps_path", type=click.Path(exists=True))
-@click.option(
-    "-r", "--subs_relation", type=click.Choice(["<", ">"])
-)  # "<" means IS-A; ">" is the inverse of IS-A
+@click.option("-s", "--src_onto_path", required=True, type=click.Path(exists=True))
+@click.option("-t", "--tgt_onto_path", required=True, type=click.Path(exists=True))
+@click.option("-e", "--equiv_maps_path", required=True, type=click.Path(exists=True))
+# @click.option(
+#     "-r", "--subs_relation", required=True, type=click.Choice(["<", ">"], help="relation for subsu")
+# )  # "<" means IS-A; ">" is the inverse of IS-A
 @click.option("-m", "--max_subs_ratio", type=int, default=1)
 @click.option("-d", "--is_delete_equiv_tgt", type=bool, default=True)
 @click.option("-h", "--max_hop", type=int, default=1)
@@ -45,17 +45,23 @@ def subs_construct(
     src_onto_path: str,
     tgt_onto_path: str,
     equiv_maps_path: str,
-    subs_relation: str,
+    # subs_relation: str,
     max_subs_ratio: int,
     is_delete_equiv_tgt: bool,
-    max_hop: int
+    max_hop: int,
 ):
 
     banner_msg("Choose a Generation Type")
     generation_types = ["static", "online"]
     print_choices(generation_types)
     gen_type = generation_types[click.prompt("Enter a number", type=int)]
-    
+
+    banner_msg("Choose a Subsumption Relation")
+    subs_rels_prompts = ["'<' (subClassOf)", "'>' (superClassOf)"]
+    subs_rels = ["<", ">"]
+    print_choices(subs_rels_prompts)
+    subs_relation = subs_rels[click.prompt("Enter a number", type=int)]
+
     src_onto = Ontology.from_new(src_onto_path)
     tgt_onto = Ontology.from_new(tgt_onto_path)
     subs_generator = SubsumptionMappingGenerator(
@@ -79,7 +85,9 @@ def subs_construct(
 
     # save the subsumption mappings
     banner_msg("Saving Results")
-    print(f"Generate {len(subs_generator.subs_pairs)} subsumption ({subs_generator.rel}) mappings ...")
+    print(
+        f"Generate {len(subs_generator.subs_pairs)} subsumption ({subs_generator.rel}) mappings ..."
+    )
     print("Save mappings to .tsv file ...")
     subs_generator.subs_pairs_to_tsv(saved_path)
 
