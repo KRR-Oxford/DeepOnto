@@ -26,8 +26,8 @@ from deeponto.onto.prune import OntoPruner
 
 @click.command()
 @click.option("-o", "--saved_path", type=click.Path(exists=True), default=".")
-@click.option("-s", "--src_onto_path", type=click.Path(exists=True))
-@click.option("-i", "--preserved_iris_path", type=click.Path(exists=True))
+@click.option("-s", "--src_onto_path", required=True, type=click.Path(exists=True))
+@click.option("-i", "--preserved_iris_path", required=True, type=click.Path(exists=True))
 @click.option("-t", "--preserve_strategy", type=str, default="simplest")
 def onto_prune(
     saved_path: str, src_onto_path: str, preserved_iris_path: str, preserve_strategy: str
