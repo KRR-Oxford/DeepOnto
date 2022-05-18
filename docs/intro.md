@@ -164,6 +164,16 @@ python om_subs.py \
 --max_hop 1
 ```
 
+An example of first three rows of the equivalence mappings in `.tsv` format (terms are separated by `"\t"`):
+
+```
+SrcEntity   TgtEntity	Score
+ncit_largebio:C9311 obo:DOID_4362	1.0
+ncit_largebio:C8410	obo:DOID_4364	1.0
+```
+
+?> Full entity IRIs are acceptable as well.
+
 If `is_delete_equiv_tgt` is set to be `True`, then it means we are corrupting the equivalence mappings (that are *used* for generating any subsumption mappings) by deleting their target side classes to prevent an OM system from inferring subsumptions directly from the equivalence mappings. 
 
 There are two ways (`static` or `online`) of doing subsumption mapping construction with class deletion considered. By choosing `static`, target classes present in the equivalence mappings will be marked for deletion first unless they have no ancestors (resp. descendants) for `"<"` (resp. for `">"`) that can be used for constructing subsumption mappings; then it starts generating subsumption mappings and exclude those with target classes marked deleted. By choosing `online`, the deletion and construction are operated instantly for each iteration over the traversal of equivalence mappings; target classes of the equivalence mappings will not be omitted from deletion if they have been included in the subsumption mappings generated in the previous iterations.
