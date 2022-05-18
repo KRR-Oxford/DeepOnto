@@ -46,6 +46,7 @@ class Tokenizer:
     def from_rule_based(cls, spacy_lib_path: str = "en_core_web_sm"):
         """spacy word-level tokenizer with rule-based analysis
         """
+        spacy.prefer_gpu()
         nlp = spacy.load(spacy_lib_path)
         inst = cls(lambda texts: [word.text for word in nlp(texts).doc])
         inst.nlp = nlp
