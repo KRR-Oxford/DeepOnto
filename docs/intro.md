@@ -172,7 +172,7 @@ ncit_largebio:C9311 obo:DOID_4362	1.0
 ncit_largebio:C8410	obo:DOID_4364	1.0
 ```
 
-?> Full entity IRIs are acceptable as well.
+!> Full entity IRIs are acceptable as well; the abbreviated IRIs are [pre-defined](https://krr-oxford.github.io/DeepOnto/#/om_resources?id=appendix) in DeepOnto.
 
 If `is_delete_equiv_tgt` is set to be `True`, then it means we are corrupting the equivalence mappings (that are *used* for generating any subsumption mappings) by deleting their target side classes to prevent an OM system from inferring subsumptions directly from the equivalence mappings. 
 
