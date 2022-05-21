@@ -7,9 +7,9 @@ This page describes important data structures implemented in DeepOnto for proces
 The `Ontology` class relies on `owlready2` for loading OWL object, and then applies extra text-level processing on labels of selected *annotation properties* and optionally construct an *inverted index* from these class labels. 
 
 Arguments for `Ontology`:
-- `onto_path [str]`: the path of an ontology file (preferrably in `.owl` format).
-- `lab_props [List[str]]`: a list of selected annotation properties for text processing, default is `["label"].
-- `tokenizer [Optional[Tokenizer]]`: an instance of the `Tokenizer` class used for tokenizing the class labels, default is `None`.
+- `onto_path (str)`: the path of an ontology file (preferrably in `.owl` format).
+- `lab_props (List[str])`: a list of selected annotation properties for text processing, default is `["label"].
+- `tokenizer (Optional[Tokenizer])`: an instance of the `Tokenizer` class used for tokenizing the class labels, default is `None`.
 
 Example usage:
 
