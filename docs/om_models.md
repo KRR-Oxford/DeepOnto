@@ -46,10 +46,10 @@ limitations under the License.
   - `pretrained_path [str]`: path to the pre-trained BERT model from the *huggingface* library.
   - `max_length [int]`: the maximum length of the tokens in BERT's inputs.
   - `num_epochs [int]`: the number of epochs for fine-tuning.
-  - `batch_size_for_training`: the batch size for fine-tuning a BERT model.
-  - `batch_size_for_prediction`: the batch szie for mapping prediction using the fine-tuned BERT model.
-  - `early_stop_patience`: the number of patiences for early stopping, default is `None`.
-  - `device_num`: the id of GPU device for mapping prediction; for fine-tuning, it by default uses multiple GPUs.
+  - `batch_size_for_training [int]`: the batch size for fine-tuning a BERT model.
+  - `batch_size_for_prediction [int]`: the batch szie for mapping prediction using the fine-tuned BERT model.
+  - `early_stop_patience (Optional[int])`: the number of patiences for early stopping, default is `None`.
+  - `device_num (int)`: the id of GPU device for mapping prediction; for fine-tuning, it by default uses multiple GPUs.
 
 ## EditSimiarity & StringMatch
 
