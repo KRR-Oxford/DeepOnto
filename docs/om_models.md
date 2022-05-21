@@ -23,7 +23,7 @@ limitations under the License.
 ### Configurations
 > See an example `config` file in `./config/bertmap.json`.
 
-- `lab_props [list]`: specify the which annotation properties to be used for extracting class labels, default is `["label"]`.
+- lab_props (`<span class="pre">list</span>`): specify the which annotation properties to be used for extracting class labels, default is `["label"]`.
 - `tokenizer [dict]`:
   - `type [str]`: the type of the tokenizer is either `pretrained` (sub-word-based, learnable) or `rule_based` (word-level).
   - `path [str]`: the path to pre-defined tokenizer is either a *huggingface* model path (for pretrained) or a *spacy* library path (for rule_based), e.g., `emilyalsentzer/Bio_ClinicalBERT` from BioClinicalBERT, `en_core_web_sm` from *spacy* library.
