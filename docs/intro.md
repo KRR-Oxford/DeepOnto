@@ -128,7 +128,7 @@ Then the script will do the followings:
 
 ### OM Evaluation
 
-We provide an OM evaluation script for global matching (to compute $Precision$, $Recall$, and $F-score$ on full alignment) and local ranking (to compute $Hits@K$ and $MRR$ on selected candidates).
+We provide an OM evaluation script for global matching (to compute $Precision$, $Recall$, and $F_{\beta}$ (F-score) on full alignment) and local ranking (to compute $Hits@K$ and $MRR$ on selected candidates).
 
 
 Example usage of `om_eval.py` for global matching evaluation:
