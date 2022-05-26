@@ -19,7 +19,7 @@ limitations under the License.
 
 There are two modes for Ontology Alignment (a.k.a. Ontology Matching; OM): `global_match` and `pair_score`. `global_match` aims to compute mappings given two input ontologies and `pair_score` is for scoring provided class pairs. 
 
-?> $Precision$, $Recall$, and $F_1$ are frequently used in evaluating `global_match` whereas ranking-based metrics like $Hits@K$ and $MRR$ are used in evaluating `pair_score`. See our [resource paper](https://arxiv.org/abs/2205.03447) for detailed guidance of ontology matching evaluation.  
+?> `Precision`, `Recall`, and `F-score` are frequently used in evaluating `global_match` whereas ranking-based metrics like `Hits@K` and `MRR` are used in evaluating `pair_score`. See our [resource paper](https://arxiv.org/abs/2205.03447) for detailed guidance of ontology matching evaluation.  
 
 
 ### Global Matching
@@ -128,7 +128,7 @@ Then the script will do the followings:
 
 ### OM Evaluation
 
-We provide an OM evaluation script for global matching (to compute $Precision$, $Recall$, and $F_{\beta}$ (F-score) on full alignment) and local ranking (to compute $Hits@K$ and $MRR$ on selected candidates).
+We provide an OM evaluation script for global matching (to compute `Precision`, `Recall`, and `F-score` on full alignment) and local ranking (to compute `Hits@K` and `MRR` on selected candidates).
 
 
 Example usage of `om_eval.py` for global matching evaluation:
