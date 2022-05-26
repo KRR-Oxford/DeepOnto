@@ -133,7 +133,7 @@ We provide an OM evaluation script for global matching (to compute Precision, Re
 
 Example usage of `om_eval.py` for global matching evaluation:
 
-**Step 1**: For global matching evaluation, run the script with specified output directory, the path to prediction mappings (saved as `OntoMappings` consisting of a `.pkl` file for loading and a `.json` file for reading), the path the reference mappings (saved as `.tsv` with columns "SrcEntity", "TgtEntity", and "Score"), the path to the null reference mappings (`.tsv`) which are reference mappings to be ignored in evaluation (e.g., training and validation mappings when evaluating on the testing mappings), the mapping threshold (leave it blank if the final outputs are determined), the choice of displaying more F-scores (e.g., $$F_2$$ and $$F_{0.5}$$).
+**Step 1**: For global matching evaluation, run the script with specified output directory, the path to prediction mappings (saved as `OntoMappings` consisting of a `.pkl` file for loading and a `.json` file for reading), the path the reference mappings (saved as `.tsv` with columns "SrcEntity", "TgtEntity", and "Score"), the path to the null reference mappings (`.tsv`) which are reference mappings to be ignored in evaluation (e.g., training and validation mappings when evaluating on the testing mappings), the mapping threshold (leave it blank if the final outputs are determined), the choice of displaying more F-scores (e.g., $F_2$ and $F_{0.5}$).
 
 
 ```bash
