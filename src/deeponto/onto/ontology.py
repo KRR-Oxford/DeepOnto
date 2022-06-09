@@ -25,6 +25,7 @@ import os
 from typing import Optional, List
 from collections import defaultdict
 from owlready2 import get_ontology
+from owlready2.entity import ThingClass
 from pyats.datastructures import AttrDict
 from pathlib import Path
 
@@ -129,6 +130,18 @@ class Ontology(SavedObj):
         idx2class = dict(zip(cl_idx, cl_iris))
         assert len(class2idx) == len(idx2class)
         return class2idx, idx2class
+    
+    def search_ent_labs(self, ent: ThingClass):
+        """Search class labels for a given entity class
+        """
+        ent_name = text_utils.abbr_iri(ent.iri)
+        if ent_name in self.class2idx.keys():
+            ent_id = self.class2idx[ent_name]
+            ent_labs = self.idx2labs[ent_id]
+            return ent_labs
+        else:
+            raise ValueError(f"Input entity class \"{ent_name}\" is not found in the ontology ...")
+        
 
     def build_inv_idx(self, tokenizer, cut: int = 0) -> None:
         """Create inverted index based on the extracted labels of an ontology
