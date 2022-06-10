@@ -108,6 +108,14 @@ class Ontology(SavedObj):
         )
         return super().report(**self.info)
     
+    @property
+    def classes(self):
+        return list(self.owl.classes())
+    
+    @property
+    def iri(self):
+        return self.owl.base_iri
+    
     # def destroy_owl_cache(self):
     #     """Owlready2 does *not* create a new object when IRI coincide, to make sure we are 
     #     operating on the correct owl object, we need to destroy the previous cached entities
