@@ -85,4 +85,4 @@ limitations under the License.
 
 - *Yuan He‚ Jiaoyan Chen‚ Denvar Antonyrajah and Ian Horrocks.* **BERTMap: A BERT−Based Ontology Alignment System**. In Proceedings of 36th AAAI Conference on Artificial Intelligence 2022 (AAAI-22). [Arxiv](https://arxiv.org/abs/2112.02682).
 - *Yuan He‚ Jiaoyan Chen‚ Hang Dong, Ernesto Jiménez-Ruiz, Ali Hadian and Ian Horrocks.* **Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching**. Resource Paper 2022 (to be released). [Arxiv](https://arxiv.org/abs/2205.03447).
-- *Jiaoyan Chen, Yuan He, Yuxia Geng, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.* **Contextual Semantic Embeddings for Ontology Subsumption Prediction**. Under review. [Arxiv](https://arxiv.org/abs/2112.10006)
+- *Jiaoyan Chen, Yuan He, Yuxia Geng, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.* **Contextual Semantic Embeddings for Ontology Subsumption Prediction**. 2022 (Under review). [Arxiv](https://arxiv.org/abs/2112.10006)
