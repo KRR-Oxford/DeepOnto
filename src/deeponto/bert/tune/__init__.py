@@ -14,3 +14,4 @@
 
 from .bert_tune import BERTFineTune
 from .bert_tune_seq_classifier import BERTFineTuneSeqClassifier
+from .bert_train_subs import BERTTrainerSubs

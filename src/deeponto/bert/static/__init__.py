@@ -14,3 +14,4 @@
 from .bert_static import BERTStatic
 from .bert_static_embeds import BERTStaticEmbeds
 from .bert_static_seq_classifier import BERTStaticSeqClassifer
+from .bert_static_subs import BERTStaticSubs
