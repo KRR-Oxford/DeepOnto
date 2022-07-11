@@ -107,6 +107,9 @@ class OntoPruner:
             print(f"Link the parents and children of the isolated class: {cl.iri}")
             for ch in children:
                 ch.is_a += parents
-                ch.is_a.remove(cl)  # isolate cl from its child
+                if cl in ch.is_a:
+                    ch.is_a.remove(cl)  # isolate cl from its child
+                else:
+                    print('cl', cl, 'not in child\'s parents:', ch.is_a)
         # isolate cl from its parents
         cl.is_a.clear()
