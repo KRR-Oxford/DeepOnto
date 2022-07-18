@@ -21,6 +21,7 @@ import os
 import torch
 import numpy as np
 import subprocess
+import json
 
 ##################################################################################
 ###                             element processing                             ###
@@ -56,6 +57,7 @@ def sort_dict_by_values(dic: dict, desc: bool = True, top_k: Optional[int] = Non
 def evenly_divide(start, end, num_splits: int):
     step = (end - start) / num_splits
     return [start + step * i for i in range(num_splits + 1)]
+
 
 ##################################################################################
 ###                                 randomness                                 ###
@@ -114,6 +116,21 @@ def read_tsv(file_path: str):
     return pd.read_csv(file_path, sep="\t", na_values=na_vals, keep_default_na=False)
 
 
+def read_jsonl(file_path: str):
+    """Read .jsonl file (list of json) introduced in the BLINK project.
+    """
+    results = []
+    key_set = []
+    with open(file_path, "r", encoding="utf-8-sig") as f:
+        lines = f.readlines()
+        for line in lines:
+            record = json.loads(line)
+            results.append(record)
+            key_set += list(record.keys())
+    print(f"all available keys: {set(key_set)}")
+    return results
+
+
 ##################################################################################
 ###                                 torch                                      ###
 ##################################################################################
@@ -147,6 +164,7 @@ def set_seed(seed_val: int = 888):
 ##################################################################################
 ###                                 java                                       ###
 ##################################################################################
+
 
 def run_jar(command: str):
     """Run jar command using subprocess
