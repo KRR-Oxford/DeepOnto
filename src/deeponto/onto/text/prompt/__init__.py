@@ -11,4 +11,5 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Class for creating manual templates for prompt learning"""
+from .template import OntoTemplate, OntoPattern
+from .prompt import OntoPrompt
