@@ -2,9 +2,13 @@
 This file is copied from the bert_subsumption experiment repository (the original file ontology.py)
 """
 
-from owlready2 import *
+import sys
+from owlready2 import class_construct, get_ontology, default_world, IRIS, owl
+from owlready2.entity import ThingClass
+from owlready2.prop import ObjectPropertyClass
 import random
 import warnings
+import re
 
 
 class OntologySubs:
@@ -96,7 +100,7 @@ class OntologySubs:
         #        and ('some' not in str(c.value) and 'only' not in str(c.value) and
         #             'min' not in str(c.value) and 'exactly' not in str(c.value) and
         #             'max' not in str(c.value)):
-        if type(c) == class_construct.Restriction and c.type == 24 and type(c.property) == prop.ObjectPropertyClass \
+        if type(c) == class_construct.Restriction and c.type == 24 and type(c.property) == ObjectPropertyClass \
                 and type(c.value) == ThingClass and ('some' not in str(c.value) and 'only' not in str(c.value) and
                                                      'min' not in str(c.value) and 'exactly' not in str(
                     c.value) and 'max' not in str(c.value)):
@@ -168,7 +172,7 @@ class OntologySubs:
 
     @staticmethod
     def is_normal_named_class(c):
-        if type(c) == entity.ThingClass and c is not owl.Thing and True not in c.deprecated:
+        if type(c) == ThingClass and c is not owl.Thing and True not in c.deprecated:
             return True
         else:
             return False
@@ -181,10 +185,10 @@ class OntologySubs:
     def get_one_hop_neighbours(c):
         nebs_classes = set()
         for sub in c.subclasses():
-            if type(sub) == entity.ThingClass and True not in sub.deprecated:
+            if type(sub) == ThingClass and True not in sub.deprecated:
                 nebs_classes.add(sub)
         for sup in c.is_a:
-            if type(sup) == entity.ThingClass and True not in sup.deprecated:
+            if type(sup) == ThingClass and True not in sup.deprecated:
                 nebs_classes.add(sup)
         return nebs_classes
 
@@ -209,7 +213,7 @@ class OntologySubs:
                         no_duplicate = False
                     random.shuffle(tmp)
                     for c in tmp:
-                        if type(c) == entity.ThingClass and c is not owl.Thing and True not in c.deprecated:
+                        if type(c) == ThingClass and c is not owl.Thing and True not in c.deprecated:
                             subsumptions.append([c, s])
                             if c not in new_seeds:
                                 new_seeds.append(c)
@@ -219,7 +223,7 @@ class OntologySubs:
                         no_duplicate = False
                     random.shuffle(tmp)
                     for c in tmp:
-                        if type(c) == entity.ThingClass and c is not owl.Thing and True not in c.deprecated:
+                        if type(c) == ThingClass and c is not owl.Thing and True not in c.deprecated:
                             subsumptions.append([s, c])
                             if c not in new_seeds:
                                 new_seeds.append(c)
@@ -255,7 +259,7 @@ class OntologySubs:
                 if len(tmp) > 0:
                     random.shuffle(tmp)
                     for c in tmp:
-                        if type(c) == entity.ThingClass and c is not owl.Thing and True not in c.deprecated:
+                        if type(c) == ThingClass and c is not owl.Thing and True not in c.deprecated:
                             subsumptions.append([c, seed])
                             seed = c
                             end = False
@@ -270,7 +274,7 @@ class OntologySubs:
                 if len(tmp) > 0:
                     random.shuffle(tmp)
                     for c in tmp:
-                        if type(c) == entity.ThingClass and c is not owl.Thing and True not in c.deprecated:
+                        if type(c) == ThingClass and c is not owl.Thing and True not in c.deprecated:
                             subsumptions.append([seed, c])
                             seed = c
                             end = False

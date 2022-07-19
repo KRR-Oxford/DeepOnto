@@ -27,7 +27,7 @@ from deeponto import SavedObj
 
 
 def super_thing_classes_of(ent: ThingClass, ignore_root: bool = True) -> List[ThingClass]:
-    """ return super-classes of an entity class but excluding non-entity classes 
+    """Return super-classes of an entity class but excluding non-entity classes 
     such as existential axioms
     """
     supclasses = set()
@@ -42,7 +42,7 @@ def super_thing_classes_of(ent: ThingClass, ignore_root: bool = True) -> List[Th
 
 
 def sub_thing_classes_of(ent: ThingClass) -> List[ThingClass]:
-    """ return sub-classes of an entity class but excluding non-entity classes 
+    """Return sub-classes of an entity class but excluding non-entity classes 
     such as existential axioms
     """
     subclasses = set()
@@ -53,7 +53,7 @@ def sub_thing_classes_of(ent: ThingClass) -> List[ThingClass]:
 
 
 def depth_max(ent: ThingClass) -> int:
-    """ get te maximum depth of a class (including only named 
+    """Get the maximum depth of a class (including only named 
     classes in the path) to the root
     """
     supclasses = super_thing_classes_of(ent=ent)
@@ -84,8 +84,8 @@ def depth_min(ent: ThingClass) -> int:
     return d_min + 1
 
 
-#TODO: debug cannot assert isistance
-def thing_class_ancestors_of(ent: ThingClass, include_self: bool=False):
+# TODO: debug cannot assert isistance
+def thing_class_ancestors_of(ent: ThingClass, include_self: bool = False):
     """Return all the ancestors (restricted to EntityClass) of a class 
     (except for the root ThingClass)
     """
@@ -95,7 +95,7 @@ def thing_class_ancestors_of(ent: ThingClass, include_self: bool=False):
     return list(set(ancestors))
 
 
-def thing_class_descendants_of(ent: ThingClass, include_self: bool=False):
+def thing_class_descendants_of(ent: ThingClass, include_self: bool = False):
     """Return all the descendents (restricted to EntityClass) of a class 
     """
     descendants = [a for a in ent.descendants() if isinstance(a, ThingClass)]
@@ -116,7 +116,9 @@ def neighbours_of(anchor_ent: ThingClass, max_hop: int = 5, ignore_root: bool = 
     while hop <= max_hop:
         cur_hop_neighbours = []
         for ent in frontier:
-            cur_hop_neighbours += super_thing_classes_of(ent, ignore_root) + sub_thing_classes_of(ent)
+            cur_hop_neighbours += super_thing_classes_of(ent, ignore_root) + sub_thing_classes_of(
+                ent
+            )
             cur_hop_neighbours = list(set(cur_hop_neighbours))
             explored.append(ent)
         neighbours[hop] = cur_hop_neighbours
@@ -128,3 +130,15 @@ def neighbours_of(anchor_ent: ThingClass, max_hop: int = 5, ignore_root: bool = 
     SavedObj.print_json(stats)
 
     return neighbours
+
+
+def branch_of(ent: ThingClass) -> List[ThingClass]:
+    """Return the branch (the named class exactly below Thing) of an entity class
+    """
+    ancestors = thing_class_ancestors_of(ent)
+    top_ancestors = []
+    for anc in ancestors:
+        # if Thing is the only class of this ancestor, then it is the branch class
+        if len(anc.is_a) == 1 and anc.is_a[0].name == "Thing":
+            top_ancestors.append(anc)
+    return top_ancestors
