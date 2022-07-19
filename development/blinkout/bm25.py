@@ -47,6 +47,7 @@ def main(
         label = entry["label_title"]
         entity_label2tokens[label] = tkz.tokenize(entry["label_title"].lower())
         entity_label_corpus.append(entity_label2tokens[label])
+    # map the tokenized string to the original string
     entity_tokens2label = {" ".join(v): k for k, v in entity_label2tokens.items()}
     bm25_model = BM25Okapi(entity_label_corpus)
 
