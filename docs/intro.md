@@ -21,6 +21,8 @@ There are two modes for Ontology Alignment (a.k.a. Ontology Matching; OM): `glob
 
 ?> `Precision`, `Recall`, and `F-score` are frequently used in evaluating `global_match` whereas ranking-based metrics like `Hits@K` and `MRR` are used in evaluating `pair_score`. See our [resource paper](https://arxiv.org/abs/2205.03447) for detailed guidance of ontology matching evaluation.  
 
+> A configuration file in `.json` needs to be provided for each OM model, see details in our [model page]((/home/#/om_models))
+
 
 ### Global Matching
 
