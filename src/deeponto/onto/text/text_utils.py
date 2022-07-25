@@ -13,12 +13,14 @@
 # limitations under the License.
 
 from owlready2.entity import ThingClass
-from owlready2.prop import IndividualValueList
+from owlready2 import default_world
 from typing import Iterable, List, Dict, Tuple
 
 from collections import defaultdict
 from itertools import chain, product
 import math
+import deprecation
+import validators
 
 from deeponto.utils import uniqify
 from deeponto.onto.iris import namespaces, inv_namespaces
@@ -36,6 +38,7 @@ BIOCLINICAL_BERT = "emilyalsentzer/Bio_ClinicalBERT"
 ##################################################################################
 
 
+@deprecation.deprecated(details="No need for abbreviation; use full class IRIs instead.")
 def abbr_iri(ent_iri: str):
     """Return the abbreviated iri of an entity given the base iri of its ontology
     e.g., onto_iri#fragment => onto_prefix:fragment
@@ -54,6 +57,7 @@ def abbr_iri(ent_iri: str):
         return ent_iri
 
 
+@deprecation.deprecated(details="No need for abbreviation; use full class IRIs instead.")
 def unfold_iri(ent_abbr_iri: str):
     """Unfold the abbreviated iri of an entity given the base iri of its ontology
     e.g., onto_iri#fragment <= onto_prefix:fragment
@@ -61,13 +65,19 @@ def unfold_iri(ent_abbr_iri: str):
     # no unfolding needed for already complete iris
     if "http://" in ent_abbr_iri or "https://" in ent_abbr_iri:
         return ent_abbr_iri
-    
+
     base_abbr_iri = ent_abbr_iri.split(":")[0] + ":"
     if base_abbr_iri in inv_namespaces.keys():
         return ent_abbr_iri.replace(base_abbr_iri, inv_namespaces[base_abbr_iri])
         # change nothing if no full iri is available
     else:
         return ent_abbr_iri
+
+
+def is_valid_iri(iri: str):
+    """Check if an input string is a valid iri
+    """
+    return validators.url(iri)
 
 
 ##################################################################################
@@ -84,29 +94,33 @@ def lab_product(src_ent_labs: List[str], tgt_ent_labs: List[str]) -> Tuple[List,
     return list(src_out), list(tgt_out)
 
 
-def ents_labs_from_props(
-    ents: Iterable[ThingClass], ents2idx: Dict, lab_props: List[str] = ["label"]
+# def ents_labs_from_props(
+#     ents: Iterable[ThingClass],
+#     ents2idx: Dict,
+#     lab_props: List[str] = ["http://www.w3.org/2000/01/rdf-schema#label"],  # rdfs:label,
+# ):
+#     """Extract unique and cleaned labels (for a group of entities) given the input annotational properties;
+#     entities are represented by their numbers according to {ents2idx}
+#     """
+#     ents_labels = defaultdict(list)
+#     num_labels = 0
+#     for ent in ents:
+#         ent_labs = ent_labs_from_props(ent, lab_props)
+#         ents_labels[ents2idx[abbr_iri(ent.iri)]] = ent_labs
+#         num_labels += len(ent_labs)
+#     return ents_labels, num_labels
+
+
+def labs_from_props(
+    iri: str, lab_props: List[str] = ["http://www.w3.org/2000/01/rdf-schema#label"]
 ):
-    """Extract unique and cleaned labels (for a group of entities) given the input annotational properties;
-    entities are represented by their numbers according to {ents2idx}
-    """
-    ents_labels = defaultdict(list)
-    num_labels = 0
-    for ent in ents:
-        ent_labs = ent_labs_from_props(ent, lab_props)
-        ents_labels[ents2idx[abbr_iri(ent.iri)]] = ent_labs
-        num_labels += len(ent_labs)
-    return ents_labels, num_labels
-
-
-def ent_labs_from_props(ent: ThingClass, lab_props: List[str] = ["label"]):
     """Extract unique and cleaned labels (for an entity) given the input annotational properties
     """
-    ent_labels = list(chain(*[prep_labs(ent, lp) for lp in lab_props]))
-    return uniqify(ent_labels)
+    labels = list(chain(*[prep_labs(iri, lp) for lp in lab_props]))
+    return uniqify(labels)
 
 
-def prep_labs(ent: ThingClass, lab_prop: str) -> List[str]:
+def prep_labs(iri: str, lab_prop: str) -> List[str]:
     """Preprocess the texts of a class given by a particular property including
     underscores removal and lower-casing.
 
@@ -118,8 +132,10 @@ def prep_labs(ent: ThingClass, lab_prop: str) -> List[str]:
         list: cleaned labels of the input entity
     """
     try:
-        raw_labels = getattr(ent, lab_prop)
-        assert isinstance(raw_labels, IndividualValueList)
+        query = f"SELECT ?o WHERE {{<{iri}> <{lab_prop}> ?o.}}"
+        raw_labels = list(default_world.sparql(query))[0]
+        # raw_labels = getattr(ent, lab_prop)
+        # assert isinstance(raw_labels, IndividualValueList)
         cleaned_labels = [lab.lower().replace("_", " ") for lab in raw_labels]
         return cleaned_labels
     except:
@@ -133,9 +149,7 @@ def prep_labs(ent: ThingClass, lab_prop: str) -> List[str]:
 ##################################################################################
 
 
-def sib_labs(
-    ents: Iterable[ThingClass], lab_props: List[str] = ["label"]
-) -> List[List[List[str]]]:
+def sib_labs(ents: Iterable[ThingClass], lab_props: List[str]) -> List[List[List[str]]]:
     """Return all the sibling label groups with size > 1 and no duplicates
     """
     sib_lables = []
@@ -148,12 +162,12 @@ def sib_labs(
     return list(map(lambda dis_group: [list(syn_group) for syn_group in dis_group], sib_lables))
 
 
-def child_labs(ent: ThingClass, lab_props: List[str] = ["label"]) -> Tuple[Tuple[str]]:
+def child_labs(ent: ThingClass, lab_props: List[str]) -> Tuple[Tuple[str]]:
     """Return labels of child entity classes, ensuring that no label groups are duplicated 
     """
     return tuple(
         set(
-            tuple(ent_labs_from_props(child, lab_props))
+            tuple(labs_from_props(child.iri, lab_props))
             for child in ent.subclasses()
             if isinstance(child, ThingClass)
         )

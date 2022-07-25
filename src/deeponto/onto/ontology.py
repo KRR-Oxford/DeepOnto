@@ -24,7 +24,7 @@ from __future__ import annotations
 import os
 from typing import Optional, List
 from collections import defaultdict
-from owlready2 import get_ontology
+from owlready2 import get_ontology, default_world, IRIS
 from owlready2.entity import ThingClass
 from pyats.datastructures import AttrDict
 from pathlib import Path
@@ -35,13 +35,15 @@ from .text import Tokenizer, text_utils
 
 class Ontology(SavedObj):
     def __init__(self, owl_path: str):
+        # owlready2 attributes
         self.owl_path = os.path.abspath(owl_path)
         self.owl = get_ontology(f"file://{owl_path}").load()
+        self.graph = default_world.as_rdflib_graph()  # rdf graph
+        # list of label properties (in IRIs)
         self.lab_props = None
-        # dict attributes
-        self.class2idx = None
-        self.idx2class = None
-        self.idx2labs = None
+        # entity or property IRIs to their labels (via specified annotation properties)
+        self.iri2labs = None
+
         self.inv_idx = None
         # stat attributes
         self.num_classes = None
@@ -52,19 +54,22 @@ class Ontology(SavedObj):
 
     @classmethod
     def from_new(
-        cls, onto_path: str, lab_props: List[str] = ["label"], tokenizer: Optional[Tokenizer] = None
+        cls,
+        onto_path: str,
+        lab_props: List[str] = ["http://www.w3.org/2000/01/rdf-schema#label"],
+        tokenizer: Optional[Tokenizer] = None,
     ) -> Ontology:
         onto = cls(onto_path)
-        # {class_iri: class_number}; {class_number: class_iri}
-        onto.class2idx, onto.idx2class = onto.assign_class_numbers(onto.owl)
-        # {class_number: [labels]}
         onto.lab_props = lab_props
-        onto.idx2labs, onto.num_labs = text_utils.ents_labs_from_props(
-            onto.owl.classes(), onto.class2idx, onto.lab_props
-        )
-        onto.num_classes = len(onto.class2idx)
+        onto.iri2labs = defaultdict(list)
+        onto.num_classes = 0
+        onto.num_labs = 0
+        for cl in onto.owl.classes():
+            onto.iri2labs[cl.iri] = text_utils.labs_from_props(cl.iri, onto.lab_props)
+            onto.num_labs += len(onto.iri2labs[cl.iri])
+            onto.num_classes += 1
         onto.avg_labs = round(onto.num_labs / onto.num_classes, 2)
-        # {token: [class_numbers]}
+        # for (sub-)word inverted index
         if tokenizer:
             onto.build_inv_idx(tokenizer, cut=0)
         print(onto)
@@ -100,56 +105,35 @@ class Ontology(SavedObj):
             {
                 "owl_name": self.owl.name,
                 "num_classes": self.num_classes,
-                "lab_probs": self.lab_props,
+                "lab_probs": [self.name_from_iri(p) for p in self.lab_props],
                 "num_labs": self.num_labs,
                 "avg_labs": self.avg_labs,
                 "num_entries_inv_idx": self.num_entries_inv_idx,
             }
         )
         return super().report(**self.info)
-    
+
     @property
     def classes(self):
         return list(self.owl.classes())
-    
+
     @property
     def iri(self):
         return self.owl.base_iri
-    
-    # def destroy_owl_cache(self):
-    #     """Owlready2 does *not* create a new object when IRI coincide, to make sure we are 
-    #     operating on the correct owl object, we need to destroy the previous cached entities
-    #     """
-    #     self.owl._destroy_cached_entities()
-        
-    # def reload_onto_without_inv_idx(self):
-    #     """Destroy the previous cached entities and reload the owl object
-    #     """
-    #     self.destroy_owl_cache()
-    #     return Ontology.from_new(self.owl_path, self.lab_props)
 
-    @staticmethod
-    def assign_class_numbers(owl_onto):
-        """Assign numbers for each class in an owlready2 ontology
-        """
-        cl_iris = [text_utils.abbr_iri(cl.iri) for cl in owl_onto.classes()]
-        cl_idx = list(range(len(cl_iris)))
-        class2idx = dict(zip(cl_iris, cl_idx))
-        idx2class = dict(zip(cl_idx, cl_iris))
-        assert len(class2idx) == len(idx2class)
-        return class2idx, idx2class
-    
+    def obj_from_iri(self, iri: str):
+        return default_world[iri]
+
+    def name_from_iri(self, iri: str):
+        return str(default_world[iri])
+
     def search_ent_labs(self, ent: ThingClass):
         """Search class labels for a given entity class
         """
-        ent_name = text_utils.abbr_iri(ent.iri)
-        if ent_name in self.class2idx.keys():
-            ent_id = self.class2idx[ent_name]
-            ent_labs = self.idx2labs[ent_id]
-            return ent_labs
+        if ent.iri in self.iri2labs.keys():
+            return self.iri2labs[ent.iri]
         else:
-            raise ValueError(f"Input entity class \"{ent_name}\" is not found in the ontology ...")
-        
+            raise ValueError(f'Input entity class "{ent.iri}" is not found in the ontology ...')
 
     def build_inv_idx(self, tokenizer, cut: int = 0) -> None:
         """Create inverted index based on the extracted labels of an ontology
@@ -160,7 +144,7 @@ class Ontology(SavedObj):
             cut (int): keep tokens with length > cut 
         """
         self.inv_idx = defaultdict(list)
-        for cls_iri, cls_labs in self.idx2labs.items():
+        for cls_iri, cls_labs in self.iri2labs.items():
             for tk in tokenizer.tokenize_all(cls_labs):
                 if len(tk) > cut:
                     self.inv_idx[tk].append(cls_iri)
@@ -172,8 +156,8 @@ class Ontology(SavedObj):
         cand_pool = text_utils.idf_select(ent_toks, self.inv_idx, pool_size)
         # print three selected examples
         examples = [
-            (self.idx2class[ent_id], round(idf_score, 1))
-            for ent_id, idf_score in cand_pool[: min(pool_size, 3)]
+            (self.name_from_iri(ent_iri), round(idf_score, 1))
+            for ent_iri, idf_score in cand_pool[: min(pool_size, 3)]
         ]
         info = {"num_candidates": len(cand_pool)}
         for i in range(len(examples)):
