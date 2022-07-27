@@ -130,8 +130,10 @@ def prep_labs(iri: str, lab_prop: str) -> List[str]:
         list: cleaned labels of the input entity
     """
     try:
-        query = f"SELECT ?o WHERE {{<{iri}> <{lab_prop}> ?o.}}"
-        raw_labels = list(default_world.sparql(query))[0]
+        # query = f"SELECT ?o WHERE {{<{iri}> <{lab_prop}> ?o.}}"
+        # raw_labels = list(chain.from_iterable(list(default_world.sparql(query))))
+        lab_prop_name = default_world[lab_prop].name
+        raw_labels = getattr(default_world[iri], lab_prop_name)
         # raw_labels = getattr(ent, lab_prop)
         # assert isinstance(raw_labels, IndividualValueList)
         cleaned_labels = [lab.lower().replace("_", " ") for lab in raw_labels]
