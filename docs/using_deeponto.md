@@ -214,7 +214,11 @@ Enter a number: 1
 ```
 
 --------------------------------
-## Ontology Pruning
+## Ontology Data Processing
+
+to ...
+
+### Ontology Pruning
 
 The script `onto_prune.py` is used to prune an ontology by preserving classes according to a list of class IRIs while keeping the hierarchy. Specifically, if a class's IRI is not present in the input IRI list, then any axioms it involves will be deleted, and its parents will be asserted to be the parents of its children, so as to preserve the hierarchy. 
 
@@ -231,10 +235,10 @@ python onto_prune.py \
 --preserved_iris_path ./preserved_class_iris.txt
 
 ```
---------------------------------
-## Subsumption Mappings
 
-To construct inter-ontology subsumption mappings, we could utilize the inter-ontology equivalence mappings as the anchors. Specifically, we fix the source class of the equivalence mapping, and search for the ancestors (or descendants) of the target class, combining them with the source class to form the subsumption mappings. 
+### Subsumption Mapping Generation
+
+To construct inter-ontology subsumption mappings, we could utilize the **inter-ontology equivalence mappings** as the anchors. Specifically, we fix the source class of the equivalence mapping, and search for the ancestors (or descendants) of the target class, combining them with the source class to form the subsumption mappings. 
 
 Example usage of `om_subs.py` script for inter-ontology subsumption mapping construction:
 
@@ -292,3 +296,4 @@ In principle, `online` will generate more subsumption mappings than `static` bec
 **Step 3**: If `is_delete_equiv_tgt` is set to be `True`, use the `onto_prune.py` script described [above](https://krr-oxford.github.io/DeepOnto/#/intro?id=ontology-pruning) to delete the corresponding classes.
 
 
+### Negative Candidate Mapping Generation
