@@ -110,10 +110,11 @@ def print_choices(choices: list):
 na_vals = pd.io.parsers.readers.STR_NA_VALUES.difference({"NULL", "null", "n/a"})
 
 
-def read_tsv(file_path: str):
+def read_table(file_path: str):
     """Read tsv file as pandas dataframe without treating "null" as empty string.
     """
-    return pd.read_csv(file_path, sep="\t", na_values=na_vals, keep_default_na=False)
+    sep = "\t" if file_path.endswith(".tsv") else ","
+    return pd.read_csv(file_path, sep=sep, na_values=na_vals, keep_default_na=False)
 
 
 def read_jsonl(file_path: str):
