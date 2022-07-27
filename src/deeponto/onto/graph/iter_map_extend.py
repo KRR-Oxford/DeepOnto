@@ -86,30 +86,30 @@ class IterativeMappingExtension:
             self.log(f"Add {len(new_mappings)} from iteration {self.num_iter} ...")
         self.log(f"[ExpansionStats]: total={self.num_expanded}; num_iter={self.num_iter}")
 
-    def renew_frontier(self, anchor_mappings: OntoMappings):
+    def renew_frontier(self, given_mappings: OntoMappings):
         """Renew frontier with original anchors or newly expanded mappings
         """
-        self.frontier = anchor_mappings.topKs(self.threshold, K=anchor_mappings.n_best)
-        if anchor_mappings.flag == "tgt2src":
+        self.frontier = given_mappings.topks(
+            K=given_mappings.n_best, threshold=self.threshold, as_tuples=True
+        )
+        if given_mappings.flag == "tgt2src":
             # reverse (head, tail) to match src2tgt
             self.frontier = [(y, x) for (x, y) in self.frontier]
 
-    def check_ent_pair(self, src_ent_name: str, tgt_ent_name: str):
+    def check_ent_pair(self, src_ent_iri: str, tgt_ent_iri: str):
         """Check if a pair of entities should be added or discarded (explored or undervalued);
         if should be added, return the corresponding Mapping
         """
         # score doesn't matter in check_existed
         temp_map = (
-            EntityMapping(src_ent_name, tgt_ent_name, self.onto_mappings.rel, -1.0)
+            EntityMapping(src_ent_iri, tgt_ent_iri, self.onto_mappings.rel, -1.0)
             if self.onto_mappings.flag == "src2tgt"
-            else EntityMapping(tgt_ent_name, src_ent_name, self.onto_mappings.rel, -1.0)
+            else EntityMapping(tgt_ent_iri, src_ent_iri, self.onto_mappings.rel, -1.0)
         )
-        if self.onto_mappings.check_existed(temp_map):
+        if self.onto_mappings.is_existed_mapping(temp_map):
             return "explored"
         # if not explored before we compute the score
-        src_ent_id = self.src_onto.class2idx[src_ent_name]
-        tgt_ent_id = self.tgt_onto.class2idx[tgt_ent_name]
-        score = self.ent_pair_score(src_ent_id, tgt_ent_id)
+        score = self.ent_pair_score(src_ent_iri, tgt_ent_iri)
         if score < self.threshold:
             return "undervalued"
         else:

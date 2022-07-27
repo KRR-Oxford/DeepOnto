@@ -38,13 +38,14 @@ class Ontology(SavedObj):
         # owlready2 attributes
         self.owl_path = os.path.abspath(owl_path)
         self.owl = get_ontology(f"file://{owl_path}").load()
-        self.graph = default_world.as_rdflib_graph()  # rdf graph
-        # list of label properties (in IRIs)
+        # self.graph = default_world.as_rdflib_graph()  # rdf graph
+        # NOTE: list of label properties (in IRIs)
         self.lab_props = None
         # entity or property IRIs to their labels (via specified annotation properties)
         self.iri2labs = None
-
+        # inverted index for class labels
         self.inv_idx = None
+        
         # stat attributes
         self.num_classes = None
         self.num_labs = None
@@ -96,6 +97,7 @@ class Ontology(SavedObj):
         self.owl_path = saved_path + "/" + owl_file_name
         # the owlready2 ontology cannot be pickled, so saved as a separate file
         delattr(self, "owl")
+        # delattr(self, "graph")
         self.save_pkl(self, saved_path)
         # load back the owl ontology after saving the pickled parts
         self.owl = get_ontology(f"file://{self.owl_path}").load()
@@ -105,7 +107,9 @@ class Ontology(SavedObj):
             {
                 "owl_name": self.owl.name,
                 "num_classes": self.num_classes,
-                "lab_probs": [self.name_from_iri(p) for p in self.lab_props],
+                "lab_probs": [
+                    self.name_from_iri(p) for p in self.lab_props if self.obj_from_iri(p)
+                ],
                 "num_labs": self.num_labs,
                 "avg_labs": self.avg_labs,
                 "num_entries_inv_idx": self.num_entries_inv_idx,
@@ -121,19 +125,33 @@ class Ontology(SavedObj):
     def iri(self):
         return self.owl.base_iri
 
-    def obj_from_iri(self, iri: str):
+    @classmethod
+    def obj_from_iri(cls, iri: str):
+        """Return an entity or property object defined in owlready2 given its IRI
+        """
         return default_world[iri]
 
-    def name_from_iri(self, iri: str):
-        return str(default_world[iri])
+    @classmethod
+    def name_from_iri(cls, iri: str):
+        """Return the name of an entity or property object defined in owlready2 given its IRI
+        """
+        return str(cls.obj_from_iri(iri))
 
     def search_ent_labs(self, ent: ThingClass):
-        """Search class labels for a given entity class
+        """Search class labels for a given entity class object
         """
         if ent.iri in self.iri2labs.keys():
             return self.iri2labs[ent.iri]
         else:
             raise ValueError(f'Input entity class "{ent.iri}" is not found in the ontology ...')
+        
+    def sib_labs(self):
+        """Return all the label groups extracted from sibling classes of this ontology as a 3-D list:
+            -   1st list for different sibling groups;
+            -   2nd list for different siblings;
+            -   3rd list for different labels.
+        """
+        return text_utils.sib_labs(self.classes, self.lab_props)
 
     def build_inv_idx(self, tokenizer, cut: int = 0) -> None:
         """Create inverted index based on the extracted labels of an ontology

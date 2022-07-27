@@ -173,10 +173,10 @@ class TextSemanticsCorpora(SavedObj):
                 or aux_onto.owl.base_iri == self.tgt_onto.owl.base_iri
             ):
                 raise ValueError(
-                    "The loaded auxiliary ontology has the same IRI as SRC or TGT ontology " + 
-                    "which makes it having a duplicated owl object (because Owlready2 can load) " +
-                    "just one ontology of the same IRI; Please delete the auxiliary ontology dir " +
-                    "and modify its IRI to a temporarily fake one and it will not affect BERTMap alignment"
+                    "The loaded auxiliary ontology has the same IRI as SRC or TGT ontology "
+                    + "which makes it having a duplicated owl object (because Owlready2 can load) "
+                    + "just one ontology of the same IRI; Please delete the auxiliary ontology dir "
+                    + "and modify its IRI to a temporarily fake one and it will not affect BERTMap alignment"
                 )
             aux_corpus = TextSemanticsCorpusforOnto(
                 aux_onto, self.thesaurus, self.neg_ratio, flag="aux"
@@ -226,7 +226,7 @@ class TextSemanticsCorpusforOnto(SavedObj):
         # hard negatives are not always available so we compute them first
         # ideally they should be half of the negatives
         self.hard_negatives = Thesaurus.disjointness_negative_sampling(
-            text_utils.sib_labs(self.onto.owl.classes()), neg_num=(total_neg_num // 2)
+            self.onto.sib_labs(), neg_num=(total_neg_num // 2),
         )
         # soft negatives are almost always available so we amend more if we do not have enough negatives
         self.soft_negatives = Thesaurus.random_negative_sampling(
