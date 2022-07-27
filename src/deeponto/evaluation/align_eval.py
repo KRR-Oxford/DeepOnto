@@ -25,7 +25,7 @@ from deeponto.evaluation.eval_metrics import *
 def pred_thresholding(pred_maps: OntoMappings, threshold: float):
 
     # load all prediction mappings from the saved directory
-    filtered_pred = pred_maps.topKs(threshold, K=pred_maps.n_best)
+    filtered_pred = pred_maps.topks(K=pred_maps.n_best, threshold=threshold, as_tuples=True)
     if pred_maps.flag == "tgt2src":
         # reverse (head, tail) to match src2tgt
         filtered_pred = [(y, x) for (x, y) in filtered_pred]
@@ -58,8 +58,10 @@ def global_match_eval(
         pred = processed_pred
 
     # load reference mappings and (opt) null mappings
-    ref = OntoMappings.read_tsv_mappings(ref_path).to_tuples()
-    null_ref = OntoMappings.read_tsv_mappings(null_ref_path).to_tuples() if null_ref_path else None
+    ref = OntoMappings.read_table_mappings(ref_path).to_tuples()
+    null_ref = (
+        OntoMappings.read_table_mappings(null_ref_path).to_tuples() if null_ref_path else None
+    )
 
     results = f1(pred, ref, null_ref)
     if show_more_f_scores:
@@ -110,12 +112,12 @@ def global_match_select(
     merged_null_ref_path = global_match_dir + "/null_ref_for_model_select.tsv"
     if not detect_path(merged_null_ref_path):
         train_ref = (
-            OntoMappings.read_tsv_mappings(train_ref_path).to_tuples() if null_ref_path else []
+            OntoMappings.read_table_mappings(train_ref_path).to_tuples() if null_ref_path else []
         )
         null_ref = (
-            OntoMappings.read_tsv_mappings(null_ref_path).to_tuples() if null_ref_path else []
+            OntoMappings.read_table_mappings(null_ref_path).to_tuples() if null_ref_path else []
         )
-        test_ref = OntoMappings.read_tsv_mappings(test_ref_path).to_tuples()
+        test_ref = OntoMappings.read_table_mappings(test_ref_path).to_tuples()
 
         null_ref = (
             null_ref + train_ref + test_ref
@@ -147,8 +149,7 @@ def global_match_select(
                 )
             else:
                 eval_results[thr][map_type] = pool.apply_async(
-                    lambda _: {"P": -1, "R": -1, "f_score": -1},
-                    args=(None,)
+                    lambda _: {"P": -1, "R": -1, "f_score": -1}, args=(None,)
                 )
     pool.close()
     pool.join()
@@ -171,9 +172,10 @@ def global_match_select(
                 best_results["best_f1"] = scores["f_score"]
 
     banner_msg("Best Hyperparameters for Validation")
-    SavedObj.save_json(serialized_eval_results, global_match_dir + "/results.val.json")
+    val_results_dir = global_match_dir + "/val_results"
+    SavedObj.save_json(serialized_eval_results, val_results_dir + "/results.val.json")
     SavedObj.print_json(best_results)
-    SavedObj.save_json(best_results, global_match_dir + "/best_hyperparams.val.json")
+    SavedObj.save_json(best_results, val_results_dir + "/best_hyperparams.val.json")
 
 
 def local_rank_eval(pred_path: str, ref_anchor_path: str, *ks: int):

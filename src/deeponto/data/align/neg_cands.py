@@ -20,7 +20,7 @@ from deeponto.onto import Ontology
 from deeponto.onto.graph.graph_utils import *
 from deeponto.onto.text import Tokenizer
 from deeponto.onto.text.text_utils import unfold_iri, abbr_iri
-from deeponto.onto.mapping import OntoMappings, EntityMapping, AnchoredOntoMappings
+from deeponto.onto.mapping import OntoMappings, EntityMapping, AnchoredOntoMappings, AnchorMapping
 from deeponto.utils import uniqify
 from deeponto.utils.logging import banner_msg
 from deeponto import SavedObj, FlaggedObj
@@ -49,15 +49,15 @@ class NegativeCandidateGenerator(FlaggedObj):
         
         # loaded mappings are served as +ve candiates (anchors)
         # note that dict cannot be used here because multiple mappings are possible
-        self.pos_src2tgt = OntoMappings.read_tsv_mappings(
-            tsv_mappings_path=ref_mappings_path, rel=self.rel
+        self.pos_src2tgt = OntoMappings.read_table_mappings(
+            table_mappings_path=ref_mappings_path, rel=self.rel
         ).to_tuples()
         self.pos_tgt2src = [(y, x) for (x, y) in self.pos_src2tgt]
         self.null_src2tgt = []
         self.null_tgt2src = []
         if null_ref_mappings_path:
-            self.null_src2tgt = OntoMappings.read_tsv_mappings(
-                tsv_mappings_path=null_ref_mappings_path, rel=self.rel
+            self.null_src2tgt = OntoMappings.read_table_mappings(
+                table_mappings_path=null_ref_mappings_path, rel=self.rel
             ).to_tuples()
             self.null_tgt2src = [(y, x) for (x, y) in self.null_src2tgt]
         self.pos_src2tgt = list(set(self.pos_src2tgt) - set(self.null_src2tgt))
@@ -93,8 +93,9 @@ class NegativeCandidateGenerator(FlaggedObj):
         anchored_maps = self.current_anchor_mappings()
         ref_dict = self.current_ref_dict()
         for ref_src_ent_name, ref_tgt_ent_name in getattr(self, f"pos_{self.flag}"):
-            anchor_map = EntityMapping(ref_src_ent_name, ref_tgt_ent_name, self.rel, 0.0)
-            anchored_maps.add(anchor_map, anchor_map)
+            anchor_map = AnchorMapping(ref_src_ent_name, ref_tgt_ent_name, self.rel, 0.0)
+            anchor_map.add_candidate(anchor_map)
+            anchored_maps.add(anchor_map)
             ref_dict[ref_src_ent_name].append(ref_tgt_ent_name)
         for null_ref_src_name, null_ref_tgt_ent_name in getattr(self, f"null_{self.flag}"):
             ref_dict[null_ref_src_name].append(null_ref_tgt_ent_name)
@@ -111,21 +112,22 @@ class NegativeCandidateGenerator(FlaggedObj):
     def sample_for_all_one_side(self, **strategy2nums):
         """Sample negative candidates as per specified strategy-number pairs
         """
-        for ref_src_ent_name, ref_tgt_ent_name in getattr(self, f"pos_{self.flag}"):
-            banner_msg(f"CandMaps for ({ref_src_ent_name}, {ref_tgt_ent_name})")
-            anchor_map = EntityMapping(ref_src_ent_name, ref_tgt_ent_name, self.rel, 0.0)
+        for ref_src_ent_iri, ref_tgt_ent_iri in getattr(self, f"pos_{self.flag}"):
+            banner_msg(f"CandMaps for ({ref_src_ent_iri}, {ref_tgt_ent_iri})")
+            anchor_map = AnchorMapping(ref_src_ent_iri, ref_tgt_ent_iri, self.rel, 0.0)
             # excluding all the reference target classes for the same reference source class 
             # as negative candidates
-            excluded_ref_tgts = self.current_ref_dict()[ref_src_ent_name]
+            excluded_ref_tgts = self.current_ref_dict()[ref_src_ent_iri]
             if len(excluded_ref_tgts) > 1:
                 print("One-to-many reference mappings detected ...")
-            tgt_cand_names, sample_stats = self.mixed_sample(
-                ref_tgt_ent_name, excluded_ref_tgts, **strategy2nums
+            tgt_cand_iris, sample_stats = self.mixed_sample(
+                ref_tgt_ent_iri, excluded_ref_tgts, **strategy2nums
             )
-            self.stats[str((ref_src_ent_name, ref_tgt_ent_name))] = sample_stats
-            for tgt_cand_name in tgt_cand_names:
-                cand_map = EntityMapping(ref_src_ent_name, tgt_cand_name, self.rel, 0.0)
-                self.current_anchor_mappings().add(anchor_map, cand_map, allow_existed=False)
+            self.stats[anchor_map.to_tuple()] = sample_stats
+            for tgt_cand_iri in tgt_cand_iris:
+                cand_map = EntityMapping(ref_src_ent_iri, tgt_cand_iri, self.rel, 0.0)
+                anchor_map.add_candidate(cand_map)
+            self.current_anchor_mappings().add(anchor_map, allow_existed=False)
             print("Candidate mappings statistics:")
             SavedObj.print_json(sample_stats)
 
@@ -143,7 +145,7 @@ class NegativeCandidateGenerator(FlaggedObj):
         )
         SavedObj.save_json(self.stats, f"./{self.flag}.rank/stats.json")
 
-    def current_anchor_mappings(self):
+    def current_anchor_mappings(self) -> AnchoredOntoMappings:
         return getattr(self, f"{self.flag}_anchored_mappings")
 
     def current_ref_dict(self):
@@ -204,39 +206,38 @@ class NegativeCandidateGenerator(FlaggedObj):
         ref_tgt_ent = self.tgt_onto.owl.search(iri=unfold_iri(ref_tgt_ent_name))[0]
         # for subsumption mapping, ancestors or descendants will be avoided
         avoided_family = self.avoided_family_of(ref_tgt_ent)
-        avoided_names = [abbr_iri(m.iri) for m in avoided_family]  
+        avoided_ent_iris = [m.iri for m in avoided_family]  
               
-        all_tgt_ent_names = list(self.tgt_onto.class2idx.keys())
-        all_tgt_ent_names = list(set(all_tgt_ent_names) - set(avoided_names))
+        all_tgt_ent_iris = list(self.tgt_onto.iri2idx.keys())
+        all_tgt_ent_iris = list(set(all_tgt_ent_iris) - set(avoided_ent_iris))
         
-        assert not ref_tgt_ent_name in all_tgt_ent_names
-        return random.sample(all_tgt_ent_names, n_cands)
+        assert not ref_tgt_ent_name in all_tgt_ent_iris
+        return random.sample(all_tgt_ent_iris, n_cands)
 
-    def idf_sample(self, ref_tgt_ent_name, n_cands: int):
+    def idf_sample(self, ref_tgt_ent_iri: str, n_cands: int):
         """Sample negative candidates using inverted index-based idf scoring
         """
-        ref_tgt_ent = self.tgt_onto.owl.search(iri=unfold_iri(ref_tgt_ent_name))[0]
+        ref_tgt_ent = self.tgt_onto.owl.search(iri=ref_tgt_ent_iri)[0]
         # for subsumption mapping, ancestors or descendants will be avoided
         avoided_family = self.avoided_family_of(ref_tgt_ent)
-        avoided_names = [abbr_iri(m.iri) for m in avoided_family]
+        avoided_ent_iris = [m.iri for m in avoided_family]
         
         # select n candidates for the target entity
-        ref_tgt_ent_id = self.tgt_onto.class2idx[ref_tgt_ent_name]
-        ref_tgt_ent_labs = self.tgt_onto.idx2labs[ref_tgt_ent_id]
+        ref_tgt_ent_labs = self.tgt_onto.idf2labs[ref_tgt_ent_iri]
         ref_tgt_ent_toks = self.tokenizer.tokenize_all(ref_tgt_ent_labs)
         # sample 1 more candidate to prevent when reference target is included
-        tgt_cand_ids = self.tgt_onto.idf_select(
+        tgt_cands = self.tgt_onto.idf_select(
             ref_tgt_ent_toks, n_cands + len(avoided_family)
         )  # [(ent_id, idf_score)]
 
         # unzip to list of ids
-        tgt_cand_ids = list(list(zip(*tgt_cand_ids))[0])
-        tgt_cand_names = [self.tgt_onto.idx2class[i] for i in tgt_cand_ids]
+        tgt_cand_iris = list(list(zip(*tgt_cands))[0])
+        # tgt_cand_names = [self.tgt_onto.idx2class[i] for i in tgt_cand_ids]
         # ref-tgt is considered to be avoided as well
-        tgt_cand_names = list(set(tgt_cand_names) - set(avoided_names))
+        tgt_cand_iris = list(set(tgt_cand_iris) - set(avoided_ent_iris))
         
-        assert not ref_tgt_ent_name in tgt_cand_names
-        return tgt_cand_names[:n_cands]
+        assert not ref_tgt_ent_iri in tgt_cand_iris
+        return tgt_cand_iris[:n_cands]
 
     def neighbour_sample(self, ref_tgt_ent_name, n_cands: int):
         """Sample negative candidates from nearest nearest (starting from 1-hop)
