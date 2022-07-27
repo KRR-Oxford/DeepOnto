@@ -16,7 +16,7 @@ limitations under the License.
 
 - **DeepOnto**
   - [About](/)
-  - [Quick Start](intro.md)
+  - [Using DeepOnto](using_deeponto.md)
   - [OM Models](om_models.md)
   - [OM Resources](om_resources.md)
   - [Data Structures](data_structures.md)
