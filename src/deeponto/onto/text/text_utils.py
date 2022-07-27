@@ -111,9 +111,7 @@ def lab_product(src_ent_labs: List[str], tgt_ent_labs: List[str]) -> Tuple[List,
 #     return ents_labels, num_labels
 
 
-def labs_from_props(
-    iri: str, lab_props: List[str] = ["http://www.w3.org/2000/01/rdf-schema#label"]
-):
+def labs_from_props(iri: str, lab_props: List[str]):
     """Extract unique and cleaned labels (for an entity) given the input annotational properties
     """
     labels = list(chain(*[prep_labs(iri, lp) for lp in lab_props]))
@@ -150,7 +148,10 @@ def prep_labs(iri: str, lab_prop: str) -> List[str]:
 
 
 def sib_labs(ents: Iterable[ThingClass], lab_props: List[str]) -> List[List[List[str]]]:
-    """Return all the sibling label groups with size > 1 and no duplicates
+    """Return all the sibling label groups with size > 1 and no duplicates as a 3-D list:
+        -   1st list for different sibling groups;
+        -   2nd list for different siblings;
+        -   3rd list for different labels.
     """
     sib_lables = []
     for ent in ents:

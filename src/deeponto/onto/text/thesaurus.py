@@ -98,7 +98,7 @@ class Thesaurus(SavedObj):
         return the resulting synonym groups
         """
         for onto in ontos:
-            synonym_groups = [set(v) for v in onto.idx2labs.values()]
+            synonym_groups = [set(v) for v in onto.iri2labs.values()]
             if self.apply_transitivity:
                 synonym_groups = self.merge_synonyms_by_transitivity(synonym_groups)
             new_section = AttrDict(
@@ -125,10 +125,11 @@ class Thesaurus(SavedObj):
         """
         synonym_group_pairs = []
         synonym_groups = []
-        for src_ent, tgt_ent_dict in known_mappings.ranked.items():
-            src_ent_labels = src_onto.idx2labs[src_onto.class2idx[src_ent]]
+        # TODO: change to IRIs
+        for src_ent, tgt_ent_dict in known_mappings.map_dict.items():
+            src_ent_labels = src_onto.iri2labs[src_ent]
             for tgt_ent in tgt_ent_dict.keys():
-                tgt_ent_labels = tgt_onto.idx2labs[tgt_onto.class2idx[tgt_ent]]
+                tgt_ent_labels = tgt_onto.iri2labs[tgt_ent]
             # merged cross-onto synonym group where labels of aligned classes are synonymous
             synonym_group_pairs.append(
                 (set(src_ent_labels), set(tgt_ent_labels))

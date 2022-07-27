@@ -147,7 +147,7 @@ class OntoTemplate:
             contexts.child.append(self.gci_pattern(ct, et))
         # texts for the branch information of the entity class
         branch_texts = list(
-            itertools.chain.from_iterable([self.parse_onto_class(b) for b in branch_of(ent)])
+            itertools.chain.from_iterable([self.parse_onto_class(b) for b in branch_head_of(ent)])
         )
         for et, bt in itertools.product(ent_texts, branch_texts):
             contexts.branch.append(self.gci_pattern(et, bt))
