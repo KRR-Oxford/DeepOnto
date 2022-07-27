@@ -39,15 +39,15 @@ from deeponto.config import InputConfig
 @click.option("-s", "--src_onto_path", type=click.Path(exists=True), default=None)
 @click.option("-t", "--tgt_onto_path", type=click.Path(exists=True), default=None)
 @click.option("-c", "--config_path", type=click.Path(exists=True), default=None)
-@click.option("-m", "--to_be_scored_maps_path", type=click.Path(exists=True), default=None)
-@click.option("-f", "--to_be_scord_flag", type=str, default=None)
+@click.option("-m", "--to_be_scored_anchored_maps_path", type=click.Path(exists=True), default=None)
+@click.option("-f", "--to_be_scored_flag", type=str, default=None)
 def onto_match(
     saved_path: str,
     config_path: str,
     src_onto_path: str,
     tgt_onto_path: str,
-    to_be_scored_maps_path: str,
-    to_be_scord_flag: str,
+    to_be_scored_anchored_maps_path: str,
+    to_be_scored_flag: str,
 ):
     set_seed(42)
     
@@ -80,9 +80,10 @@ def onto_match(
 
     # load the to-be-confirmed mappings during pair-score mode
     if mode == "pair_score":
-        assert to_be_scored_maps_path != None
-        tbh_maps = SavedObj.from_saved(to_be_scored_maps_path)
-        align_pipeline.run(mode, tbh_maps, to_be_scord_flag, num_procs=num_procs)
+        assert to_be_scored_anchored_maps_path != None
+        tbc_anchored_maps = SavedObj.from_saved(to_be_scored_anchored_maps_path)
+        tbc_onto_maps = tbc_anchored_maps.unscored_cand_maps()
+        align_pipeline.run(mode, tbc_onto_maps, to_be_scored_flag, num_procs=num_procs)
     else:
         pass
         align_pipeline.run(mode, num_procs=num_procs)
