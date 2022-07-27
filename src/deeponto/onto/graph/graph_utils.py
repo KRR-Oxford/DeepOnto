@@ -104,12 +104,12 @@ def thing_class_descendants_of(ent: ThingClass, include_self: bool = False):
     return list(set(descendants))
 
 
-def neighbours_of(anchor_ent: ThingClass, max_hop: int = 5, ignore_root: bool = True):
+def neighbours_of(ent: ThingClass, max_hop: int = 5, ignore_root: bool = True):
     """Compute neighbours of an anchor entity up to max_hop
     in Breadth First Search style which ensures determined outputs
     """
     neighbours = defaultdict(list)
-    frontier = [anchor_ent]
+    frontier = [ent]
     explored = []
     hop = 1
 
@@ -126,13 +126,13 @@ def neighbours_of(anchor_ent: ThingClass, max_hop: int = 5, ignore_root: bool = 
         hop += 1
 
     stats = {k: len(v) for k, v in neighbours.items()}
-    print(f"Numbers of neighbours at each hop away from entity: {str(anchor_ent)}")
+    print(f"Numbers of neighbours at each hop away from entity: {str(ent)}")
     SavedObj.print_json(stats)
 
     return neighbours
 
 
-def branch_of(ent: ThingClass) -> List[ThingClass]:
+def branch_head_of(ent: ThingClass) -> List[ThingClass]:
     """Return the branch (the named class exactly below Thing) of an entity class
     """
     ancestors = thing_class_ancestors_of(ent)
