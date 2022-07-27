@@ -1,15 +1,16 @@
 {
     "lab_props": [
-        "label",
-        "hasExactSynonym",
-        "exactMatch",
-        "alternative_term",
-        "symbol",
-        "P90",
-        "prefLabel",
-        "altLabel",
-        "synonym",
-        "preferred_name"
+        "http://www.w3.org/2000/01/rdf-schema#label",
+        "http://www.geneontology.org/formats/oboInOwl#hasSynonym",
+        "http://www.geneontology.org/formats/oboInOwl#hasExactSynonym",
+        "http://www.w3.org/2004/02/skos/core#exactMatch",
+        "http://www.ebi.ac.uk/efo/alternative_term",
+        "http://www.orpha.net/ORDO/Orphanet_#symbol",
+        "http://purl.org/sig/ont/fma/synonym",
+        "http://www.w3.org/2004/02/skos/core#prefLabel",
+        "http://www.w3.org/2004/02/skos/core#altLabel",
+        "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#P108",
+        "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#P90"
     ],
     "tokenizer": {
         "type": "pretrained",
@@ -20,7 +21,7 @@
         "cand_pool_size": 200,
         "apply_string_match": true,
         "match_src2tgt": true,
-        "match_tgt2src": true,
+        "match_tgt2src": false,
         "extension_threshold": 0.9
     },
     "corpora": {
