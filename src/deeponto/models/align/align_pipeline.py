@@ -135,15 +135,15 @@ class OntoAlignPipeline(OntoPipeline):
             # load mappings if any
             ref_mappings = {"train": None, "val": None, "test": None}
             if self.config.corpora.train_mappings_path:
-                ref_mappings["train"] = OntoMappings.read_tsv_mappings(
+                ref_mappings["train"] = OntoMappings.read_table_mappings(
                     self.config.corpora.train_mappings_path
                 )
             if self.config.corpora.val_mappings_path:
-                ref_mappings["val"] = OntoMappings.read_tsv_mappings(
+                ref_mappings["val"] = OntoMappings.read_table_mappings(
                     self.config.corpora.val_mappings_path
                 )
             if self.config.corpora.test_mappings_path:
-                ref_mappings["test"] = OntoMappings.read_tsv_mappings(
+                ref_mappings["test"] = OntoMappings.read_table_mappings(
                     self.config.corpora.test_mappings_path
                 )
 

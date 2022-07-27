@@ -80,7 +80,7 @@ def hits_at_k(pred_maps: AnchoredOntoMappings, ref_tuples: List[Tuple], k: int):
     """
     n_hits = 0
     for src_ent, tgt_ent in ref_tuples:
-        tgt2score = pred_maps.anchor2cand[src_ent, tgt_ent]
+        tgt2score = pred_maps.anchor2cands[src_ent, tgt_ent]
         topk_tgt_cands = list(tgt2score.keys())[:k]
         if tgt_ent in topk_tgt_cands:
             n_hits += 1
@@ -92,7 +92,7 @@ def mean_reciprocal_rank(pred_maps: AnchoredOntoMappings, ref_tuples: List[Tuple
     """
     sum_inv_ranks = 0
     for src_ent, tgt_ent in ref_tuples:
-        tgt2score = pred_maps.anchor2cand[src_ent, tgt_ent]
+        tgt2score = pred_maps.anchor2cands[src_ent, tgt_ent]
         tgt_cands = list(tgt2score.keys())
         rank = tgt_cands.index(tgt_ent) + 1
         sum_inv_ranks += 1 / rank

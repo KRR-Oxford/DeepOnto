@@ -42,11 +42,10 @@ from deeponto.onto.text.text_semantics_corpora import (
     TextSemanticsCorpora,
     TextSemanticsCorpusforMappings,
 )
-from deeponto.onto.text.text_utils import unfold_iri, abbr_iri
 from deeponto.onto.graph import IterativeMappingExtension
 from deeponto.onto import Ontology
 from deeponto.onto.mapping import OntoMappings
-from deeponto.evaluation.align_eval import global_match_select, pred_thresholding
+from deeponto.evaluation.align_eval import pred_thresholding
 from deeponto.utils import detect_path, create_path, uniqify
 from deeponto.utils.logging import banner_msg
 from deeponto import SavedObj
@@ -364,13 +363,11 @@ class BERTMap(OntoAlign):
         """
         preds = pred_thresholding(onto_mappings, best_val_threshold)
         lines = []
-        for src_ent_name, tgt_ent_name in preds:
-            src_ent_iri = unfold_iri(src_ent_name)
-            tgt_ent_iri = unfold_iri(tgt_ent_name)
+        for src_ent_iri, tgt_ent_iri in preds:
             if onto_mappings.flag == "src2tgt":
-                score = onto_mappings.ranked[src_ent_name][tgt_ent_name]
+                score = onto_mappings.map_dict[src_ent_iri][tgt_ent_iri]
             elif onto_mappings.flag == "tgt2src":
-                score = onto_mappings.ranked[tgt_ent_name][src_ent_name]
+                score = onto_mappings.map_dict[tgt_ent_iri][src_ent_iri]
             else:
                 raise ValueError(f"Unknown mapping flag: {onto_mappings.flag}")
             lines.append(f"{src_ent_iri}|{tgt_ent_iri}|=|{score}|CLS\n")
@@ -417,12 +414,10 @@ class BERTMap(OntoAlign):
             f.write("SrcEntity\tTgtEntity\tScore\n")
             for line in lines:
                 src_ent_iri, tgt_ent_iri, score = line.split("\t")
-                src_ent_name = abbr_iri(src_ent_iri)
-                tgt_ent_name = abbr_iri(tgt_ent_iri)
-                f.write(f"{src_ent_name}\t{tgt_ent_name}\t{score}")
+                f.write(f"{src_ent_iri}\t{tgt_ent_iri}\t{score}")
 
         # after repair the direction is always src2tgt
-        repaired_mappings = OntoMappings.read_tsv_mappings(
+        repaired_mappings = OntoMappings.read_table_mappings(
             formatted_repaired_file, flag="final_output"
         )
         repaired_mappings.save_instance(repair_saved_path)
@@ -440,11 +435,11 @@ class BERTMap(OntoAlign):
         overlap_labs = set(src_ent_labs).intersection(set(tgt_ent_labs))
         return int(len(overlap_labs) > 0)
 
-    def ent_pair_score(self, src_ent_id: int, tgt_ent_id: int):
+    def ent_pair_score(self, src_ent_iri: str, tgt_ent_iri: str):
         """Compute mapping score between a cross-ontology entity pair
         """
-        src_ent_labs = self.src_onto.idx2labs[src_ent_id]
-        tgt_ent_labs = self.tgt_onto.idx2labs[tgt_ent_id]
+        src_ent_labs = self.src_onto.iri2labs[src_ent_iri]
+        tgt_ent_labs = self.tgt_onto.iri2labs[tgt_ent_iri]
         # apply string-match before using bert
         if self.apply_string_match:
             prelim_score = self.string_match(src_ent_labs, tgt_ent_labs)
@@ -455,35 +450,32 @@ class BERTMap(OntoAlign):
         # only one element tensor is able to be extracted as a scalar by .item()
         return torch.mean(self.bert_classifier(src_tgt_lab_product)).item()
 
-    def fixed_src_ent_pair_score(self, src_ent_id: int, tgt_cand_ids: List[int]):
+    def fixed_src_ent_pair_score(self, src_ent_iri: str, tgt_cand_iris: List[str]):
         """Compute mapping scores between a source entity and a batch of target entities
         """
-        mappings_for_ent = super().fixed_src_ent_pair_score(src_ent_id, tgt_cand_ids)
-        # get source entity contents
-        src_ent_name = self.src_onto.idx2class[src_ent_id]
+        mappings_for_ent = super().fixed_src_ent_pair_score(src_ent_iri, tgt_cand_iris)
         # follow naming convention in global_match_for_ent and add dummy cand selection scores
-        tgt_cands = [(t, 1.0) for t in tgt_cand_ids]
+        tgt_cands = [(t, 1.0) for t in tgt_cand_iris]
         tgt_cands_for_bert = []
 
         # for string_match
         if self.apply_string_match:
-            src_ent_labs = self.src_onto.idx2labs[src_ent_id]
-            for tgt_cand_id, _ in tgt_cands:
-                tgt_ent_name = self.tgt_onto.idx2class[tgt_cand_id]
-                tgt_ent_labs = self.tgt_onto.idx2labs[tgt_cand_id]
+            src_ent_labs = self.src_onto.iri2labs[src_ent_iri]
+            for tgt_cand_iri, _ in tgt_cands:
+                tgt_ent_labs = self.tgt_onto.iri2labs[tgt_cand_iri]
                 mapping_score = self.string_match(src_ent_labs, tgt_ent_labs)
                 if mapping_score > 0:
                     # save mappings only with positive mapping scores
                     mappings_for_ent.append(
-                        self.set_mapping(src_ent_name, tgt_ent_name, mapping_score)
+                        self.set_mapping(src_ent_iri, tgt_cand_iri, mapping_score)
                     )
                 else:
-                    tgt_cands_for_bert.append((tgt_cand_id, 1.0))
+                    tgt_cands_for_bert.append((tgt_cand_iri, 1.0))
 
         # for bert synonym classifier
         tgt_cands = tgt_cands_for_bert
         labs_batches = self.batched_lab_products_for_ent(
-            src_ent_id, tgt_cands, self.bert_args.batch_size_for_prediction
+            src_ent_iri, tgt_cands, self.bert_args.batch_size_for_prediction
         )  # [{"labs": [], "lens": []}]
         batch_base_idx = 0  # after each batch, the base index will be increased by # of covered target candidates
 
@@ -493,47 +485,44 @@ class BERTMap(OntoAlign):
             for i in range(len(pooled_scores)):
                 score = pooled_scores[i]
                 idx = i + batch_base_idx
-                tgt_ent_name = self.tgt_onto.idx2class[tgt_cands[idx][0]]
-                mappings_for_ent.append(self.set_mapping(src_ent_name, tgt_ent_name, score.item()))
+                tgt_ent_iri = tgt_cands[idx][0]
+                mappings_for_ent.append(self.set_mapping(src_ent_iri, tgt_ent_iri, score.item()))
             batch_base_idx += len(
                 labs_batch.lens
             )  # num of lens is exactly the num of tgt candidates in this batch
 
         mappings_for_ent = mappings_for_ent.sorted()
-        self.logger.info(f"[{self.flag}: {src_ent_id}] {mappings_for_ent}\n")
+        self.logger.info(f"[{self.flag}: {src_ent_iri}] {mappings_for_ent}\n")
         return mappings_for_ent
 
-    def global_mappings_for_ent(self, src_ent_id: int):
+    def global_mappings_for_ent(self, src_ent_iri: str):
         """Compute cross-ontology mappings for a source entity
         """
-        mappings_for_ent = super().global_mappings_for_ent(src_ent_id)
-        # get source entity contents
-        src_ent_name = self.src_onto.idx2class[src_ent_id]
+        mappings_for_ent = super().global_mappings_for_ent(src_ent_iri)
         # select target candidates and compute score for each
-        tgt_cands = self.idf_select_for_ent(src_ent_id)  # [(tgt_id, idf_score)]
+        tgt_cands = self.idf_select_for_ent(src_ent_iri)  # [(tgt_id, idf_score)]
 
         # for string_match
         if self.apply_string_match:
-            src_ent_labs = self.src_onto.idx2labs[src_ent_id]
-            for tgt_cand_id, _ in tgt_cands:
-                tgt_ent_name = self.tgt_onto.idx2class[tgt_cand_id]
-                tgt_ent_labs = self.tgt_onto.idx2labs[tgt_cand_id]
+            src_ent_labs = self.src_onto.iri2labs[src_ent_iri]
+            for tgt_cand_iri, _ in tgt_cands:
+                tgt_ent_labs = self.tgt_onto.iri2labs[tgt_cand_iri]
                 mapping_score = self.string_match(src_ent_labs, tgt_ent_labs)
                 if mapping_score > 0:
                     # save mappings only with positive mapping scores
                     mappings_for_ent.append(
-                        self.set_mapping(src_ent_name, tgt_ent_name, mapping_score)
+                        self.set_mapping(src_ent_iri, tgt_cand_iri, mapping_score)
                     )
                     # output only the top (k=n_best) scored mappings
             # return the mappings if there are any string match results
             if len(mappings_for_ent) > 0:
-                n_best_mappings_for_ent = mappings_for_ent.topKs(self.n_best)
-                self.logger.info(f"[{self.flag}: {src_ent_id}] {n_best_mappings_for_ent}\n")
+                n_best_mappings_for_ent = mappings_for_ent.topk(self.n_best)
+                self.logger.info(f"[{self.flag}: {src_ent_iri}] {n_best_mappings_for_ent}\n")
                 return n_best_mappings_for_ent
 
         # for bert synonym classifier
         labs_batches = self.batched_lab_products_for_ent(
-            src_ent_id, tgt_cands, self.bert_args.batch_size_for_prediction
+            src_ent_iri, tgt_cands, self.bert_args.batch_size_for_prediction
         )  # [{"labs": [], "lens": []}]
         batch_base_idx = 0  # after each batch, the base index will be increased by # of covered target candidates
         n_best_scores = torch.tensor([-1] * self.n_best).to(self.bert_classifier.device)
@@ -559,16 +548,16 @@ class BERTMap(OntoAlign):
         for idx, score in zip(n_best_idxs, n_best_scores):
             # ignore too small values or intial values (-1.0) for dummy mappings
             if score.item() >= 0.0:
-                tgt_ent_name = self.tgt_onto.idx2class[tgt_cands[idx.item()][0]]
-                mappings_for_ent.append(self.set_mapping(src_ent_name, tgt_ent_name, score.item()))
+                tgt_ent_iri = tgt_cands[idx.item()][0]
+                mappings_for_ent.append(self.set_mapping(src_ent_iri, tgt_ent_iri, score.item()))
 
         # add a dummy mapping for this entity if no mappings found
         if not mappings_for_ent:
-            mappings_for_ent.append(self.set_mapping(src_ent_name, "NullEntity", 0.0))
+            mappings_for_ent.append(self.set_mapping(src_ent_iri, "NullEntity", 0.0))
 
         # output only the top (k=n_best) scored mappings
-        n_best_mappings_for_ent = mappings_for_ent.topKs(self.n_best)
-        self.logger.info(f"[{self.flag}: {src_ent_id}] {n_best_mappings_for_ent}\n")
+        n_best_mappings_for_ent = mappings_for_ent.topk(self.n_best)
+        self.logger.info(f"[{self.flag}: {src_ent_iri}] {n_best_mappings_for_ent}\n")
         return n_best_mappings_for_ent
 
     def batch_pooling(self, batch_scores: torch.Tensor, batch_lens: List[int]) -> torch.Tensor:

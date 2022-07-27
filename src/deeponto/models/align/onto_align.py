@@ -79,27 +79,27 @@ class OntoAlign(FlaggedObj):
     def pair_score(self, tbc_mappings: OntoMappings, flag: str):
         """Compute mappings for intput src-tgt entity pairs
         """
-        self.logger.info(
-            f'Pair-score and rank input "{self.rel}" Mappings: {self.src_onto.owl.name} ==> {self.tgt_onto.owl.name}\n'
-        )
         # change side according to given
         while not self.flag == flag:
             self.switch()
+        self.logger.info(
+            f'Pair-score and rank input "{self.rel}" Mappings: {self.src_onto.owl.name} ==> {self.tgt_onto.owl.name}\n'
+        )
         prefix = self.flag.split("2")[1]  # src or tgt
         # maximum number of mappings is the number of opposite ontology classes
-        max_num_mappings = len(getattr(self, f"{prefix}_onto").idx2class)
+        max_num_mappings = len(getattr(self, f"{prefix}_onto").classes)
         # temp = self.n_best
         self.n_best = max_num_mappings  # change n_best to all possible mappings
         mappings = self.load_mappings(flag, "pair_score")
         # self.n_best = temp
         i = 0
-        for src_ent_name, tgt2score in tbc_mappings.ranked.items():
-            if src_ent_name in mappings.ranked.keys():
-                self.logger.info(f"skip prediction for {src_ent_name} as already computed ...")
+        for src_ent_iri, tgt2score in tbc_mappings.map_dict.items():
+            if src_ent_iri in mappings.map_dict.keys():
+                self.logger.info(f"skip prediction for {src_ent_iri} as already computed ...")
                 continue
-            src_ent_id = self.src_onto.class2idx[src_ent_name]
-            tgt_cand_ids = [self.tgt_onto.class2idx[t] for t in tgt2score.keys()]
-            pred_maps = self.fixed_src_ent_pair_score(src_ent_id, tgt_cand_ids)
+            # src_ent_id = self.src_onto.class2idx[src_ent_iri]
+            # tgt_cand_ids = [self.tgt_onto.class2idx[t] for t in tgt2score.keys()]
+            pred_maps = self.fixed_src_ent_pair_score(src_ent_iri, list(tgt2score.keys()))
             mappings.add_many(*pred_maps)
             # intermediate saving for every 100 entities
             if i % 100 == 0:
@@ -108,15 +108,15 @@ class OntoAlign(FlaggedObj):
         self.logger.info("Task Finished\n")
         mappings.save_instance(f"{self.saved_path}/pair_score/{self.flag}")
 
-    def fixed_src_ent_pair_score(self, src_ent_id: int, tgt_cand_ids: List[int]):
+    def fixed_src_ent_pair_score(self, src_ent_iri: str, tgt_cand_iris: List[str]):
         """Compute mapping scores between a source entity and a batch of target entities
         """
-        banner_msg(f"Compute Mappings for Entity {src_ent_id} ({self.flag})")
+        banner_msg(f"Compute Mappings for Entity {src_ent_iri} ({self.flag})")
         mappings_for_ent = self.new_mapping_list()
         # TODO: followed by individual implementations
         return mappings_for_ent
 
-    def ent_pair_score(self, src_ent_id: int, tgt_ent_id: int) -> float:
+    def ent_pair_score(self, src_ent_iri: str, tgt_ent_iri: str) -> float:
         """Compute mapping score between a cross-ontology entity pair
         """
         raise NotImplementedError
@@ -169,9 +169,9 @@ class OntoAlign(FlaggedObj):
         # suggested by huggingface when doing multi-threading
         os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-        def async_compute(proc_idx: int, return_dict: dict, src_ent_id_chunk: Iterable[int]):
+        def async_compute(proc_idx: int, return_dict: dict, src_ent_iri_chunk: Iterable[str]):
             return_dict[proc_idx] = self.global_mappings_for_ent_chunk(
-                src_ent_id_chunk, intermediate_saving=False
+                src_ent_iri_chunk, intermediate_saving=False
             )
 
         self.logger.info(
@@ -179,12 +179,12 @@ class OntoAlign(FlaggedObj):
         )
 
         # split entity ids into {num_procs} chunks
-        src_ent_id_chunks = np.array_split(list(self.src_onto.idx2class.keys()), num_procs)
+        src_ent_iri_chunks = np.array_split(list(self.src_onto.iri2labs.keys()), num_procs)
 
         # start proc for each chunk
         jobs = []
         for i in range(num_procs):
-            p = Process(target=async_compute, args=(i, return_dict, src_ent_id_chunks[i]))
+            p = Process(target=async_compute, args=(i, return_dict, src_ent_iri_chunks[i]))
             jobs.append(p)
             p.start()
 
@@ -206,7 +206,7 @@ class OntoAlign(FlaggedObj):
             f'Compute "{self.rel}" Mappings: {self.src_onto.owl.name} ==> {self.tgt_onto.owl.name}\n'
         )
         # save the output mappings
-        self.global_mappings_for_ent_chunk(self.src_onto.idx2class.keys())
+        self.global_mappings_for_ent_chunk(self.src_onto.iri2labs.keys())
         self.logger.info("Task Finished\n")
         # saving the last batch
         mappings = self.current_global_mappings()
@@ -214,7 +214,7 @@ class OntoAlign(FlaggedObj):
 
     def global_mappings_for_ent_chunk(
         self,
-        src_ent_id_chunk: Iterable[int],
+        src_ent_iri_chunk: Iterable[str],
         save_step: int = 100,
         intermediate_saving: bool = True,
     ):
@@ -223,37 +223,38 @@ class OntoAlign(FlaggedObj):
         """
         mappings = self.current_global_mappings()
         mappings_for_chunk = []
-        for src_ent_id in src_ent_id_chunk:
-            src_ent_name = self.src_onto.idx2class[src_ent_id]
-            if src_ent_name in mappings.ranked.keys():
-                self.logger.info(f"skip prediction for {src_ent_name} as already computed ...")
+        i = 0
+        for src_ent_iri in src_ent_iri_chunk:
+            if src_ent_iri in mappings.ranked.keys():
+                self.logger.info(f"skip prediction for {src_ent_iri} as already computed ...")
                 continue
-            cur_mappings = self.global_mappings_for_ent(src_ent_id)
+            cur_mappings = self.global_mappings_for_ent(src_ent_iri)
             mappings.add_many(*cur_mappings)
             mappings_for_chunk += cur_mappings
-            if intermediate_saving and src_ent_id % save_step == 0:
+            if intermediate_saving and i % save_step == 0:
                 mappings.save_instance(f"{self.saved_path}/global_match/{self.flag}")
                 self.logger.info("Save currently computed mappings ...")
+            i += 1
         return mappings_for_chunk
 
-    def global_mappings_for_ent(self, src_ent_id: int) -> EntityMappingList:
+    def global_mappings_for_ent(self, src_ent_iri: str) -> EntityMappingList:
         """Compute cross-ontology mappings for a source entity
         """
-        banner_msg(f"Compute Mappings for Entity {src_ent_id} ({self.flag})")
+        banner_msg(f"Compute Mappings for Entity {src_ent_iri} ({self.flag})")
         mappings_for_ent = self.new_mapping_list()
         # TODO: followed by individual implementations
         return mappings_for_ent
 
-    def idf_select_for_ent(self, src_ent_id: int) -> Tuple[str, float]:
+    def idf_select_for_ent(self, src_ent_iri: str) -> Tuple[str, float]:
         """Select candidates in target ontology for a given source entity
         """
-        src_ent_labs = self.src_onto.idx2labs[src_ent_id]
+        src_ent_labs = self.src_onto.iri2labs[src_ent_iri]
         src_ent_toks = self.tokenizer.tokenize_all(src_ent_labs)
         # TODO: could have more candidate selection methods in future
-        tgt_cand_ids = self.tgt_onto.idf_select(
+        tgt_cands = self.tgt_onto.idf_select(
             src_ent_toks, self.cand_pool_size
         )  # [(ent_id, idf_score)]
-        return tgt_cand_ids
+        return tgt_cands
 
     def hyperparams_select(
         self,
@@ -272,7 +273,8 @@ class OntoAlign(FlaggedObj):
             return self.best_hyperparams["map_type"]  # which by default is "src2tgt"
 
         # validate and choose the best mapping type for mapping extension
-        if detect_path(self.global_match_dir + "/best_hyperparams.val.json"):
+        val_results_dir = self.global_match_dir + "/val_results"
+        if detect_path(val_results_dir + "/best_hyperparams.val.json"):
             print(
                 "found an existing hyperparam results on validation set,"
                 + " delete it and re-run if it's empty ..."
@@ -287,7 +289,7 @@ class OntoAlign(FlaggedObj):
                 num_procs,
             )
         self.best_hyperparams = SavedObj.load_json(
-            self.global_match_dir + "/best_hyperparams.val.json"
+            val_results_dir + "/best_hyperparams.val.json"
         )
         banner_msg("Best Validation Hyperparams Before Refinement")
         del self.best_hyperparams["best_f1"]
@@ -299,17 +301,17 @@ class OntoAlign(FlaggedObj):
     ##################################################################################
 
     def lab_products_for_ent(
-        self, src_ent_id: int, tgt_cands: List[Tuple[str, float]]
+        self, src_ent_iri: str, tgt_cands: List[Tuple[str, float]]
     ) -> Tuple[List[Tuple[str, str]], List[int]]:
         """Compute Catesian Product between a source entity's labels and its selected 
         target entities' labels, with each block length recorded
         """
         src_sents, tgt_sents = [], []
         product_lens = []
-        src_ent_labs = self.src_onto.idx2labs[src_ent_id]
+        src_ent_labs = self.src_onto.idx2labs[src_ent_iri]
         # tgt_cands = self.idf_select_for_ent(src_ent_id)
-        for tgt_cand_id, _ in tgt_cands:
-            tgt_ent_labs = self.tgt_onto.idx2labs[tgt_cand_id]
+        for tgt_cand_iri, _ in tgt_cands:
+            tgt_ent_labs = self.tgt_onto.iri2labs[tgt_cand_iri]
             src_out, tgt_out = text_utils.lab_product(src_ent_labs, tgt_ent_labs)
             assert len(src_out) == len(tgt_out)
             product_lens.append(len(src_out))
@@ -318,12 +320,12 @@ class OntoAlign(FlaggedObj):
         return list(zip(src_sents, tgt_sents)), product_lens
 
     def batched_lab_products_for_ent(
-        self, src_ent_id: int, tgt_cands: List[Tuple[str, float]], batch_size: int
+        self, src_ent_iri: str, tgt_cands: List[Tuple[str, float]], batch_size: int
     ):
         """Compute the batched Catesian Product between a source entity's labels and its selected 
         target entities' labels; batches are distributed according to block lengths
         """
-        lab_products, product_lens = self.lab_products_for_ent(src_ent_id, tgt_cands)
+        lab_products, product_lens = self.lab_products_for_ent(src_ent_iri, tgt_cands)
         batches = []
         cur_batch = AttrDict({"labs": [], "lens": []})
         cur_lab_pointer = 0

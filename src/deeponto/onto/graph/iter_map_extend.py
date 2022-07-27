@@ -35,7 +35,6 @@ if TYPE_CHECKING:
     from logging import Logger
 
 from deeponto.onto.mapping import OntoMappings, EntityMapping, EntityMappingList
-from deeponto.onto.text.text_utils import unfold_iri, abbr_iri
 from .graph_utils import *
 
 
@@ -116,13 +115,13 @@ class IterativeMappingExtension:
             temp_map.score = score
             return temp_map
 
-    def one_hob_extend(self, src_ent_name: str, tgt_ent_name: str, maximum_pairs: int = 500):
+    def one_hob_extend(self, src_ent_iri: str, tgt_ent_iri: str, maximum_pairs: int = 500):
         """1-hop mapping extension, the assumption is given a highly confident mapping,
         the corresponding classes' parents and children are likely to be matched.
         """
         # get back the entity class by IRI
-        src_ent = self.src_onto.owl.search(iri=unfold_iri(src_ent_name))[0]
-        tgt_ent = self.tgt_onto.owl.search(iri=unfold_iri(tgt_ent_name))[0]
+        src_ent = self.src_onto.owl.search(iri=src_ent_iri)[0]
+        tgt_ent = self.tgt_onto.owl.search(iri=tgt_ent_iri)[0]
 
         cand_pairs = list(
             product(super_thing_classes_of(src_ent), super_thing_classes_of(tgt_ent))
@@ -140,9 +139,7 @@ class IterativeMappingExtension:
         num_added = 0
         new_mappings = EntityMappingList()
         for src_cand, tgt_cand in cand_pairs:
-            src_cand_name = abbr_iri(src_cand.iri)
-            tgt_cand_name = abbr_iri(tgt_cand.iri)
-            result = self.check_ent_pair(src_cand_name, tgt_cand_name)
+            result = self.check_ent_pair(src_cand.iri, tgt_cand.iri)
             if result == "explored":
                 num_explored += 1
             elif result == "undervalued":
@@ -152,7 +149,7 @@ class IterativeMappingExtension:
                 new_mappings.append(result)
         self.num_expanded += num_added
         self.log(
-            f"[Iter {self.num_iter}][Anchor]: {src_ent_name} {self.onto_mappings.rel} {tgt_ent_name}\n"
+            f"[Iter {self.num_iter}][Anchor]: {src_ent_iri} {self.onto_mappings.rel} {tgt_ent_iri}\n"
             + f"\t[ExpansionStats]: total={self.num_expanded}; added={num_added}; seen={num_explored}; undervalued={num_undervalued}\n"
             + f"\t[AddedMappings]: {str(new_mappings)}"
         )
