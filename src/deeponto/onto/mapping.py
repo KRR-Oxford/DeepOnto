@@ -369,7 +369,7 @@ class AnchoredOntoMappings(SavedObj):
             self.anchor2cands[anchor_map.to_tuple()][cand_map.tail] = cand_map.score
             
         # address exisitng candidate mappings
-        if not allow_existed:
+        if existed_cands and not allow_existed:
             raise ValueError("Duplicate mappings not allowed ...")
         for cand_map in existed_cands:
             # average/kept_new/kept_old the mapping scores if already existed
