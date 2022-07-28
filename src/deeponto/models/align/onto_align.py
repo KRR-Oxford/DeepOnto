@@ -111,7 +111,8 @@ class OntoAlign(FlaggedObj):
     def fixed_src_ent_pair_score(self, src_ent_iri: str, tgt_cand_iris: List[str]):
         """Compute mapping scores between a source entity and a batch of target entities
         """
-        banner_msg(f"Compute Mappings for Entity {src_ent_iri} ({self.flag})")
+        banner_msg(f"Compute Mappings for Entity: " + \
+            f"{self.src_onto.name_from_iri(src_ent_iri)} ({self.flag})")
         mappings_for_ent = self.new_mapping_list()
         # TODO: followed by individual implementations
         return mappings_for_ent
@@ -225,7 +226,7 @@ class OntoAlign(FlaggedObj):
         mappings_for_chunk = []
         i = 0
         for src_ent_iri in src_ent_iri_chunk:
-            if src_ent_iri in mappings.ranked.keys():
+            if src_ent_iri in mappings.map_dict.keys():
                 self.logger.info(f"skip prediction for {src_ent_iri} as already computed ...")
                 continue
             cur_mappings = self.global_mappings_for_ent(src_ent_iri)
@@ -308,7 +309,7 @@ class OntoAlign(FlaggedObj):
         """
         src_sents, tgt_sents = [], []
         product_lens = []
-        src_ent_labs = self.src_onto.idx2labs[src_ent_iri]
+        src_ent_labs = self.src_onto.iri2labs[src_ent_iri]
         # tgt_cands = self.idf_select_for_ent(src_ent_id)
         for tgt_cand_iri, _ in tgt_cands:
             tgt_ent_labs = self.tgt_onto.iri2labs[tgt_cand_iri]

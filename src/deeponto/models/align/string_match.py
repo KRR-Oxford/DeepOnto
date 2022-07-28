@@ -38,7 +38,7 @@ class StringMatch(OntoAlign):
             tgt_onto=tgt_onto,
             tokenizer=tokenizer,
             cand_pool_size=cand_pool_size,
-            rel="≡",
+            rel="=",
             n_best=n_best,
             is_trainable=False,
             is_val_model_select=True,
