@@ -62,7 +62,7 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
 There are two evaluation schemes (**local ranking** and **global matching**) and two data split settings (**unsupervised** and **(semi-)supervised**).
 
 - For local ranking, an OM model is required to rank candidates stored in `src2tgt.rank`.
-  -  `src2tgt` here means the **anchors/keys** are the source ontology classes, and the **candidates/values** are generated from the target ontology. The whole folder can be loaded using `AnchoredOntoMappings.from_saved("src2tgt.rank"` because of the `.pkl` file which serializes the mappings; the `.json` and `.tsv` files are provided for users who want to use their own data structures.
+  -  `src2tgt` here means the **anchors/keys** are the source ontology classes, and the **candidates/values** are generated from the target ontology. The whole folder can be loaded using `AnchoredOntoMappings.from_saved("src2tgt.rank")` because of the `.pkl` file which serializes the mappings; the `.json` and `.tsv` files are provided for users who want to use their own data structures.
   - [`AnchoredOntoMappings`](data_structures?id=anchoredontomappings) is essentially a dictionary with each reference mapping (in the form of class tuple) as a key (anchor) and its corresponding candidates (100 negative + 1 positive classes from the target ontology). 
   - `Hits@K` and `MRR` are used as evaluation metrics. Note that the candidates are separately generated w.r.t the testing mapping in each data split setting.
 

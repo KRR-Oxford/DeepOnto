@@ -79,7 +79,8 @@ class BERTMap(OntoAlign):
             n_best=n_best,
             is_trainable=True,
             is_val_model_select=True,
-            default_hyperparams={"threshold": 0.999, "map_type": "src2tgt"},
+            # if validation mappings are not provided, we use the default hyperparams
+            default_hyperparams={"threshold": 0.9995, "map_type": "src2tgt"},
             saved_path=saved_path,
         )
         self.bert_args = bert_args
@@ -111,7 +112,7 @@ class BERTMap(OntoAlign):
         self.global_match_refined_dir = self.global_match_dir + "/refined"
         self.map_extender = None
         # if validation mappings are not provided, we use the default hyperparams
-        self.best_hyperparams = {"threshold": 0.999, "map_type": "src2tgt"}
+        # self.best_hyperparams = {"threshold": 0.999, "map_type": "src2tgt"}
 
     ##################################################################################
     ###                            Corpora & Fine-tune                             ###
