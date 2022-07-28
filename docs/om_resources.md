@@ -20,7 +20,9 @@ Besides model development and implementation, DeepOnto also aims to contribute n
 
 The `Bio-ML` dataset provides five ontology pairs for both equivalence and subsumption ontology matching.
 
-> Download link: https://doi.org/10.5281/zenodo.6516125 (CC BY 4.0 International).
+> Latest Update: Version 3, 28 July 2022
+
+> Download link: https://doi.org/10.5281/zenodo.6917501 (CC BY 4.0 International).
 
 > See detailed resource construction and evaluation methods in our paper: https://arxiv.org/abs/2205.03447.
 
