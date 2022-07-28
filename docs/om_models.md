@@ -23,7 +23,7 @@ limitations under the License.
 ### Configurations
 > See an example `config` file in `./config/bertmap.json`.
 
-- `lab_props (list)`: specify the which annotation properties to be used for extracting class labels, default is `["label"]`. 
+- `lab_props (list)`: specify the which annotation properties to be used for extracting class labels, default is `["http://www.w3.org/2000/01/rdf-schema#label"]` (`rdfs:label`). 
 > This parameter is very important for BERTMap as it tries to establish a synonym classifier trained on sufficient class labels; auxiliary ontologies are recommended for augmenting training data if the input ontologies are deficient in class labels.
 - `tokenizer (dict)`:
   - `type (str)`: the type of the tokenizer is either `pretrained` (sub-word-based, learnable) or `rule_based` (word-level).
@@ -52,6 +52,18 @@ limitations under the License.
   - `early_stop_patience (Optional[int])`: the number of patiences for early stopping, default is `None`.
   - `device_num (int)`: the id of GPU device for mapping prediction; for fine-tuning, it by default uses multiple GPUs.
 
+### Outputs
+BERTMap's outputs are stored in either `exp_dir/bertmap/global_match` or `exp_dir/bertmap/pair_score` depending on which mode is selected.  
+
+For `pair_score`, depending on the alignment flag (`src2tgt` or `tgt2src`) of the input unscored mappings (in `AnchoredOntoMappings` as this mode is usually for ranking candidates), the output scored mappings will be stored in `exp_dir/bertmap/pair_score/src2tgt` or `exp_dir/bertmap/pair_score/tgt2src`.
+
+For `global_match`: 
+- If both `match_src2tgt` and `match_tgt2src` are set to be `true` in config, then the mappings predicted from both directions will be generated in `exp_dir/bertmap/global_match/src2tgt` and `exp_dir/bertmap/global_match/tgt2src`, respectively. 
+- The best mapping type (`src2tgt`, `tgt2src`, or `combined`) is determined by the performance on validation mappings (`src2tgt` by default if without validation). 
+- Mapping extension and repair is applied on mappings that obtain best validation results; however, when `combined` wins, the refinement procedure is applied to both. 
+- Final outputs will be stored in `exp_dir/bertmap/global_match/final_output.maps.{pkl,json,tsv}` after the mapping refinement.
+- Evaluation conducted on `src2tgt` or `tgt2src` prediction mappings needs to add in mapping score threshold but no need for the final outputs.
+
 ## EditSimiarity & StringMatch
 
 `EditSimiarity` is a simple rule-based ontology alignment system that computes the normalized edit similarities (1 - normalized edit distance) between class labels and use the maximum of them as the mappping score. It performs surprisingly well for ontology pairs that have a similar naming scheme. `StringMatch` is a special case of `EditSimiarity` that considers only mapping scores of 1.0.
@@ -69,3 +81,8 @@ limitations under the License.
   - `apply_string_match (bool)`: apply string matching to filter "easy" mappings or not, default is `true`.
   - `match_src2tgt (bool)`: apply global matching for each class in the source ontology.
   - `match_tgt2src (bool)`: apply global matching for each class in the target ontology.
+
+
+### Outputs
+
+The outputs of EditSimilarity/StringMatch model are similar to those of BERTMap but without any automatic validation results and further mapping refinement. Evaluation should be conducted on `src2tgt` or `tgt2src` prediction mappings with a chosen mapping threshold. Note that by setting `threshold = 1.0`, the EditSimiarity model is exactly the same as the StringMatch model.
