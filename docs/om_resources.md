@@ -61,34 +61,12 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
 
 There are two evaluation schemes (**local ranking** and **global matching**) and two data split settings (**unsupervised** and **(semi-)supervised**).
 
-- For local ranking, an OM model is required to rank candidates in the saved json file `.../for_eval/src2tgt.anchored.maps.json` which is essentially a dictionary with each reference mapping (in the form of class tuple string) as a key and its corresponding candidates (100 negative + 1 positive classes from the target ontology). `Hits@K` and `MRR` are used as evaluation metrics. Note that the candidates are separately generated w.r.t the testing mapping in each data split setting.
+- For local ranking, an OM model is required to rank candidates stored in c.
+  -  See files in `src2tgt.rank`, `src2tgt` here means the anchors/keys are the source ontology classes, and the candidates/values are generated from the target ontology. The whole folder can be loaded using `AnchoredOntoMappings.from_saved("src2tgt.rank"` because of the `.pkl` file, the `.json` and `.tsv` files are provided for users who want to use their own data structures.
+  - `AnchoredOntoMappings` is essentially a dictionary with each reference mapping (in the form of class tuple) as a key (anchor) and its corresponding candidates (100 negative + 1 positive classes from the target ontology). 
+  - `Hits@K` and `MRR` are used as evaluation metrics. Note that the candidates are separately generated w.r.t the testing mapping in each data split setting.
 
 - For global matching, an OM model is required to output full mappings and compare them with the reference mappings using `Precision`, `Recall`, and `F1`. Note that when computing these scores, mappings that are not in the testing set (validation set for both data split settings and train+validation set for the semi-supervised setting) should be ignored by substraction from both system output and reference mappings. 
 
 - Since the subsumption mappings are inherently incomplete, we suggest apply only local ranking for evaluating subsumption matching.
 
-
-## Appendix
-
-For readability, the following URIs/IRIs are abbreviated in the reference and candidate mappings included in the OM resources in accordance with other implementations in DeepOnto (see `src/deeponto/onto/iris.py`).
-
-```json
-{
-    "http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#": "fma_largebio:",
-    "http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#": "ncit_largebio:",
-    "http://www.ihtsdo.org/snomed#": "snomed_largebio:",
-    "http://purl.org/sig/ont/fma/": "fma:",
-    "http://snomed.info/id/": "snomed:",
-    "http://linkedlifedata.com/resource/umls/id/": "umls:",
-    "http://identifiers.org/hgnc/": "hgnc:",
-    "http://identifiers.org/mesh/": "mesh:",
-    "http://identifiers.org/snomedct/": "snomedct:",
-    "http://purl.obolibrary.org/obo/": "obo:",
-    "http://www.orpha.net/ORDO/": "ordo:",
-    "http://www.ebi.ac.uk/efo/": "efo:",
-    "http://omim.org/entry/": "omim:",
-    "http://www.omim.org/phenotypicSeries/": "omimps:",
-    "http://identifiers.org/meddra/": "meddra:",
-    "http://identifiers.org/medgen/": "medgen:"
-}
-```
