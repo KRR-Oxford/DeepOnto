@@ -62,11 +62,29 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
 There are two evaluation schemes (**local ranking** and **global matching**) and two data split settings (**unsupervised** and **(semi-)supervised**).
 
 - For local ranking, an OM model is required to rank candidates stored in `src2tgt.rank`.
-  -  `src2tgt` here means the **anchors/keys** are the source ontology classes, and the **candidates/values** are generated from the target ontology. The whole folder can be loaded using `AnchoredOntoMappings.from_saved("src2tgt.rank")` because of the `.pkl` file which serializes the mappings; the `.json` and `.tsv` files are provided for users who want to use their own data structures.
+  -  `src2tgt` here means the **anchors/keys** are the source ontology classes, and the **candidates/values** are generated from the target ontology. There are three options for loading the anchored candidate mapping:
+     -  *Option 1*: Load the whole data folder using [`AnchoredOntoMappings`](data_structures?id=anchoredontomappings) implemented in DeepOnto: 
+      ```python
+      from deeponto.onto.mapping import AnchoredOntoMappings
+      AnchoredOntoMappings.from_saved("src2tgt.rank")
+      ```
+     -  *Option 2*: Load the `.json` file in the `src2tgt.rank`, a nested dictionary in form of `{"(ref_src, ref_tgt)": tgt_cand: 0.0}` where `(ref_src, ref_tgt)` is a reference class pair (anchor), `tgt_cand` is a target candidate w.r.t. this anchor, `0.0` is the default score for the candidate mapping `(ref_src, tgt_cand)`.
+      ```python
+      from deeponto import SavedObj
+      SavedObj.load_json("src2tgt.rank/src2tgt.anchored.maps.json")
+      ```  
+      - *Option 3*: Load the `.tsv` file in the `src2tgt.rank`, where the columns are `["SrcEntity", "TgtEntity", "TgtCandidates"]` standing for the source class iri of a reference mapping, the target class iri of this reference mapping, and the corresponding target candidate class iris in a sequence, which can be decoded using `ast.literal_eval(tgt_cands_seq)`.
+
   - [`AnchoredOntoMappings`](data_structures?id=anchoredontomappings) is essentially a dictionary with each reference mapping (in the form of class tuple) as a key (anchor) and its corresponding candidates (100 negative + 1 positive classes from the target ontology). 
   - `Hits@K` and `MRR` are used as evaluation metrics. Note that the candidates are separately generated w.r.t the testing mapping in each data split setting.
 
-- For global matching, an OM model is required to output full mappings and compare them with the reference mappings using `Precision`, `Recall`, and `F1`. Note that when computing these scores, mappings that are not in the testing set (validation set for both data split settings and train+validation set for the semi-supervised setting) should be ignored by substraction from both system output and reference mappings. This feature is supported in [`om_eval.py`](using_deeponto?id=om-evaluation) script of DeepOnto where the arguement `null_ref_path` is for inputting the reference mappings that should be ignored.
+- For global matching, an OM model is required to output full mappings and compare them with the reference mappings using `Precision`, `Recall`, and `F1`. 
+  - For each OM pair, a `refs/full.tsv` file is provided for full reference mapping; the columns of this `.tsv` file are `["SrcEntity", "TgtEntity", "Score"]` standing for the source reference class iri, target class iri, and the score (set to $1.0$ for reference mappings).
+    -  `val.tsv` and `test.tsv` are provided in `refs/unsupervised` for validation (10%) and testing (90%), respectively.
+    -  `train.tsv`, `val.tsv`, `train+val.tsv` and `test.tsv` are provided in `refs/semi_supervised` for training (20%), validation (10%), merged training and validation file for evaluation, and testing (70%), respectively.
+  - When computing these scores, mappings that are not in the testing set should be ignored by substraction from both system output and reference mappings. 
+    - i.e., when evaluating on `refs/unsupervised/test.tsv`, `refs/unsupervised/val.tsv` should be ignored; when evaluating on `refs/semi_supervised/test.tsv`, `refs/semi_supervised/train+val.tsv` should be ignored. 
+    - This feature is supported in [`om_eval.py`](using_deeponto?id=om-evaluation) script of DeepOnto where the arguement `null_ref_path` is for inputting the reference mappings that should be ignored.
 
 - Since the subsumption mappings are inherently incomplete, we suggest apply only local ranking for evaluating subsumption matching.
 
