@@ -75,7 +75,7 @@ class BERTMap(OntoAlign):
             tgt_onto=tgt_onto,
             tokenizer=tokenizer,
             cand_pool_size=cand_pool_size,
-            rel="≡",
+            rel="=",
             n_best=n_best,
             is_trainable=True,
             is_val_model_select=True,
@@ -418,11 +418,11 @@ class BERTMap(OntoAlign):
 
         # after repair the direction is always src2tgt
         repaired_mappings = OntoMappings.read_table_mappings(
-            formatted_repaired_file, flag="final_output"
+            formatted_repaired_file, flag="final_output" 
         )
         repaired_mappings.save_instance(repair_saved_path)
         # Save another copy of output mappings
-        repaired_mappings.save_instance(self.global_match_dir + "/final_outputs")
+        repaired_mappings.save_instance(self.global_match_dir)
         self.logger.info("Mapping Repair Finished\n")
 
     ##################################################################################
