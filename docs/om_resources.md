@@ -48,7 +48,7 @@ Statistics for the subsumption matching set-ups. Note that each subsumption matc
 | UMLS   | SNOMED-NCIT | Neoplas  | 11,271-13,790 | 213              | 
 
 The downloaded datasets include `Mondo.zip` and `UMLS.zip` for resources constructed from Mondo and UMLS, respectively.
-Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. Detailed structure is presented in the following figure. Note for candidate mappings, we generate `for_eval` and `for_score` folders for evaluation and mapping scoring purposes; for users who wish to directly use the generated candidates for each reference mapping without depending on DeepOnto, they can use the file at: `.../for_eval/src2tgt.anchored.maps.json` (`...` means some preceding path).
+Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. Detailed structure is presented in the following figure. 
 
 <br/>
 <p align="center">
@@ -57,16 +57,14 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
   </a>
 </p>
 
-### Evaluation
-
 There are two evaluation schemes (**local ranking** and **global matching**) and two data split settings (**unsupervised** and **(semi-)supervised**).
 
 - For local ranking, an OM model is required to rank candidates stored in c.
-  -  See files in `src2tgt.rank`, `src2tgt` here means the anchors/keys are the source ontology classes, and the candidates/values are generated from the target ontology. The whole folder can be loaded using `AnchoredOntoMappings.from_saved("src2tgt.rank"` because of the `.pkl` file, the `.json` and `.tsv` files are provided for users who want to use their own data structures.
+  -  See files in `src2tgt.rank`, `src2tgt` here means the **anchors/keys** are the source ontology classes, and the **candidates/values** are generated from the target ontology. The whole folder can be loaded using `AnchoredOntoMappings.from_saved("src2tgt.rank"` because of the `.pkl` file, the `.json` and `.tsv` files are provided for users who want to use their own data structures.
   - `AnchoredOntoMappings` is essentially a dictionary with each reference mapping (in the form of class tuple) as a key (anchor) and its corresponding candidates (100 negative + 1 positive classes from the target ontology). 
   - `Hits@K` and `MRR` are used as evaluation metrics. Note that the candidates are separately generated w.r.t the testing mapping in each data split setting.
 
-- For global matching, an OM model is required to output full mappings and compare them with the reference mappings using `Precision`, `Recall`, and `F1`. Note that when computing these scores, mappings that are not in the testing set (validation set for both data split settings and train+validation set for the semi-supervised setting) should be ignored by substraction from both system output and reference mappings. 
+- For global matching, an OM model is required to output full mappings and compare them with the reference mappings using `Precision`, `Recall`, and `F1`. Note that when computing these scores, mappings that are not in the testing set (validation set for both data split settings and train+validation set for the semi-supervised setting) should be ignored by substraction from both system output and reference mappings. This feature is supported in `om_eval.py` script of DeepOnto where the arguement `null_ref_path` is for inputting the reference mappings that should be ignored.
 
 - Since the subsumption mappings are inherently incomplete, we suggest apply only local ranking for evaluating subsumption matching.
 
