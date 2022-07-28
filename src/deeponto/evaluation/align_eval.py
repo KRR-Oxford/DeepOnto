@@ -109,7 +109,8 @@ def global_match_select(
 
     # merge the reference mappings with the null reference mappings because
     # they should be ignored in hyperparam selection
-    merged_null_ref_path = global_match_dir + "/null_ref_for_model_select.tsv"
+    val_results_dir = global_match_dir + "/val_results"
+    merged_null_ref_path = val_results_dir + "/null_refs.val.tsv"
     if not detect_path(merged_null_ref_path):
         train_ref = (
             OntoMappings.read_table_mappings(train_ref_path).to_tuples() if null_ref_path else []
@@ -172,32 +173,31 @@ def global_match_select(
                 best_results["best_f1"] = scores["f_score"]
 
     banner_msg("Best Hyperparameters for Validation")
-    val_results_dir = global_match_dir + "/val_results"
     SavedObj.save_json(serialized_eval_results, val_results_dir + "/results.val.json")
     SavedObj.print_json(best_results)
     SavedObj.save_json(best_results, val_results_dir + "/best_hyperparams.val.json")
 
 
-def local_rank_eval(pred_path: str, ref_anchor_path: str, *ks: int):
+def local_rank_eval(scored_anchored_maps_path: str, *ks: int):
     """Eval on Hits@K, MRR (estimating OM performance) 
     """
 
     banner_msg("Eval using Hits@K, MRR")
 
     # load prediction mappings from the saved directory
-    pred_maps = OntoMappings.from_saved(pred_path)
-    ref_anchor_maps = AnchoredOntoMappings.from_saved(ref_anchor_path)
-    ref_anchor_maps.fill_scored_maps(pred_maps)
+    # pred_maps = OntoMappings.from_saved(pred_path)
+    scored_anchored_maps = AnchoredOntoMappings.from_saved(scored_anchored_maps_path)
+    # ref_anchor_maps.fill_scored_maps(pred_maps)
     # print(ref_anchor_maps.anchor2cand)
 
     # load reference mappings and (opt) null mappings
     # ref = OntoMappings.read_tsv_mappings(ref_path, 0.0).to_tuples()
-    ref = list(ref_anchor_maps.anchor2cand.keys())
+    ref = list(scored_anchored_maps.anchor2cand.keys())
 
     results = dict()
-    results["MRR"] = round(mean_reciprocal_rank(ref_anchor_maps, ref), 3)
+    results["MRR"] = round(mean_reciprocal_rank(scored_anchored_maps, ref), 3)
     for k in ks:
-        results[f"Hits@{k}"] = round(hits_at_k(ref_anchor_maps, ref, k), 3)
+        results[f"Hits@{k}"] = round(hits_at_k(scored_anchored_maps, ref, k), 3)
     SavedObj.print_json(results)
 
     return results

@@ -15,7 +15,7 @@
 
 from typing import Optional, Iterable, Tuple, List
 
-from deeponto.onto.mapping import OntoMappings, AnchoredOntoMappings
+from deeponto.onto.mapping import AnchoredOntoMappings
 
 ##################################################################################
 ###                       [Eval Case 1]: P, R, F1                              ###
