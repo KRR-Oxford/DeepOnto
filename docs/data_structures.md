@@ -24,7 +24,7 @@ tokz = Tokenizer.from_pretrained("bert-base-uncased")
 
 onto = Ontology.from_new(
   onto_path="./onto_files/pizza.owl", 
-  lab_props=["label", "hasExactSynonym", "prefLabel"],
+  lab_props=["http://www.w3.org/2000/01/rdf-schema#label"],  # rdfs:label
   tokenizer=tokz 
 )
 
@@ -54,21 +54,15 @@ onto = Ontology.from_new(
   tokenizer=tokz 
 )
 
-# onto.class2idx: {class_name: class_index}
-# onto.idx2class: {class_index: class_name}
-# onto.idx2labs: {class_index: class_labels}
-# the class names are abbreviated class IRIs (see deeponto/onto/iris.py)
 
-# get the preprocessed labels for a class of index 10 in this ontology
-# for Ontology Matching, the class should be retrieved from another ontology
-labs = onto.idx2labs[10]
+# get the preprocessed labels for a class in this ontology
+labs = onto.iri2labs["some-entity-iri"]
 
 # tokens from the class labels
 toks = tokz.tokenize_all(labs)
 
 # retrieve ontology classes with idf scores
 candidates = onto.idf_select(toks)
-
 ```
 
 ## Mapping
@@ -186,6 +180,5 @@ unscored_maps = anchored_onto_maps.unscored_cand_maps()
 anchored_onto_maps.fill_scored_maps(scored_maps)
 
 # saving and reloading are the same as OntoMappings
-
 ```
 
