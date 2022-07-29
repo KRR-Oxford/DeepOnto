@@ -26,26 +26,47 @@ The **Bio-ML** dataset provides five ontology pairs for both equivalence and sub
 - **Resource Paper**: *https://arxiv.org/abs/2205.03447*.
 - **OAEI Track**: *https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/*. 
 
+### Data Statistics
+
+<!-- tabs:start -->
+
+#### **Equivalence Matching**
+
 Statistics for the equivalence matching set-ups. In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance*"*, and *"Neoplastic Process"* in UMLS, respectively.
 
+<small>
+
 | Source | Task        | Category | #Classes      | #RefMaps (equiv) | #Annot.  | AvgDepths |
-|--------|-------------|----------|---------------|------------------|----------|-----------|
+|--------|:-----------:|:--------:|:-------------:|:----------------:|:--------:|:---------:|
 | Mondo  | OMIM-ORDO   | Disease  | 9,642-8838    | 3,721            | 34K-34K  | 1.44-1.63 |
 | Mondo  | NCIT-DOID   | Disease  | 6,835-8,848   | 4,684            | 80K-38K  | 2.04-6.85 |
 | UMLS   | SNOMED-FMA  | Body     | 24,182-64,726 | 7,256            | 39K-711K | 1.86-9.32 |
 | UMLS   | SNOMED-NCIT | Pharm    | 16,045-15,250 | 5,803            | 19K-220K | 1.09-3.26 |
 | UMLS   | SNOMED-NCIT | Neoplas  | 11,271-13,956 | 3,804            | 23K-182K | 1.15-1.68 |
 
+</small>
+
+
+#### **Subsumption Matching**
+
 Statistics for the subsumption matching set-ups. Note that each subsumption matching task is constructed from an equivalence matching task subject to target side class deletion.
 
+<small>
 
 | Source | Task        | Category | #Classes      | #RefMaps (subs)  |
-|--------|-------------|----------|---------------|------------------|
+|--------|:-----------:|:--------:|:-------------:|:----------------:|
 | Mondo  | OMIM-ORDO   | Disease  | 9,642-8,735   | 103              | 
 | Mondo  | NCIT-DOID   | Disease  | 6,835-5,113   | 3,339            | 
 | UMLS   | SNOMED-FMA  | Body     | 24,182-59,567 | 5,506            | 
 | UMLS   | SNOMED-NCIT | Pharm    | 16,045-12,462 | 4,225            | 
 | UMLS   | SNOMED-NCIT | Neoplas  | 11,271-13,790 | 213              | 
+
+</small>
+
+<!-- tabs:end -->
+
+
+### File Structure
 
 The downloaded datasets include `Mondo.zip` and `UMLS.zip` for resources constructed from Mondo and UMLS, respectively.
 Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. Detailed structure is presented in the following figure. 
@@ -57,39 +78,83 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
   </a>
 </p>
 
+### Evaluation Framework
+
 There are two evaluation schemes (**local ranking** and **global matching**) and two data split settings (**unsupervised** and **(semi-)supervised**).
 
 - For local ranking, an OM model is required to rank candidates stored in `src2tgt.rank` and evalute using `Hits@K` and `MRR`. 
   -  **Data Loading**: `src2tgt` here means the *anchors/keys* are the source ontology classes, and the *candidates/values* are generated from the target ontology. There are three options for loading the anchored candidate mapping:
-     -  *Option 1*: Load the whole data folder using [`AnchoredOntoMappings`](data_structures?id=anchoredontomappings) implemented in DeepOnto: 
-      ```python
-      from deeponto.onto.mapping import AnchoredOntoMappings
-      AnchoredOntoMappings.from_saved("src2tgt.rank")
-      ```
-      ?> [`AnchoredOntoMappings`](data_structures?id=anchoredontomappings) is essentially a dictionary with each reference mapping (in the form of class tuple) as a key (anchor) and its corresponding candidates (100 negative + 1 positive classes from the target ontology).
-      
-     -  *Option 2*: Load the `.json` file in the `src2tgt.rank`, a nested dictionary in form of `{"(ref_src, ref_tgt)": tgt_cand: 0.0}` where `(ref_src, ref_tgt)` is a reference class pair (anchor), `tgt_cand` is a target candidate w.r.t. this anchor, `0.0` is the default score for the candidate mapping `(ref_src, tgt_cand)`.
-      ```python
-      from deeponto import SavedObj
-      SavedObj.load_json("src2tgt.rank/src2tgt.anchored.maps.json")
-      ```  
-      - *Option 3*: Load the `.tsv` file in the `src2tgt.rank`, where the columns are `["SrcEntity", "TgtEntity", "TgtCandidates"]` standing for the source class iri of a reference mapping, the target class iri of this reference mapping, and the corresponding target candidate class iris in a sequence, which can be decoded using `ast.literal_eval(tgt_cands_seq)`.
+
+  <!-- tabs:start -->
+
+  #### **AnchoredOntoMappings**
+
+  Load the whole data folder using [`AnchoredOntoMappings`](data_structures?id=anchoredontomappings) implemented in DeepOnto: 
+
+  ```python
+  from deeponto.onto.mapping import AnchoredOntoMappings
+  AnchoredOntoMappings.from_saved("src2tgt.rank")
+  ```
+  ?> [`AnchoredOntoMappings`](data_structures?id=anchoredontomappings) is essentially a dictionary with each reference mapping (in the form of class tuple) as a key (anchor) and its corresponding candidates (100 negative + 1 positive classes from the target ontology).
+
+  #### **json**
+
+  Load the `.json` file in `src2tgt.rank`, a nested dictionary in form of:
+
+  ```python
+  {"('ref_src', 'ref_tgt')": 'tgt_cand': 0.0}
+  ``` 
+  where `(ref_src, ref_tgt)` is a reference class pair (anchor), `tgt_cand` is a target candidate w.r.t. this anchor, `0.0` is the default score for the candidate mapping `(ref_src, tgt_cand)`.
+
+  ```python
+  from deeponto import SavedObj
+  SavedObj.load_json("src2tgt.rank/src2tgt.anchored.maps.json")
+  ```
+
+  #### **tsv**
+
+  Load the `.tsv` file in `src2tgt.rank`, where the columns are `"SrcEntity"`, `"TgtEntity"`, and `"TgtCandidates"` standing for the source class iri of a reference mapping, the target class iri of this reference mapping, and the corresponding target candidate class iris in a sequence, which can be decoded using:
+  
+  ```python
+  import ast
+  ast.literal_eval(tgt_cands_seq)`
+  ```
+
+  <!-- tabs:end -->
+
   - **Data Split**: the candidate mappings were separately generated w.r.t. the tesing data (`test.tsv`) in each data split.
     - *Unsupervised*: `src2tgt` in `refs/unsupervised` refers to candidate mappings generated from `refs/unsupervised/test.tsv` and `refs/unsupervised/val.tsv` is ensured to be excluded from candidates.
     - *Semi-supervised*: `src2tgt` in `refs/semi_supervised` referes to candidate mappings generated from `refs/semi_supervised/test.tsv` and `refs/semi_supervised/train+val.tsv` is ensured to be excluded from candidates.
 
 - For global matching, an OM model is required to output full mappings and compare them with the reference mappings using `Precision`, `Recall`, and `F1`.
   - **Data Loading**: For each OM pair, a `refs/full.tsv` file is provided for full reference mapping; the columns of this `.tsv` file are `["SrcEntity", "TgtEntity", "Score"]` standing for the source reference class iri, target class iri, and the score (set to $1.0$ for reference mappings). 
-    - *Option 1*: Standard `read_csv` function with `sep="\t"` can be used for loading the mappings; DeepOnto implements a `read_tables` method which takes care of potential errors of loading strings containing `NULL`:
-    ```python
-    from deeponto.utils import read_table
-    read_table("refs/full.tsv")
-    ```
-    - *Option 2*: Using `OntoMappings` to load the mappings into a dictionary in form of `{src_ent: tgt_ent: score}`.
-    ```python
-    from deeponto.onto.mapping import OntoMappings
-    OntoMappings.read_table_mappings("refs/full.tsv")
-    ```
+  
+  <!-- tabs:start -->
+
+  #### **OntoMappings**
+
+  Using [`OntoMappings`](data_structures?id=ontomappings) to load the mappings into a dictionary in form of:
+  
+  ```python
+  {'src_ent': 'tgt_ent': score}
+  ```
+
+  ```python
+  from deeponto.onto.mapping import OntoMappings
+  OntoMappings.read_table_mappings("refs/full.tsv")
+  ```
+
+  #### **tsv**
+
+  Standard `read_csv` function with `sep="\t"` can be used for loading the mappings; DeepOnto implements a `read_tables` method which takes care of potential errors of loading strings containing `NULL`:
+
+  ```python
+  from deeponto.utils import read_table
+  read_table("refs/full.tsv")
+  ```
+
+  <!-- tabs:end -->
+
   - **Data Split**: the full reference mappings in `full.tsv` are divided into different splits for training (semi-supervised), validation, and testing purposes.
     -  *Unsupervised*: `val.tsv` and `test.tsv` are provided in `refs/unsupervised` for validation (10%) and testing (90%), respectively.
     -  *Semi-supervised*: `train.tsv`, `val.tsv`, `train+val.tsv` and `test.tsv` are provided in `refs/semi_supervised` for training (20%), validation (10%), merged training and validation file for evaluation, and testing (70%), respectively.
