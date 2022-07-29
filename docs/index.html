@@ -38,7 +38,7 @@ limitations under the License.
       --base-font-size: 14px;
       --sidebar-name-font-size: var(--font-size-l);
       --emoji-size: calc(var(--base-line-height) * 0.6em);
-      --sidebar-name-font-weight                    : bold;
+      --sidebar-name-font-weight: bold;
     }
   </style>
 
@@ -51,6 +51,7 @@ limitations under the License.
       loadSidebar: true,
       subMaxLevel: 3,
       homepage: 'https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/README.md',
+      search: 'auto', // default
       pagination:{
         previousText: 'Previous',
         nextText: 'Next',
@@ -79,6 +80,9 @@ limitations under the License.
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"/>
   <!-- docsify-tabs (latest v1.x.x) -->
   <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
+  <!-- search -->
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
 
 </body>
 </html>
