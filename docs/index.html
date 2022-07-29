@@ -54,7 +54,14 @@ limitations under the License.
         nextText: 'Next',
         crossChapter: true,
         crossChapterText: true
-        }
+        },
+      tabs:{
+        persist    : true,      // default
+        sync       : true,      // default
+        theme      : 'classic', // default
+        tabComments: true,      // default
+        tabHeadings: true       // default
+      }
      }
   </script>
   <!-- Docsify v4 -->
@@ -68,6 +75,8 @@ limitations under the License.
   <!-- CDN files for docsify-katex -->
   <script src="//cdn.jsdelivr.net/npm/docsify-katex@latest/dist/docsify-katex.js"></script>
   <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/katex@latest/dist/katex.min.css"/>
+  <!-- docsify-tabs (latest v1.x.x) -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-tabs@1"></script>
 
 </body>
 </html>
