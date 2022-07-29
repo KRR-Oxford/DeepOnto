@@ -22,9 +22,9 @@ The **Bio-ML** dataset provides five ontology pairs for both equivalence and sub
 
 !> Latest Update: *Version 3, 28 July 2022*.
 
-> - Download link: *https://doi.org/10.5281/zenodo.6917501 (CC BY 4.0 International)*.
-> - See detailed resource construction and evaluation methods in our paper: *https://arxiv.org/abs/2205.03447*.
-> - OAEI track: *https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/*. 
+- **Download link**: *https://doi.org/10.5281/zenodo.6917501 (CC BY 4.0 International)*.
+- **Resource Paper**: *https://arxiv.org/abs/2205.03447*.
+- **OAEI Track**: *https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/*. 
 
 Statistics for the equivalence matching set-ups. In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance*"*, and *"Neoplastic Process"* in UMLS, respectively.
 
