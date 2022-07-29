@@ -57,12 +57,12 @@ DeepOnto is mainly extended from the following packages:
 
 #### **OntoAlign**
 
-| Name                 | Relation                        | Type              |
+| Name                 | Task                            | Type              |
 | :-------------       | :---------------                | :--------------   |
-| BERTMap              | Equivalence                     | Learning-based    |
-| StringMatch          | Equivalence                     | Rule-based        |
-| EditSimiarity        | Equivalence                     | Rule-based        |
-| BERTSubs (not ready) | Subsumption                     | Learning-based    |
+| BERTMap              | Ontology Matching (Equivalence) | Learning-based    |
+| StringMatch          | Ontology Matching (Equivalence) | Rule-based        |
+| EditSimiarity        | Ontology Matching (Equivalence) | Rule-based        |
+| BERTSubs (not ready) | Ontology Matching (Subsumption) | Learning-based    |
 
 
 <!-- tabs:end -->
