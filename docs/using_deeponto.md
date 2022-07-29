@@ -328,6 +328,6 @@ In principle, `online` will generate more subsumption mappings than `static` bec
 
 To come up with a meaningful evaluation over the input class pairs in `pair_score` mode, instead of using all the possible negative candidates, selecting representative (hard) ones is essential for evaluation efficiency and a decent approximation of overall performance. Ranking over the selected candidates is referred to as **local ranking** and can be evaluated using [`om_eval.py`](using_deeponto?id=om-evaluation).
 
-Specifically, for each reference mapping $(c, c')$, we can fix the source side and sample negative candidates from the target side ontology, which can then be combined with the $c$ to form negative candidate mappings. As such, each reference mapping can be seen as an `AnchorMapping` that has $N$ `EntityMapping` as candidates (see explanation of mapping data structures [here](data_structure?id=mapping)).
+Specifically, for each reference mapping $(c, c')$, we can fix the source side and sample negative candidates from the target side ontology, which can then be combined with the $c$ to form negative candidate mappings. As such, each reference mapping can be seen as an `AnchorMapping` that has $N$ `EntityMapping` as candidates (see explanation of mapping data structures [here](data_structures?id=mapping)).
 
 Parameters of `om_cands.py` for generating target negative candidates
