@@ -65,9 +65,9 @@ DeepOnto is mainly extended from the following packages:
 ## Ontology Matchng Resources
 
 **Bio-ML** for equivalence and subsumption ontology matching:
--  Zenodo link: https://doi.org/10.5281/zenodo.6516125;
--  Instructions: https://krr-oxford.github.io/DeepOnto/#/om_resources;
--  OAEI track: https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/.
+-  Zenodo link: *https://doi.org/10.5281/zenodo.6516125*;
+-  Instructions: *https://krr-oxford.github.io/DeepOnto/#/om_resources*;
+-  OAEI track: *https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/*.
 
 ## License
 
