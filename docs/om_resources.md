@@ -60,7 +60,7 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
 There are two evaluation schemes (**local ranking** and **global matching**) and two data split settings (**unsupervised** and **(semi-)supervised**).
 
 - For local ranking, an OM model is required to rank candidates stored in `src2tgt.rank` and evalute using `Hits@K` and `MRR`. 
-  -  **Loading Data**: `src2tgt` here means the *anchors/keys* are the source ontology classes, and the *candidates/values* are generated from the target ontology. There are three options for loading the anchored candidate mapping:
+  -  **Data Loading**: `src2tgt` here means the *anchors/keys* are the source ontology classes, and the *candidates/values* are generated from the target ontology. There are three options for loading the anchored candidate mapping:
      -  *Option 1*: Load the whole data folder using [`AnchoredOntoMappings`](data_structures?id=anchoredontomappings) implemented in DeepOnto: 
       ```python
       from deeponto.onto.mapping import AnchoredOntoMappings
@@ -79,7 +79,7 @@ There are two evaluation schemes (**local ranking** and **global matching**) and
     - *Semi-supervised*: `src2tgt` in `refs/semi_supervised` referes to candidate mappings generated from `refs/semi_supervised/test.tsv` and `refs/semi_supervised/train+val.tsv` is ensured to be excluded from candidates.
 
 - For global matching, an OM model is required to output full mappings and compare them with the reference mappings using `Precision`, `Recall`, and `F1`.
-  - **Loading Data**: For each OM pair, a `refs/full.tsv` file is provided for full reference mapping; the columns of this `.tsv` file are `["SrcEntity", "TgtEntity", "Score"]` standing for the source reference class iri, target class iri, and the score (set to $1.0$ for reference mappings). 
+  - **Data Loading**: For each OM pair, a `refs/full.tsv` file is provided for full reference mapping; the columns of this `.tsv` file are `["SrcEntity", "TgtEntity", "Score"]` standing for the source reference class iri, target class iri, and the score (set to $1.0$ for reference mappings). 
     - *Option 1*: Standard `read_csv` function with `sep="\t"` can be used for loading the mappings; DeepOnto implements a `read_tables` method which takes care of potential errors of loading strings containing `NULL`:
     ```python
     from deeponto.utils import read_table
