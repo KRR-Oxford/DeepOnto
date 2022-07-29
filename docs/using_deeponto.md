@@ -23,34 +23,42 @@ limitations under the License.
 
 Please see the following sections for example usage.
 
-!> This page is currently outdated and will be ready along with the major update of codes.
+!> Contents regarding `pair_score` mode of OM and `om_cands.py` are not fully ready.
 
 ## Ontology Matching
 
-There are two modes for OM: `global_match` and `pair_score`. `global_match` aims to compute mappings given two input ontologies and `pair_score` is for scoring provided class pairs. 
+There are two modes for OM: `global_match` and `pair_score`. `global_match` aims to compute mappings given two input ontologies and `pair_score` is for scoring provided class pairs. For both modes, the source and target input ontologies are required; for `pair_score`, an input file containing the unscored class pairs and a flag that indicates the direction of the class pairs (`src2tgt` or `tgt2src`) are further required.
 
-?> `Precision`, `Recall`, and `F-score` are frequently used in evaluating `global_match` whereas ranking-based metrics like `Hits@K` and `MRR` are used in evaluating `pair_score`. See our [resource paper](https://arxiv.org/abs/2205.03447) for detailed guidance of ontology matching evaluation.  
+?> `Precision`, `Recall`, and `F-score` are frequently used in evaluating `global_match`; whereas `Accuracy` can be used in evaluating any class pair input, ranking-based metrics like `Hits@K` and `MRR` are used in evaluating `pair_score` when the input class pairs are grouped as *1 positive + N negatives*. See our [resource paper](https://arxiv.org/abs/2205.03447) for detailed guidance of ontology matching evaluation.  
 
-?> A configuration file in `.json` needs to be provided for each OM model, see how to config [here](om_models).
+?> A configuration file in `.json` needs to be provided for each OM model, see detailed configurations [here](om_models).
 
 
 ### Global Matching
 
-In this mode, the OM model is expected to search for all plausible cross-ontology class pairs that are semantically related (through, e.g., equivalence, subsumption). To search and compute mappings globally, the OM model needs to address *(1)* how semantically close two classes are; *(2)* how to search efficiently (naive traversal takes quadratic time). Futher refinement such as extension and repair are also popular for postprocessing.
+In this mode, the OM model is expected to search for all plausible cross-ontology class pairs that are semantically related (through, e.g., equivalence, subsumption). To search and compute mappings globally, the OM model needs to address *(1)* how semantically close two classes are; *(2)* how to search efficiently (naive traversal takes quadratic time). Futher refinement such as extension and repair are also optional for postprocessing.
+
+Parameters for `onto_match.py` in `global_match` mode:
+
+- **saved_path**(*str*): the path to the main output directory.
+- **src_onto**(*str*): the path to the source ontology file.
+- **tgt_onto**(*str*): the path to the target ontology file.
+- **config_path**(*str*): the path to the configuration file, default minimal configurations for each OM model is available at `./cofig`.
 
 Example usage of `onto_match.py` for global matching:
 
-**Step 1**: Run the script with specified output directory, source and target ontologies, and configuration file (if not provided, default minimal configurations are used).
+**Step 1**: Run the script with above arguments specified.
 
 ```bash
+# matching DOID and ORDO with minimal configurations
 python onto_match.py \
---saved_path "./onto_match_experiment" \  
---src_onto "./data/src_onto.owl" \
---tgt_onto "./data/tgt_onto.owl" \
+--saved_path "./experiment/doid2ordo" \  
+--src_onto "./data/doid.owl" \
+--tgt_onto "./data/ordo.owl" \
 --config_path "./config/bertmap.json"
 ```
 
-**Step 2**: Choose `global_match` and any implemented OM model.
+**Step 2**: Choose `global_match` and an implemented OM model.
 
 ```bash
 ######################################################################
@@ -76,10 +84,14 @@ Then the script will do the followings:
 - Train the scoring function with constructed data if the selected model is learning-based;
 - Globally compute the mappings and apply any refinement steps if any.
 
+?> Depending on the specific configurations of the selected model, the outputs could be different. Please refer to the documentation page of [OM models](om_models.md) for details.
+
 
 ### Pair Scoring
 
-In this mode, the OM model is expected to compute the matching scores for input class pairs. Compared to Global Matching, an extra argument for unscored mappings is needed. The unscored mappings are implemented using `OntoMappings` data structre and saved in a folder containing two files: `.pkl` for the serialized object and `.json` for human readable format. Such mappings can be generated using the script: `./data_scripts/om_rank_cands.py`, which generates negative candidates for each reference mapping for *local ranking* evaluation. Users can also transform a `.tsv` file with three columns: "SrcEntity", "TgtEntity", and "Score" to an `OntoMappings` (see [Datastructures](https://krr-oxford.github.io/DeepOnto/#/data_structures?id=mapping)) object using the following code:
+In this mode, the OM model is expected to compute the matching scores for input class pairs. Compared to Global Matching, extra arguments for unscored mappings and its flag (`src2tgt` or `tgt2src`) are needed. The easiest ...
+
+The unscored mappings are implemented using `OntoMappings` data structre and saved in a folder containing two files: `.pkl` for the serialized object and `.json` for human readable format. Such mappings can be generated using the script: `./data_scripts/om_rank_cands.py`, which generates negative candidates for each reference mapping for *local ranking* evaluation. Users can also transform a `.tsv` file with three columns: "SrcEntity", "TgtEntity", and "Score" to an `OntoMappings` (see [Datastructures](https://krr-oxford.github.io/DeepOnto/#/data_structures?id=mapping)) object using the following code:
 
 ```python
 # Fix import error if not download deeponto from PyPI
@@ -226,17 +238,23 @@ Enter a number: 1
 --------------------------------
 ## Ontology Data Processing
 
-to ...
+This section introduces some scripts for processing ontology data and creating OM resources. The pruning, subsumption mapping generation, negative candidate mapping generation algorithms were proposed in our [resource paper](https://arxiv.org/abs/2205.03447).
 
 ### Ontology Pruning
 
 The script `onto_prune.py` is used to prune an ontology by preserving classes according to a list of class IRIs while keeping the hierarchy. Specifically, if a class's IRI is not present in the input IRI list, then any axioms it involves will be deleted, and its parents will be asserted to be the parents of its children, so as to preserve the hierarchy. 
 
-> This can be seen as the most basic hierarchy preservation; in future, we will exploit logic modules to preserve more hierarchical information.
+?> This can be seen as the most basic hierarchy preservation; in future, we will exploit logic modules to preserve more hierarchical information.
+
+Parameters of `onto_prune.py`:
+
+- **saved_path**(*str*): the path to the output directory.
+- **src_onto_path**(*str*): the path to the source ontology that is about to be pruned.
+- **preserved_iris_path**(*str*): the path to the file of class IRIs (one per line) that will be preserved.
 
 Example usage of `onto_prune.py` for ontology pruning:
 
-**Step 1**: Run the script with the specified output directory, the path to the source ontology to be pruned, and the file of preserved class IRIs where each line states a class IRI.
+**Step 1**: Run the script with the above arguments specified.
 
 ```python
 python onto_prune.py \
@@ -250,32 +268,34 @@ python onto_prune.py \
 
 To construct inter-ontology subsumption mappings, we could utilize the **inter-ontology equivalence mappings** as the anchors. Specifically, we fix the source class of the equivalence mapping, and search for the ancestors (or descendants) of the target class, combining them with the source class to form the subsumption mappings. 
 
+Parameters of `om_subs.py`: 
+
+- **saved_path**(*str*): the path to the output directory.
+- **src_onto**(*str*): the path to the source ontology file.
+- **tgt_onto**(*str*): the path to the target ontology file.
+- **equiv_maps_path**(*str*): the path to the equivalence mappings in `.tsv` with columns of `"SrcEntity"`, `"TgtEntity"`, and `"Score"`.
+- **max_subs_ratio**(*int*): the maximum number of subsumption mappings generated for each input equivalence mapping, default is `1`.
+- **is_delete_equiv_tgt**(*bool*): whether or not to delete the target class of the equivalence mapping used for generating any subsumption mappings. 
+- **max_hop**(*int*): the maximum number of hops for searching the subsumption candidates, default is `1`, referring to the *most specific* subsumers.
+
 Example usage of `om_subs.py` script for inter-ontology subsumption mapping construction:
 
-**Step 1**: Run the script with the specified output directory, the paths to the source and target ontologies, the path to the equivalence mappings between source and target ontologies (a `.tsv` file with columns "SrcEntity", "TgtEntity", and "Score"), the maximum number of subsumption mappings generated for each equivalence mappping, the decision of deleting the target side classes of the *used* equivalence mapppings, the maximum number of hops for hierarchy search.
+**Step 1**: Run the script with arguments above specified.
 
 ```bash
 python om_subs.py \
---saved_path ./subs \  
+--saved_path ./subs_maps/ \  
 --src_onto_path ./data/src_onto.owl \
 --tgt_onto_path ./data/tgt_onto.owl \
---equiv_maps_path ./data/equiv_maps.tsv \ 
+--equiv_maps_path ./data/src2tgt_equiv_maps.tsv \ 
 --max_subs_ratio 1 \ 
 --is_delete_equiv_tgt True \
 --max_hop 1
 ```
 
-An example of first three rows of the equivalence mappings in `.tsv` format (terms are separated by `"\t"`):
+If `is_delete_equiv_tgt` is set to be `True`, then it means we are corrupting the equivalence mappings (that are *used* for generating any subsumption mappings) by deleting their target side classes to prevent an OM system from inferring subsumptions directly from the equivalence mappings. In this case, the deleted target classes may intervene the generation of some subsumption candidates because they may occasionally appear in a generated subsumption mapping. Two algorithms (`online` or `static`) were proposed (see details in our [resource paper](https://arxiv.org/abs/2205.03447)) to deal with the class deletion. 
 
-```
-SrcEntity   TgtEntity	Score
-ncit_largebio:C9311 obo:DOID_4362	1.0
-ncit_largebio:C8410	obo:DOID_4364	1.0
-```
-
-!> Full entity IRIs are acceptable as well; the abbreviated IRIs are [pre-defined](https://krr-oxford.github.io/DeepOnto/#/om_resources?id=appendix) in DeepOnto.
-
-If `is_delete_equiv_tgt` is set to be `True`, then it means we are corrupting the equivalence mappings (that are *used* for generating any subsumption mappings) by deleting their target side classes to prevent an OM system from inferring subsumptions directly from the equivalence mappings. 
+If `is_delete_equiv_tgt` is set to be `False`, choosing either algorithm will generate the same set of subsumption candidates because no classes will be marked for deletion.
 
 **Step 2**: Choose which algorithm to be used and which subsumption relation to be considered. 
 
@@ -301,9 +321,13 @@ There are two ways (`static` or `online`) of doing subsumption mapping construct
 
 In principle, `online` will generate more subsumption mappings than `static` because less classes are marked for deletion. However, `online` is less stable than `static` because it can be affected by the order of the equivalence mappings during traversal.
 
-> If `is_delete_equiv_tgt` is set to be `False`, choosing `static` or `online` will make no difference because no classes will be marked for deletion.
-
-**Step 3**: If `is_delete_equiv_tgt` is set to be `True`, use the `onto_prune.py` script described [above](https://krr-oxford.github.io/DeepOnto/#/intro?id=ontology-pruning) to delete the corresponding classes.
+**Step 3**: If `is_delete_equiv_tgt` is set to be `True`, the script will generate target class IRIs that should be preserved. Then, the user need to manually run the `onto_prune.py` script described [above](using_deeponto?id=ontology-pruning) to delete the corresponding classes.
 
 
 ### Negative Candidate Mapping Generation
+
+To come up with a meaningful evaluation over the input class pairs in `pair_score` mode, instead of using all the possible negative candidates, selecting representative (hard) ones is essential for evaluation efficiency and a decent approximation of overall performance. Ranking over the selected candidates is referred to as **local ranking** and can be evaluated using [`om_eval.py`](using_deeponto?id=om-evaluation).
+
+Specifically, for each reference mapping $(c, c')$, we can fix the source side and sample negative candidates from the target side ontology, which can then be combined with the $c$ to form negative candidate mappings. As such, each reference mapping can be seen as an `AnchorMapping` that has $N$ `EntityMapping` as candidates (see explanation of mapping data structures [here](data_structure?id=mapping)).
+
+Parameters of `om_cands.py` for generating target negative candidates

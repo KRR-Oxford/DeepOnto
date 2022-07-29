@@ -41,7 +41,7 @@ onto = Ontology.from_saved("./saved")
 # see onto.__dict__ for useful information
 ```
 
-*[Usage]* Use the inverted index for candidate selection:
+Example usage of the inverted index for candidate selection:
 
 ```python
 from deeponto.onto import Ontology
