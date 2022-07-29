@@ -60,7 +60,7 @@ DeepOnto is mainly extended from the following packages:
 | EditSimiarity        | Ontology Matching (Equivalence) | Rule-based        |
 | BERTSubs (not ready) | Ontology Matching (Subsumption) | Learning-based    |
 
-?> See https://krr-oxford.github.io/DeepOnto/#/intro for script usage.
+?> See *https://krr-oxford.github.io/DeepOnto/#/intro* for script usage.
 
 ## Ontology Matchng Resources
 
