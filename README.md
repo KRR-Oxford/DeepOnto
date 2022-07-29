@@ -53,7 +53,6 @@ DeepOnto is mainly extended from the following packages:
 
 ## Implemented Models
 
-<!-- tabs:start -->
 
 #### **OntoAlign**
 
@@ -64,8 +63,6 @@ DeepOnto is mainly extended from the following packages:
 | EditSimiarity        | Ontology Matching (Equivalence) | Rule-based        |
 | BERTSubs (not ready) | Ontology Matching (Subsumption) | Learning-based    |
 
-
-<!-- tabs:end -->
 
 ?> Click [here](using_deeponto.md) for script usage.
 
