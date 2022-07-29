@@ -38,11 +38,9 @@ limitations under the License.
 
 DeepOnto aims to provide implemented deep learning models and an evaluation platform for various ontology engineering purposes. 
 
-> Documentation: https://krr-oxford.github.io/DeepOnto/#/.
-
-> Github Repository: https://github.com/KRR-Oxford/DeepOnto. 
-
-> PyPI: https://pypi.org/project/deeponto/. (not fully ready)
+> - Documentation: https://krr-oxford.github.io/DeepOnto/#/.
+> - Github Repository: https://github.com/KRR-Oxford/DeepOnto. 
+> - PyPI: https://pypi.org/project/deeponto/. (not fully ready)
 
 ## Essential Dependencies
 
@@ -51,7 +49,7 @@ DeepOnto is mainly extended from the following packages:
 - [OwlReady2](https://owlready2.readthedocs.io/) for basic ontology processing.
 - [Transformers](https://github.com/huggingface/transformers) for pre-trained language models.
 
-> See `requirement.txt` for other dependencies.
+?> See `requirement.txt` for other dependencies.
 
 ## Implemented Models
 
@@ -62,7 +60,7 @@ DeepOnto is mainly extended from the following packages:
 | EditSimiarity        | Ontology Matching (Equivalence) | Rule-based        |
 | BERTSubs (not ready) | Ontology Matching (Subsumption) | Learning-based    |
 
-> See https://krr-oxford.github.io/DeepOnto/#/intro for quick usage.
+?> See https://krr-oxford.github.io/DeepOnto/#/intro for script usage.
 
 ## Ontology Matchng Resources
 
