@@ -55,21 +55,22 @@ DeepOnto is mainly extended from the following packages:
 
 <!-- tabs:start -->
 
-#### OM (ML-based)
-| Name                 | Task                            | Type              |
-| :-------------       | :---------------                | :--------------   |
-| BERTMap              | Ontology Matching (Equivalence) | Learning-based    |
-| StringMatch          | Ontology Matching (Equivalence) | Rule-based        |
-| EditSimiarity        | Ontology Matching (Equivalence) | Rule-based        |
-| BERTSubs (not ready) | Ontology Matching (Subsumption) | Learning-based    |
+#### **OntoAlign**
 
-#### OM (Rule-based)
-| Name                 | Task                            | Type              |
+| Name                 | Relation                        | Type              |
 | :-------------       | :---------------                | :--------------   |
-| BERTMap              | Ontology Matching (Equivalence) | Learning-based    |
-| StringMatch          | Ontology Matching (Equivalence) | Rule-based        |
-| EditSimiarity        | Ontology Matching (Equivalence) | Rule-based        |
-| BERTSubs (not ready) | Ontology Matching (Subsumption) | Learning-based    |
+| BERTMap              | Equivalence                     | Learning-based    |
+| StringMatch          | Equivalence                     | Rule-based        |
+| EditSimiarity        | Equivalence                     | Rule-based        |
+| BERTSubs (not ready) | Subsumption                     | Learning-based    |
+
+#### **OntoEmbeds**
+
+...
+
+#### **EntityLink**
+
+...
 
 <!-- tabs:end -->
 
