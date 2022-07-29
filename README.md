@@ -57,12 +57,14 @@ DeepOnto is mainly extended from the following packages:
 
 #### **OntoAlign**
 
+- BERTMap
+<!-- 
 | Name                 | Relation                        | Type              |
 | :-------------       | :---------------                | :--------------   |
 | BERTMap              | Equivalence                     | Learning-based    |
 | StringMatch          | Equivalence                     | Rule-based        |
 | EditSimiarity        | Equivalence                     | Rule-based        |
-| BERTSubs (not ready) | Subsumption                     | Learning-based    |
+| BERTSubs (not ready) | Subsumption                     | Learning-based    | -->
 
 #### **OntoEmbeds**
 
