@@ -64,13 +64,6 @@ DeepOnto is mainly extended from the following packages:
 | EditSimiarity        | Equivalence                     | Rule-based        |
 | BERTSubs (not ready) | Subsumption                     | Learning-based    |
 
-<!-- #### **OntoEmbeds**
-
-...
-
-#### **EntityLink**
-
-Ciao! -->
 
 <!-- tabs:end -->
 
