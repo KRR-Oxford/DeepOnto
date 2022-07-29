@@ -6,7 +6,7 @@
 *CLASS* &ensp; deeponto.onto.Ontology(<em>owl_path: str</em>)
 
 
-The `Ontology` class relies on `owlready2` for loading OWL object, and then applies extra text processing on labels of selected *annotation properties* and optionally construct an *inverted index* from these class labels. The following method is used for creating a new ontology object.
+The `Ontology` class relies on [OwlReady2](https://owlready2.readthedocs.io/) for loading OWL object, and then applies extra text processing on labels of selected *annotation properties* and optionally construct an *inverted index* from these class labels. The following method is used for creating a new ontology object.
 
 > *METHOD* &ensp; Ontology.from_new(<em>onto_path: str, lab_props: List[str], tokenizer: Optional[Tokenizer]</em>)
 

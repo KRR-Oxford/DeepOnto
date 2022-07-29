@@ -23,6 +23,8 @@ limitations under the License.
 
 Please see the following sections for example usage.
 
+!> This page is currently outdated and will be ready along with the major update of codes.
+
 ## Ontology Matching
 
 There are two modes for OM: `global_match` and `pair_score`. `global_match` aims to compute mappings given two input ontologies and `pair_score` is for scoring provided class pairs. 
