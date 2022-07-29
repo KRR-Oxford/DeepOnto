@@ -22,17 +22,30 @@ limitations under the License.
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="description" content="Description">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <!-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css"> -->
   <!-- Theme: Simple -->
-  <!--   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css"> -->
-  
-</head>
+  <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css"> -->
+  <!-- Custom theme styles -->
+  <!-- Site theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+  <!-- PrismJS theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.28.0/themes/prism.css">
+  <style>
+    :root{
+      --sidebar-name-font-family: Helvetica;
+      --blockquote-color: grey ;
+      --blockquote-font-weight: bold;
+      --blockquote-em-font-style: italic;
+      --base-font-size: 14px;
+    }
+  </style>
+
 <body>
   <div id="app"></div>
   <script>
     window.$docsify = {
-      name: '',
-      repo: '',
+      name: 'DeepOnto',
+      repo: 'https://github.com/KRR-Oxford/DeepOnto',
       loadSidebar: true,
       subMaxLevel: 3,
       homepage: 'https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/README.md',
