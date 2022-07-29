@@ -55,6 +55,22 @@ DeepOnto is mainly extended from the following packages:
 
 <!-- tabs:start -->
 
+#### **English**
+
+Hello!
+
+#### **French**
+
+Bonjour!
+
+#### **Italian**
+
+Ciao!
+
+<!-- tabs:end -->
+
+<!-- tabs:start -->
+
 #### **OntoAlign**
 
 - BERTMap
