@@ -67,7 +67,7 @@ DeepOnto is mainly extended from the following packages:
 
 <!-- tabs:end -->
 
-?> See *https://krr-oxford.github.io/DeepOnto/#/intro* for script usage.
+?> Click [here](using_deeponto.md) for script usage.
 
 ## Ontology Matchng Resources
 
