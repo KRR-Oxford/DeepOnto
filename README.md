@@ -53,21 +53,24 @@ DeepOnto is mainly extended from the following packages:
 
 ## Implemented Models
 
-asdfasdf
-
 <!-- tabs:start -->
 
-#### **English**
+#### **OntoAlign**
 
-Hello!
+| Name                 | Relation                        | Type              |
+| :-------------       | :---------------                | :--------------   |
+| BERTMap              | Equivalence                     | Learning-based    |
+| StringMatch          | Equivalence                     | Rule-based        |
+| EditSimiarity        | Equivalence                     | Rule-based        |
+| BERTSubs (not ready) | Subsumption                     | Learning-based    |
 
-#### **French**
+<!-- #### **OntoEmbeds**
 
-Bonjour!
+...
 
-#### **Italian**
+#### **EntityLink**
 
-Ciao!
+Ciao! -->
 
 <!-- tabs:end -->
 
