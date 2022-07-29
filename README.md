@@ -54,7 +54,7 @@ DeepOnto is mainly extended from the following packages:
 ## Implemented Models
 
 
-#### **OntoAlign**
+<!-- #### **OntoAlign** -->
 
 | Name                 | Task                            | Type              |
 | :-------------       | :---------------                | :--------------   |
