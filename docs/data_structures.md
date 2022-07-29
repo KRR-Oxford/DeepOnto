@@ -10,13 +10,13 @@ The `Ontology` class relies on `owlready2` for loading OWL object, and then appl
 
 > *METHOD* &ensp; Ontology.from_new(<em>onto_path: str, lab_props: List[str], tokenizer: Optional[Tokenizer]</em>)
 
-*[Parameters]* for constructing a new `Ontology` object:
+Parameters for constructing a new `Ontology` object:
 - **onto_path**(<em>str</em>): the path of an ontology file (preferrably in **.owl** format).
 - **lab_props**(<em>List[str]</em>): a list of selected annotation properties (of class labels, aliases, synonyms, etc.) for text processing, default is `["http://www.w3.org/2000/01/rdf-schema#label"]`.
 - **tokenizer**(<em>Optional[Tokenizer]</em>): an instance of the `Tokenizer` class used for tokenizing the class labels, default is `None` if not to construct an inverted index.
 
 
-*[Usage]* Create, save, and reload an ontology:
+Example usage for creating, save, and reload an ontology:
 ```python
 from deeponto.onto import Ontology
 from deeponto.onto.text import Tokenizer
@@ -77,13 +77,13 @@ Several python classes for entity (in string) mappings are defined here as main 
 
 The basic data structure for representing a mapping between entities.
 
-*[Parameters]* for constructing a new `EntityMapping` object:
+Parameters for constructing a new `EntityMapping` object:
 - **src_ent_iri**(<em>str</em>): the source entity IRI in string.
 - **tgt_ent_iri**(<em>str</em>): the target entity IRI in string.
 - **rel**(<em>str</em>): the semantic relation between the source and target entities.
 - **score**(<em>float</em>): the score of the mapping ranging from $0.0$ to $1.0$.
 
-*[Usage]* Create an equivalence entity mapping for `snomed:55940004` and `fma:54970`:
+Example usage for creating an equivalence entity mapping for `snomed:55940004` and `fma:54970`:
 
 ```python
 from deeponto.onto.mapping import EntityMapping
@@ -107,13 +107,13 @@ src2tgt_map = EntityMapping(
 
 It extends from the basic `EntityMapping` and can incorporate other entity mappings as its candidates.
 
-*[Parameters]* for constructing a new `AnchorMapping` object:
+Parameters for constructing a new `AnchorMapping` object:
 - **src_ent_iri**(<em>str</em>): the source entity IRI in string.
 - **tgt_ent_iri**(<em>str</em>): the target entity IRI in string.
 - **rel**(<em>str</em>): the semantic relation between the source and target entities.
 - **score**(<em>float</em>): the score of the mapping ranging from $0.0$ to $1.0$.
 
-*[Usage]* construct a new `AnchorMapping` and add a `EntityMapping` as a candidate.
+Example usage for constructing a new `AnchorMapping` and adding a `EntityMapping` as a candidate.
 
 ```python
 from deeponto.onto.mapping import AnchorMapping
@@ -156,7 +156,7 @@ The dict-based data structure which stores entity mappings of the same direction
 }
 ```
 
-*[Parameters]* for constructing a new `OntoMappings` object:
+Parameters for constructing a new `OntoMappings` object:
 - **flag**(<em>str</em>): the direction of the mapping (`src2tgt`, `tgt2src`).
 - **n_best**(<em>int</em>): the number of top ranked mappings stored for each head entity, default is `None` which means there is no limit.
 - **rel**(<em>str</em>): the semantic relation between the source and target entities.
@@ -165,7 +165,7 @@ The dict-based data structure which stores entity mappings of the same direction
 
 Entity mappings that belong to the same `src_ent` are sorted by scores in descending order, if `n_best` is set, only the top `n_best` mappings w.r.t. each `src_ent` will be kept.
 
-*[Usage]* Create an `OntoMappings` object and feed mappings:
+Example usage for creating an `OntoMappings` object and feed mappings:
 
 ```python
 from deeponto.onto.mapping import OntoMappings
@@ -210,14 +210,14 @@ onto_maps = OntoMappings.from_saved("./src2tgt_maps")
 It is a similar data structure as `OntoMappings` except that its keys are entity pairs (anchors) instead of a single source entity. It is essentially a collection of candidate mappings w.r.t. each 
 anchor mapping (in `AnchorMapping`). For example, to generate negative candidates for each reference mapping (as an anchor) for [local ranking evaluation](using_deeponto?id=om-evaluation), we need to use the reference class pair as a double-key and add candidate mappings as values.
 
-*[Parameters]* for constructing a new `AnchoredOntoMappings` object:
+Parameters for constructing a new `AnchoredOntoMappings` object:
 - **flag**(<em>str</em>): the direction of the mapping (`src2tgt`, `tgt2src`).
 - **n_best**(<em>int</em>): the number of top ranked mappings stored for each anchor mapping, default is `None` which means there is no limit.
 - **rel**(<em>str</em>): the semantic relation between the source and target entities.
 - **dup_strategy**(<em>str</em>): the strategy used to dealing with new mappings that have duplicated source and target entities (`average`, `kept_old`, `kept_new`).
 - **\*anchor_mappings**(<em>EntityMapping</em>): sequence of `AnchorMapping` to be added.
 
-*[Usage]* Create an `AnchoredOntoMappings` object and feed mappings:
+Example usage for creating an `AnchoredOntoMappings` object and feed mappings:
 ```python
 from deeponto.onto.mapping import AnchoredOntoMappings
 
