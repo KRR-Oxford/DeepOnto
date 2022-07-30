@@ -49,7 +49,17 @@ DeepOnto is mainly extended from the following packages:
 - [OwlReady2](https://owlready2.readthedocs.io/) for basic ontology processing.
 - [Transformers](https://github.com/huggingface/transformers) for pre-trained language models.
 
-?> See [`requirement.txt`](https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/requirements.txt) for other dependencies.
+To use DeepOnto, please manually configure Pytorch installation using:
+
+```bash
+conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch
+```
+
+Then, install other dependencies in [`requirement.txt`](https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/requirements.txt):
+
+```bash
+pip install -r requirements.txt
+```
 
 ## Implemented Models
 

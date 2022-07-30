@@ -14,3 +14,7 @@
 
 from .saved_obj import SavedObj
 from .flagged_obj import FlaggedObj
+
+# import some essentail pacakages that are not directly used but are dependencies
+import cython
+import pipreqs
