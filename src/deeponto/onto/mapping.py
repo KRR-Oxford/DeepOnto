@@ -17,6 +17,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from typing import Optional, List, Tuple
+from xml.etree.ElementInclude import include
 from pyats.datastructures import AttrDict
 import pandas as pd
 import ast
@@ -207,7 +208,13 @@ class OntoMappings(SavedObj):
                 ls.append(EntityMapping(src_ent_iri, tgt_ent_iri, self.rel, score))
         return ls
 
-    def topks(self, K: Optional[int] = 1, threshold: float = 0.0, as_tuples: bool = False):
+    def topks(
+        self,
+        K: Optional[int] = 1,
+        threshold: float = 0.0,
+        as_tuples: bool = False,
+        include_scores: bool = False,
+    ):
         """Return the top ranked anchor mappings for each head entity with scores >= threshold,
         output mappings are transformed to tuples
         """
@@ -217,26 +224,25 @@ class OntoMappings(SavedObj):
         for src_ent_iri in self.map_dict.keys():
             topks_for_all[src_ent_iri] = self.topks_for_ent(src_ent_iri, K, threshold)
         if as_tuples:
-            tups = []
+            tps = []
             for v in topks_for_all.values():
-                tups += [(em.head, em.tail) for em in v]
-            return tups
+                if not include_scores:
+                    tps += [(em.head, em.tail) for em in v]
+                else:
+                    tps += [(em.head, em.tail, em.score) for em in v]
+            return tps
         return topks_for_all
 
-    def to_tuples(self) -> List[Tuple[str, str]]:
+    def to_tuples(self, include_scores: bool=False) -> List[Tuple[str, str]]:
         """Unravel the mappings from dict to tuples
         """
-        return self.topks(K=None, as_tuples=True)
-    
+        return self.topks(K=None, as_tuples=True, include_scores=include_scores)
+
     def to_df(self):
         """Unravel the mappings from dict to dataframe
         """
-        map_df = pd.DataFrame(columns=["SrcEntity", "TgtEntity", "Score"])
-        i = 0
-        for src_ent_iri, v in self.map_dict.items():
-            for tgt_ent_iri, score in v.items():
-                map_df.loc[i] = [src_ent_iri, tgt_ent_iri, score]
-                i += 1
+        triples = self.to_tuples(include_scores=True)
+        map_df = pd.DataFrame(data=triples, columns=["SrcEntity", "TgtEntity", "Score"])
         return map_df
 
     def add(self, em: EntityMapping):
@@ -284,7 +290,7 @@ class OntoMappings(SavedObj):
         flag: str = "src2tgt",
         n_best: Optional[int] = None,
         rel: str = DEFAULT_REL,
-        dup_strategy: str = DEFAULT_DUP_STRATEGY
+        dup_strategy: str = DEFAULT_DUP_STRATEGY,
     ):
         """Read mappings from csv/tsv files and preserve mappings with scores >= threshold
         """
@@ -363,11 +369,11 @@ class AnchoredOntoMappings(SavedObj):
         self.validate_anchor_mapping(anchor_map)
         existed_cands = self.existed_cands_for_anchor(anchor_map)
         new_cands = list(set(anchor_map.candidates) - set(existed_cands))
-        
+
         # update new candidate mappings
         for cand_map in new_cands:
             self.anchor2cands[anchor_map.to_tuple()][cand_map.tail] = cand_map.score
-            
+
         # address exisitng candidate mappings
         if existed_cands and not allow_existed:
             raise ValueError("Duplicate mappings not allowed ...")
@@ -426,11 +432,13 @@ class AnchoredOntoMappings(SavedObj):
             cand_map = EntityMapping(cand_tup[0], cand_tup[1], self.rel, 0.0)
             unscored_cands.add(cand_map)
         return unscored_cands
-    
+
     def to_df(self, with_scores=False):
         """Unravel the anchor mappings from dict to dataframe
         """
-        anchor_map_df = pd.DataFrame(columns=["SrcEntity", "TgtEntity", "TgtCandidates", "CandScores"])
+        anchor_map_df = pd.DataFrame(
+            columns=["SrcEntity", "TgtEntity", "TgtCandidates", "CandScores"]
+        )
         i = 0
         for ref_tup, v in self.anchor2cands.items():
             tgt_cands, cand_scores = zip(*v.items())
@@ -439,7 +447,7 @@ class AnchoredOntoMappings(SavedObj):
         if not with_scores:
             anchor_map_df = anchor_map_df.drop(columns=["CandScores"])
         return anchor_map_df
-    
+
     def validate_anchor_mapping(self, am: AnchorMapping):
         if am.rel != self.rel:
             raise ValueError(f"Expect anchor mapping relation {self.rel}) but got {am.rel}.")
@@ -460,7 +468,7 @@ class AnchoredOntoMappings(SavedObj):
         flag: str = "src2tgt",
         n_best: Optional[int] = None,
         rel: str = DEFAULT_REL,
-        dup_strategy: str = DEFAULT_DUP_STRATEGY
+        dup_strategy: str = DEFAULT_DUP_STRATEGY,
     ):
         """Read mappings from csv/tsv files and preserve mappings with scores >= threshold
         """
