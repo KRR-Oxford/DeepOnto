@@ -41,7 +41,7 @@ class OntoAlign(FlaggedObj):
         tgt_onto: Ontology,
         tokenizer: Tokenizer,
         cand_pool_size: Optional[int] = 200,
-        rel: str = "≡",
+        rel: str = "=",
         n_best: Optional[int] = 10,
         is_trainable: bool = False,
         is_val_model_select: bool = False,
@@ -209,9 +209,11 @@ class OntoAlign(FlaggedObj):
         # save the output mappings
         self.global_mappings_for_ent_chunk(self.src_onto.iri2labs.keys())
         self.logger.info("Task Finished\n")
+        print("WTHT")
         # saving the last batch
         mappings = self.current_global_mappings()
         mappings.save_instance(f"{self.saved_path}/global_match/{self.flag}")
+        print("")
 
     def global_mappings_for_ent_chunk(
         self,
