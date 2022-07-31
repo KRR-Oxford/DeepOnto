@@ -32,6 +32,7 @@ from deeponto.utils.logging import create_logger, banner_msg
 from deeponto.utils import detect_path
 from deeponto.evaluation.align_eval import global_match_select
 from deeponto import FlaggedObj
+from deeponto.utils import create_path
 
 
 class OntoAlign(FlaggedObj):
@@ -209,11 +210,9 @@ class OntoAlign(FlaggedObj):
         # save the output mappings
         self.global_mappings_for_ent_chunk(self.src_onto.iri2labs.keys())
         self.logger.info("Task Finished\n")
-        print("WTHT")
         # saving the last batch
         mappings = self.current_global_mappings()
         mappings.save_instance(f"{self.saved_path}/global_match/{self.flag}")
-        print("")
 
     def global_mappings_for_ent_chunk(
         self,
@@ -283,6 +282,7 @@ class OntoAlign(FlaggedObj):
                 + " delete it and re-run if it's empty ..."
             )
         else:
+            create_path(val_results_dir)
             global_match_select(
                 self.global_match_dir,
                 train_ref_path,

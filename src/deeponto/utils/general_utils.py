@@ -132,6 +132,27 @@ def read_jsonl(file_path: str):
     return results
 
 
+def data_split(tsv_mapping_path: str, out_dir: str):
+    """Split mapping data into unsupervised val:test = 1:9
+    and semi-supervised settings train:val:test = 2:1:7.
+    """
+    map_df = read_table(tsv_mapping_path)
+    train_and_val = map_df.sample(frac=0.3)
+    val = train_and_val.sample(frac=1 / 3)
+    train = train_and_val.drop(index=val.index)
+    test = map_df.drop(index=train_and_val.index)
+    assert all(train.append(val).append(test).sort_index() == map_df)
+
+    create_path(out_dir + "/semi_supervised")
+    create_path(out_dir + "/unsupervised")
+    train.to_csv(out_dir + "/semi_supervised/train.tsv", sep="\t", index=False)
+    val.to_csv(out_dir + "/semi_supervised/val.tsv", sep="\t", index=False)
+    val.to_csv(out_dir + "/unsupervised/val.tsv", sep="\t", index=False)
+    test.to_csv(out_dir + "/semi_supervised/test.tsv", sep="\t", index=False)
+    train.append(test).to_csv(out_dir + "/unsupervised/test.tsv", sep="\t", index=False)
+    train.append(val).to_csv(out_dir + "/semi_supervised/train+val.tsv", sep="\t", index=False)
+
+
 ##################################################################################
 ###                                 torch                                      ###
 ##################################################################################
