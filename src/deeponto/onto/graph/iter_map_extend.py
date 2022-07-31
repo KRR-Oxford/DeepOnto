@@ -79,6 +79,7 @@ class IterativeMappingExtension:
                     self.onto_mappings.flag,
                     self.onto_mappings.n_best,
                     self.onto_mappings.rel,
+                    self.onto_mappings.dup_strategy,
                     *new_mappings,
                 )
             )
