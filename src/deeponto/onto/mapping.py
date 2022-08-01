@@ -297,7 +297,10 @@ class OntoMappings(SavedObj):
         df = read_table(table_mappings_path)
         onto_mappings = cls(flag=flag, n_best=n_best, rel=rel, dup_strategy=dup_strategy)
         for _, dp in df.iterrows():
-            onto_mappings.add(EntityMapping(dp["SrcEntity"], dp["TgtEntity"], rel, dp["Score"]))
+            score = 0.0
+            if "Score" in df.columns:
+                score = dp["Score"]
+            onto_mappings.add(EntityMapping(dp["SrcEntity"], dp["TgtEntity"], rel, score))
         return onto_mappings
 
 
