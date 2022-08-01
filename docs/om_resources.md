@@ -103,7 +103,7 @@ There are two evaluation schemes (**local ranking** and **global matching**) and
   
   ```python
   import ast
-  ast.literal_eval(tgt_cands_seq)`
+  ast.literal_eval(tgt_cands_seq)
   ```
 
   <!-- tabs:end -->
@@ -119,15 +119,13 @@ There are two evaluation schemes (**local ranking** and **global matching**) and
 
   #### **OntoMappings**
 
-  Using [`OntoMappings`](data_structures?id=ontomappings) to load the mappings into a dictionary in form of:
-  
-  ```python
-  {'src_ent': 'tgt_ent': score}
-  ```
+  Using [`OntoMappings`](data_structures?id=ontomappings) to load the mappings:
 
   ```python
   from deeponto.onto.mapping import OntoMappings
-  OntoMappings.read_table_mappings("refs/full.tsv")
+  m = OntoMappings.read_table_mappings("refs/full.tsv")
+  # Storing the mappings in dict
+  m.map_dict
   ```
 
   #### **tsv**
@@ -136,7 +134,7 @@ There are two evaluation schemes (**local ranking** and **global matching**) and
 
   ```python
   from deeponto.utils import read_table
-  read_table("refs/full.tsv")
+  m = read_table("refs/full.tsv")
   ```
 
   <!-- tabs:end -->
