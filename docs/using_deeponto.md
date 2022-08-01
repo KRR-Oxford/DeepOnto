@@ -27,7 +27,7 @@ Please see the following sections for example usage.
 
 ## Ontology Matching
 
-There are two modes for OM: `global_match` and `pair_score`. `global_match` aims to compute mappings given two input ontologies and `pair_score` is for scoring provided class pairs. For both modes, the source and target input ontologies are required; for `pair_score`, an input file containing the unscored class pairs and a flag that indicates the direction of the class pairs (`src2tgt` or `tgt2src`) are further required.
+There are two modes for OM: `global_match` and `pair_score`. `global_match` aims to compute mappings given two input ontologies and `pair_score` is for scoring provided class pairs. For both modes, the source and target input ontologies are required; for `pair_score`, an input file containing the unscored class pairs and a flag that indicates the direction of the class pairs (`src2tgt` or `tgt2src`) are further required (see [below](using_deeponto?id=pair_scoring)).
 
 ?> `Precision`, `Recall`, and `F-score` are frequently used in evaluating `global_match`; whereas `Accuracy` can be used in evaluating any class pair input, ranking-based metrics like `Hits@K` and `MRR` are used in evaluating `pair_score` when the input class pairs are grouped as *1 positive + N negatives*. See our [resource paper](https://arxiv.org/abs/2205.03447) for detailed guidance of ontology matching evaluation.  
 
@@ -89,7 +89,9 @@ Then the script will do the followings:
 
 ### Pair Scoring
 
-In this mode, the OM model is expected to compute the matching scores for input class pairs. Compared to Global Matching, extra arguments for unscored mappings and its flag (`src2tgt` or `tgt2src`) are needed. The unscored mappings come from two types of`.tsv` files 
+In this mode, the OM model is expected to compute the matching scores for input class pairs. Compared to Global Matching, extra arguments for unscored mappings (in `.tsv') and its flag (`src2tgt` or `tgt2src`) are needed. The unscored mappings come from two types of`.tsv` files:
+
+- With two columns: "SrcEntity" and "TgtEntity", which are pairs of class IRIs from source and target ontologies, respectively.
 
 The unscored mappings are implemented using `OntoMappings` data structre and saved in a folder containing two files: `.pkl` for the serialized object and `.json` for human readable format. Such mappings can be generated using the script: `./data_scripts/om_rank_cands.py`, which generates negative candidates for each reference mapping for *local ranking* evaluation. Users can also transform a `.tsv` file with three columns: "SrcEntity", "TgtEntity", and "Score" to an `OntoMappings` (see [Datastructures](https://krr-oxford.github.io/DeepOnto/#/data_structures?id=mapping)) object using the following code:
 
