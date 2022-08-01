@@ -57,7 +57,7 @@ limitations under the License.
 ### Outputs
 BERTMap's outputs are stored in either `$exp_dir/bertmap/global_match` or `$exp_dir/bertmap/pair_score` depending on which mode is selected.  
 
-For `pair_score`, depending on the alignment flag (`src2tgt` or `tgt2src`) of the input unscored mappings (in `AnchoredOntoMappings` as this mode is usually for ranking candidates), the output scored mappings will be stored in `exp_dir/bertmap/pair_score/src2tgt` or `exp_dir/bertmap/pair_score/tgt2src`.
+For `pair_score`, depending on the alignment flag (`src2tgt` or `tgt2src`) of the input unscored mappings (in `.tsv`), the output scored mappings will be stored in `exp_dir/bertmap/pair_score/src2tgt` or `exp_dir/bertmap/pair_score/tgt2src`.
 
 For `global_match`: 
 - If both `match_src2tgt` and `match_tgt2src` are set to be `true` in config, then the mappings predicted from both directions will be generated in `exp_dir/bertmap/global_match/src2tgt` and `exp_dir/bertmap/global_match/tgt2src`, respectively. 
