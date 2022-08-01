@@ -33,7 +33,7 @@ from deeponto.utils import print_choices
 @click.option("-p", "--pred_path", type=click.Path(exists=True))  # for global_match
 @click.option("-r", "--ref_path", type=click.Path(exists=True))  # for global_match
 @click.option("-n", "--null_ref_path", type=click.Path(exists=True), default=None)  # for global_match
-@click.option("-a", "--anchored_pred_path", type=click.Path(exists=True), default=None)  # for local_rank
+@click.option("-a", "--ref_anchored_path", type=click.Path(exists=True), default=None)  # for local_rank
 @click.option("-t", "--threshold", type=float, default=0.0)
 @click.option("-k", "--hits_at", multiple=True, default=[1, 5, 10, 30, 100])  # for local_rank
 @click.option("-s", "--show_more_f_scores", type=bool, default=False)  # for global_match
@@ -41,8 +41,8 @@ def onto_match_eval(
     saved_path: str,
     pred_path: str,
     ref_path: str,
-    anchored_pred_path: Optional[str],
     null_ref_path: Optional[str],
+    ref_anchored_path: Optional[str],
     threshold: float,
     hits_at: List[int],
     show_more_f_scores: bool,
@@ -57,7 +57,7 @@ def onto_match_eval(
             pred_path, ref_path, null_ref_path, threshold, show_more_f_scores
         )
     elif mode == "local_rank":
-        results = local_rank_eval(anchored_pred_path, *hits_at)
+        results = local_rank_eval(pred_path, ref_anchored_path, *hits_at)
     else:
         raise ValueError(f"Unknown mode: {mode}, choices are: {eval_modes}.")
         
