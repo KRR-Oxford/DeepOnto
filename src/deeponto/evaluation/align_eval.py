@@ -113,12 +113,12 @@ def global_match_select(
     merged_null_ref_path = val_results_dir + "/null_refs.val.tsv"
     if not detect_path(merged_null_ref_path):
         train_ref = (
-            OntoMappings.read_table_mappings(train_ref_path).to_tuples() if null_ref_path else []
+            OntoMappings.read_table_mappings(train_ref_path).to_tuples() if train_ref_path else []
         )
         null_ref = (
             OntoMappings.read_table_mappings(null_ref_path).to_tuples() if null_ref_path else []
         )
-        test_ref = OntoMappings.read_table_mappings(test_ref_path).to_tuples()
+        test_ref = OntoMappings.read_table_mappings(test_ref_path).to_tuples() if test_ref_path else []
 
         null_ref = (
             null_ref + train_ref + test_ref
@@ -186,13 +186,16 @@ def local_rank_eval(pred_path: str, ref_anchored_maps_path: str, *ks: int):
 
     # load prediction mappings from the saved directory
     pred_maps = OntoMappings.from_saved(pred_path)
-    ref_anchored_maps = AnchoredOntoMappings.from_saved(ref_anchored_maps_path)
+    if ref_anchored_maps_path.endswith(".tsv"):
+        ref_anchored_maps = AnchoredOntoMappings.read_table_mappings(ref_anchored_maps_path)
+    else:
+        ref_anchored_maps = AnchoredOntoMappings.from_saved(ref_anchored_maps_path)
     ref_anchored_maps.fill_scored_maps(pred_maps)
     # print(ref_anchor_maps.anchor2cand)
 
     # load reference mappings and (opt) null mappings
     # ref = OntoMappings.read_tsv_mappings(ref_path, 0.0).to_tuples()
-    ref_pairs = list(ref_anchored_maps.anchor2cand.keys())
+    ref_pairs = list(ref_anchored_maps.anchor2cands.keys())
 
     results = dict()
     results["MRR"] = round(mean_reciprocal_rank(ref_anchored_maps, ref_pairs), 3)
