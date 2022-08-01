@@ -178,26 +178,26 @@ def global_match_select(
     SavedObj.save_json(best_results, val_results_dir + "/best_hyperparams.val.json")
 
 
-def local_rank_eval(scored_anchored_maps_path: str, *ks: int):
+def local_rank_eval(pred_path: str, ref_anchored_maps_path: str, *ks: int):
     """Eval on Hits@K, MRR (estimating OM performance) 
     """
 
     banner_msg("Eval using Hits@K, MRR")
 
     # load prediction mappings from the saved directory
-    # pred_maps = OntoMappings.from_saved(pred_path)
-    scored_anchored_maps = AnchoredOntoMappings.from_saved(scored_anchored_maps_path)
-    # ref_anchor_maps.fill_scored_maps(pred_maps)
+    pred_maps = OntoMappings.from_saved(pred_path)
+    ref_anchored_maps = AnchoredOntoMappings.from_saved(ref_anchored_maps_path)
+    ref_anchored_maps.fill_scored_maps(pred_maps)
     # print(ref_anchor_maps.anchor2cand)
 
     # load reference mappings and (opt) null mappings
     # ref = OntoMappings.read_tsv_mappings(ref_path, 0.0).to_tuples()
-    ref = list(scored_anchored_maps.anchor2cand.keys())
+    ref_pairs = list(ref_anchored_maps.anchor2cand.keys())
 
     results = dict()
-    results["MRR"] = round(mean_reciprocal_rank(scored_anchored_maps, ref), 3)
+    results["MRR"] = round(mean_reciprocal_rank(ref_anchored_maps, ref_pairs), 3)
     for k in ks:
-        results[f"Hits@{k}"] = round(hits_at_k(scored_anchored_maps, ref, k), 3)
+        results[f"Hits@{k}"] = round(hits_at_k(ref_anchored_maps, ref_pairs, k), 3)
     SavedObj.print_json(results)
 
     return results

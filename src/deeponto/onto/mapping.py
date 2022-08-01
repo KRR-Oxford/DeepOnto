@@ -373,6 +373,7 @@ class AnchoredOntoMappings(SavedObj):
         # update new candidate mappings
         for cand_map in new_cands:
             self.anchor2cands[anchor_map.to_tuple()][cand_map.tail] = cand_map.score
+            self.cand2anchors[cand_map.to_tuple()].append(anchor_map.tail)
 
         # address exisitng candidate mappings
         if existed_cands and not allow_existed:
@@ -394,7 +395,7 @@ class AnchoredOntoMappings(SavedObj):
                 new_score = old_score
             print(f"\t ==> update score to {new_score}")
             self.anchor2cands[anchor_map.to_tuple()][cand_map.tail] = new_score
-        self.cand2anchors[cand_map.to_tuple()].append(anchor_map.tail)
+            self.cand2anchors[cand_map.to_tuple()].append(anchor_map.tail)
         # rank according to mapping scores and preserve n_best (if specified)
         self.anchor2cands[anchor_map.to_tuple()] = sort_dict_by_values(
             self.anchor2cands[anchor_map.to_tuple()], top_k=self.n_best

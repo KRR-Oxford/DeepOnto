@@ -22,7 +22,8 @@ sys.path.append(main_dir)
 import click
 
 from deeponto import SavedObj
-from deeponto.utils import print_choices, set_seed
+from deeponto.onto.mapping import OntoMappings, AnchoredOntoMappings
+from deeponto.utils import print_choices, set_seed, read_table
 from deeponto.utils.logging import banner_msg
 from deeponto.models.align import (
     OntoAlignPipeline,
@@ -39,18 +40,18 @@ from deeponto.config import InputConfig
 @click.option("-s", "--src_onto_path", type=click.Path(exists=True), default=None)
 @click.option("-t", "--tgt_onto_path", type=click.Path(exists=True), default=None)
 @click.option("-c", "--config_path", type=click.Path(exists=True), default=None)
-@click.option("-m", "--to_be_scored_anchored_maps_path", type=click.Path(exists=True), default=None)
-@click.option("-f", "--to_be_scored_flag", type=str, default=None)
+@click.option("-m", "--to_be_scored_mappings_path", type=click.Path(exists=True), default=None)
+@click.option("-f", "--to_be_scored_mappings_flag", type=str, default=None)
 def onto_match(
     saved_path: str,
     config_path: str,
     src_onto_path: str,
     tgt_onto_path: str,
-    to_be_scored_anchored_maps_path: str,
-    to_be_scored_flag: str,
+    to_be_scored_mappings_path: str,
+    to_be_scored_mappings_flag: str,
 ):
     set_seed(42)
-    
+
     banner_msg("Choose a Supported OM Mode")
     print_choices(supported_modes)
     mode = supported_modes[click.prompt("Enter a number", type=int)]
@@ -78,14 +79,27 @@ def onto_match(
         model_name, saved_path, config_path, src_onto_path, tgt_onto_path
     )
 
-    # load the to-be-confirmed mappings during pair-score mode
     if mode == "pair_score":
-        assert to_be_scored_anchored_maps_path != None
-        tbc_anchored_maps = SavedObj.from_saved(to_be_scored_anchored_maps_path)
-        tbc_onto_maps = tbc_anchored_maps.unscored_cand_maps()
-        align_pipeline.run(mode, tbc_onto_maps, to_be_scored_flag, num_procs=num_procs)
+        # load the to-be-confirmed mappings during pair-score mode
+        assert to_be_scored_mappings_path != None
+        assert to_be_scored_mappings_path.endswith(".tsv") or to_be_scored_mappings_path.endswith(
+            ".csv"
+        )
+        assert to_be_scored_mappings_flag in ["src2tgt", "tgt2src"]
+        temp_read = read_table(to_be_scored_mappings_path)
+        with_anchors = "TgtCandidates" in temp_read.columns
+        if not with_anchors:
+            print("Loading to-be-scored mappings from table data ...")
+            tbc_onto_maps = OntoMappings.read_table_mappings(
+                table_mappings_path=to_be_scored_mappings_path, flag=to_be_scored_mappings_flag
+            )
+        else:
+            print("Loading to-be-scored mappings from table data with anchors ...")
+            tbc_onto_maps = AnchoredOntoMappings.read_table_mappings(
+                table_mappings_path=to_be_scored_mappings_path, flag=to_be_scored_mappings_flag
+            ).unscored_cand_maps()
+        align_pipeline.run(mode, tbc_onto_maps, to_be_scored_mappings_flag, num_procs=num_procs)
     else:
-        pass
         align_pipeline.run(mode, num_procs=num_procs)
 
 
