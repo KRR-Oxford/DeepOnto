@@ -23,7 +23,7 @@ limitations under the License.
 
 Please see the following sections for example usage.
 
-!> Contents regarding `pair_score` mode of OM and `om_cands.py` are not fully ready.
+<!-- !> Contents regarding `pair_score` mode of OM and `om_cands.py` are not fully ready. -->
 
 ## Ontology Matching
 
@@ -165,10 +165,10 @@ Example usage of `om_eval.py` for global matching evaluation:
 
 ```bash
 python om_eval.py \
---saved_path ./om_results \  
---pred_path ./om_exp/bertmap/global_match \ 
---ref_path ./data/test.tsv \
---null_ref_path ./data/train+val.tsv \
+--saved_path "./om_results" \  
+--pred_path "./om_exp/bertmap/global_match" \ 
+--ref_path "./data/test.tsv" \
+--null_ref_path "./data/train+val.tsv" \
 --threshold 0.9995 \  
 --show_more_f_scores False
 ```
@@ -336,4 +336,33 @@ To come up with a meaningful evaluation over the input class pairs in `pair_scor
 
 Specifically, for each reference mapping $(c, c')$, we can fix the source side and sample negative candidates from the target side ontology, which can then be combined with the $c$ to form negative candidate mappings. As such, each reference mapping can be seen as an `AnchorMapping` that has $N$ `EntityMapping` as candidates (see explanation of mapping data structures [here](data_structures?id=mapping)).
 
-Parameters of `om_cands.py` for generating target negative candidates
+Parameters of `om_cands.py` for generating target negative candidates:
+
+- **saved_path**(*str*): the path to the output directory.
+- **src_onto_path**(*str*): the path to the source ontology file.
+- **tgt_onto_path**(*str*): the path to the target ontology file.
+- **ref_mappings_path**(*str*): the path to the reference mapping file in `.tsv`.
+- **null_ref_mappings_path**(*str*): the path to the null reference mapping file in `.tsv`. Such mappings should be ignored during the genration of candidates.
+- **tokenizer_path**(*str*): the library path to the pre-trained (*hugginface*) tokenizer, default is `"emilyalsentzer/Bio_ClinicalBERT"`.
+- **idf_sample_num**(*int*): the *desired* number of cadidates generated using IDFSample algorithm (see [paper](https://arxiv.org/abs/2205.03447)), default is `50`.
+- **neighbour_sample_num**(*int*): the *desired* number of candidates generated using NeighbourSample algorithm (see [paper](https://arxiv.org/abs/2205.03447)), default is `50`.
+
+- **max_hops**(*int*): the maximum number of hops for NeighbourSample search, default is `6`.
+
+- **random_sample_num**(*int*): the number of candidates generated using RandomSample, which is also used to amend the number when IDFSample or NeighbourSample cannot generate the *desired* numbers (see [paper](https://arxiv.org/abs/2205.03447)); default is `0`.
+
+Example usage of `om_cands.py` for generating negative candidate mappings from test mappings.
+
+```python
+python om_cands.py \
+--saved_path "./cand_maps" \
+--src_onto_path "./data/src_onto.owl" \
+--tgt_onto_path "./data/tgt_onto.owl" \
+--ref_mappings_path "./data/test.tsv" \
+--null_ref_mappings_path "./data/train+val.tsv" \
+--tokenizer_path "emilyalsentzer/Bio_ClinicalBERT" \
+--idf_sample_num 50 \
+--neighbour_sample_num 50 \
+--max_hops 6 \
+--random_sample_num 0
+```
