@@ -43,7 +43,7 @@ Parameters for `onto_match.py` in `global_match` mode:
 - **saved_path**(*str*): the path to the main output directory.
 - **src_onto**(*str*): the path to the source ontology file.
 - **tgt_onto**(*str*): the path to the target ontology file.
-- **config_path**(*str*): the path to the configuration file, default minimal configurations for each OM model is available at `./cofig`.
+- **config_path**(*str*): the path to the configuration file, default minimal configurations for each OM model is available at `deeponto_repo/cofig`.
 
 Example usage of `onto_match.py` for global matching:
 
@@ -89,43 +89,36 @@ Then the script will do the followings:
 
 ### Pair Scoring
 
-In this mode, the OM model is expected to compute the matching scores for input class pairs. Compared to Global Matching, extra arguments for unscored mappings (in `.tsv') and its flag (`src2tgt` or `tgt2src`) are needed. The unscored mappings come from two types of`.tsv` files:
+In this mode, the OM model is expected to compute the matching scores for input class pairs. Compared to Global Matching, extra arguments for unscored mappings (in `.tsv`) and its flag (`src2tgt` or `tgt2src`) are needed. The unscored mappings come from two types of `.tsv` files:
 
-- With two columns: "SrcEntity" and "TgtEntity", which are pairs of class IRIs from source and target ontologies, respectively.
+- With two columns: `"SrcEntity"` and `"TgtEntity"`, which are pairs of class IRIs from source and target ontologies, respectively.
+- With three columns: `"SrcEntity"`, `"TgtEntity"`, and `"TgtCandidates"`, which are pairs of source-target class IRIs and candidates generated from target ontologies. Please refer to [*local ranking*](om_resources?id=evaluation_framework) evaluation for details.
 
-The unscored mappings are implemented using `OntoMappings` data structre and saved in a folder containing two files: `.pkl` for the serialized object and `.json` for human readable format. Such mappings can be generated using the script: `./data_scripts/om_rank_cands.py`, which generates negative candidates for each reference mapping for *local ranking* evaluation. Users can also transform a `.tsv` file with three columns: "SrcEntity", "TgtEntity", and "Score" to an `OntoMappings` (see [Datastructures](https://krr-oxford.github.io/DeepOnto/#/data_structures?id=mapping)) object using the following code:
+Parameters for `onto_match.py` in `pair_score` mode:
 
-```python
-# Fix import error if not download deeponto from PyPI
-import os
-import sys
-
-main_dir = os.getcwd().split("DeepOnto")[0] + "DeepOnto/src"
-sys.path.append(main_dir)
-
-# load OntoMappings data structure
-from deeponto.onto.mapping import OntoMappings
-
-# note that for unscored mappings please set all values in "Score" column as 0.0
-onto_maps = OntoMappings.read_tsv_mappings("path_to_tsv_file", flag="src2tgt")
-onto_maps.save_instance("./unscored_maps")
-```
+- **saved_path**(*str*): the path to the main output directory.
+- **src_onto**(*str*): the path to the source ontology file.
+- **tgt_onto**(*str*): the path to the target ontology file.
+- **config_path**(*str*): the path to the configuration file, default minimal configurations for each OM model is available at `deeponto_repo/cofig`.
+- **--to_be_scored_mappings_path**(*str*): the path to the to-be-scored mappings in `.tsv` as described above.
+- **--from_be_scored_mappings_flag**(*str*): the flag that indicates the direction of the to-be-scored class pairs (`src2tgt` or `tgt2src`).
 
 Example usage of `onto_match.py` for pair scoring:
 
-**Step 1**: Run the script with specified output directory, source and target ontologies, configuration file (if not provided, default minimal configurations are used), path to the unscored mappings (saved using `OntoMappings` data structure), and the flag of the unscored mappings (`src2tgt` (resp. `tgt2src`) if the input mappings are organized as `(src_class, tgt_class)` pairs (resp. `(tgt_class, src_class)` pairs)).
+**Step 1**: Run the script with above arguments specified:
 
 ```bash
+# scoring class pairs DOID and ORDO with minimal configurations
 python onto_match.py \
---saved_path ./onto_match_experiment \  
---src_onto_path ./data/src_onto.owl \
---tgt_onto_path ./data/tgt_onto.owl \
---config_path ./config/bertmap.json \
---to_be_scored_maps_path ./unscored_maps \
---to_be_scored_flag src2tgt
+--saved_path "./experiment/doid2ordo" \  
+--src_onto "./data/doid.owl" \
+--tgt_onto "./data/ordo.owl" \
+--config_path "./config/bertmap.json"
+--to_be_scored_maps_path "./data/doid2ordo_unscored.tsv" \
+--to_be_scored_flag "src2tgt"
 ```
 
-**Step 2**: Choose `global_match` and any implemented OM model.
+**Step 2**: Choose `pair_score` and an implemented OM model.
 
 ```bash
 ######################################################################
@@ -149,26 +142,34 @@ Enter a number: 0
 Then the script will do the followings:
 - Load and parse the input ontologies;
 - Train the scoring function with constructed data if the selected model is learning-based;
-- Compute the scores for the input mappings and save the results in `./${exp_dir}/${model_name}/pair_score/${flag}` using `OntoMappings.save_instance()` (see explanation of `OntoMappings` [here](https://krr-oxford.github.io/DeepOnto/#/data_structures?id=mapping)).
-
+- Compute the scores for the input mappings and save the results in `./${exp_dir}/${model_name}/pair_score/${flag}`. 
 
 ### OM Evaluation
 
-We provide an OM evaluation script for global matching (to compute `Precision`, `Recall`, and `F-score` on full alignment) and local ranking (to compute `Hits@K` and `MRR` on selected candidates).
+We provide an OM evaluation script for global matching (to compute `Precision`, `Recall`, and `F-score` on output mappings against reference mappings) and local ranking (to compute `Hits@K` and `MRR` on reference mappings against selected negative candidates).
+
+Parameters for `om_eval.py` in `global_match` mode:
+
+- **saved_path**(*str*): the path to the main output directory.
+- **pred_path**(*str*): the path to the prediction mappings saved using [`OntoMappings`](data_structures?id=onto_mapping).
+- **ref_path**(*str*): the path to the reference mappings saved in `.tsv`.
+- **null_ref_path**(*str*): the path to the reference mappings (in `.tsv`) that should be ignored in calculating Precision, Recall, and F-score, e.g., training and validation mappings when evaluating on the testing mappings.
+- **--threshold**(*float*): mappings with scores $\leq$ the threshold $\lambda \in [0, 1]$ are considered in the evaluation.
+- **--show_more_f_scores**(*str*): whether or not to display more variants of F-score besides F1.
 
 
 Example usage of `om_eval.py` for global matching evaluation:
 
-**Step 1**: For global matching evaluation, run the script with specified output directory, the path to prediction mappings (saved as `OntoMappings` consisting of a `.pkl` file for loading and a `.json` or `.tsv` file for reading), the path the reference mappings (saved as `.tsv` with columns "SrcEntity", "TgtEntity", and "Score"), the path to the null reference mappings (`.tsv`) which are reference mappings to be ignored in evaluation (e.g., training and validation mappings when evaluating on the testing mappings), the mapping threshold (leave it blank if the final outputs are determined), the choice of displaying more F-scores (e.g., $F_2$ and $F_{0.5}$).
+**Step 1**: Run the script with above arguments specified.
 
 
 ```bash
 python om_eval.py \
 --saved_path ./om_results \  
---pred_path ./om_models/results/pred_maps \ 
---ref_path ./data/test_maps.tsv \
---null_ref_path ./data/train+val_maps.tsv \
---threshold 0.0 \  
+--pred_path ./om_exp/bertmap/global_match \ 
+--ref_path ./data/test.tsv \
+--null_ref_path ./data/train+val.tsv \
+--threshold 0.9995 \  
 --show_more_f_scores False
 ```
 
@@ -193,21 +194,24 @@ Enter a number: 0
 }
 ```
 
+Parameters for `om_eval.py` in `local_rank` mode:
+
+- **saved_path**(*str*): the path to the main output directory.
+- **pred_path**(*str*): the path to the prediction mappings saved using [`OntoMappings`](data_structures?id=onto_mapping).
+- **ref_anchored_path**(*str*): the path to the file of reference mappings and their corresponding candidate mappings saved in `.tsv`.
+- **--hits_at**(*Tuple[int]*): the numbers of hits considered in computing Hits@K, default is `[1, 5, 10, 30, 100]`.
+
 Example usage of `om_eval.py` for local ranking evaluation:
 
 
-**Step 1**: For local ranking evaluation, run the script with specified output directory, the path to prediction mappings (saved as `OntoMappings` consisting of a `.pkl` file for loading and a `.json` file for reading), the path the anchored reference mappings (saved as `AnchoredOntoMappings` consisting of a `.pkl` file for loading and a `.json` file for reading), and the number of hits concerned. 
-
-The prediction mappings consist of all scored entity pairs from an OM model implemented in DeepOnto whereas the anchored reference mappings consist of unscored candidate mappings associated with each reference pair (can be generated by `om_rank_cands.py`). Essentially, the prediction mappings are filled back to the anchored reference mappings before calculating the ranking-based metrics.
-
-> See `OntoMappings` and `AnchoredOntoMappings` [here](https://krr-oxford.github.io/DeepOnto/#/data_structures?id=mapping) for details.
+**Step 1**: Run the script with above arguments specified.
 
 
 ```bash
 python om_eval.py \
 --saved_path ./om_results \  
---pred_path ./om_models/results/scored_maps \ 
---ref_anchor_path ./data/scored_anchored_maps \
+--pred_path ./om_exp/bertmap/pair_score/src2tgt \ 
+--ref_anchored_path ./data/test.cands.tsv \
 --hits_at 1 5 10 30 100
 ```
 
