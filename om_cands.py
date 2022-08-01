@@ -25,7 +25,7 @@ import click
 )
 @click.option("-in", "--idf_sample_num", type=int, default=50)
 @click.option("-gn", "--neighbour_sample_num", type=int, default=50)
-@click.option("-mh", "--max_hobs", type=int, default=6)
+@click.option("-mh", "--max_hops", type=int, default=6)
 @click.option("-rn", "--random_sample_num", type=int, default=0)
 def main(
     saved_path: str,
@@ -36,7 +36,7 @@ def main(
     tokenizer_path: str,
     idf_sample_num: int,
     neighbour_sample_num: int,
-    max_hobs: int,
+    max_hops: int,
     random_sample_num: int,
 ):
     set_seed(42)
@@ -64,7 +64,7 @@ def main(
         null_ref_mappings_path,
         rel="=",
         tokenizer=tokenizer,
-        max_hops=max_hobs,
+        max_hops=max_hops,
         avoid_ancestors=avoid_ancestors,
         avoid_descendents=avoid_descendents,
     )
