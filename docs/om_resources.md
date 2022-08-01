@@ -82,8 +82,8 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
 
 There are two evaluation schemes (**local ranking** and **global matching**) and two data split settings (**unsupervised** and **(semi-)supervised**).
 
-- For local ranking, an OM model is required to rank candidates stored in `src2tgt.rank` and evalute using `Hits@K` and `MRR`. 
-  -  **Data Loading**: `src2tgt` here means the *anchors/keys* are the source ontology classes, and the *candidates/values* are generated from the target ontology. There are three options for loading the anchored candidate mapping:
+- For local ranking, an OM model is required to rank candidate mappings (in `test.cands.tsv`) generated from test mappings and evalute using `Hits@K` and `MRR`. 
+  -  **Data Loading**: There are two options for loading the anchored candidate mapping:
 
   <!-- tabs:start -->
 
@@ -93,27 +93,13 @@ There are two evaluation schemes (**local ranking** and **global matching**) and
 
   ```python
   from deeponto.onto.mapping import AnchoredOntoMappings
-  AnchoredOntoMappings.from_saved("src2tgt.rank")
+  AnchoredOntoMappings.read_table_mappings("test.cands.tsv")
   ```
   ?> [`AnchoredOntoMappings`](data_structures?id=anchoredontomappings) is essentially a dictionary with each reference mapping (in the form of class tuple) as a key (anchor) and its corresponding candidates (100 negative + 1 positive classes from the target ontology).
 
-  #### **json**
-
-  Load the `.json` file in `src2tgt.rank`, a nested dictionary in form of:
-
-  ```python
-  {"('ref_src', 'ref_tgt')": 'tgt_cand': 0.0}
-  ``` 
-  where `(ref_src, ref_tgt)` is a reference class pair (anchor), `tgt_cand` is a target candidate w.r.t. this anchor, `0.0` is the default score for the candidate mapping `(ref_src, tgt_cand)`.
-
-  ```python
-  from deeponto import SavedObj
-  SavedObj.load_json("src2tgt.rank/src2tgt.anchored.maps.json")
-  ```
-
   #### **tsv**
 
-  Load the `.tsv` file in `src2tgt.rank`, where the columns are `"SrcEntity"`, `"TgtEntity"`, and `"TgtCandidates"` standing for the source class iri of a reference mapping, the target class iri of this reference mapping, and the corresponding target candidate class iris in a sequence, which can be decoded using:
+  Load the `test.cands.tsv` directly, where the columns are `"SrcEntity"`, `"TgtEntity"`, and `"TgtCandidates"` standing for the source class iri of a test mapping, the target class iri of this test mapping, and the corresponding target candidate class iris in a sequence, which can be decoded using:
   
   ```python
   import ast
@@ -123,8 +109,8 @@ There are two evaluation schemes (**local ranking** and **global matching**) and
   <!-- tabs:end -->
 
   - **Data Split**: the candidate mappings were separately generated w.r.t. the tesing data (`test.tsv`) in each data split.
-    - *Unsupervised*: `src2tgt` in `refs/unsupervised` refers to candidate mappings generated from `refs/unsupervised/test.tsv` and `refs/unsupervised/val.tsv` is ensured to be excluded from candidates.
-    - *Semi-supervised*: `src2tgt` in `refs/semi_supervised` referes to candidate mappings generated from `refs/semi_supervised/test.tsv` and `refs/semi_supervised/train+val.tsv` is ensured to be excluded from candidates.
+    - *Unsupervised*: `test.cands.tsv` in `refs/unsupervised` refers to candidate mappings generated from `refs/unsupervised/test.tsv` and `refs/unsupervised/val.tsv` is ensured to be excluded from candidates.
+    - *Semi-supervised*: `test.cands.tsv` in `refs/semi_supervised` referes to candidate mappings generated from `refs/semi_supervised/test.tsv` and `refs/semi_supervised/train+val.tsv` is ensured to be excluded from candidates.
 
 - For global matching, an OM model is required to output full mappings and compare them with the reference mappings using `Precision`, `Recall`, and `F1`.
   - **Data Loading**: For each OM pair, a `refs/full.tsv` file is provided for full reference mapping; the columns of this `.tsv` file are `["SrcEntity", "TgtEntity", "Score"]` standing for the source reference class iri, target class iri, and the score (set to $1.0$ for reference mappings). 
