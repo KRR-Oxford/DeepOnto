@@ -346,9 +346,7 @@ Parameters of `om_cands.py` for generating target negative candidates:
 - **tokenizer_path**(*str*): the library path to the pre-trained (*hugginface*) tokenizer, default is `"emilyalsentzer/Bio_ClinicalBERT"`.
 - **idf_sample_num**(*int*): the *desired* number of cadidates generated using IDFSample algorithm (see [paper](https://arxiv.org/abs/2205.03447)), default is `50`.
 - **neighbour_sample_num**(*int*): the *desired* number of candidates generated using NeighbourSample algorithm (see [paper](https://arxiv.org/abs/2205.03447)), default is `50`.
-
 - **max_hops**(*int*): the maximum number of hops for NeighbourSample search, default is `6`.
-
 - **random_sample_num**(*int*): the number of candidates generated using RandomSample, which is also used to amend the number when IDFSample or NeighbourSample cannot generate the *desired* numbers (see [paper](https://arxiv.org/abs/2205.03447)); default is `0`.
 
 Example usage of `om_cands.py` for generating negative candidate mappings from test mappings.
