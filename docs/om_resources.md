@@ -20,7 +20,7 @@ limitations under the License.
 
 The **Bio-ML** dataset provides five ontology pairs for both equivalence and subsumption ontology matching.
 
-- **Download link**: *https://doi.org/10.5281/zenodo.6510086 (CC BY 4.0 International)*.
+- **Download link**: *https://doi.org/10.5281/zenodo.6510086* (CC BY 4.0 International).
 - **Resource Paper**: *https://arxiv.org/abs/2205.03447*.
 - **OAEI Track**: *https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/*. 
 
