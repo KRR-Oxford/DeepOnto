@@ -75,7 +75,7 @@ pip install -r requirements.txt
 ## Ontology Matchng Resources
 
 **Bio-ML** for equivalence and subsumption ontology matching:
--  Download link: *https://doi.org/10.5281/zenodo.6510086*;
+-  Download link: *https://doi.org/10.5281/zenodo.6510086* (CC BY 4.0 International);
 -  Instructions: *https://krr-oxford.github.io/DeepOnto/#/om_resources*;
 -  OAEI track: *https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/*.
 
