@@ -209,9 +209,9 @@ Example usage of `om_eval.py` for local ranking evaluation:
 
 ```bash
 python om_eval.py \
---saved_path ./om_results \  
---pred_path ./om_exp/bertmap/pair_score/src2tgt \ 
---ref_anchored_path ./data/test.cands.tsv \
+--saved_path "./om_results" \  
+--pred_path "./om_exp/bertmap/pair_score/src2tgt" \ 
+--ref_anchored_path "./data/test.cands.tsv" \
 --hits_at 1 5 10 30 100
 ```
 
@@ -262,11 +262,11 @@ Example usage of `onto_prune.py` for ontology pruning:
 
 **Step 1**: Run the script with the above arguments specified.
 
-```python
+```bash
 python onto_prune.py \
---saved_path ./pruned_onto \  
---src_onto_path ./data/src_onto.owl
---preserved_iris_path ./preserved_class_iris.txt
+--saved_path "./pruned_onto" \  
+--src_onto_path "./data/src_onto.owl"
+--preserved_iris_path "./preserved_class_iris.txt"
 
 ```
 
@@ -290,10 +290,10 @@ Example usage of `om_subs.py` script for inter-ontology subsumption mapping cons
 
 ```bash
 python om_subs.py \
---saved_path ./subs_maps/ \  
---src_onto_path ./data/src_onto.owl \
---tgt_onto_path ./data/tgt_onto.owl \
---equiv_maps_path ./data/src2tgt_equiv_maps.tsv \ 
+--saved_path "./subs_maps/" \  
+--src_onto_path "./data/src_onto.owl" \
+--tgt_onto_path "./data/tgt_onto.owl" \
+--equiv_maps_path "./data/src2tgt_equiv_maps.tsv" \ 
 --max_subs_ratio 1 \ 
 --is_delete_equiv_tgt True \
 --max_hop 1
@@ -351,7 +351,7 @@ Parameters of `om_cands.py` for generating target negative candidates:
 
 Example usage of `om_cands.py` for generating negative candidate mappings from test mappings.
 
-```python
+```bash
 python om_cands.py \
 --saved_path "./cand_maps" \
 --src_onto_path "./data/src_onto.owl" \
