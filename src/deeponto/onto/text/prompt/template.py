@@ -30,7 +30,6 @@ if TYPE_CHECKING:
     from owlready2.class_construct import Restriction
 
 from deeponto.onto.graph.graph_utils import *
-from pyats.datastructures import AttrDict
 import itertools
 
 
@@ -52,9 +51,9 @@ class OntoTemplate:
         self._equiv_pattern = OntoPattern(lambda et1, et2: f"{et1} is the same as {et2}")
 
         # memorize used patterns
-        self.patterns = AttrDict({"gci": [], "equiv": []})
-        self.patterns.gci.append(self._gci_pattern)
-        self.patterns.equiv.append(self._equiv_pattern)
+        self.patterns = {"gci": [], "equiv": []}
+        self.patterns["gci"].append(self._gci_pattern)
+        self.patterns["equiv"].append(self._equiv_pattern)
 
     @property
     def gci_pattern(self):
@@ -128,7 +127,7 @@ class OntoTemplate:
         self.gci_pattern = gci_pattern
         self.equiv_pattern = equiv_pattern
         # contexts are defined as below
-        contexts = AttrDict({"ent": [], "parent": [], "child": [], "branch": []})
+        contexts = {"ent": [], "parent": [], "child": [], "branch": []}
         # texts for the entity class
         ent_texts = self.parse_onto_class(ent)
         for et1, et2 in itertools.product(ent_texts, ent_texts):

@@ -52,7 +52,7 @@ class SavedObj:
             json.dump(json_obj, f, indent=4, separators=(",", ": "), sort_keys=sort_keys)
 
     @staticmethod
-    def load_json(saved_path: str):
+    def load_json(saved_path: str) -> dict:
         with open(saved_path, "r") as f:
             json_obj = json.load(f)
         return json_obj

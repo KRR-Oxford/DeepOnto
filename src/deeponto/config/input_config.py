@@ -14,7 +14,6 @@
 """Class for input configurations"""
 
 import click
-from pyats.datastructures import NestedAttrDict
 
 from deeponto import SavedObj
 from deeponto.utils.logging import banner_msg
@@ -28,7 +27,7 @@ class InputConfig(SavedObj):
     def new_config(cls):
         """Set up new config template from command lines
         """
-        config = NestedAttrDict()
+        config = dict()
         finished = False
         banner_msg(f"New {type(cls).__name__} Template")
         while not finished:
@@ -37,7 +36,7 @@ class InputConfig(SavedObj):
         cls.preview_and_save(config)
 
     @staticmethod
-    def add_param_group(param_dict: NestedAttrDict):
+    def add_param_group(param_dict: dict):
         """Construct param group with maximum two levels
         """
         top_param = click.prompt("Please enter a valid (identifier) parameter name", type=str)
@@ -46,7 +45,7 @@ class InputConfig(SavedObj):
         if not nested:
             param_dict[top_param] = click.prompt(f'Please enter the value for "{top_param}"')
         else:
-            param_dict[top_param] = NestedAttrDict()
+            param_dict[top_param] = dict()
         # 2-levels {param: {sub_param: value}}
         while nested:
             sub_param = click.prompt("Please enter a valid (identifier) parameter name", type=str)
@@ -69,13 +68,13 @@ class InputConfig(SavedObj):
     def load_config(cls, config_json_path):
         """Load saved config
         """
-        return NestedAttrDict(cls.load_json(config_json_path))
+        return dict(cls.load_json(config_json_path))
 
     @classmethod
     def edit_config(cls, config_json_path):
         """Edit existing config through command lines
         """
-        config = NestedAttrDict(cls.load_json(config_json_path))
+        config = cls.load_json(config_json_path)
         banner_msg(f"Choose Config Params to Edit")
         top_params = list(config.keys())
         finished = False
@@ -85,7 +84,7 @@ class InputConfig(SavedObj):
                 print(f'[{i}]: "{name}"')
             selected = top_params[click.prompt("Please choose a number", type=int)]
             top_val = config[selected]
-            if isinstance(top_val, NestedAttrDict):
+            if isinstance(top_val, dict):
                 sub_params = list(top_val.keys())
                 for i in range(len(sub_params)):
                     name = sub_params[i]

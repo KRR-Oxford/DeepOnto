@@ -21,7 +21,6 @@
 from itertools import chain
 from typing import List, Tuple, Optional, Iterable
 from multiprocessing_on_dill import Process, Manager
-from pyats.datastructures import AttrDict
 import numpy as np
 import os
 
@@ -330,18 +329,18 @@ class OntoAlign(FlaggedObj):
         """
         lab_products, product_lens = self.lab_products_for_ent(src_ent_iri, tgt_cands)
         batches = []
-        cur_batch = AttrDict({"labs": [], "lens": []})
+        cur_batch = {"labs": [], "lens": []}
         cur_lab_pointer = 0
         for i in range(len(product_lens)):  # which is the size of candidate pool
             cur_length = product_lens[i]
             cur_labs = lab_products[cur_lab_pointer : cur_lab_pointer + cur_length]
-            cur_batch.labs += cur_labs
-            cur_batch.lens.append(cur_length)
+            cur_batch["labs"] += cur_labs
+            cur_batch["lens"].append(cur_length)
             # collect when the batch is full or for the last set of label pairs
-            if sum(cur_batch.lens) > batch_size or i == len(product_lens) - 1:
+            if sum(cur_batch["lens"]) > batch_size or i == len(product_lens) - 1:
                 # deep copy is necessary for dictionary data
                 batches.append(cur_batch)
-                cur_batch = AttrDict({"labs": [], "lens": []})
+                cur_batch = {"labs": [], "lens": []}
             cur_lab_pointer += cur_length
         # small check for the algorithm
         assert lab_products == list(chain.from_iterable([b.labs for b in batches]))

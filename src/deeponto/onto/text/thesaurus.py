@@ -37,7 +37,6 @@ import networkx as nx
 import itertools
 import random
 from typing import List, Set, Tuple, Optional, TYPE_CHECKING
-from pyats.datastructures import AttrDict
 
 from deeponto import SavedObj
 from deeponto.utils import uniqify
@@ -67,27 +66,23 @@ class Thesaurus(SavedObj):
         print(self)
 
     def __str__(self) -> str:
-        self.info = AttrDict(
-            {
-                "onto_names": [section.onto_name for section in self.sections],
-                "section_sizes": [section.num_synonym_groups for section in self.sections],
-            }
-        )
-        self.info.total_size = sum(self.info.section_sizes)
+        self.info = {
+            "onto_names": [section["onto_name"] for section in self.sections],
+            "section_sizes": [section["num_synonym_groups"] for section in self.sections],
+        }
+        self.info["total_size"] = sum(self.info["section_sizes"])
         if self.merged_section:
-            self.info.merged_total_size = self.merged_section.num_synonym_groups
-            self.info.reduced = self.info.total_size - self.info.merged_total_size
+            self.info["merged_total_size"] = self.merged_section["num_synonym_groups"]
+            self.info["reduced"] = self.info["total_size"] - self.info["merged_total_size"]
         return super().report(**self.info)
 
     def create_merged_section(self):
-        all_synonym_groups = [section.synonym_groups for section in self.sections]
+        all_synonym_groups = [section["synonym_groups"] for section in self.sections]
         merged_synonym_groups = self.merge_synonyms_by_transitivity(*all_synonym_groups)
-        self.merged_section = AttrDict(
-            {
-                "num_synonym_groups": len(merged_synonym_groups),
-                "synonym_groups": merged_synonym_groups,
-            }
-        )
+        self.merged_section = {
+            "num_synonym_groups": len(merged_synonym_groups),
+            "synonym_groups": merged_synonym_groups,
+        }
 
     ##################################################################################
     ###                   extract synonyms from an ontology                        ###
@@ -101,18 +96,16 @@ class Thesaurus(SavedObj):
             synonym_groups = [set(v) for v in onto.iri2labs.values()]
             if self.apply_transitivity:
                 synonym_groups = self.merge_synonyms_by_transitivity(synonym_groups)
-            new_section = AttrDict(
-                {
-                    "onto_name": "[intra-onto]: " + onto.owl.name,
-                    "onto_info": str(onto),
-                    "num_synonym_groups": len(synonym_groups),
-                    "synonym_groups": synonym_groups,
-                }
-            )
+            new_section = {
+                "onto_name": "[intra-onto]: " + onto.owl.name,
+                "onto_info": str(onto),
+                "num_synonym_groups": len(synonym_groups),
+                "synonym_groups": synonym_groups,
+            }
             self.sections.append(new_section)
             banner_msg("Updating Thesaurus (from Ontos)")
-            print(f"Add {new_section.num_synonym_groups} synonym groups from the following ontology:\n")
-            print(f"{new_section.onto_info}")
+            print(f"Add {len(synonym_groups)} synonym groups from the following ontology:\n")
+            print(f"{str(onto)}")
         self.create_merged_section()
         return synonym_groups
 
@@ -139,20 +132,18 @@ class Thesaurus(SavedObj):
             )  # form a synonym group without distinguishing ontology source
         if self.apply_transitivity:
             synonym_groups = self.merge_synonyms_by_transitivity(synonym_groups)
-        new_section = AttrDict(
-            {
+        new_section = {
                 "onto_name": f"[cross-onto]: ({src_onto.owl.name}, {tgt_onto.owl.name})",
                 "onto_info": f"{src_onto}\n{tgt_onto}",
                 "num_synonym_groups": len(synonym_groups),
                 "synonym_groups": synonym_groups,
             }
-        )
         self.sections.append(new_section)
         banner_msg("Updating Thesaurus (from Mappings)")
         print(
-            f"Add {new_section.num_synonym_groups} synonym groups from the mappings of following ontologies:\n"
+            f"Add {len(synonym_groups)} synonym groups from the mappings of following ontologies:\n"
         )
-        print(f"{new_section.onto_info}")
+        print(f"{src_onto}\n{tgt_onto}")
         self.create_merged_section()
         return synonym_group_pairs
 
@@ -203,7 +194,9 @@ class Thesaurus(SavedObj):
             pos_sample_pool += synonym_pairs
         pos_sample_pool = uniqify(pos_sample_pool)
         if (not pos_num) or (pos_num >= len(pos_sample_pool)):
-            print("required number of positives >= maximum; return all retrieved samples instead ...")
+            print(
+                "required number of positives >= maximum; return all retrieved samples instead ..."
+            )
             return pos_sample_pool
         else:
             return random.sample(pos_sample_pool, pos_num)
@@ -224,10 +217,10 @@ class Thesaurus(SavedObj):
         # uniqify is too slow so we should avoid operating it too often
         neg_sample_pool = uniqify(neg_sample_pool)
         while len(neg_sample_pool) < neg_num and max_iter > 0:
-            max_iter = max_iter - 1 # reduce the iteration to prevent exhausting loop
+            max_iter = max_iter - 1  # reduce the iteration to prevent exhausting loop
             neg_sample_pool += Thesaurus.random_negative_sampling(
                 synonym_groups, neg_num - len(neg_sample_pool), max_iter
-            ) 
+            )
             neg_sample_pool = uniqify(neg_sample_pool)
         return neg_sample_pool
 
@@ -245,16 +238,25 @@ class Thesaurus(SavedObj):
         neg_sample_pool = []
         for disjoint_synonym_groups in list_of_disjoint_synonym_groups:
             # compute catersian product for all possible combinations of disjoint synonym groups
-            catersian_product = list(itertools.product(disjoint_synonym_groups, disjoint_synonym_groups))
+            catersian_product = list(
+                itertools.product(disjoint_synonym_groups, disjoint_synonym_groups)
+            )
             # filter those mapped to selfs
             product_excluding_selfs = [pair for pair in catersian_product if pair[0] != pair[1]]
             # for each pair of disjoint synonym groups, compute the product of their corresponding labels
-            product_of_disjoint_labels = [list(itertools.product(left_syn, right_syn)) for left_syn, right_syn in product_excluding_selfs]
-            product_of_disjoint_labels = list(itertools.chain.from_iterable(product_of_disjoint_labels))
+            product_of_disjoint_labels = [
+                list(itertools.product(left_syn, right_syn))
+                for left_syn, right_syn in product_excluding_selfs
+            ]
+            product_of_disjoint_labels = list(
+                itertools.chain.from_iterable(product_of_disjoint_labels)
+            )
             neg_sample_pool += product_of_disjoint_labels
         neg_sample_pool = uniqify(neg_sample_pool)
         if neg_num > len(neg_sample_pool):
-            print("required number of negatives >= maximum; return all retrieved samples instead ...")
+            print(
+                "required number of negatives >= maximum; return all retrieved samples instead ..."
+            )
             return neg_sample_pool
         else:
             return random.sample(neg_sample_pool, neg_num)
@@ -299,7 +301,7 @@ class Thesaurus(SavedObj):
         # uniqify is too slow so we should avoid operating it too often
         neg_sample_pool = uniqify(neg_sample_pool)
         while len(neg_sample_pool) < neg_num and max_iter > 0:
-            max_iter = max_iter - 1 # reduce the iteration to prevent exhausting loop
+            max_iter = max_iter - 1  # reduce the iteration to prevent exhausting loop
             neg_sample_pool += Thesaurus.random_negative_sampling_from_paired_groups(
                 matched_synonym_groups, neg_num - len(neg_sample_pool), max_iter
             )

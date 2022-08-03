@@ -29,7 +29,6 @@ import os
 import itertools
 import torch
 from typing import Optional, List
-from pyats.datastructures import AttrDict
 from sklearn.model_selection import train_test_split
 import subprocess
 
@@ -131,9 +130,9 @@ class BERTMap(OntoAlign):
                 print("Resume training from previous checkpoint...")
             bert_classifier = BERTFineTuneSeqClassifier(
                 bert_args=self.bert_args,
-                train_data=self.fine_tune_data.train,
-                val_data=self.fine_tune_data.val,
-                test_data=self.fine_tune_data.test,
+                train_data=self.fine_tune_data["train"],
+                val_data=self.fine_tune_data["val"],
+                test_data=self.fine_tune_data["test"],
             )
             bert_classifier.train()
             if bert_classifier.test_data:
@@ -215,62 +214,58 @@ class BERTMap(OntoAlign):
             print("found an existing corpora directory, delete it and re-run if it's empty ...")
             print("if constructed, check details in `report.txt` ...")
         print("Loading the constructed corpora data ...")
-        self.main_corpora = AttrDict(SavedObj.load_json(self.corpora_path + "/train-val.json"))
+        self.main_corpora = SavedObj.load_json(self.corpora_path + "/train-val.json")
         banner_msg("Corpora Statistics (Train-Val)")
-        SavedObj.print_json(self.main_corpora.stats)
+        SavedObj.print_json(self.main_corpora["stats"])
         if detect_path(self.corpora_path + "/val.maps.json"):
-            self.val_maps_corpus = AttrDict(
-                SavedObj.load_json(self.corpora_path + "/val.maps.json")
-            )
+            self.val_maps_corpus = SavedObj.load_json(self.corpora_path + "/val.maps.json")
             banner_msg("Corpora Statistics (Val-Maps)")
-            SavedObj.print_json(self.val_maps_corpus.stats)
+            SavedObj.print_json(self.val_maps_corpus["stats"])
         if detect_path(self.corpora_path + "/test.maps.json"):
-            self.test_maps_corpus = AttrDict(
-                SavedObj.load_json(self.corpora_path + "/test.maps.json")
-            )
+            self.test_maps_corpus = SavedObj.load_json(self.corpora_path + "/test.maps.json")
             banner_msg("Corpora Statistics (Test-Maps)")
-            SavedObj.print_json(self.test_maps_corpus.stats)
+            SavedObj.print_json(self.test_maps_corpus["stats"])
 
     def load_fine_tune_data(self, split_ratio: float = 0.1):
         """Get data for fine-tuning from the corpora
         """
         banner_msg("Fine-tuning Data")
         if not detect_path(self.fine_tune_data_path):
-            fine_tune_data = AttrDict()
-            fine_tune_data.stats = dict()
+            fine_tune_data = dict()
+            fine_tune_data["stats"] = dict()
             print(
                 f"Splitting main corpora into training and validation ({split_ratio * 100}%) data ..."
             )
-            main_data = self.main_corpora.positives + self.main_corpora.negatives
+            main_data = self.main_corpora["positives"] + self.main_corpora["negatives"]
             main_train, main_val = train_test_split(main_data, test_size=split_ratio)
-            fine_tune_data.train = main_train
-            fine_tune_data.val = main_val
-            fine_tune_data.test = []
+            fine_tune_data["train"] = main_train
+            fine_tune_data["val"] = main_val
+            fine_tune_data["test"] = []
             if self.val_maps_corpus:
                 print("Get additional validation data from validation mappings ...")
                 # TODO: we do not care about duplicates here because label pairs from mappings are of higher importance
-                fine_tune_data.val += (
-                    self.val_maps_corpus.positives + self.val_maps_corpus.negatives
+                fine_tune_data["val"] += (
+                    self.val_maps_corpus["positives"] + self.val_maps_corpus["negatives"]
                 )
             if self.test_maps_corpus:
                 print("Get additional testing data from testing mappings ...")
                 print(
                     "\t=> These testing mapppings do not make any decision on model selection ..."
                 )
-                fine_tune_data.test += (
-                    self.test_maps_corpus.positives + self.test_maps_corpus.negatives
+                fine_tune_data["test"] += (
+                    self.test_maps_corpus["positives"] + self.test_maps_corpus["negatives"]
                 )
-            fine_tune_data.stats["n_train"] = len(fine_tune_data.train)
-            fine_tune_data.stats["n_val"] = len(fine_tune_data.val)
-            fine_tune_data.stats["n_test"] = len(fine_tune_data.test)
+            fine_tune_data["stats"]["n_train"] = len(fine_tune_data["train"])
+            fine_tune_data["stats"]["n_val"] = len(fine_tune_data["val"])
+            fine_tune_data["stats"]["n_test"] = len(fine_tune_data["test"])
             create_path(self.fine_tune_data_path)
             SavedObj.save_json(fine_tune_data, self.fine_tune_data_path + "/data.json")
         else:
             print(
                 "found an existing fine-tune data directory, delete it and re-run if it's empty ..."
             )
-        self.fine_tune_data = AttrDict(SavedObj.load_json(self.fine_tune_data_path + "/data.json"))
-        SavedObj.print_json(self.fine_tune_data.stats)
+        self.fine_tune_data = SavedObj.load_json(self.fine_tune_data_path + "/data.json")
+        SavedObj.print_json(self.fine_tune_data["stats"])
 
     ##################################################################################
     ###                            Mapping Refinement                              ###

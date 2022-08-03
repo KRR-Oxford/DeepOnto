@@ -14,7 +14,6 @@
 """Class for running implemented models"""
 
 from typing import Optional
-from pyats.datastructures import AttrDict
 
 from deeponto import SavedObj
 from deeponto.onto import Ontology
@@ -27,14 +26,14 @@ class OntoPipeline:
         self, model_name: str, saved_path: str, config_path: str,
     ):
         self.model_name = model_name
-        self.paths = AttrDict()
-        self.paths.main_dir = saved_path
+        self.paths = dict()
+        self.paths["main_dir"] = saved_path
         self.config = InputConfig.load_config(config_path)
         
     def run(self):
         """Run the whole pipeline
         """
-        create_path(self.paths.main_dir)
+        create_path(self.paths["main_dir"])
         #TODO: do the pipeline
 
     def load_onto(self):
@@ -59,4 +58,5 @@ class OntoPipeline:
             return None
 
     def complete_path(self, relative_path: str):
-        return f"{self.paths.main_dir}/{relative_path}"
+        main_dir = self.paths["main_dir"]
+        return f"{main_dir}/{relative_path}"

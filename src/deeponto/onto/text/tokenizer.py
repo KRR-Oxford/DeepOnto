@@ -14,7 +14,6 @@
 """Class for different types of tokenizers"""
 
 from types import MethodType
-from typing import List
 from transformers import AutoTokenizer
 import spacy
 from itertools import chain
