@@ -20,13 +20,15 @@ only after we have built (intra-onto / cross-onto) corpora for SRC and TGT ontol
 
 from __future__ import annotations
 
-from typing import Optional, List, Union
-from pyats.datastructures import AttrDict
+from typing import Optional, List, Union, TYPE_CHECKING
+# to avoid circular imports
+if TYPE_CHECKING:
+    from deeponto.onto import Ontology
+    from deeponto.onto.mapping import OntoMappings
+    
 from contextlib import redirect_stdout
 
-from deeponto.onto.text import Thesaurus, text_utils
-from deeponto.onto import Ontology
-from deeponto.onto.mapping import OntoMappings
+from deeponto.onto.text import Thesaurus
 from deeponto import SavedObj
 from deeponto.utils import uniqify, create_path
 from deeponto.utils.logging import banner_msg
@@ -56,15 +58,13 @@ class TextSemanticsCorpora(SavedObj):
         self.soft_negatives = []
         self.hard_negatives = []
 
-        self.stats = AttrDict(
-            {
-                "transitivity": self.apply_transitivity,
-                "num_known_mappings": len(self.known_mappings.to_tuples())
-                if self.known_mappings
-                else "N/A",
-                "num_aux_ontos": len(self.aux_ontos) if self.aux_ontos else "N/A",
-            }
-        )  # storing the statistics of corpora
+        self.stats = {
+            "transitivity": self.apply_transitivity,
+            "num_known_mappings": len(self.known_mappings.to_tuples())
+            if self.known_mappings
+            else "N/A",
+            "num_aux_ontos": len(self.aux_ontos) if self.aux_ontos else "N/A",
+        }  # storing the statistics of corpora
 
         # build thesaurus and then text semantics sub-corpora from various sources
         self.thesaurus = Thesaurus(self.apply_transitivity)
@@ -100,13 +100,13 @@ class TextSemanticsCorpora(SavedObj):
             # self.hard_negatives_isolated = self.hard_negatives
             # only the merged section is needed in this case because all synonym groups are merged by transitivity
             self.positives = Thesaurus.positive_sampling(
-                self.thesaurus.merged_section.synonym_groups
+                self.thesaurus.merged_section["synonym_groups"]
             )
             # however, the hard negatives rely on individual ontology structure, so we keep the hard negatives
             # and amend more soft negatives
             total_neg_num = self.neg_ratio * len(self.positives)
             self.soft_negatives = Thesaurus.random_negative_sampling(
-                self.thesaurus.merged_section.synonym_groups,
+                self.thesaurus.merged_section["synonym_groups"],
                 neg_num=total_neg_num - len(self.hard_negatives),
             )
 
@@ -122,10 +122,10 @@ class TextSemanticsCorpora(SavedObj):
         # TODO: will leave for future improvement
 
         # record the stats
-        self.stats.num_positives = len(self.positives)
-        self.stats.num_negatives = len(self.negatives)
-        self.stats.soft_negatives = len(self.soft_negatives)
-        self.stats.num_hard_negatives = len(self.hard_negatives)
+        self.stats["num_positives"] = len(self.positives)
+        self.stats["num_negatives"] = len(self.negatives)
+        self.stats["soft_negatives"] = len(self.soft_negatives)
+        self.stats["num_hard_negatives"] = len(self.hard_negatives)
 
         super().__init__(f"txtsem.corpora")
 

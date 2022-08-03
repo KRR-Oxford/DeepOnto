@@ -24,9 +24,8 @@ from __future__ import annotations
 import os
 from typing import Optional, List
 from collections import defaultdict
-from owlready2 import get_ontology, default_world, IRIS
+from owlready2 import get_ontology, default_world
 from owlready2.entity import ThingClass
-from pyats.datastructures import AttrDict
 from pathlib import Path
 
 from deeponto import SavedObj
@@ -45,7 +44,7 @@ class Ontology(SavedObj):
         self.iri2labs = None
         # inverted index for class labels
         self.inv_idx = None
-        
+
         # stat attributes
         self.num_classes = None
         self.num_labs = None
@@ -103,18 +102,15 @@ class Ontology(SavedObj):
         self.owl = get_ontology(f"file://{self.owl_path}").load()
 
     def __str__(self) -> str:
-        self.info = AttrDict(
-            {
-                "owl_name": self.owl.name,
-                "num_classes": self.num_classes,
-                "lab_probs": [
-                    self.name_from_iri(p) for p in self.lab_props if self.obj_from_iri(p)
-                ],
-                "num_labs": self.num_labs,
-                "avg_labs": self.avg_labs,
-                "num_entries_inv_idx": self.num_entries_inv_idx,
-            }
-        )
+        self.info = {
+            "owl_name": self.owl.name,
+            "num_classes": self.num_classes,
+            "lab_probs": [self.name_from_iri(p) for p in self.lab_props if self.obj_from_iri(p)],
+            "num_labs": self.num_labs,
+            "avg_labs": self.avg_labs,
+            "num_entries_inv_idx": self.num_entries_inv_idx,
+        }
+
         return super().report(**self.info)
 
     @property
@@ -144,7 +140,7 @@ class Ontology(SavedObj):
             return self.iri2labs[ent.iri]
         else:
             raise ValueError(f'Input entity class "{ent.iri}" is not found in the ontology ...')
-        
+
     def sib_labs(self):
         """Return all the label groups extracted from sibling classes of this ontology as a 3-D list:
             -   1st list for different sibling groups;

@@ -35,12 +35,14 @@ class OntoAlignPipeline(OntoPipeline):
         tgt_onto_path: str,
     ):
         super().__init__(model_name, saved_path, config_path)
-        self.paths.src_onto = self.complete_path("src_onto")
-        self.paths.tgt_onto = self.complete_path("tgt_onto")
+        self.paths["src_onto"] = self.complete_path("src_onto")
+        self.paths["tgt_onto"] = self.complete_path("tgt_onto")
 
         # load tokenizer (type = pretrained or rule_based)
-        tkz_load = getattr(Tokenizer, f"from_{self.config.tokenizer.type}")
-        self.tokenizer = tkz_load(self.config.tokenizer.path)
+        tkz_type = self.config["tokenizer"]["type"]
+        tkz_path = self.config["tokenizer"]["path"]
+        tkz_load = getattr(Tokenizer, f"from_{tkz_type}")
+        self.tokenizer = tkz_load(tkz_path)
 
         # load src and tgt ontologies
         self.src_onto = self.load_onto("src", src_onto_path)
@@ -69,20 +71,20 @@ class OntoAlignPipeline(OntoPipeline):
         if mode == "global_match":
             self.model.global_match(
                 num_procs=num_procs,
-                match_src2tgt=self.config.search.match_src2tgt,
-                match_tgt2src=self.config.search.match_tgt2src,
+                match_src2tgt=self.config["search"]["match_src2tgt"],
+                match_tgt2src=self.config["search"]["match_tgt2src"],
             )
             map_type = self.model.hyperparams_select(
-                self.config.corpora.train_mappings_path,
-                self.config.corpora.val_mappings_path,
-                self.config.corpora.test_mappings_path,
-                self.config.corpora.null_mappings_path,
+                self.config["corpora"]["train_mappings_path"],
+                self.config["corpora"]["val_mappings_path"],
+                self.config["corpora"]["test_mappings_path"],
+                self.config["corpora"]["null_mappings_path"],
             )
             torch.cuda.empty_cache()
 
             # mapping refinement for bertmap
             if self.model_name == "bertmap":
-                self.model.refinement(map_type, self.config.search.extension_threshold)
+                self.model.refinement(map_type, self.config["search"]["extension_threshold"])
                 torch.cuda.empty_cache()
 
         elif mode == "pair_score":
@@ -96,11 +98,11 @@ class OntoAlignPipeline(OntoPipeline):
     def load_onto(self, flag: str, new_onto_path: str):
         """Load ontology from saved or new data path
         """
-        saved_onto_path = getattr(self.paths, f"{flag}_onto")
+        saved_onto_path = self.paths[f"{flag}_onto"]
         onto = self.from_saved(saved_onto_path, is_onto=True)
         # if nothing saved
         if not onto:
-            onto = Ontology.from_new(new_onto_path, self.config.lab_props, self.tokenizer)
+            onto = Ontology.from_new(new_onto_path, self.config["lab_props"], self.tokenizer)
             onto.save_instance(saved_onto_path)
             # onto.destroy_owl_cache()
             onto = Ontology.from_saved(saved_onto_path)
@@ -113,44 +115,44 @@ class OntoAlignPipeline(OntoPipeline):
         """Load alignment model according to model name
         """
         # create directory for saving align model
-        self.paths.model = self.complete_path(self.model_name)
-        create_path(self.paths.model)
+        self.paths["model"] = self.complete_path(self.model_name)
+        create_path(self.paths["model"])
 
         # load the model according to model name
         if self.model_name == "bertmap":
             # get arguments for BERT
-            self.paths.bert = self.complete_path("bertmap/fine_tune/model")
+            self.paths["bert"] = self.complete_path("bertmap/fine_tune/model")
             self.bert_args = BERTArgs(
-                bert_checkpoint=self.config.bert.pretrained_path,
-                output_dir=self.paths.bert,
-                num_epochs=float(self.config.bert.num_epochs),
-                batch_size_for_training=self.config.bert.batch_size_for_training,
-                batch_size_for_prediction=self.config.bert.batch_size_for_prediction,
-                max_length=self.config.bert.max_length,
-                device_num=self.config.bert.device_num,
-                early_stop_patience=self.config.bert.early_stop_patience,
-                resume_from_ckp=self.config.bert.resume_from_ckp,
+                bert_checkpoint=self.config["bert"]["pretrained_path"],
+                output_dir=self.paths["bert"],
+                num_epochs=float(self.config["bert"]["num_epochs"]),
+                batch_size_for_training=self.config["bert"]["batch_size_for_training"],
+                batch_size_for_prediction=self.config["bert"]["batch_size_for_prediction"],
+                max_length=self.config["bert"]["max_length"],
+                device_num=self.config["bert"]["device_num"],
+                early_stop_patience=self.config["bert"]["early_stop_patience"],
+                resume_from_ckp=self.config["bert"]["resume_from_ckp"],
             )
 
             # load mappings if any
             ref_mappings = {"train": None, "val": None, "test": None}
-            if self.config.corpora.train_mappings_path:
+            if self.config["corpora"]["train_mappings_path"]:
                 ref_mappings["train"] = OntoMappings.read_table_mappings(
-                    self.config.corpora.train_mappings_path
+                    self.config["corpora"]["train_mappings_path"]
                 )
-            if self.config.corpora.val_mappings_path:
+            if self.config["corpora"]["val_mappings_path"]:
                 ref_mappings["val"] = OntoMappings.read_table_mappings(
-                    self.config.corpora.val_mappings_path
+                    self.config["corpora"]["val_mappings_path"]
                 )
-            if self.config.corpora.test_mappings_path:
+            if self.config["corpora"]["test_mappings_path"]:
                 ref_mappings["test"] = OntoMappings.read_table_mappings(
-                    self.config.corpora.test_mappings_path
+                    self.config["corpora"]["test_mappings_path"]
                 )
 
             # load auxiliary ontologies if any
             aux_ontos = []
             aux_count = 0
-            for aux_onto_path in self.config.corpora.aux_onto_paths:
+            for aux_onto_path in self.config["corpora"]["aux_onto_paths"]:
                 aux_flag = f"aux_{aux_count}"
                 self.paths[f"{aux_flag}_onto"] = self.complete_path(f"{aux_flag}_onto")
                 # no need to load tokenizer
@@ -163,16 +165,16 @@ class OntoAlignPipeline(OntoPipeline):
                 tgt_onto=self.tgt_onto,
                 tokenizer=self.tokenizer,
                 bert_args=self.bert_args,
-                cand_pool_size=self.config.search.cand_pool_size,
-                n_best=self.config.search.n_best,
-                saved_path=self.paths.model,
+                cand_pool_size=self.config["search"]["cand_pool_size"],
+                n_best=self.config["search"]["n_best"],
+                saved_path=self.paths["model"],
                 train_mappings=ref_mappings["train"],
                 validation_mappings=ref_mappings["val"],
                 test_mappings=ref_mappings["test"],
                 aux_ontos=aux_ontos,
-                apply_transitivity=self.config.corpora.apply_transitivity,
-                neg_ratio=self.config.corpora.neg_ratio,
-                apply_string_match=self.config.search.apply_string_match,
+                apply_transitivity=self.config["corpora"]["apply_transitivity"],
+                neg_ratio=self.config["corpora"]["neg_ratio"],
+                apply_string_match=self.config["search"]["apply_string_match"],
             )
 
         elif self.model_name == "string_match":
@@ -180,9 +182,9 @@ class OntoAlignPipeline(OntoPipeline):
                 src_onto=self.src_onto,
                 tgt_onto=self.tgt_onto,
                 tokenizer=self.tokenizer,
-                cand_pool_size=self.config.search.cand_pool_size,
-                n_best=self.config.search.n_best,
-                saved_path=self.paths.model,
+                cand_pool_size=self.config["search"]["cand_pool_size"],
+                n_best=self.config["search"]["n_best"],
+                saved_path=self.paths["model"],
             )
 
         elif self.model_name == "edit_sim":
@@ -190,9 +192,9 @@ class OntoAlignPipeline(OntoPipeline):
                 src_onto=self.src_onto,
                 tgt_onto=self.tgt_onto,
                 tokenizer=self.tokenizer,
-                cand_pool_size=self.config.search.cand_pool_size,
-                n_best=self.config.search.n_best,
-                saved_path=self.paths.model,
+                cand_pool_size=self.config["search"]["cand_pool_size"],
+                n_best=self.config["search"]["n_best"],
+                saved_path=self.paths["model"],
             )
 
         else:

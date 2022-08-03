@@ -17,8 +17,6 @@ from __future__ import annotations
 
 from collections import defaultdict
 from typing import Optional, List, Tuple
-from xml.etree.ElementInclude import include
-from pyats.datastructures import AttrDict
 import pandas as pd
 import ast
 
@@ -175,15 +173,13 @@ class OntoMappings(SavedObj):
         super().__init__(f"{self.flag}.maps")
 
     def __str__(self):
-        self.info = AttrDict(
-            {
-                "flag": self.flag,
-                "relation": self.rel,
-                "n_best": self.n_best,
-                "num_heads": len(self.map_dict),
-                "num_maps": len(self),
-            }
-        )
+        self.info = {
+            "flag": self.flag,
+            "relation": self.rel,
+            "n_best": self.n_best,
+            "num_heads": len(self.map_dict),
+            "num_maps": len(self),
+        }
         return super().report(**self.info)
 
     def __len__(self):
@@ -233,7 +229,7 @@ class OntoMappings(SavedObj):
             return tps
         return topks_for_all
 
-    def to_tuples(self, include_scores: bool=False) -> List[Tuple[str, str]]:
+    def to_tuples(self, include_scores: bool = False) -> List[Tuple[str, str]]:
         """Unravel the mappings from dict to tuples
         """
         return self.topks(K=None, as_tuples=True, include_scores=include_scores)
@@ -340,15 +336,13 @@ class AnchoredOntoMappings(SavedObj):
         super().__init__(f"{self.flag}.anchored.maps")
 
     def __str__(self):
-        self.info = AttrDict(
-            {
-                "flag": self.flag,
-                "relation": self.rel,
-                "n_best": self.n_best,
-                "num_anchors": len(self.anchor2cands),
-                "num_maps": len(self),
-            }
-        )
+        self.info = {
+            "flag": self.flag,
+            "relation": self.rel,
+            "n_best": self.n_best,
+            "num_anchors": len(self.anchor2cands),
+            "num_maps": len(self),
+        }
         return super().report(**self.info)
 
     def __len__(self):
