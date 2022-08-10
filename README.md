@@ -62,6 +62,8 @@ pip install -r requirements.txt
 
 <!-- #### **OntoAlign** -->
 
+<center>
+
 | Name                 | Task                            | Type              |
 | :-------------       | :---------------                | :--------------   |
 | BERTMap              | Ontology Matching (Equivalence) | Learning-based    |
@@ -69,6 +71,7 @@ pip install -r requirements.txt
 | EditSimiarity        | Ontology Matching (Equivalence) | Rule-based        |
 | BERTSubs (not ready) | Ontology Matching (Subsumption) | Learning-based    |
 
+</center>
 
 ?> Click [here](using_deeponto.md) for script usage.
 

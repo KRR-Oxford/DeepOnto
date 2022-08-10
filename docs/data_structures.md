@@ -1,3 +1,5 @@
+# Data Structures
+
 ?> This page describes important data structures implemented in DeepOnto for processing ontology data.
 
 ## Ontology
