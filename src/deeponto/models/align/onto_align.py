@@ -241,7 +241,8 @@ class OntoAlign(FlaggedObj):
     def global_mappings_for_ent(self, src_ent_iri: str) -> EntityMappingList:
         """Compute cross-ontology mappings for a source entity
         """
-        banner_msg(f"Compute Mappings for Entity {src_ent_iri} ({self.flag})")
+        banner_msg("Compute Mappings for Entity" + \
+            f"{self.src_onto.name_from_iri(src_ent_iri)} ({self.flag})")
         mappings_for_ent = self.new_mapping_list()
         # TODO: followed by individual implementations
         return mappings_for_ent
