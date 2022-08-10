@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+# Script Usage
+
 ?>DeepOnto provides scripts for different purposes.
 - `onto_match.py`: using implemented Ontology Alignment (a.k.a. Ontology Matching; OM) models.
 - `om_eval.py`: evaluate the performance of OM models.

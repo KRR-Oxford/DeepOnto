@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
+# Ontology Matching Resources
+
 ?> Besides model development and implementation, DeepOnto also aims to contribute new Ontology Matching (OM) resources and comprehensive evaluation workaround. In this page, we provide download links to our datasets and instructions for data usage.
 
 ## Bio-ML
@@ -32,6 +34,7 @@ The **Bio-ML** dataset provides five ontology pairs for both equivalence and sub
 
 Statistics for the equivalence matching set-ups. In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance*"*, and *"Neoplastic Process"* in UMLS, respectively.
 
+<center>
 <small>
 
 | Source | Task        | Category | #Classes      | #RefMaps (equiv) | #Annot.  | AvgDepths |
@@ -43,12 +46,14 @@ Statistics for the equivalence matching set-ups. In the **Category** column, *"D
 | UMLS   | SNOMED-NCIT | Neoplas  | 11,271-13,956 | 3,804            | 23K-182K | 1.15-1.68 |
 
 </small>
+</center>
 
 
 #### **Subsumption Matching**
 
 Statistics for the subsumption matching set-ups. Note that each subsumption matching task is constructed from an equivalence matching task subject to target side class deletion.
 
+<center>
 <small>
 
 | Source | Task        | Category | #Classes      | #RefMaps (subs)  |
@@ -60,6 +65,7 @@ Statistics for the subsumption matching set-ups. Note that each subsumption matc
 | UMLS   | SNOMED-NCIT | Neoplas  | 11,271-13,790 | 213              | 
 
 </small>
+</center>
 
 <!-- tabs:end -->
 
