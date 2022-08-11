@@ -476,15 +476,15 @@ class BERTMap(OntoAlign):
         batch_base_idx = 0  # after each batch, the base index will be increased by # of covered target candidates
 
         for labs_batch in labs_batches:
-            batch_scores = self.bert_classifier(labs_batch.labs)
-            pooled_scores = self.batch_pooling(batch_scores, labs_batch.lens)
+            batch_scores = self.bert_classifier(labs_batch["labs"])
+            pooled_scores = self.batch_pooling(batch_scores, labs_batch["lens"])
             for i in range(len(pooled_scores)):
                 score = pooled_scores[i]
                 idx = i + batch_base_idx
                 tgt_ent_iri = tgt_cands[idx][0]
                 mappings_for_ent.append(self.set_mapping(src_ent_iri, tgt_ent_iri, score.item()))
             batch_base_idx += len(
-                labs_batch.lens
+                labs_batch["lens"]
             )  # num of lens is exactly the num of tgt candidates in this batch
 
         mappings_for_ent = mappings_for_ent.sorted()
@@ -525,8 +525,8 @@ class BERTMap(OntoAlign):
         n_best_idxs = torch.tensor([-1] * self.n_best).to(self.bert_classifier.device)
 
         for labs_batch in labs_batches:
-            batch_scores = self.bert_classifier(labs_batch.labs)
-            pooled_scores = self.batch_pooling(batch_scores, labs_batch.lens)
+            batch_scores = self.bert_classifier(labs_batch["labs"])
+            pooled_scores = self.batch_pooling(batch_scores, labs_batch["lens"])
             # K should be n_best, except when the pooled batch scores do not contain K values
             K = len(pooled_scores) if len(pooled_scores) < self.n_best else self.n_best
             batch_top_k_scores, batch_top_k_idxs = torch.topk(pooled_scores, k=K)
@@ -538,7 +538,7 @@ class BERTMap(OntoAlign):
             n_best_idxs = torch.cat([batch_top_k_idxs, n_best_idxs])[best_scores_idxs]
             # print(f"current nbest idx: {batch_nbest_idxs}")
             batch_base_idx += len(
-                labs_batch.lens
+                labs_batch["lens"]
             )  # num of lens is exactly the num of tgt candidates in this batch
 
         for idx, score in zip(n_best_idxs, n_best_scores):

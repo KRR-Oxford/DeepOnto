@@ -344,6 +344,6 @@ class OntoAlign(FlaggedObj):
                 cur_batch = {"labs": [], "lens": []}
             cur_lab_pointer += cur_length
         # small check for the algorithm
-        assert lab_products == list(chain.from_iterable([b.labs for b in batches]))
-        assert product_lens == list(chain.from_iterable([b.lens for b in batches]))
+        assert lab_products == list(chain.from_iterable([b["labs"] for b in batches]))
+        assert product_lens == list(chain.from_iterable([b["lens"] for b in batches]))
         return batches
