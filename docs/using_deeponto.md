@@ -103,7 +103,7 @@ Parameters for `onto_match.py` in `pair_score` mode:
 - **tgt_onto**(*str*): the path to the target ontology file.
 - **config_path**(*str*): the path to the configuration file, default minimal configurations for each OM model is available at `deeponto_repo/cofig`.
 - **--to_be_scored_mappings_path**(*str*): the path to the to-be-scored mappings in `.tsv` as described above.
-- **--from_be_scored_mappings_flag**(*str*): the flag that indicates the direction of the to-be-scored class pairs (`src2tgt` or `tgt2src`).
+- **--to_be_scored_mappings_flag**(*str*): the flag that indicates the direction of the to-be-scored class pairs (`src2tgt` or `tgt2src`).
 
 Example usage of `onto_match.py` for pair scoring:
 
@@ -116,8 +116,8 @@ python onto_match.py \
 --src_onto "./data/doid.owl" \
 --tgt_onto "./data/ordo.owl" \
 --config_path "./config/bertmap.json"
---to_be_scored_maps_path "./data/doid2ordo_unscored.tsv" \
---to_be_scored_flag "src2tgt"
+--to_be_scored_mappings_path "./data/doid2ordo_unscored.tsv" \
+--to_be_scored_mappings_flag "src2tgt"
 ```
 
 **Step 2**: Choose `pair_score` and an implemented OM model.
