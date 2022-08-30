@@ -22,6 +22,8 @@ import torch
 import numpy as np
 import subprocess
 import json
+from datasets import load_dataset
+from openprompt.data_utils import InputExample
 
 ##################################################################################
 ###                             element processing                             ###
@@ -151,6 +153,23 @@ def data_split(tsv_mapping_path: str, out_dir: str):
     test.to_csv(out_dir + "/semi_supervised/test.tsv", sep="\t", index=False)
     train.append(test).to_csv(out_dir + "/unsupervised/test.tsv", sep="\t", index=False)
     train.append(val).to_csv(out_dir + "/semi_supervised/train+val.tsv", sep="\t", index=False)
+
+
+def load_prompt_data(dataset_path: str = "multi_nli", split: Optional[str] = None):
+    """Load a datast from huggingface datasets and transform to openprompt examples.
+    """
+    data_dict = load_dataset(dataset_path)
+    prompt_data_dict = dict()
+    splits = [split] if split else data_dict.keys()
+    for split in splits:
+        x_samples = []
+        i = 0
+        for samp in data_dict[split]:
+            inp = InputExample(guid=i, meta=samp, label=samp["label"])
+            x_samples.append(inp)
+            i += 1
+        prompt_data_dict[split] = x_samples
+    return prompt_data_dict
 
 
 ##################################################################################
