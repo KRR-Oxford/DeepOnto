@@ -93,7 +93,7 @@ class Thesaurus(SavedObj):
         return the resulting synonym groups
         """
         for onto in ontos:
-            synonym_groups = [set(v) for v in onto.iri2labs.values()]
+            synonym_groups = [set(v) for v in onto.iri2labs.values() if v]
             if self.apply_transitivity:
                 synonym_groups = self.merge_synonyms_by_transitivity(synonym_groups)
             new_section = {
@@ -123,13 +123,14 @@ class Thesaurus(SavedObj):
             src_ent_labels = src_onto.iri2labs[src_ent]
             for tgt_ent in tgt_ent_dict.keys():
                 tgt_ent_labels = tgt_onto.iri2labs[tgt_ent]
-            # merged cross-onto synonym group where labels of aligned classes are synonymous
-            synonym_group_pairs.append(
-                (set(src_ent_labels), set(tgt_ent_labels))
-            )  # form a synonym group pair with known ontology source
-            synonym_groups.append(
-                set(src_ent_labels + tgt_ent_labels)
-            )  # form a synonym group without distinguishing ontology source
+                if src_ent_labels and tgt_ent_labels:
+                    # merged cross-onto synonym group where labels of aligned classes are synonymous
+                    synonym_group_pairs.append(
+                        (set(src_ent_labels), set(tgt_ent_labels))
+                    )  # form a synonym group pair with known ontology source
+                    synonym_groups.append(
+                        set(src_ent_labels + tgt_ent_labels)
+                    )  # form a synonym group without distinguishing ontology source
         if self.apply_transitivity:
             synonym_groups = self.merge_synonyms_by_transitivity(synonym_groups)
         new_section = {
