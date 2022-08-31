@@ -109,12 +109,15 @@ class IterativeMappingExtension:
         if self.onto_mappings.is_existed_mapping(temp_map):
             return "explored"
         # if not explored before we compute the score
-        score = self.ent_pair_score(src_ent_iri, tgt_ent_iri)
-        if score < self.threshold:
+        try:
+            score = self.ent_pair_score(src_ent_iri, tgt_ent_iri)
+            if score < self.threshold:
+                return "undervalued"
+            else:
+                temp_map.score = score
+                return temp_map
+        except:
             return "undervalued"
-        else:
-            temp_map.score = score
-            return temp_map
 
     def one_hob_extend(self, src_ent_iri: str, tgt_ent_iri: str, maximum_pairs: int = 500):
         """1-hop mapping extension, the assumption is given a highly confident mapping,
