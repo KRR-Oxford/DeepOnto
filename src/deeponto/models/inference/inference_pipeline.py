@@ -91,4 +91,4 @@ class InferencePipeline:
         results = list(zip(preds, truths))
         acc = sum([p == g for p, g in results]) / len(results)
         print(f"Inference results over {len(results)} samples: {round(acc, 5)} (ACC)")
-        return list(zip(preds, truths))
+        return results, acc
