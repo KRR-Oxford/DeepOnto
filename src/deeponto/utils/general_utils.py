@@ -155,15 +155,15 @@ def data_split(tsv_mapping_path: str, out_dir: str):
     train.append(val).to_csv(out_dir + "/semi_supervised/train+val.tsv", sep="\t", index=False)
 
 
-def load_prompt_data(dataset_path: str = "multi_nli", split: Optional[str] = None):
+def load_prompt_data(dataset_path: str = "multi_nli", *splits: str):
     """Load a datast from huggingface datasets and transform to openprompt examples.
     """
     data_dict = load_dataset(dataset_path)
     prompt_data_dict = dict()
-    splits = [split] if split else data_dict.keys()
+    splits = list(splits) if splits else data_dict.keys()
+    i = 0
     for split in splits:
         x_samples = []
-        i = 0
         for samp in data_dict[split]:
             inp = InputExample(guid=i, meta=samp, label=samp["label"])
             x_samples.append(inp)
