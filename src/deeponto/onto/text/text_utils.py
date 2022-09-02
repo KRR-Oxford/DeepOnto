@@ -111,14 +111,14 @@ def lab_product(src_ent_labs: List[str], tgt_ent_labs: List[str]) -> Tuple[List,
 #     return ents_labels, num_labels
 
 
-def labs_from_props(iri: str, lab_props: List[str]):
+def labs_from_props(iri: str, lab_props: List[str], uncased: bool = True):
     """Extract unique and cleaned labels (for an entity) given the input annotational properties
     """
-    labels = list(chain(*[prep_labs(iri, lp) for lp in lab_props]))
+    labels = list(chain(*[prep_labs(iri, lp, uncased) for lp in lab_props]))
     return uniqify(labels)
 
 
-def prep_labs(iri: str, lab_prop: str) -> List[str]:
+def prep_labs(iri: str, lab_prop: str, uncased: bool = True) -> List[str]:
     """Preprocess the texts of a class given by a particular property including
     underscores removal and lower-casing.
 
@@ -138,7 +138,10 @@ def prep_labs(iri: str, lab_prop: str) -> List[str]:
         # NOTE: obsolete original code
         # raw_labels = getattr(ent, lab_prop)
         # assert isinstance(raw_labels, IndividualValueList)
-        cleaned_labels = [lab.lower().replace("_", " ") for lab in raw_labels]
+        if uncased:
+            cleaned_labels = [lab.lower().replace("_", " ") for lab in raw_labels]
+        else:
+            cleaned_labels = [lab.replace("_", " ") for lab in raw_labels]
         return cleaned_labels
     except:
         # when input label cannot be retrieved (annotation property not defined)
