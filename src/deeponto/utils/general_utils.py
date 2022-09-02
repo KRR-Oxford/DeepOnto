@@ -61,6 +61,34 @@ def evenly_divide(start, end, num_splits: int):
     return [start + step * i for i in range(num_splits + 1)]
 
 
+def split_java_identifier(java_style_identifier: str):
+    """Split words in java's identifier style into natural language phrase.
+    e.g.1, SuperNaturalPower => Super Natural Power.
+    e.g.2, APIReference => API reference
+    """
+    raw_words = re.findall("([0-9A-Z][a-z]*)", java_style_identifier)
+    # need to fix for the split of consecutive capitalized words such as API
+    words = []
+    capitalized_word = ""
+    for i, w in enumerate(raw_words):
+        # the above regex pattern will split at capitals
+        # so the capitalized words are split into characters
+        if len(w) == 1:
+            capitalized_word += w
+            # edge case for the last word
+            if i == len(raw_words) - 1:
+                words.append(capitalized_word)
+        # if the the current w is a full word, save the previous cached capitalized_word
+        elif capitalized_word:
+            words.append(capitalized_word)
+            words.append(w.lower())
+            capitalized_word = ""
+        else:
+            words.append(w.lower())
+            
+    return words
+
+
 ##################################################################################
 ###                                 randomness                                 ###
 ##################################################################################

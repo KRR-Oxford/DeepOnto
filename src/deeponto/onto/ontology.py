@@ -58,6 +58,7 @@ class Ontology(SavedObj):
         onto_path: str,
         lab_props: List[str] = ["http://www.w3.org/2000/01/rdf-schema#label"],
         tokenizer: Optional[Tokenizer] = None,
+        uncased_labels: bool = True,
     ) -> Ontology:
         onto = cls(onto_path)
         onto.lab_props = lab_props
@@ -65,7 +66,9 @@ class Ontology(SavedObj):
         onto.num_classes = 0
         onto.num_labs = 0
         for cl in onto.owl.classes():
-            onto.iri2labs[cl.iri] = text_utils.labs_from_props(cl.iri, onto.lab_props)
+            onto.iri2labs[cl.iri] = text_utils.labs_from_props(
+                cl.iri, onto.lab_props, uncased_labels
+            )
             onto.num_labs += len(onto.iri2labs[cl.iri])
             onto.num_classes += 1
         onto.avg_labs = round(onto.num_labs / onto.num_classes, 2)
