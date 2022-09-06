@@ -37,7 +37,7 @@ from deeponto.bert import BERTArgs
 from deeponto.bert.static import BERTStaticSeqClassifer
 from deeponto.bert.tune import BERTFineTuneSeqClassifier
 from deeponto.onto.text import Tokenizer, Thesaurus
-from deeponto.onto.text.text_semantics_corpora import (
+from deeponto.data.align import (
     TextSemanticsCorpora,
     TextSemanticsCorpusforMappings,
 )
