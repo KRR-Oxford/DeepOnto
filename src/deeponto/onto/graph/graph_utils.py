@@ -85,13 +85,19 @@ def depth_min(ent: ThingClass) -> int:
 
 
 # TODO: debug cannot assert isistance
-def thing_class_ancestors_of(ent: ThingClass, include_self: bool = False):
+def thing_class_ancestors_of(ent: ThingClass, include_self: bool = False, ignore_root: bool = True):
     """Return all the ancestors (restricted to EntityClass) of a class 
     (except for the root ThingClass)
     """
-    ancestors = [a for a in ent.ancestors() if isinstance(a, ThingClass)]
-    if not include_self:
+    if not ignore_root:
+        ancestors = [a for a in ent.ancestors() if isinstance(a, ThingClass)]
+    else:
+        ancestors = [a for a in ent.ancestors() if isinstance(a, ThingClass) and a.name != "Thing"]
+    
+    # NOTE: edge case if an ontology (such as schema.org) has a self-defined Thing class
+    if not include_self and ent in ancestors:
         ancestors.remove(ent)
+        
     return list(set(ancestors))
 
 
