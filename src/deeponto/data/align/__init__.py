@@ -13,4 +13,4 @@
 # limitations under the License.
 from .neg_cands import NegativeCandidateGenerator
 from .subs_maps import SubsumptionMappingGenerator
-
+from .text_semantics_corpora import *
