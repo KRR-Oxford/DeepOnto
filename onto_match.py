@@ -31,7 +31,6 @@ from deeponto.models.align import (
     supported_modes,
     multi_procs_models,
 )
-from deeponto.config.align_configs import align_configs_dir
 from deeponto.config import InputConfig
 
 
@@ -70,6 +69,7 @@ def onto_match(
             num_procs = click.prompt("Enter the number of processes", type=int)
 
     if not config_path:
+        align_configs_dir = os.getcwd().split("DeepOnto")[0] + "DeepOnto/config"
         banner_msg(f"Use Default Configs for {model_name}")
         config_path = align_configs_dir + f"/{model_name}.json"
     SavedObj.print_json(InputConfig.load_config(config_path))
