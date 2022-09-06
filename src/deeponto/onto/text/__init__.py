@@ -13,5 +13,4 @@
 # limitations under the License.
 from .tokenizer import Tokenizer
 from .thesaurus import Thesaurus
-from .text_semantics_corpora import *
 from . import text_utils
