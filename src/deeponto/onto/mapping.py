@@ -419,7 +419,10 @@ class AnchoredOntoMappings(SavedObj):
                         self.anchor2cands[src_ent_iri, anchor_tail], top_k=self.n_best
                     )
         print(
-            f"{num_valid}/{len(scored_onto_maps)} of scored mappings are filled to corresponding anchors."
+            f"{num_valid}/{len(scored_onto_maps)} of scored mappings are valid and filled to corresponding anchors."
+        )
+        print(
+            f"{num_valid}/{len(self)} of anchored mappings are scored; for locak ranking evaluation, all anchored mappings should be scored."
         )
 
     def unscored_cand_maps(self) -> OntoMappings:
