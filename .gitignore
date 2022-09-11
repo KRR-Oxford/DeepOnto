@@ -102,3 +102,5 @@ logmap-log.out
 experiments/
 run.mondo.sh
 run.umls.sh
+
+print_reqs.py
