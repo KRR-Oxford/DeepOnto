@@ -409,20 +409,22 @@ class AnchoredOntoMappings(SavedObj):
         """
         assert self.flag == scored_onto_maps.flag
         num_valid = 0
+        num_filled = 0
         for src_ent_iri, v in scored_onto_maps.map_dict.items():
             for tgt_ent_iri, score in v.items():
                 if self.cand2anchors[src_ent_iri, tgt_ent_iri]:
                     num_valid += 1
                     for anchor_tail in self.cand2anchors[src_ent_iri, tgt_ent_iri]:
+                        num_filled += 1
                         self.anchor2cands[src_ent_iri, anchor_tail][tgt_ent_iri] = score
                     self.anchor2cands[src_ent_iri, anchor_tail] = sort_dict_by_values(
                         self.anchor2cands[src_ent_iri, anchor_tail], top_k=self.n_best
                     )
         print(
-            f"{num_valid}/{len(scored_onto_maps)} of scored mappings are valid and filled to corresponding anchors."
+            f"{num_valid}/{len(scored_onto_maps)} of *unique* scored mappings are valid and filled to corresponding anchors."
         )
         print(
-            f"{num_valid}/{len(self)} of anchored mappings are scored; for locak ranking evaluation, all anchored mappings should be scored."
+            f"{num_filled}/{len(self)} of anchored mappings are scored; for local ranking evaluation, all anchored mappings should be scored."
         )
 
     def unscored_cand_maps(self) -> OntoMappings:
