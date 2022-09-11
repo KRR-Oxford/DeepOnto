@@ -40,11 +40,9 @@ DeepOnto aims to provide implemented deep learning models and an evaluation plat
 
 To use DeepOnto scripts, it is sufficient to git the project and run the scripts directly; to build on a new project extending DeepOnto, please install DeepOnto from PyPI by:
 
-```
+```bash
 pip install deeponto
 ```
-
-Should you find any problems with DeepOnto, please contact through the github repository issue section by mentioning the main developer: @lawhy.
 
 ## Essential Dependencies
 
