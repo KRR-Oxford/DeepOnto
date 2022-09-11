@@ -36,7 +36,15 @@ DeepOnto aims to provide implemented deep learning models and an evaluation plat
 
 - **Documentation**: *https://krr-oxford.github.io/DeepOnto/#/*.
 - **Github Repository**: *https://github.com/KRR-Oxford/DeepOnto*. 
-- **PyPI**: *https://pypi.org/project/deeponto/*. (not fully ready)
+- **PyPI**: *https://pypi.org/project/deeponto/*. (experimental)
+
+To use DeepOnto scripts, it is sufficient to git the project and run the scripts directly; to build on a new project extending DeepOnto, please install DeepOnto from PyPI by:
+
+```
+pip install deeponto
+```
+
+Should you find any problems with DeepOnto, please contact through the github repository issue section by mentioning the main developer: @lawhy.
 
 ## Essential Dependencies
 
