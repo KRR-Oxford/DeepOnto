@@ -13,11 +13,12 @@
 # limitations under the License.
 """Providing useful utility functions"""
 
-from deeponto import SavedObj
-from deeponto.onto import Ontology
-from deeponto.onto.graph.graph_utils import thing_class_ancestors_of
 import itertools
 import random
+from owlready2.entity import ThingClass
+
+from deeponto.onto import Ontology
+from deeponto.onto.graph.graph_utils import thing_class_ancestors_of, thing_class_descendants_of
 
 
 class SubsumptionPairGenerator:
@@ -25,18 +26,42 @@ class SubsumptionPairGenerator:
         self.onto = onto
         self.subs = {"entailment": [], "contradiction": []}
         self.neg_ratio = neg_ratio
-    
+
     def sample(self):
         self.subs = {"entailment": [], "contradiction": []}
         self.entailment_pairs()
         self.contradiction_pairs()
         assert not set(self.subs["entailment"]).intersection(self.subs["contradiction"])
-        
+
     def save(self, saved_path: str):
         """Save in json format similar to the huggingface datasets manner
         """
         data_dict = {}
         pass
+
+    @classmethod
+    def check_different_branch(cls, ent1: ThingClass, ent2: ThingClass):
+        """Check if any of the two entities are from different branches
+        (i.e., no intersection below Thing Class or there exists a disjointness
+        among their ancestors)
+        """
+        ancestors1 = thing_class_ancestors_of(ent1, include_self=True)
+        descendants1 = thing_class_descendants_of(ent1, include_self=True)
+        ancestors2 = thing_class_ancestors_of(ent2, include_self=True)
+        descendants2 = thing_class_descendants_of(ent2, include_self=True)
+
+        # check any disjoint ancestors (including self)
+        for a1, a2 in itertools.product(ancestors1, ancestors2):
+            if cls.check_disjoint(a1, a2):
+                return True
+
+        # check if no intersection is found below the Thing Class
+        common_ancestors = set(ancestors1).intersection(set(ancestors2))
+        common_descendants = set(descendants1).intersection(set(descendants2))
+        if not common_ancestors and not common_descendants:
+            return True
+
+        return False
 
     def entailment_pairs(self):
         """Extract all subsumption pairs that indicate entailment from left to right,
@@ -60,11 +85,10 @@ class SubsumptionPairGenerator:
         max_iter = 10 * max_neg
         i = 0
         while len(self.subs["contradiction"]) < max_neg and i < max_iter:
+            # NOTE: sampling method can be improved
             left, right = tuple(random.sample(classes, k=2))
-            left_subsumers = thing_class_ancestors_of(left, include_self=True)
-            right_subsumers = thing_class_ancestors_of(right, include_self=True)
-            # if no common ancestor
-            if not set(left_subsumers).intersection(set(right_subsumers)):
+            # sanitiy check to reduce false negatives
+            if self.check_different_branch(left, right):
                 left_labs = self.onto.iri2labs[left.iri]
                 right_labs = self.onto.iri2labs[right.iri]
                 neg_cands = list(itertools.product(left_labs, right_labs))
