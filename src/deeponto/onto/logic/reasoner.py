@@ -37,6 +37,11 @@ class OWLAPIReasoner:
         self.owlClasses = dict()
         for cl in self.owlOnto.getClassesInSignature(True):
             self.owlClasses[str(cl.getIRI())] = cl
+        # for creating axioms
+        self.owlDataFactory = OWLManager.getOWLDataFactory()
+        
+    def owlClass_from_iri(self, iri: str):
+        return self.owlClasses[iri]
 
     def superclasses_of(self, owlClass, direct: bool = False):
         """Return the named superclasses of a given OWLAPI class, either direct or inferred
@@ -53,3 +58,9 @@ class OWLAPIReasoner:
         subclass_iris.remove("http://www.w3.org/2002/07/owl#Nothing")
         return subclass_iris
 
+    def check_disjoint(self, owlClass1, owlClass2):
+        """Check if two entity classes are disjoint according to the reasoner
+        """
+        disjoint_axiom = self.owlDataFactory.getOWLDisjointClassesAxiom([owlClass1, owlClass2])
+        return self.reasoner.isEntailed(disjoint_axiom)
+        
