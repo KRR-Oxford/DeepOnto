@@ -160,7 +160,12 @@ def sib_labs(ents: Iterable[ThingClass], lab_props: List[str]) -> List[List[List
         -   2nd list for different siblings;
         -   3rd list for different labels.
     """
-    sib_lables = []
+    # if not including the thing class, the top level classes will be omitted
+    thing_class = default_world["http://www.w3.org/2002/07/owl#Thing"]
+    if not thing_class in ents:
+        ents.append(thing_class)
+    
+    sib_lables = []   
     for ent in ents:
         ch_labels = child_labs(ent, lab_props)
         if ch_labels and len(ch_labels) > 1:
