@@ -14,7 +14,7 @@
 """Reasoner Class based on OWLAPI"""
 
 import os
-from deeponto import init_jvm
+from deeponto import init_jvm, OWL_THING, OWL_NOTHING
 init_jvm("2g")
 
 from java.io import *  # type: ignore
@@ -26,6 +26,7 @@ from org.semanticweb.HermiT import ReasonerFactory  # type: ignore
 
 class OWLAPIReasoner:
     def __init__(self, onto_path: str):
+        print("Perform reasoning on the input ontology ...\n")
         # the ontology object based on OWLAPI
         self.owlManager = OWLManager.createOWLOntologyManager()
         self.owlPath = "file:///" + os.path.abspath(onto_path)
@@ -35,13 +36,26 @@ class OWLAPIReasoner:
         self.reasoner = self.reasonerFactory.createReasoner(self.owlOnto)
         # save the OWLAPI classes for convenience
         self.owlClasses = dict()
-        for cl in self.owlOnto.getClassesInSignature(True):
+        for cl in self.owlOnto.getClassesInSignature():
             self.owlClasses[str(cl.getIRI())] = cl
         # for creating axioms
         self.owlDataFactory = OWLManager.getOWLDataFactory()
         
     def owlClass_from_iri(self, iri: str):
-        return self.owlClasses[iri]
+        try:
+            return self.owlClasses[iri]
+        except:
+            if iri == OWL_THING:
+                return self.OWLThing
+            else:
+                raise ValueError(f"Class IRI {iri} not found ...")
+    
+    @property
+    def OWLThing(self):
+        roots = self.reasoner.getTopClassNode().getEntities()
+        for r in roots:
+            if str(r.getIRI()) == OWL_THING:
+                return r
 
     def superclasses_of(self, owlClass, direct: bool = False):
         """Return the named superclasses of a given OWLAPI class, either direct or inferred
@@ -55,7 +69,9 @@ class OWLAPIReasoner:
         """
         subclasses = self.reasoner.getSubClasses(owlClass, direct).getFlattened()
         subclass_iris = [str(s.getIRI()) for s in subclasses]
-        subclass_iris.remove("http://www.w3.org/2002/07/owl#Nothing")
+        # the leaf node is owl#Nothing
+        if OWL_NOTHING in subclass_iris:
+            subclass_iris.remove(OWL_NOTHING)
         return subclass_iris
 
     def check_disjoint(self, owlClass1, owlClass2):
