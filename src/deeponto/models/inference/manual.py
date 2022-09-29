@@ -27,10 +27,12 @@ def inference_templates(model_name: str):
         cls_token = "<s>"
         sep_token = "</s></s>"
     return [
-        f"{PREMISE}?{sep_token}{MASK}, {HYPOTHESIS}",
-        f'"{PREMISE}"?{sep_token}{MASK}, "{HYPOTHESIS}"',
-        f"{PREMISE}? {MASK}, {HYPOTHESIS}",
-        f'"{PREMISE}"? {MASK}, "{HYPOTHESIS}"',
+        f"{PREMISE}?{sep_token}{MASK}, {HYPOTHESIS}.",  # from NLI
+        f'"{PREMISE}"?{sep_token}{MASK}, "{HYPOTHESIS}".',  # from NLI
+        f"{PREMISE}? {MASK}, {HYPOTHESIS}.",  # from NLI
+        f'"{PREMISE}"? {MASK}, "{HYPOTHESIS}".',  # from NLI
+        f'If {PREMISE}, then {MASK}, {HYPOTHESIS}',  # more natural
+        f'{PREMISE}. Is it true that {HYPOTHESIS}? {MASK}.' # more natural
     ]
 
 
