@@ -22,6 +22,7 @@ import torch
 import numpy as np
 import subprocess
 import json
+import ast
 from datasets import load_dataset
 from openprompt.data_utils import InputExample
 
@@ -35,6 +36,12 @@ def uniqify(ls):
     """
     non_empty_ls = list(filter(lambda x: x != "", ls))
     return list(dict.fromkeys(non_empty_ls))
+
+
+def parse_tuple(tuple_string: str):
+    """Parse string tuple to tuple, e.g., '(1, 2)' => (1, 2)
+    """
+    return ast.literal_eval(tuple_string)
 
 
 def to_identifier(var_name: str):
@@ -85,7 +92,7 @@ def split_java_identifier(java_style_identifier: str):
             capitalized_word = ""
         else:
             words.append(w.lower())
-            
+
     return words
 
 
