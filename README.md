@@ -49,7 +49,7 @@ pip install deeponto
 DeepOnto is mainly extended from the following packages:
 
 - [OwlReady2](https://owlready2.readthedocs.io/) for basic ontology processing.
-- [OWLAPI](http://owlapi.sourceforge.net/) (in Java) for advanced ontology processing. The Python-Java interaction relies on what has been implemented [mOWL](https://mowl.readthedocs.io/en/latest/index.html) which uses [JPype](https://jpype.readthedocs.io/en/latest/).
+- [OWLAPI](http://owlapi.sourceforge.net/) (in Java) for advanced ontology processing. The Python-Java interaction relies on what has been implemented in [mOWL](https://mowl.readthedocs.io/en/latest/index.html) which uses [JPype](https://jpype.readthedocs.io/en/latest/).
 - [Transformers](https://github.com/huggingface/transformers) for pre-trained language models.
 
 To use DeepOnto, please manually configure Pytorch installation using:
