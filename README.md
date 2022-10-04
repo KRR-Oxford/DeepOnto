@@ -82,7 +82,7 @@ pip install -r requirements.txt
 
 ?> Click [here](using_deeponto.md) for script usage.
 
-## Ontology Matchng Resources
+## Ontology Matching Resources
 
 **Bio-ML** for equivalence and subsumption ontology matching:
 -  Download link: *https://doi.org/10.5281/zenodo.6510086* (CC BY 4.0 International);
