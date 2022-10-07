@@ -435,6 +435,17 @@ class AnchoredOntoMappings(SavedObj):
             cand_map = EntityMapping(cand_tup[0], cand_tup[1], self.rel, 0.0)
             unscored_cands.add(cand_map)
         return unscored_cands
+    
+    def flattened(self) -> OntoMappings:
+        """Covert to scored OntoMappings
+        """
+        scored_cands = OntoMappings(self.flag, self.n_best, self.rel, self.dup_strategy)
+        for anchor_tup, cands in self.anchor2cands.items():
+            head = anchor_tup[0]
+            for tail, score in cands.items():   
+                cand_map = EntityMapping(head, tail, self.rel, score)
+                scored_cands.add(cand_map)
+        return scored_cands
 
     def to_df(self, with_scores=False):
         """Unravel the anchor mappings from dict to dataframe
@@ -472,6 +483,7 @@ class AnchoredOntoMappings(SavedObj):
         n_best: Optional[int] = None,
         rel: str = DEFAULT_REL,
         dup_strategy: str = DEFAULT_DUP_STRATEGY,
+        is_ranked: bool = False
     ):
         """Read mappings from csv/tsv files and preserve mappings with scores >= threshold
         """
@@ -483,7 +495,11 @@ class AnchoredOntoMappings(SavedObj):
             if "CandScores" in df.columns:
                 cand_scores = ast.literal_eval(df["CandScores"])
             else:
-                cand_scores = [0.0] * len(tgt_cands)
+                # if already ranked from left to right, adding fake scores to preserve ranking
+                if is_ranked:
+                    cand_scores = [1 / len(tgt_cands) * x for x in range(len(tgt_cands), 0, -1)]
+                else:
+                    cand_scores = [0.0] * len(tgt_cands)
             for i in range(len(tgt_cands)):
                 cand_map = EntityMapping(anchor_map.head, tgt_cands[i], rel, cand_scores[i])
                 anchor_map.add_candidate(cand_map)
