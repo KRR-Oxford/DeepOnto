@@ -52,7 +52,11 @@ def global_match_eval(
 
     # load prediction mappings from the saved directory
     if not processed_pred:
-        pred_maps = OntoMappings.from_saved(pred_path)
+        try:
+            pred_maps = OntoMappings.from_saved(pred_path)
+        except:
+            pred_maps = OntoMappings.read_table_mappings(pred_path)
+            
         pred = pred_thresholding(pred_maps, threshold)
     else:
         pred = processed_pred
@@ -184,13 +188,20 @@ def local_rank_eval(pred_path: str, ref_anchored_maps_path: str, *ks: int):
 
     banner_msg("Eval using Hits@K, MRR")
 
-    # load prediction mappings from the saved directory
-    pred_maps = OntoMappings.from_saved(pred_path)
     if ref_anchored_maps_path.endswith(".tsv"):
         ref_anchored_maps = AnchoredOntoMappings.read_table_mappings(ref_anchored_maps_path)
     else:
         ref_anchored_maps = AnchoredOntoMappings.from_saved(ref_anchored_maps_path)
-    ref_anchored_maps.fill_scored_maps(pred_maps)
+    try:
+        pred_maps = OntoMappings.from_saved(pred_path)
+        ref_anchored_maps.fill_scored_maps(pred_maps)
+    except:
+        pred_maps = AnchoredOntoMappings.read_table_mappings(pred_path, is_ranked=True)
+        pred_maps.save_instance("./test.tsv")
+        if set(pred_maps.anchor2cands.keys()) == set(ref_anchored_maps.anchor2cands.keys()):
+            ref_anchored_maps = pred_maps
+        else:
+            raise ValueError("Could not find correct anchors.")
     # print(ref_anchor_maps.anchor2cand)
 
     # load reference mappings and (opt) null mappings
