@@ -196,9 +196,10 @@ def local_rank_eval(pred_path: str, ref_anchored_maps_path: str, *ks: int):
         pred_maps = OntoMappings.from_saved(pred_path)
         ref_anchored_maps.fill_scored_maps(pred_maps)
     except:
+        # for those with already ranked mapppings
         pred_maps = AnchoredOntoMappings.read_table_mappings(pred_path, is_ranked=True)
-        pred_maps.save_instance("./test.tsv")
         if set(pred_maps.anchor2cands.keys()) == set(ref_anchored_maps.anchor2cands.keys()):
+            # the ranked input should have the same set of anchors as the reference anchor mappings
             ref_anchored_maps = pred_maps
         else:
             raise ValueError("Could not find correct anchors.")
