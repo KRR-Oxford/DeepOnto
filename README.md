@@ -74,8 +74,7 @@ pip install -r requirements.txt
 | Name                 | Task                            | Type              |
 | :-------------       | :---------------                | :--------------   |
 | BERTMap              | Ontology Matching (Equivalence) | Learning-based    |
-| StringMatch          | Ontology Matching (Equivalence) | Rule-based        |
-| EditSimiarity        | Ontology Matching (Equivalence) | Rule-based        |
+| EditSim/StringMatch  | Ontology Matching (Equivalence) | Rule-based        |
 | BERTSubs (not ready) | Ontology Matching (Subsumption) | Learning-based    |
 
 <!-- </div> -->
