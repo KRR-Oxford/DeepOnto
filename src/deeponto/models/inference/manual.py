@@ -31,7 +31,7 @@ def inference_templates(model_name: str):
         f'"{PREMISE}"?{sep_token}{MASK}, "{HYPOTHESIS}".',  # from NLI
         f"{PREMISE}? {MASK}, {HYPOTHESIS}.",  # from NLI
         f'"{PREMISE}"? {MASK}, "{HYPOTHESIS}".',  # from NLI
-        f'If {PREMISE}, then {MASK}, {HYPOTHESIS}',  # more natural
+        f'If {PREMISE}, then {MASK}, {HYPOTHESIS}.',  # more natural
         f'{PREMISE}. Is it true that {HYPOTHESIS}? {MASK}.' # more natural
     ]
 

@@ -16,10 +16,10 @@
 
 from typing import Optional
 import torch
-from tqdm.std import tqdm
+import enlighten
 from openprompt.prompts import ManualTemplate
 from openprompt.prompts import ManualVerbalizer
-from openprompt import PromptForClassification, PromptForGeneration
+from openprompt import PromptForClassification
 from openprompt import PromptDataLoader
 from openprompt.plms import load_plm
 
@@ -78,7 +78,9 @@ class InferencePipeline:
         preds = []
         truths = []
         with torch.no_grad():
-            for inference_sample in tqdm(inference_data_loader, desc="NLI Inference"):
+            manager = enlighten.get_manager()
+            pbar = manager.counter(total=len(inference_data_loader), desc="Running Inference", unit='sample')
+            for inference_sample in inference_data_loader:
                 logits = self.prompt_model(inference_sample)
                 pred_idx = torch.argmax(logits, dim=-1)
                 pred = self.inference_classes[pred_idx]
@@ -88,6 +90,7 @@ class InferencePipeline:
                 #     correct += 1
                 preds.append(pred)
                 truths.append(ground_truth)
+                pbar.update()
         results = list(zip(preds, truths))
         acc = sum([p == g for p, g in results]) / len(results)
         print(f"Inference results over {len(results)} samples: {round(acc, 5)} (ACC)")
