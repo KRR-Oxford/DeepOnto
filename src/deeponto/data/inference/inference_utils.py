@@ -13,21 +13,16 @@
 # limitations under the License.
 
 from collections import defaultdict
+from typing import Callable, Optional
 from datasets import load_dataset
 from openprompt.data_utils import InputExample
 from deeponto.utils import read_table
 from deeponto import SavedObj
 
 # default label indexing for inference classfication
-trinary_label2idx = {
-    "entailment": 0,
-    "neutral": 1,
-    "contradiction": 2
-}
-binary_label2idx = {
-    "entailment": 0,
-    "contradiction": 1
-}
+trinary_label2idx = {"entailment": 0, "neutral": 1, "contradiction": 2}
+binary_label2idx = {"entailment": 0, "contradiction": 1}
+
 
 def load_prompt_data_from_huggingface(dataset_path: str = "multi_nli", *splits: str):
     """Load a datast from huggingface datasets and transform to openprompt examples.
@@ -45,7 +40,13 @@ def load_prompt_data_from_huggingface(dataset_path: str = "multi_nli", *splits: 
         prompt_data_dict[split] = x_samples
     return prompt_data_dict
 
-def load_prompt_data_from_table(tabular_data_path: str, label2idx: dict):
+
+def load_prompt_data_from_table(
+    tabular_data_path: str,
+    label2idx: dict,
+    premise_pattern: Optional[Callable] = lambda x: x,  # extra pattern for premise, default is no change
+    hypothesis_pattern: Optional[Callable] = lambda x: x,  # extra pattern for hypothesis, default is no change
+):
     """Load an inference dataset containing (premise-hypothesis) pairs
     from the json file
     """
@@ -53,7 +54,11 @@ def load_prompt_data_from_table(tabular_data_path: str, label2idx: dict):
     prompt_data = []
     stats = defaultdict(lambda: 0)
     for i, dp in df.iterrows():
-        samp = {"premise": dp["Premise"], "hypothesis": dp["Hypothesis"], "label": dp["Label"]}
+        samp = {
+            "premise": premise_pattern(dp["Premise"]),
+            "hypothesis": hypothesis_pattern(dp["Hypothesis"]),
+            "label": dp["Label"],
+        }
         label_idx = label2idx[dp["Label"]]
         inp = InputExample(guid=i, meta=samp, label=label_idx)
         prompt_data.append(inp)
