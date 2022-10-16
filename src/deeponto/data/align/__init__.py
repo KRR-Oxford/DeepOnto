@@ -11,6 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from .neg_cands import NegativeCandidateGenerator
+from .cand_maps import MappingCandidateGenerator
 from .subs_maps import SubsumptionMappingGenerator
 from .text_semantics_corpora import *
