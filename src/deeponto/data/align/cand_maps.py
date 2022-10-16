@@ -29,7 +29,7 @@ from deeponto import SavedObj, FlaggedObj
 sampling_options = ["idf", "neighbour", "random"]
 
 
-class NegativeCandidateGenerator(FlaggedObj):
+class MappingCandidateGenerator(FlaggedObj):
     def __init__(
         self,
         saved_path: str,
