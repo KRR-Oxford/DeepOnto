@@ -13,15 +13,46 @@
 # limitations under the License.
 
 from collections import defaultdict
-from typing import Callable, Optional
+from typing import Callable, Optional, List
 from datasets import load_dataset
 from openprompt.data_utils import InputExample
-from deeponto.utils import read_table
+from openprompt import PromptDataLoader
+from openprompt.prompt_base import Template
+from openprompt.plms.utils import TokenizerWrapper
+from transformers.tokenization_utils import PreTrainedTokenizer
+from yacs.config import CfgNode
+
+from deeponto.utils import read_table, credit
 from deeponto import SavedObj
 
 # default label indexing for inference classfication
 trinary_label2idx = {"entailment": 0, "neutral": 1, "contradiction": 2}
 binary_label2idx = {"entailment": 0, "contradiction": 1}
+
+
+@credit("openprompt", "https://github.com/thunlp/OpenPrompt/blob/main/experiments/cli.py")
+def build_dataloader(
+    dataset: List,
+    template: Template,
+    tokenizer: PreTrainedTokenizer,
+    tokenizer_wrapper_class: TokenizerWrapper,
+    config: CfgNode,
+    split: str,
+):
+    dataloader = PromptDataLoader(
+        dataset=dataset,
+        template=template,
+        tokenizer=tokenizer,
+        tokenizer_wrapper_class=tokenizer_wrapper_class,
+        batch_size=config[split].batch_size,
+        shuffle=config[split].shuffle_data,
+        teacher_forcing=config[split].teacher_forcing
+        if hasattr(config[split], "teacher_forcing")
+        else None,
+        predict_eos_token=True if config.task == "generation" else False,
+        **config.dataloader,
+    )
+    return dataloader
 
 
 def load_prompt_data_from_huggingface(dataset_path: str = "multi_nli", *splits: str):
@@ -44,8 +75,12 @@ def load_prompt_data_from_huggingface(dataset_path: str = "multi_nli", *splits: 
 def load_prompt_data_from_table(
     tabular_data_path: str,
     label2idx: dict,
-    premise_pattern: Optional[Callable] = lambda x: x,  # extra pattern for premise, default is no change
-    hypothesis_pattern: Optional[Callable] = lambda x: x,  # extra pattern for hypothesis, default is no change
+    premise_pattern: Optional[
+        Callable
+    ] = lambda x: x,  # extra pattern for premise, default is no change
+    hypothesis_pattern: Optional[
+        Callable
+    ] = lambda x: x,  # extra pattern for hypothesis, default is no change
 ):
     """Load an inference dataset containing (premise-hypothesis) pairs
     from the json file
