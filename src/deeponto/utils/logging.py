@@ -14,6 +14,7 @@
 import logging
 import datetime
 import time
+from functools import wraps
 
 # subclass of logging.Formatter
 class RuntimeFormatter(logging.Formatter):
@@ -28,6 +29,7 @@ class RuntimeFormatter(logging.Formatter):
         elapsed = duration.strftime("%H:%M:%S")
         return "{}".format(elapsed)
 
+
 def create_logger(model_name: str, saved_path: str):
     """Create logger for both console info and saved info
     """
@@ -40,7 +42,9 @@ def create_logger(model_name: str, saved_path: str):
     ch = logging.StreamHandler()
     ch.setLevel(logging.INFO)
     # create formatter and add it to the handlers
-    formatter = RuntimeFormatter('[Time: %(asctime)s] - [PID: %(process)d] - [Model: %(name)s] \n%(message)s')
+    formatter = RuntimeFormatter(
+        "[Time: %(asctime)s] - [PID: %(process)d] - [Model: %(name)s] \n%(message)s"
+    )
     fh.setFormatter(formatter)
     ch.setFormatter(formatter)
     # add the handlers to the logger
@@ -48,9 +52,11 @@ def create_logger(model_name: str, saved_path: str):
     logger.addHandler(ch)
     return logger
 
+
 ##################################################################################
 ###                              pretty print                                  ###
 ##################################################################################
+
 
 def banner_msg(message: str, banner_len: int = 70, sym="#"):
     """Print banner message:
@@ -67,3 +73,22 @@ def banner_msg(message: str, banner_len: int = 70, sym="#"):
     print(message)
     print(sym * banner_len)
     print()
+
+
+##################################################################################
+###                              adding tags                                   ###
+##################################################################################
+
+def credit(*tags):
+    """Add credit tagger to any external functions"""
+    # Define a new decorator, named "decorator", to return
+    def decorator(func):
+        # Ensure the decorated function keeps its metadata
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            # Call the function being decorated and return the result
+            return func(*args, **kwargs)
+        wrapper.credit_to = tags
+        return wrapper
+    # Return the new decorator
+    return decorator
