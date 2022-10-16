@@ -4,7 +4,7 @@ import sys
 main_dir = os.getcwd().split("DeepOnto")[0] + "DeepOnto/src"
 sys.path.append(main_dir)
 
-from deeponto.data.align import NegativeCandidateGenerator
+from deeponto.data.align import MappingCandidateGenerator
 from deeponto.onto import Ontology
 from deeponto.onto.text import Tokenizer
 from deeponto.utils import set_seed, print_choices
@@ -56,7 +56,7 @@ def main(
     tokenizer = Tokenizer.from_pretrained(tokenizer_path)
     src_onto = Ontology.from_new(src_onto_path, lab_props, tokenizer)
     tgt_onto = Ontology.from_new(tgt_onto_path, lab_props, tokenizer)
-    sampler = NegativeCandidateGenerator(
+    sampler = MappingCandidateGenerator(
         saved_path,
         src_onto,
         tgt_onto,
