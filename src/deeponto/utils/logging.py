@@ -76,10 +76,11 @@ def banner_msg(message: str, banner_len: int = 70, sym="#"):
 
 
 ##################################################################################
-###                              adding tags                                   ###
+###                              adding credit                                 ###
 ##################################################################################
 
-def credit(*tags):
+# NOTE: https://stackoverflow.com/questions/308999/what-does-functools-wraps-do
+def credit(name: str, link: str):
     """Add credit tagger to any external functions"""
     # Define a new decorator, named "decorator", to return
     def decorator(func):
@@ -88,7 +89,7 @@ def credit(*tags):
         def wrapper(*args, **kwargs):
             # Call the function being decorated and return the result
             return func(*args, **kwargs)
-        wrapper.credit_to = tags
+        wrapper.credit_to = f"This function is credited to {name} at {link}." 
         return wrapper
     # Return the new decorator
     return decorator
