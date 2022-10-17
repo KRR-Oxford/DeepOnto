@@ -275,7 +275,9 @@ def trainer(
 
     CUR_TEMPLATE = template
     CUR_VERBALIZER = verbalizer
-    print(verbalizer.label_words)
+    logger = logging.getLogger()
+    logger.info(f"Label classes: {verbalizer.classes}")
+    logger.info(f"Label words: {verbalizer.label_words}")
     if zero:
         res = runner.test()
     elif test:
