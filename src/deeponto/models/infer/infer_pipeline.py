@@ -65,21 +65,8 @@ def build_dataloader(
 
 
 @credit("openprompt", "https://github.com/thunlp/OpenPrompt/blob/main/experiments/cli.py")
-def run_inference(
-    template_choice: int,
-    verbalizer_choice: int,
-    learning_setting: str = "zero_shot",
-    num_train_per_label: int = 0,
-    num_dev_per_label: int = 0,
-):
+def run_inference(config, args):
     global CUR_TEMPLATE, CUR_VERBALIZER
-    config, args = get_config()
-    config.manual_template.choice = template_choice
-    config.manual_verbalizer.choice = verbalizer_choice
-    config.learning_setting = learning_setting
-    if learning_setting == "few_shot":
-        config.sampling_from_train.num_examples_per_label = num_train_per_label
-        config.sampling_from_train.num_examples_per_label_dev = num_dev_per_label
     # exit()
     # init logger, create log dir and set log level, etc.
     if args.resume and args.test:
