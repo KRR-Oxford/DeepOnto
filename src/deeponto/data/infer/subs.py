@@ -20,13 +20,13 @@ import enlighten
 
 from deeponto.onto import Ontology
 from deeponto.onto.graph.graph_utils import thing_class_ancestors_of
-from deeponto.onto.logic.reasoner import OWLAPIReasoner
+from deeponto.onto.logic.reasoner import OWLReasoner
 from deeponto import SavedObj, OWL_THING
 
 
 class SubsumptionPairGenerator:
     def __init__(self, onto_path: str, neg_ratio: int = 1, hard_neg_ratio: Optional[int] = None):
-        self.reasoner = OWLAPIReasoner(onto_path)
+        self.reasoner = OWLReasoner(onto_path)
         self.onto = Ontology.from_new(onto_path)
         self.class_iris = list(self.reasoner.owlClasses.keys())
         self.class_iris_with_root = self.class_iris + [OWL_THING]
