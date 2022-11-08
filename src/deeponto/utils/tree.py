@@ -67,12 +67,12 @@ class RangeNode(NodeMixin):
             inserted = False
             for ch in self.children:
                 if (node < ch) is True:
-                    print("further down")
+                    # print("further down")
                     ch.insert_child(node)
                     inserted = True
                     break
                 elif (node > ch) is True:
-                    print("insert in between")
+                    # print("insert in between")
                     ch.parent = node
                     break
             if not inserted:
