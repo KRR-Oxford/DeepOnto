@@ -11,90 +11,84 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""A ternary tree implementation for integer ranges (without partial overlap)."""
+"""A tree implementation for ranges (without partial overlap).
+- parent node's range fully covers child node's range, e.g., [1, 10] isParentOf [2, 5]
+- partial overlap between ranges not allowed, e.g., [2, 4] and [3, 5] cannot appear in the same RangeNodeTree
+- non-overlap ranges are on different branches 
+- child nodes are ordered according to their relative positions
+"""
 
 from __future__ import annotations
+from anytree import NodeMixin, RenderTree
+from typing import List
+import math
 
-class RangeNode:
-    def __init__(self, start: int, end: int, **kwargs):
-        assert start <= end
+class RangeNode(NodeMixin):
+    def __init__(self, start, end, **kwargs):
+        if start >= end:
+            raise RuntimeError("invalid start and end positions ...")
         self.start = start
         self.end = end
         for k, v in kwargs.items():
             setattr(self, k, v)
-        self.left = None
-        self.right = None
-        self.container = None
-        self.content = None
-    
-    def insert(self, start: int, end: int, **kwargs):
-        assert start <= end
-        if end < self.start:  # inserted node is on the left
-            if self.left:
-                self.left.insert(start, end, **kwargs)
-            else:
-                self.left = RangeNode(start, end, **kwargs)
-        elif self.end < start:  # inserted node is on the right
-            if self.right:
-                self.right.insert(start, end, **kwargs)
-            else:
-                self.right = RangeNode(start, end, **kwargs)
-        # the following two parts are reversible edges
-        elif self.start <= start and end <= self.end:  # inserted node is smaller 
-            new_node = RangeNode(start, end, **kwargs)
-            if self.content:
-                if start <= self.content.start and self.content.end <= end:  # inserted node is in between 
-                     # insert the node in between 
-                     self.content.container = new_node
-                     new_node.content = self.content
-                     self.content = new_node
-                     new_node.container = self
-                else:
-                    # going further down
-                    self.content.insert(start, end, **kwargs)
-            else:
-                # just set reversible relationships
-                self.content = new_node
-                new_node.container = self
-        elif start <= self.start and self.end <= end: # inserted node is larger
-            new_node = RangeNode(start, end, **kwargs)
-            # check if left and right need to be changed because of the new container
-            if self.right and new_node.end < self.right.start:
-                new_node.right = self.right
-                self.right = None
-            if self.left and self.left.end < new_node.start:
-                new_node.left = self.left
-            # update container
-            if self.container:
-                if self.container.start <= start and end <= self.container.end: # inserted node is in between
-                    # insert the node in between
-                    self.container.content = new_node
-                    new_node.container = self.container
-                    self.container = new_node
-                    new_node.content = self
-                else:
-                    # going further up
-                    self.container.insert(start, end, **kwargs)
-            else:
-                self.container = new_node
-                new_node.content = self
-        else:
-            raise RuntimeError("Cannot insert a new node with partial overlap")
+        super().__init__()
         
+    # def __eq__(self, other: RangeNode):
+    #     return self.start == other.start and self.end == other.end
+        
+    def __gt__(self, other: RangeNode):
+        if other.start <= self.start and self.end <= other.end:
+            return False
+        elif self.start <= other.start and other.end <= self.end:
+            return True
+        elif other.end < self.start or self.end < other.start:
+            # print("compared ranges are irrelevant ...")
+            return "irrelevant"
+        else:
+            raise RuntimeError("compared ranges have partial overlap ...")
+        
+    @staticmethod
+    def sort_by_start(nodes: List[RangeNode]):
+        """A sorting function that sorts the nodes by their starting positions
+        """
+        temp = {
+            sib: sib.start for sib in nodes
+        }
+        return list(dict(sorted(temp.items(), key=lambda item: item[1])).keys())
     
-    def __str__(self):
+    def insert_child(self, node: RangeNode):
+        """Child nodes have a smaller (inclusive) range
+        e.g., [2, 5] is a child of [1, 6]
+        """
+        if node > self:
+            raise RuntimeError("invalid child node")
+        # print(self.children)
+        if self.children:
+            inserted = False
+            for ch in self.children:
+                if (node < ch) is True:
+                    print("further down")
+                    ch.insert_child(node)
+                    inserted = True
+                    break
+                elif (node > ch) is True:
+                    print("insert in between")
+                    ch.parent = node
+                    break
+            if not inserted:
+                self.children = list(self.children) + [node]
+                self.children = self.sort_by_start(self.children)
+        else:
+            node.parent = self
+            self.children = [node]
+    
+    def __repr__(self):
         # only present downwards (down, left, right)
         printed = f"[{self.start}, {self.end}]"
-        if self.content:
-            printed = f"[{self.start}, {str(self.content)}, {self.end}]"
-        if self.left:
-            printed = f"{str(self.left)}, {printed}"
-        if self.right:
-            printed = f"{printed}, {str(self.right)}"
+        if self.children:
+            printed = f"[{self.start}, {str(list(self.children))[1:-1]}, {self.end}]"
         return printed
     
-    def print_root(self):
-        cur_node = self
-        while cur_node.container:
-            cur_node = cur_node.container
-        print(cur_node)
+    def print_tree(self):
+        print(RenderTree(self))
+
