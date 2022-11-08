@@ -44,6 +44,7 @@ class OWLAxiomParser:
         parentheses matching algorithms.
         """
         axiom_text = self.abbr_axiom_text(axiom_text)
+        print("To parse the following (transformed) axiom text:\n", axiom_text)
         # parse complex patterns first
         cur_parsed = self._parse(axiom_text)
         # parse the IRI patterns latter
@@ -57,7 +58,8 @@ class OWLAxiomParser:
         parentheses matching algorithms.
         """
         if not cur_parsed:
-            parsed = RangeNode(0, len(axiom_text) + 1, type=axiom_text[:5], text=axiom_text)
+            # a root node that covers the entire sentence
+            parsed = RangeNode(0, len(axiom_text) + 1, type="Root", text=axiom_text)
         else:
             parsed = cur_parsed
         stack = []

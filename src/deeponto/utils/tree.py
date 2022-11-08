@@ -62,6 +62,9 @@ class RangeNode(NodeMixin):
         """
         if node > self:
             raise RuntimeError("invalid child node")
+        if node.start == self.start and node.end == self.end:
+            # duplicated node
+            return
         # print(self.children)
         if self.children:
             inserted = False
@@ -74,7 +77,8 @@ class RangeNode(NodeMixin):
                 elif (node > ch) is True:
                     # print("insert in between")
                     ch.parent = node
-                    break
+                    # NOTE: should not break here as it could be parent of multiple children !
+                    # break
             if not inserted:
                 self.children = list(self.children) + [node]
                 self.children = self.sort_by_start(self.children)
