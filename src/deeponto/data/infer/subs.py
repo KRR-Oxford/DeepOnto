@@ -24,7 +24,7 @@ from deeponto.onto.logic.reasoner import OWLReasoner
 from deeponto import SavedObj, OWL_THING
 
 
-class SubsumptionPairGenerator:
+class AtomicSubsumptionPairGenerator:
     def __init__(self, onto_path: str, neg_ratio: int = 1, hard_neg_ratio: Optional[int] = None):
         self.reasoner = OWLReasoner(onto_path)
         self.onto = Ontology.from_new(onto_path)
@@ -113,29 +113,14 @@ class SubsumptionPairGenerator:
         i = 0
         added = 0
         while added < max_neg_num and i < max_iter:
-            accepted = False
             left_class_iri, right_class_iri = sample_a_pair()
             # skip if it doesn't draw a pair
             if not left_class_iri or not right_class_iri:
                 i += 1
                 iter_bar.update(1)
                 continue
-            # get the owlapi class objects
-            owl_left = self.reasoner.owlClass_from_iri(left_class_iri)
-            owl_right = self.reasoner.owlClass_from_iri(right_class_iri)
-            # NOTE: Test 1: check for disjointness (after reasoning)
-            if self.reasoner.check_disjoint(owl_left, owl_right):
-                accepted = True
-            else:
-                # NOTE: Test 2: check any common descendants including themselves (after reasoning)
-                left_descendant_iris = self.reasoner.subclasses_of(owl_left)
-                left_descendant_iris.append(left_class_iri)
-                right_descendant_iris = self.reasoner.subclasses_of(owl_right)
-                right_descendant_iris.append(right_class_iri)
-                if not set(left_descendant_iris).intersection(set(right_descendant_iris)):
-                    accepted = True
             # collect class label if accepted
-            if accepted:
+            if self.sanity_check(left_class_iri, right_class_iri):
                 neg = f"{left_class_iri} <NotSubsumedBy> {right_class_iri}"
                 negatives.append(neg)
                 added += 1
@@ -159,6 +144,26 @@ class SubsumptionPairGenerator:
         """[Auxiliary]: hard negatives are sampled from sibling classes (direct children of a parent class)
         """
         return tuple(random.choice(self.sibling_pairs))
+    
+    def sanity_check(self, left_class_iri: str, right_class_iri: str):
+        """Sanity check for a given negative sample
+        """
+        accepted = False
+        # get the owlapi class objects
+        owl_left = self.reasoner.owlClass_from_iri(left_class_iri)
+        owl_right = self.reasoner.owlClass_from_iri(right_class_iri)
+        # NOTE: Test 1: check for disjointness (after reasoning)
+        if self.reasoner.check_disjoint(owl_left, owl_right):
+            accepted = True
+        else:
+            # NOTE: Test 2: check any common descendants including themselves (after reasoning)
+            left_descendant_iris = self.reasoner.subclasses_of(owl_left)
+            left_descendant_iris.append(left_class_iri)
+            right_descendant_iris = self.reasoner.subclasses_of(owl_right)
+            right_descendant_iris.append(right_class_iri)
+            if not set(left_descendant_iris).intersection(set(right_descendant_iris)):
+                accepted = True
+        return accepted
 
     def random_select_lab_pair(self, left_class_iri: str, right_class_iri: str):
         """[Auxiliary]: randomly select a pair of labels from two classes

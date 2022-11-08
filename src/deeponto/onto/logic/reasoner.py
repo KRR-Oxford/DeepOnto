@@ -14,7 +14,7 @@
 """Reasoner Class based on OWLAPI"""
 
 import os
-from deeponto import init_jvm, OWL_THING, OWL_NOTHING
+from deeponto import init_jvm, OWL_THING, OWL_NOTHING, OWL_BOTTOM_OBJECT_PROP, OWL_TOP_OBJECT_PROP
 
 init_jvm("2g")
 
@@ -39,6 +39,11 @@ class OWLReasoner:
         self.owlClasses = dict()
         for cl in self.owlOnto.getClassesInSignature():
             self.owlClasses[str(cl.getIRI())] = cl
+        # save the OWLAPI object properties for convenience
+        self.owlObjectProperties = dict()
+        for obj in self.owlOnto.getObjectPropertiesInSignature():
+            if str(obj.getIRI()) != OWL_TOP_OBJECT_PROP:
+                self.owlObjectProperties[str(obj.getIRI())] = obj
         # for creating axioms
         self.owlDataFactory = OWLManager.getOWLDataFactory()
 
@@ -84,6 +89,23 @@ class OWLReasoner:
         if OWL_NOTHING in subclass_iris:
             subclass_iris.remove(OWL_NOTHING)
         return subclass_iris
+
+    def super_object_properties_of(self, owlObjProp, direct: bool = False):
+        """Return the super-object properties of a given OWLAPI object property, either direct or inferred
+        """
+        super_obj_props = self.reasoner.getSuperObjectProperties(owlObjProp, direct).getFlattened()
+        super_obj_iris = [str(s.getIRI()) for s in super_obj_props]
+        return super_obj_iris
+
+    def sub_object_properties_of(self, owlObjProp, direct: bool = False):
+        """Return the sub-object properties of a given OWLAPI object property, either direct or inferred
+        """
+        sub_obj_props = self.reasoner.getSubObjectProperties(owlObjProp, direct).getFlattened()
+        sub_obj_iris = [str(s.getIRI()) for s in sub_obj_props]
+        # the leaf node is owl#Nothing
+        if OWL_BOTTOM_OBJECT_PROP in sub_obj_iris:
+            sub_obj_iris.remove(OWL_BOTTOM_OBJECT_PROP)
+        return sub_obj_iris
 
     def check_disjoint(self, owlClass1, owlClass2):
         """Check if two entity classes are disjoint according to the reasoner
