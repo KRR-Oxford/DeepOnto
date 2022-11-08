@@ -15,16 +15,17 @@
 
 import os
 from deeponto import init_jvm, OWL_THING, OWL_NOTHING
+
 init_jvm("2g")
 
 from java.io import *  # type: ignore
 from java.util import *  # type: ignore
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
-from org.semanticweb.owlapi.model import IRI # type: ignore
+from org.semanticweb.owlapi.model import IRI  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory  # type: ignore
 
 
-class OWLAPIReasoner:
+class OWLReasoner:
     def __init__(self, onto_path: str):
         print("Perform reasoning on the input ontology ...\n")
         # the ontology object based on OWLAPI
@@ -40,7 +41,7 @@ class OWLAPIReasoner:
             self.owlClasses[str(cl.getIRI())] = cl
         # for creating axioms
         self.owlDataFactory = OWLManager.getOWLDataFactory()
-        
+
     def owlClass_from_iri(self, iri: str):
         try:
             return self.owlClasses[iri]
@@ -49,7 +50,7 @@ class OWLAPIReasoner:
                 return self.OWLThing
             else:
                 raise ValueError(f"Class IRI {iri} not found ...")
-    
+
     @property
     def OWLThing(self):
         roots = self.reasoner.getTopClassNode().getEntities()
@@ -57,15 +58,25 @@ class OWLAPIReasoner:
             if str(r.getIRI()) == OWL_THING:
                 return r
 
+    @property
+    def equiv_axioms(self):
+        """Return all the equivalence axioms in an ontology
+        NOTE: (checked with protege already)
+        """
+        equivs = []
+        for cl in self.owlOnto.getClassesInSignature():
+            equivs += [str(x) for x in self.owlOnto.getEquivalentClassesAxioms(cl)]
+        return list(set(equivs))
+
     def superclasses_of(self, owlClass, direct: bool = False):
-        """Return the named superclasses of a given OWLAPI class, either direct or inferred
+        """Return the atomic (named) superclasses of a given OWLAPI class, either direct or inferred
         """
         superclasses = self.reasoner.getSuperClasses(owlClass, direct).getFlattened()
         superclass_iris = [str(s.getIRI()) for s in superclasses]
         return superclass_iris
 
     def subclasses_of(self, owlClass, direct: bool = False):
-        """Return the named subclasses of a given OWLAPI class, either direct or inferred
+        """Return the atomic (named) subclasses of a given OWLAPI class, either direct or inferred
         """
         subclasses = self.reasoner.getSubClasses(owlClass, direct).getFlattened()
         subclass_iris = [str(s.getIRI()) for s in subclasses]
@@ -79,4 +90,3 @@ class OWLAPIReasoner:
         """
         disjoint_axiom = self.owlDataFactory.getOWLDisjointClassesAxiom([owlClass1, owlClass2])
         return self.reasoner.isEntailed(disjoint_axiom)
-        
