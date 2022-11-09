@@ -48,8 +48,8 @@ class OWLEquivAxiomParser(OWLAxiomParser):
             print("Load the input ontology ...")
             self.onto = Ontology.from_new(self.owl_path)
         # just one exceptional case where the rdf:label is missing
-        if iri == "<http://purl.obolibrary.org/obo/NCBITaxon_32224>":
-            return "eriobotrya japonica"
+        # if iri == "<http://purl.obolibrary.org/obo/NCBITaxon_32224>":
+        #     return "eriobotrya japonica"
         return self.onto.iri2labs[iri[1:-1]][0]
 
     def parse_obj_prop(self, iri: str, is_plural: bool):

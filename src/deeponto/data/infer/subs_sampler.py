@@ -15,7 +15,7 @@
 
 import itertools
 import random
-from typing import Callable, Optional
+from typing import Callable, Optional, List
 import enlighten
 from collections import defaultdict
 
@@ -25,9 +25,15 @@ from deeponto import SavedObj, OWL_THING
 
 
 class SubsumptionSampler:
-    def __init__(self, onto_path: str, neg_ratio: int = 1, hard_neg_ratio: Optional[int] = None):
+    def __init__(
+        self,
+        onto_path: str,
+        lab_props: List[str] = ["http://www.w3.org/2000/01/rdf-schema#label"],
+        neg_ratio: int = 1,
+        hard_neg_ratio: Optional[int] = None,
+    ):
         self.reasoner = OWLReasoner(onto_path)
-        self.onto = Ontology.from_new(onto_path)
+        self.onto = Ontology.from_new(onto_path, lab_props)
         self.class_iris = list(self.reasoner.owlClasses.keys())
         self.class_iris_with_root = self.class_iris + [OWL_THING]
         self.obj_prop_iris = list(self.reasoner.owlObjectProperties.keys())
@@ -176,37 +182,32 @@ class SubsumptionSampler:
     def neg_sample_for_class(self, class_iri: str, try_hard: bool = True):
         """Generate a customized negative sample (atomic classes) with one side fixed
         """
-        accepted = False
-        neg = None
-        while not accepted:
-            neg = None
-            if try_hard:
-                # print("try to sample a hard negative first ...")
-                try:
-                    neg = random.choice(self.sibling_dict[class_iri])
-                except:
-                    # print("no hard negative can be sampled ...")
-                    pass
-            if not neg:
-                neg = random.choice(self.class_iris)
-            if self.sanity_check(class_iri, neg):
-                accepted = True
-        return neg
+        if try_hard:
+            try:
+                neg = random.choice(self.sibling_dict[class_iri])
+                if self.sanity_check(neg):
+                    return neg
+            except:
+                pass
+        # if failed to try hard sample
+        neg = random.choice(self.class_iris)
+        if self.sanity_check(class_iri, neg):
+            return neg
+        else:
+            return None
 
     def neg_sample_for_object_property(self, property_iri: str):
         """Generate a customized negative sample (object property) with one side fixed
         """
-        accepted = False
-        neg = None
-        while not accepted:
-            prop = self.reasoner.owlObjectProperties[property_iri]
-            prop_subs = self.reasoner.sub_object_properties_of(prop) + [property_iri]
-            neg_iri = random.choice(self.obj_prop_iris)
-            neg = self.reasoner.owlObjectProperties[neg_iri]
-            neg_subs = self.reasoner.sub_object_properties_of(neg) + [neg_iri]
-            if not set(prop_subs).intersection(set(neg_subs)):
-                accepted = True
-        return str(neg.getIRI())
+        prop = self.reasoner.owlObjectProperties[property_iri]
+        prop_subs = self.reasoner.sub_object_properties_of(prop) + [property_iri]
+        neg_iri = random.choice(self.obj_prop_iris)
+        neg = self.reasoner.owlObjectProperties[neg_iri]
+        neg_subs = self.reasoner.sub_object_properties_of(neg) + [neg_iri]
+        if not set(prop_subs).intersection(set(neg_subs)):
+            return str(neg.getIRI())
+        else:
+            return None
 
     def random_select_lab_pair(self, left_class_iri: str, right_class_iri: str):
         """[Auxiliary]: randomly select a pair of labels from two classes
