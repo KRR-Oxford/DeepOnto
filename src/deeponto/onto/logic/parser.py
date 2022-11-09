@@ -32,6 +32,7 @@ class OWLAxiomParser:
             "ObjectUnionOf": "[ORR]",
             "ObjectIntersectionOf": "[AND]",
             "EquivalentClasses": "[EQU]",
+            "SubClassOf": "[SUB]",  # self-defined not confirmed in OWLAPI yet
         }
 
     def abbr_axiom_text(self, axiom_text: str):
@@ -44,7 +45,7 @@ class OWLAxiomParser:
         parentheses matching algorithms.
         """
         axiom_text = self.abbr_axiom_text(axiom_text)
-        print("To parse the following (transformed) axiom text:\n", axiom_text)
+        # print("To parse the following (transformed) axiom text:\n", axiom_text)
         # parse complex patterns first
         cur_parsed = self._parse(axiom_text)
         # parse the IRI patterns latter
@@ -82,12 +83,14 @@ class OWLAxiomParser:
                             start - 5,
                             end + 1,
                             type=axiom_text[start - 5 : start],
-                            text=axiom_text[start - 5 : end + 1], 
+                            text=axiom_text[start - 5 : end + 1],
                         )
                         parsed.insert_child(node)
                     else:
                         # no preceding characters for just atomic class (IRI)
-                        node = RangeNode(start, end + 1, type="IRI", text=axiom_text[start : end + 1])
+                        node = RangeNode(
+                            start, end + 1, type="IRI", text=axiom_text[start : end + 1]
+                        )
                         parsed.insert_child(node)
                 except IndexError:
                     print("Too many closing parentheses")
