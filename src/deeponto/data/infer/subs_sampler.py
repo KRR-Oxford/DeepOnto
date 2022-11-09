@@ -11,25 +11,26 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Intra-ontology Subsumption Class Pair Generator for Text Inference"""
+"""Intra-ontology Atomic Subsumption Class Pair Generator for Text Inference"""
 
 import itertools
 import random
 from typing import Callable, Optional
 import enlighten
+from collections import defaultdict
 
 from deeponto.onto import Ontology
-from deeponto.onto.graph.graph_utils import thing_class_ancestors_of
 from deeponto.onto.logic.reasoner import OWLReasoner
 from deeponto import SavedObj, OWL_THING
 
 
-class AtomicSubsumptionPairGenerator:
+class SubsumptionSampler:
     def __init__(self, onto_path: str, neg_ratio: int = 1, hard_neg_ratio: Optional[int] = None):
         self.reasoner = OWLReasoner(onto_path)
         self.onto = Ontology.from_new(onto_path)
         self.class_iris = list(self.reasoner.owlClasses.keys())
         self.class_iris_with_root = self.class_iris + [OWL_THING]
+        self.obj_prop_iris = list(self.reasoner.owlObjectProperties.keys())
         self.subs = self.init_subs()
         self.neg_ratio = neg_ratio
         # set the hard negative ratio the same as the soft negative ratio if not specified
@@ -44,8 +45,13 @@ class AtomicSubsumptionPairGenerator:
                 self.non_single_child_classes[cl_iri] = children
                 self.sibling_pairs += [
                     (x, y) for x, y in itertools.product(children, children) if x != y
-                ] # all possible combinations excluding reflexive pairs
+                ]  # all possible combinations excluding reflexive pairs
         self.sibling_pairs = list(set(self.sibling_pairs))
+        # an additional sibling dictionary for customized (fixed one sample) sampling
+        self.sibling_dict = defaultdict(list)
+        for l, r in self.sibling_pairs:
+            self.sibling_dict[l].append(r)
+            self.sibling_dict[r].append(l)
         print(
             f"{len(self.non_single_child_classes)}/{len(self.class_iris_with_root)} (including Owl:Thing) has multiple (direct and inferred) children ..."
         )
@@ -66,7 +72,9 @@ class AtomicSubsumptionPairGenerator:
         self.subs["soft_negative"] = self.contradiction_pairs(
             self.soft_neg_sample, max_neg_num=int(self.neg_ratio * len(self.subs["positive"]))
         )
-        hard_neg_num = min(self.hard_neg_ratio * len(self.subs["positive"]), len(self.sibling_pairs))
+        hard_neg_num = min(
+            self.hard_neg_ratio * len(self.subs["positive"]), len(self.sibling_pairs)
+        )
         self.subs["hard_negative"] = self.contradiction_pairs(
             self.hard_neg_sample, max_neg_num=int(hard_neg_num)
         )
@@ -144,9 +152,9 @@ class AtomicSubsumptionPairGenerator:
         """[Auxiliary]: hard negatives are sampled from sibling classes (direct children of a parent class)
         """
         return tuple(random.choice(self.sibling_pairs))
-    
+
     def sanity_check(self, left_class_iri: str, right_class_iri: str):
-        """Sanity check for a given negative sample
+        """[Auxiliary]: sanity check for a given negative sample
         """
         accepted = False
         # get the owlapi class objects
@@ -164,6 +172,40 @@ class AtomicSubsumptionPairGenerator:
             if not set(left_descendant_iris).intersection(set(right_descendant_iris)):
                 accepted = True
         return accepted
+
+    def neg_sample_for_class(self, class_iri: str, try_hard: bool = True):
+        """Generate a customized negative sample (atomic classes) with one side fixed
+        """
+        accepted = False
+        neg = None
+        while not accepted:
+            neg = None
+            if try_hard:
+                print("try to sample a hard negative first ...")
+                try:
+                    neg = random.choice(self.sibling_dict[class_iri])
+                except:
+                    print("no hard negative can be sampled ...")
+            if not neg:
+                neg = random.choice(self.class_iris)
+            if self.sanity_check(class_iri, neg):
+                accepted = True
+        return neg
+
+    def neg_sample_for_object_property(self, property_iri: str):
+        """Generate a customized negative sample (object property) with one side fixed
+        """
+        accepted = False
+        neg = None
+        while not accepted:
+            prop = self.reasoner.owlObjectProperties[property_iri]
+            prop_subs = self.reasoner.sub_object_properties_of(prop) + [property_iri]
+            neg_iri = random.choice(self.obj_prop_iris)
+            neg = self.reasoner.owlObjectProperties[neg_iri]
+            neg_subs = self.reasoner.sub_object_properties_of(neg) + [neg_iri]
+            if not set(prop_subs).intersection(set(neg_subs)):
+                accepted = True
+        return str(neg.getIRI())
 
     def random_select_lab_pair(self, left_class_iri: str, right_class_iri: str):
         """[Auxiliary]: randomly select a pair of labels from two classes
