@@ -78,6 +78,9 @@ class OWLReasoner:
         """
         superclasses = self.reasoner.getSuperClasses(owlClass, direct).getFlattened()
         superclass_iris = [str(s.getIRI()) for s in superclasses]
+        # the root node is owl#Thing
+        if OWL_THING in superclass_iris:
+            superclass_iris.remove(OWL_THING)
         return superclass_iris
 
     def subclasses_of(self, owlClass, direct: bool = False):
@@ -95,6 +98,9 @@ class OWLReasoner:
         """
         super_obj_props = self.reasoner.getSuperObjectProperties(owlObjProp, direct).getFlattened()
         super_obj_iris = [str(s.getIRI()) for s in super_obj_props]
+        # the root node is owl#TopObjectProperty
+        if OWL_TOP_OBJECT_PROP in super_obj_iris:
+            super_obj_iris.remove(OWL_TOP_OBJECT_PROP)
         return super_obj_iris
 
     def sub_object_properties_of(self, owlObjProp, direct: bool = False):
@@ -102,7 +108,7 @@ class OWLReasoner:
         """
         sub_obj_props = self.reasoner.getSubObjectProperties(owlObjProp, direct).getFlattened()
         sub_obj_iris = [str(s.getIRI()) for s in sub_obj_props]
-        # the leaf node is owl#Nothing
+        # the leaf node is owl#BottomObjectProperty
         if OWL_BOTTOM_OBJECT_PROP in sub_obj_iris:
             sub_obj_iris.remove(OWL_BOTTOM_OBJECT_PROP)
         return sub_obj_iris
