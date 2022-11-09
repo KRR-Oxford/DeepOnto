@@ -62,10 +62,10 @@ class OWLEquivAxiomParser(OWLAxiomParser):
     def parse_and_atoms(self, node: RangeNode):
         assert re.findall(AND_ATOMS, node.text)
         return " and ".join([self.parse_atom_class(ch.text) for ch in node.children])
-    
+
     def parse_ext_atom(self, node: RangeNode, as_tuple: bool = False):
         assert re.findall(EXT_ATOM, node.text)
-        assert len(node.children) == 2 # children = [objectProperty, atomClass]
+        assert len(node.children) == 2  # children = [objectProperty, atomClass]
         obj_prop = self.parse_obj_prop(node.children[0].text, is_plural=False)
         obj = self.parse_atom_class(node.children[1].text)
         # e.g., "derives from soyabean"
@@ -73,10 +73,10 @@ class OWLEquivAxiomParser(OWLAxiomParser):
             return f"{obj_prop} {obj}"
         else:
             return node.children[0].text, obj
-    
+
     def parse_ext_and_atoms(self, node: RangeNode, as_tuple: bool = False):
         assert re.findall(EXT_AND_ATOMS, node.text)
-        assert len(node.children) == 2 # children = [objectProperty, AndAtoms]
+        assert len(node.children) == 2  # children = [objectProperty, AndAtoms]
         obj_prop = self.parse_obj_prop(node.children[0].text, is_plural=True)
         multi_objs = self.parse_and_atoms(node.children[1])
         # e.g., "has participants of soyabean and sunflower"
@@ -84,7 +84,7 @@ class OWLEquivAxiomParser(OWLAxiomParser):
             return f"{obj_prop} {multi_objs}"
         else:
             return node.children[0].text, multi_objs
-    
+
     def parse_and_mixed(self, node: RangeNode):
         assert re.findall(AND_MIXED, node.text)
         atoms = []
@@ -111,11 +111,10 @@ class OWLEquivAxiomParser(OWLAxiomParser):
                 p = self.parse_obj_prop(p, is_plural=False)
             parsed_exts.append(p + " " + o)
         if atoms:
-            return " and ".join(atoms) + " that " + " and ".join(parsed_exts)     
+            return " and ".join(atoms) + " that " + " and ".join(parsed_exts)
         else:
-            return "something that " + " and ".join(parsed_exts)  
-        
-        
+            return "something that " + " and ".join(parsed_exts)
+
     def parse_equiv(self, axiom_text: str, keep_atom_iri: bool = False):
         """To parse the equivalence axiom text
         NOTE: the way of extracting children follow the structure of an equivalence axiom text
@@ -127,6 +126,8 @@ class OWLEquivAxiomParser(OWLAxiomParser):
         atom, comp = super().parse(axiom_text).children[0].children
         if not keep_atom_iri:
             atom = self.parse_atom_class(atom.text)
+        else:
+            atom = atom.text
         if self.fit(AND_ATOMS, axiom_text):
             comp = self.parse_and_atoms(comp)
         elif self.fit(EXT_ATOM, axiom_text):
@@ -138,3 +139,8 @@ class OWLEquivAxiomParser(OWLAxiomParser):
         else:
             raise RuntimeError("Pattern not supported yet ...")
         return atom, comp
+
+    def parse_sub(self, axiom_text: str, keep_atom_iri: bool = False):
+        """To parse the subsumption axiom text (exactly same way as to parse an equivalence axiom)
+        """
+        return self.parse_equiv(axiom_text, keep_atom_iri)
