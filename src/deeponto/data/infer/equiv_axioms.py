@@ -36,7 +36,7 @@ class OWLEquivAxiomParser(OWLAxiomParser):
         self.obj_prop_df = pd.read_csv(obj_prop_path, index_col=0)
 
     def fit(self, pattern: str, axiom_text: str):
-        pattern = f"^\[EQU\]\(({IRI}) ({pattern}) \)$"
+        pattern = f"^\[(EQU|SUB|SUP)\]\(({IRI}) ({pattern}) \)$"
         return re.findall(pattern, self.abbr_axiom_text(axiom_text))
 
     @staticmethod
@@ -70,7 +70,7 @@ class OWLEquivAxiomParser(OWLAxiomParser):
         obj = self.parse_atom_class(node.children[1].text)
         # e.g., "derives from soyabean"
         if not as_tuple:
-            return f"{obj_prop} {obj}"
+            return f"something that {obj_prop} {obj}"
         else:
             return node.children[0].text, obj
 
@@ -81,7 +81,7 @@ class OWLEquivAxiomParser(OWLAxiomParser):
         multi_objs = self.parse_and_atoms(node.children[1])
         # e.g., "has participants of soyabean and sunflower"
         if not as_tuple:
-            return f"{obj_prop} {multi_objs}"
+            return f"something that {obj_prop} {multi_objs}"
         else:
             return node.children[0].text, multi_objs
 
@@ -109,7 +109,7 @@ class OWLEquivAxiomParser(OWLAxiomParser):
                 p = self.parse_obj_prop(p, is_plural=True)
             else:
                 p = self.parse_obj_prop(p, is_plural=False)
-            parsed_exts.append(p + " " + o)
+            parsed_exts.append(str(p) + " " + str(o))
         if atoms:
             return " and ".join(atoms) + " that " + " and ".join(parsed_exts)
         else:
@@ -143,4 +143,9 @@ class OWLEquivAxiomParser(OWLAxiomParser):
     def parse_sub(self, axiom_text: str, keep_atom_iri: bool = False):
         """To parse the subsumption axiom text (exactly same way as to parse an equivalence axiom)
         """
-        return self.parse_equiv(axiom_text, keep_atom_iri)
+        atom, comp = self.parse_equiv(axiom_text, keep_atom_iri)
+        # keep the entailment order (premise => hypothesis)
+        if axiom_text.startswith("SubClassOf"):
+            return atom, comp
+        elif axiom_text.startswith("SuperClassOf"):
+            return comp, atom

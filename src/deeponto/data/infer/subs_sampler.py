@@ -181,11 +181,12 @@ class SubsumptionSampler:
         while not accepted:
             neg = None
             if try_hard:
-                print("try to sample a hard negative first ...")
+                # print("try to sample a hard negative first ...")
                 try:
                     neg = random.choice(self.sibling_dict[class_iri])
                 except:
-                    print("no hard negative can be sampled ...")
+                    # print("no hard negative can be sampled ...")
+                    pass
             if not neg:
                 neg = random.choice(self.class_iris)
             if self.sanity_check(class_iri, neg):

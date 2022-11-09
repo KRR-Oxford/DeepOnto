@@ -33,6 +33,7 @@ class OWLAxiomParser:
             "ObjectIntersectionOf": "[AND]",
             "EquivalentClasses": "[EQU]",
             "SubClassOf": "[SUB]",  # self-defined not confirmed in OWLAPI yet
+            "SuperClassOf": "[SUP]", # self-defined not confirmed in OWLAPI yet
         }
 
     def abbr_axiom_text(self, axiom_text: str):
