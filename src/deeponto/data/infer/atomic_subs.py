@@ -24,7 +24,7 @@ from deeponto.onto.logic.reasoner import OWLReasoner
 from deeponto import SavedObj, OWL_THING
 
 
-class SubsumptionSampler:
+class AtomicSubsumptionSampler:
     def __init__(
         self,
         onto_path: str,
