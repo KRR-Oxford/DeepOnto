@@ -28,7 +28,7 @@ from transformers import TrainingArguments
 sys.path.append("./src")
 
 from deeponto.onto import OntologySubs
-from deeponto.bert.tune import BERTTrainerSubs
+from deeponto.bert.train import BERTTrainerSubs
 
 
 # Generate negative subsumptions for training subsumptions
