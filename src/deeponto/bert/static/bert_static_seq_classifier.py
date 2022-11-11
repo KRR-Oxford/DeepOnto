@@ -21,13 +21,13 @@ from typing import List, Tuple
 import torch
 from transformers import AutoModelForSequenceClassification
 
-from deeponto.bert import BERTArgs
-from . import BERTStatic
+from deeponto.bert import BertArguments
+from . import BertStaticBase
 
 
-class BERTStaticSeqClassifer(BERTStatic):
+class BertStaticForSequenceClassification(BertStaticBase):
     def __init__(
-        self, bert_args: BERTArgs,
+        self, bert_args: BertArguments,
     ):
         super().__init__(bert_args)
         self.softmax = torch.nn.Softmax(dim=1).to(self.device)

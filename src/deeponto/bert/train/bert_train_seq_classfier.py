@@ -21,14 +21,14 @@ import pandas as pd
 from datasets import Dataset
 from transformers import AutoModelForSequenceClassification
 
-from deeponto.bert import BERTArgs
-from . import BERTFineTune
+from deeponto.bert import BertArguments
+from . import BertTrainerBase
 
 
-class BERTFineTuneSeqClassifier(BERTFineTune):
+class BertTrainerForSequenceClassification(BertTrainerBase):
     def __init__(
         self,
-        bert_args: BERTArgs,
+        bert_args: BertArguments,
         train_data: List,
         val_data: List,
         test_data: Optional[List] = None,

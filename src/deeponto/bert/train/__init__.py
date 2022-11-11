@@ -11,3 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+from .bert_train_base import BertTrainerBase
+from .bert_train_seq_classfier import BertTrainerForSequenceClassification
+from .bert_train_subs import BERTTrainerSubs

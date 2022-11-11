@@ -22,13 +22,13 @@ from typing import Dict, List
 import torch
 from transformers import AutoModel
 
-from deeponto.bert import BERTArgs
-from . import BERTStatic
+from deeponto.bert import BertArguments
+from . import BertStaticBase
 
 
-class BERTStaticEmbeds(BERTStatic):
+class BertStaticForEmbeddings(BertStaticBase):
     def __init__(
-        self, bert_args: BERTArgs,
+        self, bert_args: BertArguments,
     ):
         super().__init__(bert_args)
 

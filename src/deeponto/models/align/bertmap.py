@@ -33,9 +33,9 @@ from sklearn.model_selection import train_test_split
 import subprocess
 
 import deeponto
-from deeponto.bert import BERTArgs
-from deeponto.bert.static import BERTStaticSeqClassifer
-from deeponto.bert.tune import BERTFineTuneSeqClassifier
+from deeponto.bert import BertArguments
+from deeponto.bert.static import BertStaticForSequenceClassification
+from deeponto.bert.train import BertTrainerForSequenceClassification
 from deeponto.onto.text import Tokenizer, Thesaurus
 from deeponto.data.align import (
     TextSemanticsCorpora,
@@ -57,7 +57,7 @@ class BERTMap(OntoAlign):
         src_onto: Ontology,
         tgt_onto: Ontology,
         tokenizer: Tokenizer,
-        bert_args: BERTArgs,  # arguments for BERT fine-tuning
+        bert_args: BertArguments,  # arguments for BERT fine-tuning
         cand_pool_size: Optional[int] = 200,
         n_best: Optional[int] = 10,
         saved_path: str = "",
@@ -128,7 +128,7 @@ class BERTMap(OntoAlign):
                 print("Start training from scratch ...")
             else:
                 print("Resume training from previous checkpoint...")
-            bert_classifier = BERTFineTuneSeqClassifier(
+            bert_classifier = BertTrainerForSequenceClassification(
                 bert_args=self.bert_args,
                 train_data=self.fine_tune_data["train"],
                 val_data=self.fine_tune_data["val"],
@@ -164,7 +164,7 @@ class BERTMap(OntoAlign):
                     print(f"found new checkpoint: {best_checkpoint} ...")
         banner_msg(f"Found Saved Best Checkpoint: {best_checkpoint}")
         self.bert_args.bert_checkpoint = f"{self.fine_tune_model_path}/checkpoint-{best_checkpoint}"
-        self.bert_classifier = BERTStaticSeqClassifer(self.bert_args)
+        self.bert_classifier = BertStaticForSequenceClassification(self.bert_args)
 
     def construct_corpora(self):
         """Load corpora data from new construction or saved directory
