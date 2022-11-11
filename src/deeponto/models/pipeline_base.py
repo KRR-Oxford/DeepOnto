@@ -21,7 +21,7 @@ from deeponto.utils import detect_path, create_path
 from deeponto.config import InputConfig
 
 
-class OntoPipeline:
+class OntoPipelineBase:
     def __init__(
         self, model_name: str, saved_path: str, config_path: str,
     ):
