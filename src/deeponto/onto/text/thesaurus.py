@@ -203,7 +203,7 @@ class Thesaurus(SavedObj):
             return random.sample(pos_sample_pool, pos_num)
 
     @staticmethod
-    def random_negative_sampling(synonym_groups: List[Set[str]], neg_num: int, max_iter: int = 10):
+    def random_negative_sampling(synonym_groups: List[Set[str]], neg_num: int, max_iter: int = 5):
         """Soft (random) non-synonyms are defined as label pairs from two different synonym groups
         that are randomly selected
         """
@@ -227,7 +227,7 @@ class Thesaurus(SavedObj):
 
     @staticmethod
     def disjointness_negative_sampling(
-        list_of_disjoint_synonym_groups: List[List[List[str]]], neg_num: int
+        list_of_disjoint_synonym_groups: List[List[List[str]]], neg_num: int, max_iter: int = 5
     ):
         """Hard (disjoint) non-synonyms are defined as label pairs from two different synonym groups
         that are logically disjoint; since these pairs are often of limited number, I adopt the same
@@ -237,30 +237,22 @@ class Thesaurus(SavedObj):
         """
         # flatten the disjointness groups into all pairs of hard neagtives
         neg_sample_pool = []
-        for disjoint_synonym_groups in list_of_disjoint_synonym_groups:
-            # compute catersian product for all possible combinations of disjoint synonym groups
-            catersian_product = list(
-                itertools.product(disjoint_synonym_groups, disjoint_synonym_groups)
-            )
-            # filter those mapped to selfs
-            product_excluding_selfs = [pair for pair in catersian_product if pair[0] != pair[1]]
-            # for each pair of disjoint synonym groups, compute the product of their corresponding labels
-            product_of_disjoint_labels = [
-                list(itertools.product(left_syn, right_syn))
-                for left_syn, right_syn in product_excluding_selfs
-            ]
-            product_of_disjoint_labels = list(
-                itertools.chain.from_iterable(product_of_disjoint_labels)
-            )
-            neg_sample_pool += product_of_disjoint_labels
+        for _ in range(neg_num):
+            disjoint_synonym_groups = random.choice(list_of_disjoint_synonym_groups)
+            left, right = tuple(random.sample(disjoint_synonym_groups, 2))
+            left_label = random.choice(left)
+            right_label = random.choice(right)
+            neg_sample_pool.append((left_label, right_label))
+        # uniqify is too slow so we should avoid operating it too often
         neg_sample_pool = uniqify(neg_sample_pool)
-        if neg_num > len(neg_sample_pool):
-            print(
-                "required number of negatives >= maximum; return all retrieved samples instead ..."
+        while len(neg_sample_pool) < neg_num and max_iter > 0:
+            max_iter = max_iter - 1  # reduce the iteration to prevent exhausting loop
+            neg_sample_pool += Thesaurus.disjointness_negative_sampling(
+                list_of_disjoint_synonym_groups, neg_num - len(neg_sample_pool), max_iter
             )
-            return neg_sample_pool
-        else:
-            return random.sample(neg_sample_pool, neg_num)
+            neg_sample_pool = uniqify(neg_sample_pool)
+        return neg_sample_pool
+ 
 
     @staticmethod
     def positive_sampling_from_paired_groups(
