@@ -21,7 +21,7 @@ from deeponto.onto import Ontology
 from deeponto.onto.mapping import OntoMappings
 from deeponto.onto.text import Tokenizer
 from deeponto.models import OntoPipeline
-from deeponto.bert import BERTArgs
+from deeponto.bert import BertArguments
 from . import StringMatch, EditSimilarity, BERTMap
 
 
@@ -122,7 +122,7 @@ class OntoAlignPipeline(OntoPipeline):
         if self.model_name == "bertmap":
             # get arguments for BERT
             self.paths["bert"] = self.complete_path("bertmap/fine_tune/model")
-            self.bert_args = BERTArgs(
+            self.bert_args = BertArguments(
                 bert_checkpoint=self.config["bert"]["pretrained_path"],
                 output_dir=self.paths["bert"],
                 num_epochs=float(self.config["bert"]["num_epochs"]),

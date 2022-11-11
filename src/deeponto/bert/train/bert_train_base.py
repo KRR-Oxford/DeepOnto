@@ -19,14 +19,14 @@ from datasets import Dataset
 from sklearn.metrics import accuracy_score
 from transformers import EarlyStoppingCallback, Trainer
 
-from deeponto.bert import BERTArgs
+from deeponto.bert import BertArguments
 from deeponto.onto.text import Tokenizer
 
 
-class BERTFineTune:
+class BertTrainerBase:
     def __init__(
         self,
-        bert_args: BERTArgs,
+        bert_args: BertArguments,
         train_data: List,
         val_data: List,
         test_data: Optional[List] = None,

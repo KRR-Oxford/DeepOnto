@@ -18,7 +18,7 @@ from typing import Optional, Union
 import torch
 
 
-class BERTArgs:
+class BertArguments:
     def __init__(
         self,
         bert_checkpoint: str,

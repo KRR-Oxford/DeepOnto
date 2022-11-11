@@ -18,13 +18,13 @@ BERTStatic class for handling BERT embeddings and pre-trained/fine-tuned BERT mo
 """
 from typing import List
 
-from deeponto.bert import BERTArgs
+from deeponto.bert import BertArguments
 from deeponto.onto.text import Tokenizer
 from deeponto.utils import get_device
 
 
-class BERTStatic:
-    def __init__(self, bert_args: BERTArgs):
+class BertStaticBase:
+    def __init__(self, bert_args: BertArguments):
 
         self.args = bert_args
         self.tokenizer = Tokenizer.from_pretrained(self.args.bert_checkpoint)
