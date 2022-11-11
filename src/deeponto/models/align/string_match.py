@@ -19,10 +19,10 @@ from itertools import product
 
 from deeponto.onto.text import Tokenizer
 from deeponto.onto import Ontology
-from . import OntoAlign
+from . import OntoAlignBase
 
 
-class StringMatch(OntoAlign):
+class StringMatch(OntoAlignBase):
     def __init__(
         self,
         src_onto: Ontology,

@@ -48,10 +48,10 @@ from deeponto.evaluation.align_eval import pred_thresholding
 from deeponto.utils import detect_path, create_path, uniqify
 from deeponto.utils.logging import banner_msg
 from deeponto import SavedObj
-from . import OntoAlign
+from . import OntoAlignBase
 
 
-class BERTMap(OntoAlign):
+class BERTMap(OntoAlignBase):
     def __init__(
         self,
         src_onto: Ontology,

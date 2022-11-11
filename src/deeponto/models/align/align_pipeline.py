@@ -20,12 +20,12 @@ from deeponto.utils import create_path
 from deeponto.onto import Ontology
 from deeponto.onto.mapping import OntoMappings
 from deeponto.onto.text import Tokenizer
-from deeponto.models import OntoPipeline
+from deeponto.models import OntoPipelineBase
 from deeponto.bert import BertArguments
 from . import StringMatch, EditSimilarity, BERTMap
 
 
-class OntoAlignPipeline(OntoPipeline):
+class OntoAlignPipeline(OntoPipelineBase):
     def __init__(
         self,
         model_name: str,

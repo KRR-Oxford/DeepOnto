@@ -34,7 +34,7 @@ from deeponto import FlaggedObj
 from deeponto.utils import create_path
 
 
-class OntoAlign(FlaggedObj):
+class OntoAlignBase(FlaggedObj):
     def __init__(
         self,
         src_onto: Ontology,

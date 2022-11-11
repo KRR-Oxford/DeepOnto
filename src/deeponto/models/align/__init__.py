@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from .onto_align import OntoAlign
+from .align_base import OntoAlignBase
 from .bertmap import BERTMap
 from .string_match import StringMatch
 from .edit_sim import EditSimilarity
