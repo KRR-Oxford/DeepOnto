@@ -16,7 +16,7 @@
 import re
 import pandas as pd
 from collections import defaultdict
-from deeponto.onto.logic.parser import OWLAxiomParser
+from deeponto.onto.logic.parser import OWLAxiomParserBase
 from deeponto.onto import Ontology
 from deeponto.utils.tree import RangeNode
 
@@ -28,7 +28,7 @@ AND_MIXED = f"\[AND\]\((?:{IRI}|{EXT_ATOM}|{EXT_AND_ATOMS}| )*?\)"
 ALL_PATTERNS = [AND_ATOMS, EXT_ATOM, EXT_AND_ATOMS, AND_MIXED]
 
 
-class OWLEquivAxiomParser(OWLAxiomParser):
+class OWLEquivAxiomParser(OWLAxiomParserBase):
     def __init__(self, owl_path: str, obj_prop_path: str):
         super().__init__()
         self.owl_path = owl_path

@@ -11,5 +11,5 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from .axiom_parser import OWLAxiomParser
+from .axiom_parser_base import OWLAxiomParserBase
 from .equiv_parser import OWLEquivAxiomParser

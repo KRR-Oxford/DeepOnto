@@ -22,7 +22,7 @@ E.g., 'EquivalentClasses(<http://purl.obolibrary.org/obo/FOODON_00001083> Object
 from deeponto.utils.tree import RangeNode
 
 
-class OWLAxiomParser:
+class OWLAxiomParserBase:
     def __init__(self):
         # abbrevations all have length 5
         self.abbr = {
