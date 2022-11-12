@@ -28,38 +28,41 @@ class SubsumptionSamplerBase:
     def __init__(
         self,
         onto: Ontology,
-        neg_ratio: int = 1,
-        hard_neg_ratio: Optional[int] = None,
+        neg_ratio: int = 1
     ):
         self.onto = onto
         self.reasoner = OWLReasoner(onto.owl_path)
-        self.class_iris = list(self.reasoner.owlClasses.keys())
-        self.class_iris_with_root = self.class_iris + [OWL_THING]
-        self.obj_prop_iris = list(self.reasoner.owlObjectProperties.keys())
-        self.subs = self.init_subs()
         self.neg_ratio = neg_ratio
-        # set the hard negative ratio the same as the soft negative ratio if not specified
-        self.hard_neg_ratio = hard_neg_ratio if hard_neg_ratio else neg_ratio
-        # pre-compute classes that have multiple (inferred and direct) children
-        self.non_single_child_classes = dict()
-        self.sibling_pairs = []
-        for cl_iri in self.class_iris_with_root:
-            owlClass = self.reasoner.owlClass_from_iri(cl_iri)
-            children = self.reasoner.subclasses_of(owlClass, direct=True)
-            if len(children) >= 2:
-                self.non_single_child_classes[cl_iri] = children
-                self.sibling_pairs += [
-                    (x, y) for x, y in itertools.product(children, children) if x != y
-                ]  # all possible combinations excluding reflexive pairs
-        self.sibling_pairs = list(set(self.sibling_pairs))
-        # an additional sibling dictionary for customized (fixed one sample) sampling
-        self.sibling_dict = defaultdict(list)
-        for l, r in self.sibling_pairs:
-            self.sibling_dict[l].append(r)
-            self.sibling_dict[r].append(l)
-        print(
-            f"{len(self.non_single_child_classes)}/{len(self.class_iris_with_root)} (including Owl:Thing) has multiple (direct and inferred) children ..."
-        )
-        print(
-            f"In total there are {len(self.sibling_pairs)} sibling class pairs (order matters) ..."
-        )
+        self.progress_manager = enlighten.get_manager()
+        self.subs = {}
+        
+    def init_subs(self):
+        raise NotImplementedError
+    
+    def save(self, saved_path: str):
+        """Save in json format similar to the huggingface datasets manner
+        """
+        SavedObj.save_json(self.subs, saved_path)
+        
+    def random_atomic_class(self):
+        """Randomly draw a named concept's IRI
+        """
+        return random.choice(self.reasoner.class_iris)
+    
+    def random_sibling_atomic_class_for(self, class_iri: str):
+        """Randomly draw a sibling class for a given class
+        """
+        try:
+            return random.choice(self.reasoner.sibling_dict[class_iri])
+        except:
+            return None
+    
+    def random_atomic_class_pair(self):
+        """Randomly draw a pair of named concepts' IRIs
+        """
+        return tuple(random.sample(self.reasoner.class_iris, k=2))
+        
+    def random_sibling_atomic_class_pair(self):
+        """Randomly draw a pair of named concepts' IRIs that are sibling
+        """
+        return tuple(random.choice(self.reasoner.sibling_pairs))

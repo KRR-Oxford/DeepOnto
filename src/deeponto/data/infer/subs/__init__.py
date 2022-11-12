@@ -12,3 +12,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from .subs_base import SubsumptionSamplerBase
+from .atomic_subs import AtomicSubsumptionSampler
