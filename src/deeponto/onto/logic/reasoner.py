@@ -182,22 +182,29 @@ class OWLReasoner:
         assert ent_type == self.determine(superOwlObject, is_singular=True)
         sub_axiom = getattr(self.owlDataFactory, f"getOWLSub{ent_type}OfAxiom")(subOwlObject, superOwlObject)
         return self.reasoner.isEntailed(sub_axiom)
+    
+    def check_common_descendants(self, owlObjectExp1: OWLObject, owlObjectExp2: OWLObject):
+        """Check if two OWLObjects have a common decendant
+        """
+        ent_type = self.determine(owlObjectExp1)
+        assert ent_type == self.determine(owlObjectExp2)
+        subs1 = self.subs_of(owlObjectExp1)
+        subs2 = self.subs_of(owlObjectExp2)
+        return set(subs1).intersection(set(subs2))
 
-    def check_negative_subsumption(self, OwlObject1: OWLObject, OwlObject2: OWLObject):
+    def check_negative_subsumption(self, owlObjectExp1: OWLObject, owlObjectExp2: OWLObject):
         """[Auxiliary]: sanity check for a given negative sample
         """
-        ent_type = self.determine(OwlObject1)
-        assert ent_type == self.determine(OwlObject2)
+        ent_type = self.determine(owlObjectExp1)
+        assert ent_type == self.determine(owlObjectExp2)
         accepted = False
         # NOTE: Test 1: check for disjointness (after reasoning)
-        if self.check_disjoint(OwlObject1, OwlObject2):
+        if self.check_disjoint(owlObjectExp1, owlObjectExp2):
             accepted = True
         else:
             # NOTE: Test 2: check any common descendants and mutual subsumption
-            descendants_1 = self.supers_of(OwlObject1)
-            descendants_2 = self.subs_of(OwlObject2)
-            has_common_descendants = set(descendants_1).intersection(set(descendants_2))
-            has_subsumption = self.check_subsumption(OwlObject1, OwlObject2) or self.check_subsumption(OwlObject2, OwlObject1)
+            has_common_descendants = self.check_common_descendants(owlObjectExp1, owlObjectExp2)
+            has_subsumption = self.check_subsumption(owlObjectExp1, owlObjectExp2) or self.check_subsumption(owlObjectExp2, owlObjectExp1)
             if (not has_common_descendants) and (not has_subsumption):
                 accepted = True        
         return accepted
