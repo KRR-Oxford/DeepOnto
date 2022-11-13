@@ -81,7 +81,7 @@ class OWLReasoner:
                 return b
 
     @property
-    def equiv_axioms(self, to_str: bool = False):
+    def equiv_axioms(self):
         """Return all the equivalence axioms in an ontology
         NOTE: (checked with protege already)
         """
@@ -90,10 +90,7 @@ class OWLReasoner:
             for cl in self.owlOnto.getClassesInSignature():
                 self._equiv_axioms += self.owlOnto.getEquivalentClassesAxioms(cl)
             self._equiv_axioms = list(set(self._equiv_axioms))
-        if to_str:
-            return [str(x) for x in self._equiv_axioms]
-        else:
-            return self._equiv_axioms
+        return self._equiv_axioms
 
     @property
     def sibling_pairs(self):
