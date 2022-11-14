@@ -25,6 +25,7 @@ from java.util import *  # type: ignore
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
 from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory  # type: ignore
+from org.semanticweb.owlapi.util import OWLObjectDuplicator # type: ignore
 from yacs.config import CfgNode
 
 
@@ -44,7 +45,7 @@ class OWLReasoner:
         # save the OWLAPI object properties for convenience
         self.owlObjectProperties, self.obj_prop_iris = self.getOWLObjects("ObjectProperties")
         # for creating axioms
-        self.owlDataFactory = OWLManager.getOWLDataFactory()
+        self.owlDataFactory = self.owlManager.getOWLDataFactory()
         # determine which top and bottom to be used
         self.top_bottom_dict = CfgNode(
             {
@@ -60,25 +61,30 @@ class OWLReasoner:
         self._sid_dict = None
 
     def getOWLObjects(self, which: str):
-        owlObjects = dict()
+        owlObjects = defaultdict(lambda: None)
         source = getattr(self.owlOnto, f"get{which}InSignature")
         for cl in source():
             owlObjects[str(cl.getIRI())] = cl
         return owlObjects, list(owlObjects.keys())
+    
+    def getOWLObjectFromIRI(self, iri: str):
+        """Return OWLObject given its IRI
+        """
+        # NOTE: to further extend with data properties and so on in future
+        if self.owlClasses[iri]:
+            return self.owlClasses[iri]
+        elif self.owlObjectProperties[iri]:
+            return self.owlObjectProperties[iri]
+        else:
+            pass
 
     @property
     def OWLThing(self):
-        roots = self.reasoner.getTopClassNode().getEntities()
-        for r in roots:
-            if str(r.getIRI()) == OWL_THING:
-                return r
+        return self.owlDataFactory.getOWLThing()
 
     @property
     def OWLNothing(self):
-        bottoms = self.reasoner.getBottomClassNode().getEntities()
-        for b in bottoms:
-            if str(b.getIRI()) == OWL_NOTHING:
-                return b
+        return self.owlDataFactory.getOWLNothing()
 
     @property
     def equiv_axioms(self):
@@ -102,7 +108,7 @@ class OWLReasoner:
                     owlClass = self.OWLThing
                 else:
                     owlClass = self.owlClasses[cl_iri]
-                children = self.subs_of(owlClass, direct=True)
+                children = self.sub_entities_of(owlClass, direct=True)
                 if len(children) >= 2:
                     self._non_single_child_classes[cl_iri] = children
                     self._sib_pairs += [
@@ -127,48 +133,48 @@ class OWLReasoner:
         return self._sib_dict
 
     @staticmethod
-    def determine(owlObjectExp: OWLObject, is_singular: bool = False):
-        if isinstance(owlObjectExp, OWLClassExpression):
+    def determine(owlObject: OWLObject, is_singular: bool = False):
+        if isinstance(owlObject, OWLClassExpression):
             return "Classes" if not is_singular else "Class"
-        elif isinstance(owlObjectExp, OWLObjectPropertyExpression):
+        elif isinstance(owlObject, OWLObjectPropertyExpression):
             return "ObjectProperties" if not is_singular else "ObjectProperty"
         else:
             # NOTE: add further options in future
             pass
 
-    def supers_of(self, owlObjectExp: OWLClassExpression, direct: bool = False):
-        """Return the atomic (named) superclasses of a given OWLAPI class, either direct or inferred
+    def super_entities_of(self, owlObject: OWLObject, direct: bool = False):
+        """Return the super-entities of a given OWLAPI object, either direct or inferred
         """
-        ent_type = self.determine(owlObjectExp)
+        ent_type = self.determine(owlObject)
         get_super = f"getSuper{ent_type}"
         TOP = self.top_bottom_dict[ent_type].TOP
-        super_entities = getattr(self.reasoner, get_super)(owlObjectExp, direct).getFlattened()
+        super_entities = getattr(self.reasoner, get_super)(owlObject, direct).getFlattened()
         super_entity_iris = [str(s.getIRI()) for s in super_entities]
         # the root node is owl#Thing
         if TOP in super_entity_iris:
             super_entity_iris.remove(TOP)
         return super_entity_iris
 
-    def subs_of(self, owlObjectExp: OWLClassExpression, direct: bool = False):
-        """Return the atomic (named) superclasses of a given OWLAPI class, either direct or inferred
+    def sub_entities_of(self, owlObject: OWLObject, direct: bool = False):
+        """Return the sub-entities of a given OWLAPI objec, either direct or inferred
         """
-        ent_type = self.determine(owlObjectExp)
+        ent_type = self.determine(owlObject)
         get_sub = f"getSub{ent_type}"
         BOTTOM = self.top_bottom_dict[ent_type].BOTTOM
-        sub_entities = getattr(self.reasoner, get_sub)(owlObjectExp, direct).getFlattened()
+        sub_entities = getattr(self.reasoner, get_sub)(owlObject, direct).getFlattened()
         sub_entity_iris = [str(s.getIRI()) for s in sub_entities]
         # the root node is owl#Thing
         if BOTTOM in sub_entity_iris:
             sub_entity_iris.remove(BOTTOM)
         return sub_entity_iris
 
-    def check_disjoint(self, owlObjectExp1: OWLObject, owlObjectExp2: OWLObject):
+    def check_disjoint(self, owlObject1: OWLObject, owlObject2: OWLObject):
         """Check if two class expressions are disjoint according to the reasoner
         """
-        ent_type = self.determine(owlObjectExp1)
-        assert ent_type == self.determine(owlObjectExp2)
+        ent_type = self.determine(owlObject1)
+        assert ent_type == self.determine(owlObject2)
         disjoint_axiom = getattr(self.owlDataFactory, f"getOWLDisjoint{ent_type}Axiom")(
-            [owlObjectExp1, owlObjectExp2]
+            [owlObject1, owlObject2]
         )
         return self.reasoner.isEntailed(disjoint_axiom)
 
@@ -177,31 +183,42 @@ class OWLReasoner:
         """
         ent_type = self.determine(subOwlObject, is_singular=True)
         assert ent_type == self.determine(superOwlObject, is_singular=True)
-        sub_axiom = getattr(self.owlDataFactory, f"getOWLSub{ent_type}OfAxiom")(subOwlObject, superOwlObject)
+        sub_axiom = getattr(self.owlDataFactory, f"getOWLSub{ent_type}OfAxiom")(
+            subOwlObject, superOwlObject
+        )
         return self.reasoner.isEntailed(sub_axiom)
-    
-    def check_common_descendants(self, owlObjectExp1: OWLObject, owlObjectExp2: OWLObject):
+
+    def check_common_descendants(self, owlObject1: OWLObject, owlObject2: OWLObject):
         """Check if two OWLObjects have a common decendant
         """
-        ent_type = self.determine(owlObjectExp1)
-        assert ent_type == self.determine(owlObjectExp2)
-        subs1 = self.subs_of(owlObjectExp1)
-        subs2 = self.subs_of(owlObjectExp2)
+        ent_type = self.determine(owlObject1)
+        assert ent_type == self.determine(owlObject2)
+        subs1 = self.sub_entities_of(owlObject1)
+        subs2 = self.sub_entities_of(owlObject2)
         return set(subs1).intersection(set(subs2))
 
-    def check_negative_subsumption(self, owlObjectExp1: OWLObject, owlObjectExp2: OWLObject):
-        """[Auxiliary]: sanity check for a given negative sample
+    def check_negative_subsumption(self, owlObject1: OWLObject, owlObject2: OWLObject):
+        """Sanity check for a given negative sample
         """
-        ent_type = self.determine(owlObjectExp1)
-        assert ent_type == self.determine(owlObjectExp2)
+        ent_type = self.determine(owlObject1)
+        assert ent_type == self.determine(owlObject2)
         accepted = False
         # NOTE: Test 1: check for disjointness (after reasoning)
-        if self.check_disjoint(owlObjectExp1, owlObjectExp2):
+        if self.check_disjoint(owlObject1, owlObject2):
             accepted = True
         else:
             # NOTE: Test 2: check any common descendants and mutual subsumption
-            has_common_descendants = self.check_common_descendants(owlObjectExp1, owlObjectExp2)
-            has_subsumption = self.check_subsumption(owlObjectExp1, owlObjectExp2) or self.check_subsumption(owlObjectExp2, owlObjectExp1)
+            has_common_descendants = self.check_common_descendants(owlObject1, owlObject2)
+            has_subsumption = self.check_subsumption(
+                owlObject1, owlObject2
+            ) or self.check_subsumption(owlObject2, owlObject1)
             if (not has_common_descendants) and (not has_subsumption):
-                accepted = True        
+                accepted = True
         return accepted
+    
+    def replace_entity(self, owlObject: OWLObject, entity_iri: str, replacement_iri: str):
+        """Replace an entity in a class expression with another entity
+        """
+        iri_dict = {IRI.create(entity_iri): IRI.create(replacement_iri)}
+        replacer = OWLObjectDuplicator(self.owlDataFactory, iri_dict)
+        return replacer.duplicateObject(owlObject)
