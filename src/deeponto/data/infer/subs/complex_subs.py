@@ -41,14 +41,17 @@ class ComplexSubsumptionSampler(SubsumptionSamplerBase):
     def init_subs(self):
         return {"positive": [], "negative": []}
 
-    def sample(self, is_test: bool = False):
+    def sample(self, max_num_per_equiv: Optional[int] = None, is_test: bool = False, to_str: bool = True):
         self.subs = self.init_subs()
         added_bar = self.progress_manager.counter(
             total=len(self.equiv_axioms), desc="Sample Complex Subs for Equivs", unit="per equiv axiom"
         )
         for ea in self.equiv_axioms:
             pos_ea = self.entailment_pairs_from_equiv_axiom(ea)
-            num = min(len(pos_ea), 5)  # to prevent ever slow negative checking
+            if max_num_per_equiv:
+                num = min(len(pos_ea), max_num_per_equiv)  # to prevent ever slow negative checking
+            else:
+                num = len(pos_ea)
             pos_ea = list(random.sample(pos_ea, num))
             neg_ea = self.contradiction_pairs_from_equiv_axiom(ea, num)
             self.subs["positive"] += pos_ea
@@ -56,8 +59,9 @@ class ComplexSubsumptionSampler(SubsumptionSamplerBase):
             added_bar.update()
             if is_test:
                 break
-        self.subs["positive"] = [str(x) for x in list(set(self.subs["positive"]))]
-        self.subs["negative"] = [str(x) for x in list(set(self.subs["negative"]))]
+        if to_str:
+            self.subs["positive"] = [str(x) for x in list(set(self.subs["positive"]))]
+            self.subs["negative"] = [str(x) for x in list(set(self.subs["negative"]))]
 
     def entailment_pairs_from_equiv_axiom(self, equiv_axiom: OWLObject):
         """Extract subsumptions that involve the complex class part of an equivalence axiom:
