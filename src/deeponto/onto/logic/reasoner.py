@@ -16,6 +16,7 @@
 import os
 import itertools
 from collections import defaultdict
+import warnings
 from deeponto import init_jvm, OWL_THING, OWL_NOTHING, OWL_BOTTOM_OBJECT_PROP, OWL_TOP_OBJECT_PROP
 
 init_jvm("2g")
@@ -25,7 +26,7 @@ from java.util import *  # type: ignore
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
 from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory  # type: ignore
-from org.semanticweb.owlapi.util import OWLObjectDuplicator # type: ignore
+from org.semanticweb.owlapi.util import OWLObjectDuplicator  # type: ignore
 from yacs.config import CfgNode
 
 
@@ -66,7 +67,7 @@ class OWLReasoner:
         for cl in source():
             owlObjects[str(cl.getIRI())] = cl
         return owlObjects, list(owlObjects.keys())
-    
+
     def getOWLObjectFromIRI(self, iri: str):
         """Return OWLObject given its IRI
         """
@@ -76,7 +77,15 @@ class OWLReasoner:
         elif self.owlObjectProperties[iri]:
             return self.owlObjectProperties[iri]
         else:
-            pass
+            return None
+
+    @staticmethod
+    def hasIRI(owlObject: OWLObject):
+        try:
+            owlObject.getIRI()
+            return True
+        except:
+            return False
 
     @property
     def OWLThing(self):
@@ -193,9 +202,20 @@ class OWLReasoner:
         """
         ent_type = self.determine(owlObject1)
         assert ent_type == self.determine(owlObject2)
-        subs1 = self.sub_entities_of(owlObject1)
-        subs2 = self.sub_entities_of(owlObject2)
-        return set(subs1).intersection(set(subs2))
+        
+        if not self.hasIRI(owlObject1) and not self.hasIRI(owlObject2):
+            warnings.warn("Computing descendants for two complex classes is very slow...")
+        
+        computed, compared = owlObject1, owlObject2
+        if not self.hasIRI(owlObject1) and self.hasIRI(owlObject2):
+            computed, compared = owlObject2, owlObject1
+        # for every inferred child of computed, check if it is subsumed by compared
+        for s in self.sub_entities_of(computed):
+            # print("check a subsumption")
+            if self.check_subsumption(self.getOWLObjectFromIRI(s), compared):
+                return True
+        return False
+
 
     def check_negative_subsumption(self, owlObject1: OWLObject, owlObject2: OWLObject):
         """Sanity check for a given negative sample
@@ -215,7 +235,7 @@ class OWLReasoner:
             if (not has_common_descendants) and (not has_subsumption):
                 accepted = True
         return accepted
-    
+
     def replace_entity(self, owlObject: OWLObject, entity_iri: str, replacement_iri: str):
         """Replace an entity in a class expression with another entity
         """
