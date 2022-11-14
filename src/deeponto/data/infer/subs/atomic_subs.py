@@ -15,14 +15,9 @@
 
 import itertools
 import random
-from typing import Callable, Optional, List
-import enlighten
-from collections import defaultdict
-from yacs.config import CfgNode
+from typing import Callable, Optional
 
 from deeponto.onto import Ontology
-from deeponto.onto.logic.reasoner import OWLReasoner
-from deeponto import SavedObj, OWL_THING
 from . import SubsumptionSamplerBase
 
 
@@ -64,7 +59,7 @@ class AtomicSubsumptionSampler(SubsumptionSamplerBase):
         positives = []
         for cl_iri in self.reasoner.class_iris:
             owl_cl = self.reasoner.owlClasses[cl_iri]
-            for subsumer_iri in self.reasoner.supers_of(owl_cl):
+            for subsumer_iri in self.reasoner.super_entities_of(owl_cl):
                 positives.append(f"{cl_iri} <SubsumedBy> {subsumer_iri}")
                 pbar.update()
         positives = list(set(sorted(positives)))

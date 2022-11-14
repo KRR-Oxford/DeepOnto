@@ -16,6 +16,7 @@
 import re
 import pandas as pd
 from collections import defaultdict
+from typing import Optional
 from deeponto.onto.logic.parser import OWLAxiomParserBase
 from deeponto.onto import Ontology
 from deeponto.utils.tree import RangeNode
@@ -29,14 +30,14 @@ ALL_PATTERNS = [AND_ATOMS, EXT_ATOM, EXT_AND_ATOMS, AND_MIXED]
 
 
 class OWLEquivAxiomParser(OWLAxiomParserBase):
-    def __init__(self, owl_path: str, obj_prop_path: str):
+    def __init__(self, owl_path: str, obj_prop_path: Optional[str] = None):
         super().__init__()
         self.owl_path = owl_path
         self.onto = None
-        self.obj_prop_df = pd.read_csv(obj_prop_path, index_col=0)
+        self.obj_prop_df = pd.read_csv(obj_prop_path, index_col=0) if obj_prop_path else None
 
     def fit(self, pattern: str, axiom_text: str):
-        pattern = f"^\[(EQU|SUB|SUP)\]\(({IRI}) ({pattern}) \)$"
+        pattern = f"^\[(EQU|SUB|SUP)\]\(({IRI}) ({pattern})( )*\)$"
         return re.findall(pattern, self.abbr_axiom_text(axiom_text))
 
     @staticmethod
@@ -54,6 +55,9 @@ class OWLEquivAxiomParser(OWLAxiomParserBase):
 
     def parse_obj_prop(self, iri: str, is_plural: bool):
         iri = iri[1:-1]
+        if self.obj_prop_df is None:
+            obj_prop = self.onto.obj_from_iri(iri)
+            return obj_prop.label[0]
         if not is_plural:
             return self.obj_prop_df.loc[iri]["CorrectedLabelSingleObject"]
         else:

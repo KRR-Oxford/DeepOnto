@@ -13,15 +13,13 @@
 # limitations under the License.
 """Base Class for Ontology Subsumption Inference Data Sampling"""
 
-import itertools
 import random
-from typing import Callable, Optional, List
 import enlighten
-from collections import defaultdict
+from typing import Tuple
 
 from deeponto.onto import Ontology
 from deeponto.onto.logic.reasoner import OWLReasoner
-from deeponto import SavedObj, OWL_THING
+from deeponto import SavedObj
 
 
 class SubsumptionSamplerBase:
@@ -44,12 +42,17 @@ class SubsumptionSamplerBase:
         """
         SavedObj.save_json(self.subs, saved_path)
         
-    def random_atomic_class(self):
+    def random_atomic_class(self) -> str:
         """Randomly draw a named concept's IRI
         """
         return random.choice(self.reasoner.class_iris)
     
-    def random_sibling_atomic_class_for(self, class_iri: str):
+    def random_object_property(self) -> str:
+        """Randomly draw a object property's IRI
+        """
+        return random.choice(self.reasoner.obj_prop_iris)
+    
+    def random_sibling_atomic_class_for(self, class_iri: str) -> str:
         """Randomly draw a sibling class for a given class
         """
         try:
@@ -57,12 +60,12 @@ class SubsumptionSamplerBase:
         except:
             return None
     
-    def random_atomic_class_pair(self):
+    def random_atomic_class_pair(self) -> Tuple[str, str]:
         """Randomly draw a pair of named concepts' IRIs
         """
         return tuple(random.sample(self.reasoner.class_iris, k=2))
         
-    def random_sibling_atomic_class_pair(self):
+    def random_sibling_atomic_class_pair(self) -> Tuple[str, str]:
         """Randomly draw a pair of named concepts' IRIs that are sibling
         """
         return tuple(random.choice(self.reasoner.sibling_pairs))

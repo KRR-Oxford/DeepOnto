@@ -13,3 +13,4 @@
 # limitations under the License.
 from .subs_base import SubsumptionSamplerBase
 from .atomic_subs import AtomicSubsumptionSampler
+from .complex_subs import ComplexSubsumptionSampler
