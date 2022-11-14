@@ -56,6 +56,8 @@ class ComplexSubsumptionSampler(SubsumptionSamplerBase):
             added_bar.update()
             if is_test:
                 break
+        self.subs["positive"] = [str(x) for x in list(set(self.subs["positive"]))]
+        self.subs["negative"] = [str(x) for x in list(set(self.subs["negative"]))]
 
     def entailment_pairs_from_equiv_axiom(self, equiv_axiom: OWLObject):
         """Extract subsumptions that involve the complex class part of an equivalence axiom:
