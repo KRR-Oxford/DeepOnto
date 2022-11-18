@@ -71,11 +71,11 @@ pip install -r requirements.txt
 
 <!-- <div align="center"> -->
 
-| Name                 | Task                            | Type              |
-| :-------------       | :---------------                | :--------------   |
-| BERTMap              | Ontology Matching (Equivalence) | Learning-based    |
-| EditSim/StringMatch  | Ontology Matching (Equivalence) | Rule-based        |
-| BERTSubs (not ready) | Ontology Matching (Subsumption) | Learning-based    |
+| Name                  | Task                            |
+| :-------------        | :---------------                |
+| BERTMap               | Ontology Matching (Equivalence) |
+| BERTMapLt (EditSim)   | Ontology Matching (Equivalence) |
+| BERTSubs (not ready)  | Ontology Matching (Subsumption) |
 
 <!-- </div> -->
 

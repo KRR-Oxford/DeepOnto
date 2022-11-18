@@ -68,9 +68,9 @@ For `global_match`:
 - Final outputs will be stored in `exp_dir/bertmap/global_match/final_output.maps.{pkl,json,tsv}` after the mapping refinement.
 - Evaluation conducted on the intermediate prediction mappings in `src2tgt` or `tgt2src` needs to add in the mapping score threshold argument (often set between $0.999$ and $0.9995$); the threshold is not required when evaluating the final output mappings as it has been determined by the model.
 
-## EditSimiarity & StringMatch
+## EditSimiarity (BERTMap-Lite)
 
-`EditSimiarity` is a simple rule-based ontology alignment system that computes the normalized edit similarities (1 - normalized edit distance) between class labels and use the maximum of them as the mappping score. It performs surprisingly well for ontology pairs that have a similar naming scheme. `StringMatch` is a special case of `EditSimiarity` that considers only mapping scores of 1.0 and it was aggregated into BERTMap model for accelerating prediction.
+`EditSimiarity` is a simple rule-based ontology alignment system that computes the normalized edit similarities (1 - normalized edit distance) between class labels and use the maximum of them as the mappping score. It performs surprisingly well for ontology pairs that have a similar naming scheme. `StringMatch` is a special case of `EditSimiarity` that considers only mapping scores of 1.0 and it was aggregated into BERTMap model for accelerating prediction. Since it can be seen as a part of BERTMap, we also refer to it as `BERTMap-Lite`.
 
 ### Configurations
 > See an example config file in `config/edit_sim.json`.
