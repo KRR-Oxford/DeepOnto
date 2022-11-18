@@ -70,7 +70,7 @@ For `global_match`:
 
 ## BERTMap-Lite
 
-`BERTMap-Lite` (or `EditSimilarity`) is the rule-base component of `BERTMap` which computes the normalized edit similarities (1 - normalized edit distance) between class labels and use the maximum of them as the mappping score. It performs surprisingly well for ontology pairs that have a similar naming scheme. `StringMatch` is a special case of `EditSimiarity` that considers only mapping scores of 1.0 and it was aggregated into BERTMap model for accelerating prediction. 
+`BERTMapLt` (or `EditSimilarity`) is the rule-base component of `BERTMap` which computes the normalized edit similarities (1 - normalized edit distance) between class labels and use the maximum of them as the mappping score. It performs surprisingly well for ontology pairs that have a similar naming scheme. `StringMatch` is a special case of `EditSimiarity` that considers only mapping scores of 1.0 and it was aggregated into BERTMap model for accelerating prediction. 
 
 ### Configurations
 > See an example config file in `config/edit_sim.json`.
