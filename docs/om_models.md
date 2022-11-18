@@ -68,9 +68,9 @@ For `global_match`:
 - Final outputs will be stored in `exp_dir/bertmap/global_match/final_output.maps.{pkl,json,tsv}` after the mapping refinement.
 - Evaluation conducted on the intermediate prediction mappings in `src2tgt` or `tgt2src` needs to add in the mapping score threshold argument (often set between $0.999$ and $0.9995$); the threshold is not required when evaluating the final output mappings as it has been determined by the model.
 
-## EditSimiarity (BERTMap-Lite)
+## BERTMap-Lite
 
-`EditSimiarity` is a simple rule-based ontology alignment system that computes the normalized edit similarities (1 - normalized edit distance) between class labels and use the maximum of them as the mappping score. It performs surprisingly well for ontology pairs that have a similar naming scheme. `StringMatch` is a special case of `EditSimiarity` that considers only mapping scores of 1.0 and it was aggregated into BERTMap model for accelerating prediction. Since it can be seen as a part of BERTMap, we also refer to it as `BERTMap-Lite`.
+`BERTMap-Lite` (or `EditSimilarity`) is the rule-base component of `BERTMap` which computes the normalized edit similarities (1 - normalized edit distance) between class labels and use the maximum of them as the mappping score. It performs surprisingly well for ontology pairs that have a similar naming scheme. `StringMatch` is a special case of `EditSimiarity` that considers only mapping scores of 1.0 and it was aggregated into BERTMap model for accelerating prediction. 
 
 ### Configurations
 > See an example config file in `config/edit_sim.json`.
@@ -88,4 +88,4 @@ For `global_match`:
 
 ### Outputs
 
-The outputs of EditSimilarity/StringMatch model are similar to those of BERTMap but without any automatic validation results and further mapping refinement. Evaluation should be conducted on `src2tgt` or `tgt2src` prediction mappings with a chosen mapping threshold. Note that by setting `threshold = 1.0`, the EditSimiarity model is exactly the same as the StringMatch model.
+The outputs of this model are similar to those of BERTMap but without any automatic validation results and further mapping refinement. Evaluation should be conducted on `src2tgt` or `tgt2src` prediction mappings with a chosen mapping threshold. Note that by setting `threshold = 1.0`, the EditSimiarity model is exactly the same as the StringMatch model.
