@@ -121,11 +121,29 @@ class OWLEquivAxiomParser(OWLAxiomParserBase):
 
     def parse_equiv(self, axiom_text: str, keep_atom_iri: bool = False):
         """To parse the equivalence axiom text
-        NOTE: the way of extracting children follow the structure of an equivalence axiom text
+        
+        The way of extracting children follow the structure of an equivalence axiom text
         where the root node has one child which covers the whole equivalence part (.children[0])
         subsequently, there are two children where the .children[0] is the atomic class on the left hand side
         and .children[1] is the complex class on the right hand side of the equivalence axiom.
         Therefore, root.children[0].children[1] will lead to the complex part for parsing
+
+        Parameters
+        ----------
+        axiom_text : str
+            the equivalence axiom text to be parsed
+        keep_atom_iri : bool, optional
+            keep IRI or directly render a label, by default False
+
+        Returns
+        -------
+        Tuple
+            (parsed atomic class, parsed complex class)
+
+        Raises
+        ------
+        RuntimeError
+            raise if the pattern of the axiom text is not supported yet
         """
         atom, comp = super().parse(axiom_text).children[0].children
         if not keep_atom_iri:
@@ -145,7 +163,24 @@ class OWLEquivAxiomParser(OWLAxiomParserBase):
         return atom, comp
 
     def parse_sub(self, axiom_text: str, keep_atom_iri: bool = False):
-        """To parse the subsumption axiom text (exactly same way as to parse an equivalence axiom)
+        """To parse the subsumption axiom text in the similar way as to parse the equivalence axiom
+
+        Parameters
+        ----------
+        axiom_text : str
+            the subsumption axiom text to be parsed
+        keep_atom_iri : bool, optional
+            keep IRI or directly render a label, by default False
+
+        Returns
+        -------
+        Tuple
+            (parsed atomic class, parsed complex class)
+
+        Raises
+        ------
+        RuntimeError
+            raise if the pattern of the axiom text is not supported yet
         """
         atom, comp = self.parse_equiv(axiom_text, keep_atom_iri)
         # keep the entailment order (premise => hypothesis)
