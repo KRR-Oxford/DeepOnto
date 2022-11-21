@@ -37,13 +37,35 @@ class OWLAxiomParserBase:
         }
 
     def abbr_axiom_text(self, axiom_text: str):
+        """Abbreviate logical operand expressions in an OWLAPI axiom text
+
+        Parameters
+        ----------
+        axiom_text : str
+            string representation of an OWLAPI axiom
+
+        Returns
+        -------
+        str
+            modified expression of an OWLAPI axiom where the logical operands are abbreviated
+        """
         for k, v in self.abbr.items():
             axiom_text = axiom_text.replace(k, v)
         return axiom_text
 
     def parse(self, axiom_text: str) -> RangeNode:
         """Parse the OWL Axiom based on the tenary tree search (RangeNode) and the 
-        parentheses matching algorithms.
+        parentheses matching algorithms
+
+        Parameters
+        ----------
+        axiom_text : str
+            string representation of an OWLAPI axiom
+
+        Returns
+        -------
+        RangeNode
+            a tree stucture parsed from the OWLAPI axiom text
         """
         axiom_text = self.abbr_axiom_text(axiom_text)
         # print("To parse the following (transformed) axiom text:\n", axiom_text)
@@ -57,7 +79,26 @@ class OWLAxiomParserBase:
         cls, axiom_text: str, cur_parsed: RangeNode = None, for_iri: bool = False
     ) -> RangeNode:
         """Parse the OWL Axiom based on the tenary tree search (RangeNode) and the 
-        parentheses matching algorithms.
+        parentheses matching algorithms
+
+        Parameters
+        ----------
+        axiom_text : str
+            string representation of an OWLAPI axiom
+        cur_parsed : RangeNode, optional
+            intermediate tree structure parsed from an OWLAPI axiom text, by default None
+        for_iri : bool, optional
+            parse regarding the IRI strings instead of the logical operands or not, by default False
+
+        Returns
+        -------
+        RangeNode
+            a tree stucture parsed from the OWLAPI axiom text
+
+        Raises
+        ------
+        RuntimeError
+            raise if the OWLAPI axiom text is invalid 
         """
         if not cur_parsed:
             # a root node that covers the entire sentence
