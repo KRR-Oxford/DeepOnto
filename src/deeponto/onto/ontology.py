@@ -11,7 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Class for handling the ontology in owlready2 format
+"""Class that extends the owlready2 Ontology for convenient access to textual and structural information
+
+NOTE: the logical information is handled by the OWLAPI library (see onto.logic.reasoner)
 
 Known issues for owlready2:
 - No new object will be created when loading ontologies of the same IRIs 
@@ -60,6 +62,24 @@ class Ontology(SavedObj):
         tokenizer: Optional[Tokenizer] = None,
         uncased_labels: bool = True,
     ) -> Ontology:
+        """Initialise a new Ontology instance and coduct pre-processing
+
+        Parameters
+        ----------
+        onto_path : str
+            path to the ontology file to be processed
+        lab_props : List[str], optional
+            annotation properties considered as the class labels, by default ["http://www.w3.org/2000/01/rdf-schema#label"]
+        tokenizer : Optional[Tokenizer], optional
+            tokenizer used for creating the inverted index, by default None
+        uncased_labels : bool, optional
+            lowercased the pre-processed class labels or not, by default True
+
+        Returns
+        -------
+        Ontology
+            a pre-processed Ontology instance
+        """
         onto = cls(onto_path)
         onto.lab_props = lab_props
         onto.iri2labs = defaultdict(list)
@@ -80,6 +100,23 @@ class Ontology(SavedObj):
 
     @classmethod
     def from_saved(cls, saved_path: str) -> Optional[Ontology]:
+        """Load an instance of pre-processed ontologies from the specified path.
+
+        Parameters
+        ----------
+        saved_path : str
+            path to save the pre-processed ontology
+
+        Returns
+        -------
+        Optional[Ontology]
+            loaded pre-processed ontology
+
+        Raises
+        ------
+        FileNotFoundError
+            raise if the required files are missing
+        """
         try:
             onto = cls.load_pkl(saved_path)
             owl_file_name = onto.owl_path.split("/")[-1]
@@ -90,8 +127,15 @@ class Ontology(SavedObj):
             raise FileNotFoundError(f"please check file integrity in : {saved_path})")
 
     def save_instance(self, saved_path: str):
-        """The saved Ontology consists of a owl file and a pkl file with all the
+        """Save the current instance of an pre-processed ontologies
+        
+        The saved Ontology consists of a owl file and a pkl file with all the
         data (class2idx, idx2labs, inv_idx, ...) generated from construction
+
+        Parameters
+        ----------
+        saved_path : str
+            path to save the Ontology instance
         """
         Path(saved_path).mkdir(parents=True, exist_ok=True)
         self.copy2(self.owl_path, saved_path)
@@ -126,18 +170,53 @@ class Ontology(SavedObj):
 
     @classmethod
     def obj_from_iri(cls, iri: str):
-        """Return an entity or property object defined in owlready2 given its IRI
+        """Return an owlready2 entity given its IRI
+        
+        Parameters
+        ----------
+        iri : str
+            the IRI of the entity
+
+        Returns
+        -------
+        owlready2.Entity
+            the owlready2 entity that has the specified IRI
         """
         return default_world[iri]
 
     @classmethod
     def name_from_iri(cls, iri: str):
-        """Return the name of an entity or property object defined in owlready2 given its IRI
+        """Return the entity name of the specified IRI
+
+        Parameters
+        ----------
+        iri : str
+            the IRI of the owlready2 entity
+
+        Returns
+        -------
+        str
+            the entity name of the specified IRI
         """
         return str(cls.obj_from_iri(iri))
 
     def search_ent_labs(self, ent: ThingClass):
-        """Search class labels for a given entity class object
+        """Search labels for a given owlready2 ThingClass
+
+        Parameters
+        ----------
+        ent : ThingClass
+            the ThingClass object to search for labels
+
+        Returns
+        -------
+        list
+            the labels for the given ThingClass
+
+        Raises
+        ------
+        ValueError
+            raise if the given ThingClass is not found
         """
         if ent.iri in self.iri2labs.keys():
             return self.iri2labs[ent.iri]
@@ -146,6 +225,10 @@ class Ontology(SavedObj):
 
     def sib_labs(self):
         """Return all the label groups extracted from sibling classes of this ontology as a 3-D list:
+
+        Returns
+        -------
+        List[List[List]]
             -   1st list for different sibling groups;
             -   2nd list for different siblings;
             -   3rd list for different labels.
@@ -155,10 +238,12 @@ class Ontology(SavedObj):
     def build_inv_idx(self, tokenizer, cut: int = 0) -> None:
         """Create inverted index based on the extracted labels of an ontology
 
-        Args:
-            tokenizer : text tokenizer, word-level or sub-word-level,
-                        a .tokenize() funciton needs to be implemented
-            cut (int): keep tokens with length > cut 
+        Parameters
+        ----------
+        tokenizer : Tokenizer
+            text tokenizer, word-level or sub-word-level
+        cut : int, optional
+            keep tokens with length > cut , by default 0
         """
         self.inv_idx = defaultdict(list)
         for cls_iri, cls_labs in self.iri2labs.items():
@@ -168,7 +253,19 @@ class Ontology(SavedObj):
         self.num_entries_inv_idx = len(self.inv_idx)
 
     def idf_select(self, ent_toks, pool_size: int = 200) -> List[str]:
-        """Select entities based on idf scores
+        """Select entities based on idf scores calculated from the pre-computed inverted index
+
+        Parameters
+        ----------
+        ent_toks : List[str]
+            tokenized entity labels
+        pool_size : int, optional
+            maximum number of candidates considered, by default 200
+
+        Returns
+        -------
+        List[str]
+            candidates ranked by idf scores
         """
         cand_pool = text_utils.idf_select(ent_toks, self.inv_idx, pool_size)
         # print three selected examples
