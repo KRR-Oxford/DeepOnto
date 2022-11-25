@@ -15,14 +15,17 @@
 
 import os
 import itertools
+from typing import List
 from collections import defaultdict
 import warnings
+import enlighten
 from deeponto import init_jvm, OWL_THING, OWL_NOTHING, OWL_BOTTOM_OBJECT_PROP, OWL_TOP_OBJECT_PROP
 
 init_jvm("2g")
 
-from java.io import *  # type: ignore
-from java.util import *  # type: ignore
+# from java.io import *  # type: ignore
+# from java.util import *  # type: ignore
+from java.io import File # type: ignore
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
 from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory  # type: ignore
@@ -78,6 +81,11 @@ class OWLReasoner:
             return self.owlObjectProperties[iri]
         else:
             return None
+        
+    def save_onto(self, saved_path: str):
+        """Save the inferred ontology to the given path
+        """
+        self.owlOnto.saveOntology(IRI.create(File(saved_path).toURI()))
 
     @staticmethod
     def hasIRI(owlObject: OWLObject):
@@ -177,6 +185,25 @@ class OWLReasoner:
         if BOTTOM in sub_entity_iris:
             sub_entity_iris.remove(BOTTOM)
         return sub_entity_iris
+    
+    def check_assumed_disjoint(self, assumed_disjoint_pairs: List):
+        """Check if the ontology is still consistent with the assumed disjointness
+        between the two class expressions
+        """
+        for owlObject1, owlObject2 in assumed_disjoint_pairs:
+            ent_type = self.determine(owlObject1)
+            assert ent_type == self.determine(owlObject2)
+            disjoint_axiom = getattr(self.owlDataFactory, f"getOWLDisjoint{ent_type}Axiom")(
+                [owlObject1, owlObject2]
+            )
+            self.owlOnto.addAxiom(disjoint_axiom)
+        self.reasoner.dispose()
+        self.reasoner = self.reasonerFactory.createReasoner(self.owlOnto)
+        unsats = list(self.reasoner.getUnsatisfiableClasses())
+        # if the only unsatisfiable class is OWLNothing we return true
+        if len(unsats) == 1 and unsats[0] == self.OWLNothing:
+            return True
+        return False
 
     def check_disjoint(self, owlObject1: OWLObject, owlObject2: OWLObject):
         """Check if two class expressions are disjoint according to the reasoner
