@@ -117,6 +117,7 @@ class OWLReasoner:
                     owlClass = self.OWLThing
                 else:
                     owlClass = self.owlClasses[cl_iri]
+                # NOTE: direct is True is very important here !!!
                 children = self.sub_entities_of(owlClass, direct=True)
                 if len(children) >= 2:
                     self._non_single_child_classes[cl_iri] = children
