@@ -18,6 +18,8 @@ limitations under the License.
 
 DeepOnto now supports ontology reasoning modules extended from OWLAPI.
 
+## Use OWLAPI Reasoner in Python
+
 ```python
 
 from deeponto.onto.logic.reasoner import OWLReasoner
