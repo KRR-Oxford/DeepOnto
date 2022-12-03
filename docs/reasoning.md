@@ -14,10 +14,5 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<!-- - **DeepOnto** -->
-- [About](/)
-- [Useful Scripts](using_deeponto.md)
-- [OM Models](om_models.md)
-- [OM Resources](om_resources.md)
-- [Ontology Reasoning](reasoning.md)
-- [Data Structures](data_structures.md)
+# Ontology Reasoning
+
