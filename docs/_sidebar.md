@@ -19,5 +19,5 @@ limitations under the License.
 - [Useful Scripts](using_deeponto.md)
 - [OM Models](om_models.md)
 - [OM Resources](om_resources.md)
-- [Ontology Reasoning](reasoning.md)
+- [Reasoning](reasoning.md)
 - [Data Structures](data_structures.md)
