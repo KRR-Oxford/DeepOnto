@@ -88,6 +88,10 @@ pip install -r requirements.txt
 -  Instructions: *https://krr-oxford.github.io/DeepOnto/#/om_resources*;
 -  OAEI track: *https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/*.
 
+## Using OWLAPI Reasoner in Python
+
+Thanks for [JPype](https://jpype.readthedocs.io/en/latest/), we can use the OWLAPI reasoner in Python for better integration with the deep learning modules. See the page [here](reasoning.md) for more information.
+
 ## License
 
 Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.
