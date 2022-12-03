@@ -16,3 +16,27 @@ limitations under the License.
 
 # Ontology Reasoning
 
+DeepOnto now supports ontology reasoning modules extended from OWLAPI.
+
+```python
+
+from deeponto.onto.logic.reasoner import OWLReasoner
+
+# initialise the ontology reasoner
+reasoner = OWLReasoner("doid.owl")
+
+# getting an OWLObject (class or property) instance from its IRI
+owl_object = reasoner.getOWLObjectFromIRI("http://purl.obolibrary.org/obo/DOID_0040002")
+
+# getting IRIs of the inferred super-classes of the owl_object
+# set direct=True if only direct super-classes are required 
+supers = reasoner.super_entities_of(owl_object, direct=False)
+
+# getting IRIs of the inferred sub-classes of the owl_object
+# set direct=True if only direct sub-classes are required 
+subs = reasoner.sub_entities_of(owl_object, direct=False)
+
+```
+
+There are other helpful methods for checking disjointness, subsumption relationship, common descendants, and so on. Check the source code for more information.
+
