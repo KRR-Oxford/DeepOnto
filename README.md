@@ -71,8 +71,8 @@ pip install -r requirements.txt
 ### Ontology Matching 
 
 DeepOnto has implemented a family of BERT-based Ontology Matching (OM) models including:
-- BERTMap and BERTMapLt (EditSim) for equivalence OM;
-- BERTSubs (not ready) for subsumption OM.
+- **BERTMap** and **BERTMapLt** (EditSim) for equivalence OM;
+- **BERTSubs** (not ready) for subsumption OM.
 
 It also incorporates the OM resource **Bio-ML**:
 -  Download link: *https://doi.org/10.5281/zenodo.6510086* (CC BY 4.0 International);
