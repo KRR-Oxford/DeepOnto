@@ -64,8 +64,6 @@ Then, install other dependencies in [`requirement.txt`](https://raw.githubuserco
 pip install -r requirements.txt
 ```
 
-?> Click [here](using_deeponto.md) for script usage.
-
 ## Main Features
 
 ### Ontology Matching 
@@ -82,6 +80,8 @@ It also incorporates the OM resource **Bio-ML**:
 ### Using OWLAPI Reasoner in Python
 
 Thanks for [JPype](https://jpype.readthedocs.io/en/latest/), we can use the OWLAPI reasoner in Python for better integration with the deep learning modules. See the page [here](reasoning.md) for more information.
+
+?> Click [here](using_deeponto.md) for script usage related to supported features.
 
 ## License
 
