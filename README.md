@@ -64,31 +64,22 @@ Then, install other dependencies in [`requirement.txt`](https://raw.githubuserco
 pip install -r requirements.txt
 ```
 
-## Implemented Models
-
-
-<!-- #### **OntoAlign** -->
-
-<!-- <div align="center"> -->
-
-| Name                  | Task                            |
-| :-------------        | :---------------                |
-| BERTMap               | Ontology Matching (Equivalence) |
-| BERTMapLt (EditSim)   | Ontology Matching (Equivalence) |
-| BERTSubs (not ready)  | Ontology Matching (Subsumption) |
-
-<!-- </div> -->
-
 ?> Click [here](using_deeponto.md) for script usage.
 
-## Ontology Matching Resources
+## Main Features
 
-**Bio-ML** for equivalence and subsumption ontology matching:
+### Ontology Matching 
+
+DeepOnto has implemented a family of BERT-based Ontology Matching (OM) models including:
+- BERTMap and BERTMapLt (EditSim) for equivalence OM;
+- BERTSubs (not ready) for subsumption OM.
+
+It also incorporates the OM resource **Bio-ML**:
 -  Download link: *https://doi.org/10.5281/zenodo.6510086* (CC BY 4.0 International);
 -  Instructions: *https://krr-oxford.github.io/DeepOnto/#/om_resources*;
 -  OAEI track: *https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/*.
 
-## Using OWLAPI Reasoner in Python
+### Using OWLAPI Reasoner in Python
 
 Thanks for [JPype](https://jpype.readthedocs.io/en/latest/), we can use the OWLAPI reasoner in Python for better integration with the deep learning modules. See the page [here](reasoning.md) for more information.
 
