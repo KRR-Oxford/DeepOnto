@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.data.infer package &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="deeponto.data.infer.subs package" href="deeponto.data.infer.subs.html" />
+    <link rel="prev" title="deeponto.data.align package" href="deeponto.data.align.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">deeponto</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="deeponto.html">deeponto package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="deeponto.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.html">deeponto.bert package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.config.html">deeponto.config package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="deeponto.data.html">deeponto.data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.evaluation.html">deeponto.evaluation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.html">deeponto.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html">deeponto.onto package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.utils.html">deeponto.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto.flagged_obj">deeponto.flagged_obj module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto.saved_obj">deeponto.saved_obj module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">deeponto</a></li>
+          <li class="breadcrumb-item"><a href="deeponto.html">deeponto package</a></li>
+          <li class="breadcrumb-item"><a href="deeponto.data.html">deeponto.data package</a></li>
+      <li class="breadcrumb-item active">deeponto.data.infer package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/deeponto.data.infer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="deeponto-data-infer-package">
+<h1>deeponto.data.infer package<a class="headerlink" href="#deeponto-data-infer-package" title="Permalink to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deeponto.data.infer.subs.html">deeponto.data.infer.subs package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.data.infer.subs.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.data.infer.subs.html#module-deeponto.data.infer.subs.atomic_subs">deeponto.data.infer.subs.atomic_subs module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.atomic_subs.AtomicSubsumptionSampler"><code class="docutils literal notranslate"><span class="pre">AtomicSubsumptionSampler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.atomic_subs.AtomicSubsumptionSampler.contradiction_pairs"><code class="docutils literal notranslate"><span class="pre">AtomicSubsumptionSampler.contradiction_pairs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.atomic_subs.AtomicSubsumptionSampler.entailment_pairs"><code class="docutils literal notranslate"><span class="pre">AtomicSubsumptionSampler.entailment_pairs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.atomic_subs.AtomicSubsumptionSampler.init_subs"><code class="docutils literal notranslate"><span class="pre">AtomicSubsumptionSampler.init_subs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.atomic_subs.AtomicSubsumptionSampler.random_select_lab_pair"><code class="docutils literal notranslate"><span class="pre">AtomicSubsumptionSampler.random_select_lab_pair()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.atomic_subs.AtomicSubsumptionSampler.sample"><code class="docutils literal notranslate"><span class="pre">AtomicSubsumptionSampler.sample()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.data.infer.subs.html#module-deeponto.data.infer.subs.complex_subs">deeponto.data.infer.subs.complex_subs module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.complex_subs.ComplexSubsumptionSampler"><code class="docutils literal notranslate"><span class="pre">ComplexSubsumptionSampler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.complex_subs.ComplexSubsumptionSampler.contradiction_pairs_from_equiv_axiom"><code class="docutils literal notranslate"><span class="pre">ComplexSubsumptionSampler.contradiction_pairs_from_equiv_axiom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.complex_subs.ComplexSubsumptionSampler.entailment_pairs_from_equiv_axiom"><code class="docutils literal notranslate"><span class="pre">ComplexSubsumptionSampler.entailment_pairs_from_equiv_axiom()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.complex_subs.ComplexSubsumptionSampler.init_subs"><code class="docutils literal notranslate"><span class="pre">ComplexSubsumptionSampler.init_subs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.complex_subs.ComplexSubsumptionSampler.random_corrupt"><code class="docutils literal notranslate"><span class="pre">ComplexSubsumptionSampler.random_corrupt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.complex_subs.ComplexSubsumptionSampler.sample"><code class="docutils literal notranslate"><span class="pre">ComplexSubsumptionSampler.sample()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.data.infer.subs.html#module-deeponto.data.infer.subs.subs_base">deeponto.data.infer.subs.subs_base module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.subs_base.SubsumptionSamplerBase"><code class="docutils literal notranslate"><span class="pre">SubsumptionSamplerBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.subs_base.SubsumptionSamplerBase.init_subs"><code class="docutils literal notranslate"><span class="pre">SubsumptionSamplerBase.init_subs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.subs_base.SubsumptionSamplerBase.random_atomic_class"><code class="docutils literal notranslate"><span class="pre">SubsumptionSamplerBase.random_atomic_class()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.subs_base.SubsumptionSamplerBase.random_atomic_class_pair"><code class="docutils literal notranslate"><span class="pre">SubsumptionSamplerBase.random_atomic_class_pair()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.subs_base.SubsumptionSamplerBase.random_object_property"><code class="docutils literal notranslate"><span class="pre">SubsumptionSamplerBase.random_object_property()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.subs_base.SubsumptionSamplerBase.random_sibling_atomic_class_for"><code class="docutils literal notranslate"><span class="pre">SubsumptionSamplerBase.random_sibling_atomic_class_for()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.subs_base.SubsumptionSamplerBase.random_sibling_atomic_class_pair"><code class="docutils literal notranslate"><span class="pre">SubsumptionSamplerBase.random_sibling_atomic_class_pair()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.subs.html#deeponto.data.infer.subs.subs_base.SubsumptionSamplerBase.save"><code class="docutils literal notranslate"><span class="pre">SubsumptionSamplerBase.save()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.data.infer.subs.html#module-deeponto.data.infer.subs">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-deeponto.data.infer.infer_utils">
+<span id="deeponto-data-infer-infer-utils-module"></span><h2>deeponto.data.infer.infer_utils module<a class="headerlink" href="#module-deeponto.data.infer.infer_utils" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="deeponto.data.infer.infer_utils.InferenceProcessor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeponto.data.infer.infer_utils.</span></span><span class="sig-name descname"><span class="pre">InferenceProcessor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">apply_binary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/infer/infer_utils.html#InferenceProcessor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.infer.infer_utils.InferenceProcessor" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DataProcessor</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.infer.infer_utils.InferenceProcessor.get_examples">
+<span class="sig-name descname"><span class="pre">get_examples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/infer/infer_utils.html#InferenceProcessor.get_examples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.infer.infer_utils.InferenceProcessor.get_examples" title="Permalink to this definition"></a></dt>
+<dd><p>get the <code class="xref py py-obj docutils literal notranslate"><span class="pre">split</span></code> of dataset under <code class="xref py py-obj docutils literal notranslate"><span class="pre">data_dir</span></code></p>
+<p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_dir</span></code> is the base path of the dataset, for example:</p>
+<p>training file could be located in <code class="docutils literal notranslate"><span class="pre">data_dir/train.txt</span></code></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_dir</strong> (<em>str</em>) – the base path of the dataset</p></li>
+<li><p><strong>split</strong> (<em>str</em>) – <code class="docutils literal notranslate"><span class="pre">train</span></code> / <code class="docutils literal notranslate"><span class="pre">dev</span></code> / <code class="docutils literal notranslate"><span class="pre">test</span></code> / <code class="docutils literal notranslate"><span class="pre">unlabeled</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>return a list of <code class="xref py py-class docutils literal notranslate"><span class="pre">InputExample</span></code></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List[InputExample]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.data.infer.infer_utils.load_inference_dataset">
+<span class="sig-prename descclassname"><span class="pre">deeponto.data.infer.infer_utils.</span></span><span class="sig-name descname"><span class="pre">load_inference_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CfgNode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_class</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/infer/infer_utils.html#load_inference_dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.infer.infer_utils.load_inference_dataset" title="Permalink to this definition"></a></dt>
+<dd><p>A plm loader using a global config.
+It will load the train, valid, and test set (if exists) simulatenously.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">CfgNode</span></code>) – The global config from the CfgNode.</p></li>
+<li><p><strong>return_class</strong> (<code class="xref py py-obj docutils literal notranslate"><span class="pre">bool</span></code>) – Whether return the data processor class
+for future usage.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The train dataset.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">Optional[List[InputExample]]</span></code>: The valid dataset.
+<code class="xref py py-obj docutils literal notranslate"><span class="pre">Optional[List[InputExample]]</span></code>: The test dataset.
+:obj:”</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Optional[List[InputExample]]</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.data.infer.infer_utils.load_prompt_data_from_huggingface">
+<span class="sig-prename descclassname"><span class="pre">deeponto.data.infer.infer_utils.</span></span><span class="sig-name descname"><span class="pre">load_prompt_data_from_huggingface</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'multi_nli'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">splits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/infer/infer_utils.html#load_prompt_data_from_huggingface"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.infer.infer_utils.load_prompt_data_from_huggingface" title="Permalink to this definition"></a></dt>
+<dd><p>Load a datast from huggingface datasets and transform to openprompt examples.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.data.infer.infer_utils.load_prompt_data_from_table">
+<span class="sig-prename descclassname"><span class="pre">deeponto.data.infer.infer_utils.</span></span><span class="sig-name descname"><span class="pre">load_prompt_data_from_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tabular_data_path:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label2idx:</span> <span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">premise_pattern:</span> <span class="pre">~typing.Optional[~typing.Callable]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hypothesis_pattern:</span> <span class="pre">~typing.Optional[~typing.Callable]</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/infer/infer_utils.html#load_prompt_data_from_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.infer.infer_utils.load_prompt_data_from_table" title="Permalink to this definition"></a></dt>
+<dd><p>Load an inference dataset containing (premise-hypothesis) pairs
+from the json file</p>
+</dd></dl>
+
+</section>
+<section id="module-deeponto.data.infer">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-deeponto.data.infer" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="deeponto.data.align.html" class="btn btn-neutral float-left" title="deeponto.data.align package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="deeponto.data.infer.subs.html" class="btn btn-neutral float-right" title="deeponto.data.infer.subs package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

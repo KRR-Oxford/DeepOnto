@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.onto.text.thesaurus &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">deeponto</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../deeponto.html">deeponto</a></li>
+      <li class="breadcrumb-item active">deeponto.onto.text.thesaurus</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeponto.onto.text.thesaurus</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.</span>
+
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;Class for processing thesarus of &quot;synonyms&quot; and &quot;non-synonyms&quot; extracted from ontologies</span>
+
+<span class="sd">Synonym pairs (labels for the same class) are guaranteed to have:</span>
+<span class="sd">1. Reflexivity (identity synonyms): for class label1 =&gt; ADD (label1, label1);</span>
+<span class="sd">2. Symmetricality: ADD (label1, label2) =&gt; ADD (label2, label1);</span>
+<span class="sd">3. Transitivity (Optional, not used in the original BERTMap): ADD (label1, label2), (label2, label3) =&gt; ADD (label1, label3)</span>
+
+<span class="sd">Non-synonyms are of huge sampling space, and we do not care about any of the above properties but there are two types:</span>
+<span class="sd">1. Soft: labels from two different (atomic) classes;</span>
+<span class="sd">2. Hard: labels from two logically disjoint (atomic) classes (sibling classes in BERTMap).</span>
+
+<span class="sd">For cross-ontology level, given a small set of mappings:</span>
+<span class="sd">1. Synonyms are extracted from label pairs of aligned classes;</span>
+<span class="sd">2. Non-synonyms are extracted from label pairs of mismatched classes (w.r.t the given mappings).</span>
+
+<span class="sd">Thoughts for future: </span>
+<span class="sd">1. Should we consider using equivalence axioms, e.g., (Apple, Fruit &amp; RedColor)? Or leave it for prompts?</span>
+<span class="sd">2. </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+
+<span class="kn">from</span> <span class="nn">deeponto</span> <span class="kn">import</span> <span class="n">SavedObj</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">uniqify</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils.logging</span> <span class="kn">import</span> <span class="n">banner_msg</span>
+
+<span class="c1"># to avoid circular imports</span>
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
+    <span class="kn">from</span> <span class="nn">deeponto.onto.mapping</span> <span class="kn">import</span> <span class="n">OntoMappings</span>
+
+
+<div class="viewcode-block" id="Thesaurus"><a class="viewcode-back" href="../../../../deeponto.onto.text.html#deeponto.onto.text.thesaurus.Thesaurus">[docs]</a><span class="k">class</span> <span class="nc">Thesaurus</span><span class="p">(</span><span class="n">SavedObj</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># note that reflexivity and symmetricality have been assumed by</span>
+        <span class="c1"># e.g., if a class C has labels {x, y}, we include (x, x), (y, y)</span>
+        <span class="c1"># for reflexivity; and (x, y), (y, x) for symmetricality.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sections</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">merged_section</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply_transitivity</span> <span class="o">=</span> <span class="n">apply_transitivity</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;thesaurus&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">ontos</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a new Thesaurus for given ontologies</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_transitivity</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_synonyms_from_ontos</span><span class="p">(</span><span class="o">*</span><span class="n">ontos</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;onto_names&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">section</span><span class="p">[</span><span class="s2">&quot;onto_name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">],</span>
+            <span class="s2">&quot;section_sizes&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">section</span><span class="p">[</span><span class="s2">&quot;num_synonym_groups&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">],</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;total_size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;section_sizes&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">merged_section</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;merged_total_size&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merged_section</span><span class="p">[</span><span class="s2">&quot;num_synonym_groups&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;reduced&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;total_size&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;merged_total_size&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Thesaurus.create_merged_section"><a class="viewcode-back" href="../../../../deeponto.onto.text.html#deeponto.onto.text.thesaurus.Thesaurus.create_merged_section">[docs]</a>    <span class="k">def</span> <span class="nf">create_merged_section</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">all_synonym_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">section</span><span class="p">[</span><span class="s2">&quot;synonym_groups&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">]</span>
+        <span class="n">merged_synonym_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_synonyms_by_transitivity</span><span class="p">(</span><span class="o">*</span><span class="n">all_synonym_groups</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">merged_section</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;num_synonym_groups&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">merged_synonym_groups</span><span class="p">),</span>
+            <span class="s2">&quot;synonym_groups&quot;</span><span class="p">:</span> <span class="n">merged_synonym_groups</span><span class="p">,</span>
+        <span class="p">}</span></div>
+
+    <span class="c1">##################################################################################</span>
+    <span class="c1">###                   extract synonyms from an ontology                        ###</span>
+    <span class="c1">##################################################################################</span>
+
+<div class="viewcode-block" id="Thesaurus.add_synonyms_from_ontos"><a class="viewcode-back" href="../../../../deeponto.onto.text.html#deeponto.onto.text.thesaurus.Thesaurus.add_synonyms_from_ontos">[docs]</a>    <span class="k">def</span> <span class="nf">add_synonyms_from_ontos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">ontos</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Add synonyms from each input ontology into a &quot;section&quot;,</span>
+<span class="sd">        return the resulting synonym groups</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">onto</span> <span class="ow">in</span> <span class="n">ontos</span><span class="p">:</span>
+            <span class="n">synonym_groups</span> <span class="o">=</span> <span class="p">[</span><span class="nb">set</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_transitivity</span><span class="p">:</span>
+                <span class="n">synonym_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_synonyms_by_transitivity</span><span class="p">(</span><span class="n">synonym_groups</span><span class="p">)</span>
+            <span class="n">new_section</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;onto_name&quot;</span><span class="p">:</span> <span class="s2">&quot;[intra-onto]: &quot;</span> <span class="o">+</span> <span class="n">onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">&quot;onto_info&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">onto</span><span class="p">),</span>
+                <span class="s2">&quot;num_synonym_groups&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">synonym_groups</span><span class="p">),</span>
+                <span class="s2">&quot;synonym_groups&quot;</span><span class="p">:</span> <span class="n">synonym_groups</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_section</span><span class="p">)</span>
+            <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Updating Thesaurus (from Ontos)&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Add </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">synonym_groups</span><span class="p">)</span><span class="si">}</span><span class="s2"> synonym groups from the following ontology:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">onto</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_merged_section</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">synonym_groups</span></div>
+
+<div class="viewcode-block" id="Thesaurus.add_matched_synonyms_from_mappings"><a class="viewcode-back" href="../../../../deeponto.onto.text.html#deeponto.onto.text.thesaurus.Thesaurus.add_matched_synonyms_from_mappings">[docs]</a>    <span class="k">def</span> <span class="nf">add_matched_synonyms_from_mappings</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">known_mappings</span><span class="p">:</span> <span class="n">OntoMappings</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]]:</span>
+        <span class="sd">&quot;&quot;&quot;Add aligned synonym groups from given mappings. The merged synonyms are included as a section </span>
+<span class="sd">        and returning aligned but not merged src and tgt synonym groups with: (src_synonyms, tgt_synonyms) </span>
+<span class="sd">        for cross-ontology negative sampling.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">synonym_group_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">synonym_groups</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># TODO: change to IRIs</span>
+        <span class="k">for</span> <span class="n">src_ent</span><span class="p">,</span> <span class="n">tgt_ent_dict</span> <span class="ow">in</span> <span class="n">known_mappings</span><span class="o">.</span><span class="n">map_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">src_ent_labels</span> <span class="o">=</span> <span class="n">src_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="p">[</span><span class="n">src_ent</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">tgt_ent</span> <span class="ow">in</span> <span class="n">tgt_ent_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">tgt_ent_labels</span> <span class="o">=</span> <span class="n">tgt_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="p">[</span><span class="n">tgt_ent</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">src_ent_labels</span> <span class="ow">and</span> <span class="n">tgt_ent_labels</span><span class="p">:</span>
+                    <span class="c1"># merged cross-onto synonym group where labels of aligned classes are synonymous</span>
+                    <span class="n">synonym_group_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">src_ent_labels</span><span class="p">),</span> <span class="nb">set</span><span class="p">(</span><span class="n">tgt_ent_labels</span><span class="p">))</span>
+                    <span class="p">)</span>  <span class="c1"># form a synonym group pair with known ontology source</span>
+                    <span class="n">synonym_groups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="nb">set</span><span class="p">(</span><span class="n">src_ent_labels</span> <span class="o">+</span> <span class="n">tgt_ent_labels</span><span class="p">)</span>
+                    <span class="p">)</span>  <span class="c1"># form a synonym group without distinguishing ontology source</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_transitivity</span><span class="p">:</span>
+            <span class="n">synonym_groups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">merge_synonyms_by_transitivity</span><span class="p">(</span><span class="n">synonym_groups</span><span class="p">)</span>
+        <span class="n">new_section</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;onto_name&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;[cross-onto]: (</span><span class="si">{</span><span class="n">src_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;onto_info&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">src_onto</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">tgt_onto</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;num_synonym_groups&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">synonym_groups</span><span class="p">),</span>
+                <span class="s2">&quot;synonym_groups&quot;</span><span class="p">:</span> <span class="n">synonym_groups</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_section</span><span class="p">)</span>
+        <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Updating Thesaurus (from Mappings)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Add </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">synonym_groups</span><span class="p">)</span><span class="si">}</span><span class="s2"> synonym groups from the mappings of following ontologies:</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">src_onto</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">tgt_onto</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_merged_section</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">synonym_group_pairs</span></div>
+
+    <span class="c1">##################################################################################</span>
+    <span class="c1">###                   auxiliary functions for transitivity                     ###</span>
+    <span class="c1">##################################################################################</span>
+
+<div class="viewcode-block" id="Thesaurus.merge_synonyms_by_transitivity"><a class="viewcode-back" href="../../../../deeponto.onto.text.html#deeponto.onto.text.thesaurus.Thesaurus.merge_synonyms_by_transitivity">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">merge_synonyms_by_transitivity</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">*</span><span class="n">synonym_group_seq</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
+        <span class="sd">&quot;&quot;&quot;With transitivity assumed, to merge different synonym groups</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">label_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">synonym_group</span> <span class="ow">in</span> <span class="n">synonym_group_seq</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">synonym_set</span> <span class="ow">in</span> <span class="n">synonym_group</span><span class="p">:</span>
+                <span class="n">label_pairs</span> <span class="o">+=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">synonym_set</span><span class="p">,</span> <span class="n">synonym_set</span><span class="p">)</span>
+        <span class="n">merged_grouped_synonyms</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">connected_labels</span><span class="p">(</span><span class="n">label_pairs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">merged_grouped_synonyms</span></div>
+
+<div class="viewcode-block" id="Thesaurus.connected_labels"><a class="viewcode-back" href="../../../../deeponto.onto.text.html#deeponto.onto.text.thesaurus.Thesaurus.connected_labels">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">connected_labels</span><span class="p">(</span><span class="n">label_pairs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Build a graph for adjacency among the class labels such that</span>
+<span class="sd">        the transitivity of synonyms is ensured</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            label_pairs (List[Tuple[str, str]]): label pairs that are synonymous</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List[Set[str]]: a collection of synonym sets</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+        <span class="n">graph</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">label_pairs</span><span class="p">)</span>
+        <span class="c1"># nx.draw(G, with_labels = True)</span>
+        <span class="n">connected</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">graph</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">connected</span></div>
+
+    <span class="c1">##################################################################################</span>
+    <span class="c1">###                          +ve and -ve sampling                              ###</span>
+    <span class="c1">##################################################################################</span>
+
+<div class="viewcode-block" id="Thesaurus.positive_sampling"><a class="viewcode-back" href="../../../../deeponto.onto.text.html#deeponto.onto.text.thesaurus.Thesaurus.positive_sampling">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">positive_sampling</span><span class="p">(</span><span class="n">synonym_groups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">pos_num</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate synonym pairs from each independent synonym group</span>
+<span class="sd">        (has be validated for getting the same results as in BERTMap repo)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pos_sample_pool</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">synonym_set</span> <span class="ow">in</span> <span class="n">synonym_groups</span><span class="p">:</span>
+            <span class="n">synonym_pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">synonym_set</span><span class="p">,</span> <span class="n">synonym_set</span><span class="p">))</span>
+            <span class="n">pos_sample_pool</span> <span class="o">+=</span> <span class="n">synonym_pairs</span>
+        <span class="n">pos_sample_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">pos_sample_pool</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">pos_num</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">pos_num</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos_sample_pool</span><span class="p">)):</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;required number of positives &gt;= maximum; return all retrieved samples instead ...&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">pos_sample_pool</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">pos_sample_pool</span><span class="p">,</span> <span class="n">pos_num</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Thesaurus.random_negative_sampling"><a class="viewcode-back" href="../../../../deeponto.onto.text.html#deeponto.onto.text.thesaurus.Thesaurus.random_negative_sampling">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">random_negative_sampling</span><span class="p">(</span><span class="n">synonym_groups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">neg_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Soft (random) non-synonyms are defined as label pairs from two different synonym groups</span>
+<span class="sd">        that are randomly selected</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">neg_sample_pool</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># randomly select disjoint synonym group pairs from all</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">neg_num</span><span class="p">):</span>
+            <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">synonym_groups</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="c1"># randomly choose one label from a synonym group</span>
+            <span class="n">left_label</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">left</span><span class="p">))</span>
+            <span class="n">right_label</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">right</span><span class="p">))</span>
+            <span class="n">neg_sample_pool</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">left_label</span><span class="p">,</span> <span class="n">right_label</span><span class="p">))</span>
+        <span class="c1"># uniqify is too slow so we should avoid operating it too often</span>
+        <span class="n">neg_sample_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">neg_sample_pool</span><span class="p">)</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">neg_sample_pool</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">neg_num</span> <span class="ow">and</span> <span class="n">max_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># reduce the iteration to prevent exhausting loop</span>
+            <span class="n">neg_sample_pool</span> <span class="o">+=</span> <span class="n">Thesaurus</span><span class="o">.</span><span class="n">random_negative_sampling</span><span class="p">(</span>
+                <span class="n">synonym_groups</span><span class="p">,</span> <span class="n">neg_num</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">neg_sample_pool</span><span class="p">),</span> <span class="n">max_iter</span>
+            <span class="p">)</span>
+            <span class="n">neg_sample_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">neg_sample_pool</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">neg_sample_pool</span></div>
+
+<div class="viewcode-block" id="Thesaurus.disjointness_negative_sampling"><a class="viewcode-back" href="../../../../deeponto.onto.text.html#deeponto.onto.text.thesaurus.Thesaurus.disjointness_negative_sampling">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">disjointness_negative_sampling</span><span class="p">(</span>
+        <span class="n">list_of_disjoint_synonym_groups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span> <span class="n">neg_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Hard (disjoint) non-synonyms are defined as label pairs from two different synonym groups</span>
+<span class="sd">        that are logically disjoint; since these pairs are often of limited number, I adopt the same</span>
+<span class="sd">        way as in positive sampling where we first retrieve all the possible pairs.</span>
+<span class="sd">        </span>
+<span class="sd">        Each entry of the input is a group of different disjoint synonym groups</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># flatten the disjointness groups into all pairs of hard neagtives</span>
+        <span class="n">neg_sample_pool</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">neg_num</span><span class="p">):</span>
+            <span class="n">disjoint_synonym_groups</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">list_of_disjoint_synonym_groups</span><span class="p">)</span>
+            <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">disjoint_synonym_groups</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="n">left_label</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">left</span><span class="p">)</span>
+            <span class="n">right_label</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">right</span><span class="p">)</span>
+            <span class="n">neg_sample_pool</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">left_label</span><span class="p">,</span> <span class="n">right_label</span><span class="p">))</span>
+        <span class="c1"># uniqify is too slow so we should avoid operating it too often</span>
+        <span class="n">neg_sample_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">neg_sample_pool</span><span class="p">)</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">neg_sample_pool</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">neg_num</span> <span class="ow">and</span> <span class="n">max_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># reduce the iteration to prevent exhausting loop</span>
+            <span class="n">neg_sample_pool</span> <span class="o">+=</span> <span class="n">Thesaurus</span><span class="o">.</span><span class="n">disjointness_negative_sampling</span><span class="p">(</span>
+                <span class="n">list_of_disjoint_synonym_groups</span><span class="p">,</span> <span class="n">neg_num</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">neg_sample_pool</span><span class="p">),</span> <span class="n">max_iter</span>
+            <span class="p">)</span>
+            <span class="n">neg_sample_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">neg_sample_pool</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">neg_sample_pool</span></div>
+ 
+
+<div class="viewcode-block" id="Thesaurus.positive_sampling_from_paired_groups"><a class="viewcode-back" href="../../../../deeponto.onto.text.html#deeponto.onto.text.thesaurus.Thesaurus.positive_sampling_from_paired_groups">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">positive_sampling_from_paired_groups</span><span class="p">(</span>
+        <span class="n">matched_synonym_groups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span> <span class="n">pos_num</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate synonym pairs from each paired synonym group where identity synonyms are removed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pos_sample_pool</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">left_synonym_set</span><span class="p">,</span> <span class="n">right_synonym_set</span> <span class="ow">in</span> <span class="n">matched_synonym_groups</span><span class="p">:</span>
+            <span class="c1"># sample cross-onto synonyms but removing identity synonyms</span>
+            <span class="n">synonym_pairs</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">left_synonym_set</span><span class="p">,</span> <span class="n">right_synonym_set</span><span class="p">)</span> <span class="k">if</span> <span class="n">l</span> <span class="o">!=</span> <span class="n">r</span>
+            <span class="p">]</span>
+            <span class="c1"># append the reversed synonyms (preserve symmertry)</span>
+            <span class="n">backward_synonym_pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">r</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">synonym_pairs</span><span class="p">]</span>
+            <span class="n">pos_sample_pool</span> <span class="o">+=</span> <span class="n">synonym_pairs</span> <span class="o">+</span> <span class="n">backward_synonym_pairs</span>
+        <span class="n">pos_sample_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">pos_sample_pool</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">pos_num</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">pos_num</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos_sample_pool</span><span class="p">)):</span>
+            <span class="c1"># return all the possible synonyms if no maximum limit</span>
+            <span class="k">return</span> <span class="n">pos_sample_pool</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">pos_sample_pool</span><span class="p">,</span> <span class="n">pos_num</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Thesaurus.random_negative_sampling_from_paired_groups"><a class="viewcode-back" href="../../../../deeponto.onto.text.html#deeponto.onto.text.thesaurus.Thesaurus.random_negative_sampling_from_paired_groups">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">random_negative_sampling_from_paired_groups</span><span class="p">(</span>
+        <span class="n">matched_synonym_groups</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]],</span> <span class="n">neg_num</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Soft (random) non-synonyms are defined as label pairs from two different synonym groups</span>
+<span class="sd">        that are randomly selected from oposite ontologies</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">neg_sample_pool</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># randomly select disjoint synonym group pairs from all</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">neg_num</span><span class="p">):</span>
+            <span class="n">left_class_pairs</span><span class="p">,</span> <span class="n">right_class_pairs</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">matched_synonym_groups</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="c1"># randomly choose one label from a synonym group</span>
+            <span class="n">left_label</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">left_class_pairs</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>  <span class="c1"># choosing the src side</span>
+            <span class="n">right_label</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">right_class_pairs</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>  <span class="c1"># choosing the tgt side</span>
+            <span class="n">neg_sample_pool</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">left_label</span><span class="p">,</span> <span class="n">right_label</span><span class="p">))</span>
+        <span class="c1"># uniqify is too slow so we should avoid operating it too often</span>
+        <span class="n">neg_sample_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">neg_sample_pool</span><span class="p">)</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">neg_sample_pool</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">neg_num</span> <span class="ow">and</span> <span class="n">max_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># reduce the iteration to prevent exhausting loop</span>
+            <span class="n">neg_sample_pool</span> <span class="o">+=</span> <span class="n">Thesaurus</span><span class="o">.</span><span class="n">random_negative_sampling_from_paired_groups</span><span class="p">(</span>
+                <span class="n">matched_synonym_groups</span><span class="p">,</span> <span class="n">neg_num</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">neg_sample_pool</span><span class="p">),</span> <span class="n">max_iter</span>
+            <span class="p">)</span>
+            <span class="n">neg_sample_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">neg_sample_pool</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">neg_sample_pool</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

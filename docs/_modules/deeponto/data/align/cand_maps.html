@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.data.align.cand_maps &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">deeponto</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../deeponto.html">deeponto</a></li>
+      <li class="breadcrumb-item active">deeponto.data.align.cand_maps</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeponto.data.align.cand_maps</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.</span>
+
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;Provide functions for generating negative candidates&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
+<span class="kn">from</span> <span class="nn">deeponto.onto.graph.graph_utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">deeponto.onto.text</span> <span class="kn">import</span> <span class="n">Tokenizer</span>
+<span class="kn">from</span> <span class="nn">deeponto.onto.mapping</span> <span class="kn">import</span> <span class="n">OntoMappings</span><span class="p">,</span> <span class="n">EntityMapping</span><span class="p">,</span> <span class="n">AnchoredOntoMappings</span><span class="p">,</span> <span class="n">AnchorMapping</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">uniqify</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils.logging</span> <span class="kn">import</span> <span class="n">banner_msg</span>
+<span class="kn">from</span> <span class="nn">deeponto</span> <span class="kn">import</span> <span class="n">SavedObj</span><span class="p">,</span> <span class="n">FlaggedObj</span>
+
+
+<span class="c1"># TODO: to be updated constantly</span>
+<span class="n">sampling_options</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;idf&quot;</span><span class="p">,</span> <span class="s2">&quot;neighbour&quot;</span><span class="p">,</span> <span class="s2">&quot;random&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="MappingCandidateGenerator"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.cand_maps.MappingCandidateGenerator">[docs]</a><span class="k">class</span> <span class="nc">MappingCandidateGenerator</span><span class="p">(</span><span class="n">FlaggedObj</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">saved_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+        <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+        <span class="n">ref_mappings_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">null_ref_mappings_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">rel</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Tokenizer</span><span class="p">,</span>
+        <span class="n">max_hops</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">avoid_ancestors</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">avoid_descendents</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">src_onto</span><span class="p">,</span> <span class="n">tgt_onto</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rel</span> <span class="o">=</span> <span class="n">rel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saved_path</span> <span class="o">=</span> <span class="n">saved_path</span>
+
+        <span class="c1"># loaded mappings are served as +ve candiates (anchors)</span>
+        <span class="c1"># note that dict cannot be used here because multiple mappings are possible</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_src2tgt</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span>
+            <span class="n">table_mappings_path</span><span class="o">=</span><span class="n">ref_mappings_path</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rel</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">to_tuples</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_tgt2src</span> <span class="o">=</span> <span class="p">[(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos_src2tgt</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">null_src2tgt</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">null_tgt2src</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">null_ref_mappings_path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">null_src2tgt</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span>
+                <span class="n">table_mappings_path</span><span class="o">=</span><span class="n">null_ref_mappings_path</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rel</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">to_tuples</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">null_tgt2src</span> <span class="o">=</span> <span class="p">[(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">null_src2tgt</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_src2tgt</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_src2tgt</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_src2tgt</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos_tgt2src</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos_tgt2src</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">null_tgt2src</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
+
+        <span class="c1"># init the reference anchored mappings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">src2tgt_anchored_mappings</span> <span class="o">=</span> <span class="n">AnchoredOntoMappings</span><span class="p">(</span>
+            <span class="n">flag</span><span class="o">=</span><span class="s2">&quot;src2tgt&quot;</span><span class="p">,</span> <span class="n">n_best</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rel</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">src2tgt_ref_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_anchors</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">switch</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tgt2src_anchored_mappings</span> <span class="o">=</span> <span class="n">AnchoredOntoMappings</span><span class="p">(</span>
+            <span class="n">flag</span><span class="o">=</span><span class="s2">&quot;tgt2src&quot;</span><span class="p">,</span> <span class="n">n_best</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rel</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tgt2src_ref_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_anchors</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renew</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="c1"># arguments for neighbour sampling</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_hops</span> <span class="o">=</span> <span class="n">max_hops</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">avoid_ancestors</span> <span class="o">=</span> <span class="n">avoid_ancestors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">avoid_descendents</span> <span class="o">=</span> <span class="n">avoid_descendents</span>
+
+<div class="viewcode-block" id="MappingCandidateGenerator.init_anchors"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.cand_maps.MappingCandidateGenerator.init_anchors">[docs]</a>    <span class="k">def</span> <span class="nf">init_anchors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add all the reference anchor mappings as a candidate mapping first</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># init anchor maps and anchor dict</span>
+        <span class="n">anchored_maps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_anchor_mappings</span><span class="p">()</span>
+        <span class="n">ref_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_ref_dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">ref_src_ent_iri</span><span class="p">,</span> <span class="n">ref_tgt_ent_iri</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;pos_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="n">anchor_map</span> <span class="o">=</span> <span class="n">AnchorMapping</span><span class="p">(</span><span class="n">ref_src_ent_iri</span><span class="p">,</span> <span class="n">ref_tgt_ent_iri</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">anchor_map</span><span class="o">.</span><span class="n">add_candidate</span><span class="p">(</span><span class="n">anchor_map</span><span class="p">)</span>
+            <span class="n">anchored_maps</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">anchor_map</span><span class="p">)</span>
+            <span class="n">ref_dict</span><span class="p">[</span><span class="n">ref_src_ent_iri</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref_tgt_ent_iri</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">null_ref_src_iri</span><span class="p">,</span> <span class="n">null_ref_tgt_ent_iri</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;null_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="n">ref_dict</span><span class="p">[</span><span class="n">null_ref_src_iri</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">null_ref_tgt_ent_iri</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MappingCandidateGenerator.sample"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.cand_maps.MappingCandidateGenerator.sample">[docs]</a>    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">strategy2nums</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sample for both src2tgt and tgt2src sides</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renew</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_for_all_one_side</span><span class="p">(</span><span class="o">**</span><span class="n">strategy2nums</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">switch</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sample_for_all_one_side</span><span class="p">(</span><span class="o">**</span><span class="n">strategy2nums</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renew</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="MappingCandidateGenerator.sample_for_all_one_side"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.cand_maps.MappingCandidateGenerator.sample_for_all_one_side">[docs]</a>    <span class="k">def</span> <span class="nf">sample_for_all_one_side</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">strategy2nums</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sample negative candidates as per specified strategy-number pairs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">ref_src_ent_iri</span><span class="p">,</span> <span class="n">ref_tgt_ent_iri</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;pos_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="n">banner_msg</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Generate Candidates for(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">name_from_iri</span><span class="p">(</span><span class="n">ref_src_ent_iri</span><span class="p">)</span><span class="si">}</span><span class="s2">,&quot;</span> <span class="o">+</span> 
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">name_from_iri</span><span class="p">(</span><span class="n">ref_tgt_ent_iri</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+            <span class="n">anchor_map</span> <span class="o">=</span> <span class="n">AnchorMapping</span><span class="p">(</span><span class="n">ref_src_ent_iri</span><span class="p">,</span> <span class="n">ref_tgt_ent_iri</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="c1"># excluding all the reference target classes for the same reference source class</span>
+            <span class="c1"># as negative candidates</span>
+            <span class="n">excluded_ref_tgts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_ref_dict</span><span class="p">()[</span><span class="n">ref_src_ent_iri</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">excluded_ref_tgts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;One-to-many reference mappings detected ...&quot;</span><span class="p">)</span>
+            <span class="n">tgt_cand_iris</span><span class="p">,</span> <span class="n">sample_stats</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mixed_sample</span><span class="p">(</span>
+                <span class="n">ref_tgt_ent_iri</span><span class="p">,</span> <span class="n">excluded_ref_tgts</span><span class="p">,</span> <span class="o">**</span><span class="n">strategy2nums</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">anchor_map</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">())]</span> <span class="o">=</span> <span class="n">sample_stats</span>
+            <span class="k">for</span> <span class="n">tgt_cand_iri</span> <span class="ow">in</span> <span class="n">tgt_cand_iris</span><span class="p">:</span>
+                <span class="n">cand_map</span> <span class="o">=</span> <span class="n">EntityMapping</span><span class="p">(</span><span class="n">ref_src_ent_iri</span><span class="p">,</span> <span class="n">tgt_cand_iri</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+                <span class="n">anchor_map</span><span class="o">.</span><span class="n">add_candidate</span><span class="p">(</span><span class="n">cand_map</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_anchor_mappings</span><span class="p">()</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">anchor_map</span><span class="p">,</span> <span class="n">allow_existed</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Candidate mappings statistics:&quot;</span><span class="p">)</span>
+            <span class="n">SavedObj</span><span class="o">.</span><span class="n">print_json</span><span class="p">(</span><span class="n">sample_stats</span><span class="p">)</span>
+
+        <span class="c1"># candidate mappings are never the null reference mappings</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="nb">set</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;null_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
+            <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_anchor_mappings</span><span class="p">()</span><span class="o">.</span><span class="n">cand2anchors</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;pos_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span>
+            <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_anchor_mappings</span><span class="p">()</span><span class="o">.</span><span class="n">cand2anchors</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="p">)</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;pos_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_anchor_mappings</span><span class="p">()</span><span class="o">.</span><span class="n">save_instance</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">.rank&quot;</span><span class="p">)</span>
+        <span class="c1"># self.current_anchor_mappings().unscored_cand_maps().save_instance(</span>
+        <span class="c1">#     f&quot;./{self.flag}.rank/for_score&quot;</span>
+        <span class="c1"># )</span>
+        <span class="n">SavedObj</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">.rank/stats.json&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MappingCandidateGenerator.current_anchor_mappings"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.cand_maps.MappingCandidateGenerator.current_anchor_mappings">[docs]</a>    <span class="k">def</span> <span class="nf">current_anchor_mappings</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnchoredOntoMappings</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">_anchored_mappings&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MappingCandidateGenerator.current_ref_dict"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.cand_maps.MappingCandidateGenerator.current_ref_dict">[docs]</a>    <span class="k">def</span> <span class="nf">current_ref_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">_ref_dict&quot;</span><span class="p">)</span></div>
+
+    <span class="c1">##################################################################################</span>
+    <span class="c1">###                            sampling stratgies                              ###</span>
+    <span class="c1">##################################################################################</span>
+
+<div class="viewcode-block" id="MappingCandidateGenerator.mixed_sample"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.cand_maps.MappingCandidateGenerator.mixed_sample">[docs]</a>    <span class="k">def</span> <span class="nf">mixed_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_tgt_ent_iri</span><span class="p">,</span> <span class="n">excluded_ref_tgts</span><span class="p">,</span> <span class="o">**</span><span class="n">strategy2nums</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Randomly select specified candidates for each strategy;</span>
+<span class="sd">        amend random samples if not meeting the number</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">all_tgt_cand_iris</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">stats</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">total_n_cands</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">strategy</span><span class="p">,</span> <span class="n">n_cands</span> <span class="ow">in</span> <span class="n">strategy2nums</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">strategy</span> <span class="ow">in</span> <span class="n">sampling_options</span><span class="p">:</span>
+                <span class="n">sampler</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">strategy</span><span class="si">}</span><span class="s2">_sample&quot;</span><span class="p">)</span>
+                <span class="c1"># for ith iteration, the worst case is when all n_cands are duplicated</span>
+                <span class="c1"># or should be excluded from other reference targets so we generate</span>
+                <span class="c1"># NOTE:  total_n_cands + n_cands + len(excluded_ref_tgts)</span>
+                <span class="c1"># candidates first and prune the rest; another edge case is when sampled</span>
+                <span class="c1"># candidates are not sufficient and we use random sample to meet n_cands</span>
+                <span class="n">cur_tgt_cands</span> <span class="o">=</span> <span class="n">sampler</span><span class="p">(</span>
+                    <span class="n">ref_tgt_ent_iri</span><span class="p">,</span> <span class="n">total_n_cands</span> <span class="o">+</span> <span class="n">n_cands</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">excluded_ref_tgts</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="c1"># remove the duplicated candidates (and excluded refs) and prune the tail</span>
+                <span class="n">cur_tgt_cands</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                    <span class="nb">set</span><span class="p">(</span><span class="n">cur_tgt_cands</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_tgt_cand_iris</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">excluded_ref_tgts</span><span class="p">)</span>
+                <span class="p">)[:</span><span class="n">n_cands</span><span class="p">]</span>
+                <span class="n">stats</span><span class="p">[</span><span class="n">strategy</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cur_tgt_cands</span><span class="p">)</span>
+                <span class="c1"># use random samples for complementation if not enough</span>
+                <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">cur_tgt_cands</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n_cands</span><span class="p">:</span>
+                    <span class="n">amend_cands</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span><span class="n">ref_tgt_ent_iri</span><span class="p">,</span> <span class="n">n_cands</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">cur_tgt_cands</span><span class="p">))</span>
+                    <span class="n">amend_cands</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
+                        <span class="nb">set</span><span class="p">(</span><span class="n">amend_cands</span><span class="p">)</span>
+                        <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">all_tgt_cand_iris</span><span class="p">)</span>
+                        <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">cur_tgt_cands</span><span class="p">)</span>
+                        <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">excluded_ref_tgts</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="n">cur_tgt_cands</span> <span class="o">+=</span> <span class="n">amend_cands</span>
+                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">cur_tgt_cands</span><span class="p">)</span> <span class="o">==</span> <span class="n">n_cands</span>
+                <span class="k">if</span> <span class="n">strategy</span> <span class="o">!=</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
+                    <span class="n">stats</span><span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">n_cands</span> <span class="o">-</span> <span class="n">stats</span><span class="p">[</span><span class="n">strategy</span><span class="p">]</span>
+                <span class="n">all_tgt_cand_iris</span> <span class="o">+=</span> <span class="n">cur_tgt_cands</span>
+                <span class="n">total_n_cands</span> <span class="o">+=</span> <span class="n">n_cands</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid sampling trategy: </span><span class="si">{</span><span class="n">strategy</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_tgt_cand_iris</span><span class="p">)</span> <span class="o">==</span> <span class="n">total_n_cands</span>
+        <span class="k">return</span> <span class="n">all_tgt_cand_iris</span><span class="p">,</span> <span class="n">stats</span></div>
+
+<div class="viewcode-block" id="MappingCandidateGenerator.random_sample"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.cand_maps.MappingCandidateGenerator.random_sample">[docs]</a>    <span class="k">def</span> <span class="nf">random_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_tgt_ent_iri</span><span class="p">,</span> <span class="n">n_cands</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Randomly select n target candidates</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ref_tgt_ent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">iri</span><span class="o">=</span><span class="n">ref_tgt_ent_iri</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># for subsumption mapping, ancestors or descendants will be avoided</span>
+        <span class="n">avoided_family</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avoided_family_of</span><span class="p">(</span><span class="n">ref_tgt_ent</span><span class="p">)</span>
+        <span class="n">avoided_ent_iris</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">iri</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">avoided_family</span><span class="p">]</span>
+
+        <span class="n">all_tgt_ent_iris</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">all_tgt_ent_iris</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">all_tgt_ent_iris</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">avoided_ent_iris</span><span class="p">))</span>
+
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">ref_tgt_ent_iri</span> <span class="ow">in</span> <span class="n">all_tgt_ent_iris</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">all_tgt_ent_iris</span><span class="p">,</span> <span class="n">n_cands</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MappingCandidateGenerator.idf_sample"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.cand_maps.MappingCandidateGenerator.idf_sample">[docs]</a>    <span class="k">def</span> <span class="nf">idf_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_tgt_ent_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_cands</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sample negative candidates using inverted index-based idf scoring</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ref_tgt_ent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">iri</span><span class="o">=</span><span class="n">ref_tgt_ent_iri</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># for subsumption mapping, ancestors or descendants will be avoided</span>
+        <span class="n">avoided_family</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avoided_family_of</span><span class="p">(</span><span class="n">ref_tgt_ent</span><span class="p">)</span>
+        <span class="n">avoided_ent_iris</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">iri</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">avoided_family</span><span class="p">]</span>
+
+        <span class="c1"># select n candidates for the target entity</span>
+        <span class="n">ref_tgt_ent_labs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="p">[</span><span class="n">ref_tgt_ent_iri</span><span class="p">]</span>
+        <span class="n">ref_tgt_ent_toks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize_all</span><span class="p">(</span><span class="n">ref_tgt_ent_labs</span><span class="p">)</span>
+        <span class="c1"># sample 1 more candidate to prevent when reference target is included</span>
+        <span class="n">tgt_cands</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">idf_select</span><span class="p">(</span>
+            <span class="n">ref_tgt_ent_toks</span><span class="p">,</span> <span class="n">n_cands</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">avoided_family</span><span class="p">)</span>
+        <span class="p">)</span>  <span class="c1"># [(ent_id, idf_score)]</span>
+
+        <span class="c1"># unzip to list of ids</span>
+        <span class="n">tgt_cand_iris</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">tgt_cands</span><span class="p">))[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="c1"># ref-tgt is considered to be avoided as well</span>
+        <span class="n">tgt_cand_iris</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">tgt_cand_iris</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">avoided_ent_iris</span><span class="p">))</span>
+
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">ref_tgt_ent_iri</span> <span class="ow">in</span> <span class="n">tgt_cand_iris</span>
+        <span class="k">return</span> <span class="n">tgt_cand_iris</span><span class="p">[:</span><span class="n">n_cands</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="MappingCandidateGenerator.neighbour_sample"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.cand_maps.MappingCandidateGenerator.neighbour_sample">[docs]</a>    <span class="k">def</span> <span class="nf">neighbour_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ref_tgt_ent_iri</span><span class="p">,</span> <span class="n">n_cands</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Sample negative candidates from nearest nearest (starting from 1-hop)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># select n candidates for the target entity</span>
+        <span class="n">ref_tgt_ent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">obj_from_iri</span><span class="p">(</span><span class="n">ref_tgt_ent_iri</span><span class="p">)</span>
+
+        <span class="c1"># for subsumption mapping, ancestors or descendants will be avoided</span>
+        <span class="n">avoided_family</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">avoided_family_of</span><span class="p">(</span><span class="n">ref_tgt_ent</span><span class="p">)</span>
+
+        <span class="n">ref_tgt_neighbours</span> <span class="o">=</span> <span class="n">neighbours_of</span><span class="p">(</span><span class="n">ref_tgt_ent</span><span class="p">,</span> <span class="n">max_hop</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">max_hops</span><span class="p">,</span> <span class="n">ignore_root</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">tgt_cand_iris</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">hop</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1"># extract from the nearest neighbours until enough candidates or max hop</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">tgt_cand_iris</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n_cands</span> <span class="ow">and</span> <span class="n">hop</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_hops</span><span class="p">:</span>
+            <span class="n">neighbours_of_cur_hop</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ref_tgt_neighbours</span><span class="p">[</span><span class="n">hop</span><span class="p">])</span> <span class="o">-</span> <span class="n">avoided_family</span><span class="p">)</span>
+            <span class="c1"># if by adding neighbours of current hop the require number will be met</span>
+            <span class="c1"># we randomly pick among them</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">neighbours_of_cur_hop</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">n_cands</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">tgt_cand_iris</span><span class="p">):</span>
+                <span class="n">neighbours_of_cur_hop</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+                    <span class="n">neighbours_of_cur_hop</span><span class="p">,</span> <span class="n">n_cands</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">tgt_cand_iris</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="c1"># some neighbour</span>
+            <span class="n">tgt_cand_iris</span> <span class="o">+=</span> <span class="p">[</span><span class="n">tgt_cand</span><span class="o">.</span><span class="n">iri</span> <span class="k">for</span> <span class="n">tgt_cand</span> <span class="ow">in</span> <span class="n">neighbours_of_cur_hop</span><span class="p">]</span>
+            <span class="n">tgt_cand_iris</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">tgt_cand_iris</span><span class="p">)</span>
+            <span class="n">hop</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">tgt_cand_iris</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">n_cands</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="n">ref_tgt_ent_iri</span> <span class="ow">in</span> <span class="n">tgt_cand_iris</span>
+        <span class="k">return</span> <span class="n">tgt_cand_iris</span></div>
+
+<div class="viewcode-block" id="MappingCandidateGenerator.avoided_family_of"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.cand_maps.MappingCandidateGenerator.avoided_family_of">[docs]</a>    <span class="k">def</span> <span class="nf">avoided_family_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ent</span><span class="p">:</span> <span class="n">ThingClass</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the (direct) family members of an entity class</span>
+<span class="sd">        which should be avoided in subsumption matching</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">family</span> <span class="o">=</span> <span class="p">[</span><span class="n">ent</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">avoid_ancestors</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;avoid ancestors for subsumption matching ...&quot;</span><span class="p">)</span>
+            <span class="n">family</span> <span class="o">+=</span> <span class="n">thing_class_ancestors_of</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">avoid_descendents</span><span class="p">:</span>
+            <span class="n">family</span> <span class="o">+=</span> <span class="n">thing_class_descendants_of</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;avoid descendants for subsumption matching ...&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">family</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.utils package &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="deeponto.onto.text package" href="deeponto.onto.text.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">deeponto</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="deeponto.html">deeponto package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="deeponto.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.html">deeponto.bert package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.config.html">deeponto.config package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.html">deeponto.data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.evaluation.html">deeponto.evaluation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.html">deeponto.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html">deeponto.onto package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">deeponto.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto.flagged_obj">deeponto.flagged_obj module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto.saved_obj">deeponto.saved_obj module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">deeponto</a></li>
+          <li class="breadcrumb-item"><a href="deeponto.html">deeponto package</a></li>
+      <li class="breadcrumb-item active">deeponto.utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/deeponto.utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="deeponto-utils-package">
+<h1>deeponto.utils package<a class="headerlink" href="#deeponto-utils-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-deeponto.utils.general_utils">
+<span id="deeponto-utils-general-utils-module"></span><h2>deeponto.utils.general_utils module<a class="headerlink" href="#module-deeponto.utils.general_utils" title="Permalink to this heading"></a></h2>
+<p>Providing useful utility functions</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.create_path">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">create_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#create_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.create_path" title="Permalink to this definition"></a></dt>
+<dd><p>Create path recursively</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.data_split">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">data_split</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tsv_mapping_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#data_split"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.data_split" title="Permalink to this definition"></a></dt>
+<dd><p>Split mapping data into unsupervised val:test = 1:9
+and semi-supervised settings train:val:test = 2:1:7.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.detect_path">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">detect_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saved_obj_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#detect_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.detect_path" title="Permalink to this definition"></a></dt>
+<dd><p>Check if path exists</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.evenly_divide">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">evenly_divide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_splits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#evenly_divide"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.evenly_divide" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.get_device">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">get_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#get_device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.get_device" title="Permalink to this definition"></a></dt>
+<dd><p>Get a device (GPU or CPU) for the torch model</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.load_prompt_data">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">load_prompt_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'multi_nli'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">splits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#load_prompt_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.load_prompt_data" title="Permalink to this definition"></a></dt>
+<dd><p>Load a datast from huggingface datasets and transform to openprompt examples.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.parse_tuple">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">parse_tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tuple_string</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#parse_tuple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.parse_tuple" title="Permalink to this definition"></a></dt>
+<dd><p>Parse string tuple to tuple, e.g., ‘(1, 2)’ =&gt; (1, 2)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.print_choices">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">print_choices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">choices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#print_choices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.print_choices" title="Permalink to this definition"></a></dt>
+<dd><p>Print available choices</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.rand_sample_excl">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">rand_sample_excl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">excl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#rand_sample_excl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.rand_sample_excl" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly generate a number between {start} and {end} with end and specified
+{excl} value(s) excluded</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.read_jsonl">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">read_jsonl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#read_jsonl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.read_jsonl" title="Permalink to this definition"></a></dt>
+<dd><p>Read .jsonl file (list of json) introduced in the BLINK project.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.read_table">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">read_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#read_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.read_table" title="Permalink to this definition"></a></dt>
+<dd><p>Read tsv file as pandas dataframe without treating “null” as empty string.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.run_jar">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">run_jar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#run_jar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.run_jar" title="Permalink to this definition"></a></dt>
+<dd><p>Run jar command using subprocess</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.set_seed">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">set_seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed_val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">888</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#set_seed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.set_seed" title="Permalink to this definition"></a></dt>
+<dd><p>Set random seed for reproducible results</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.sort_dict_by_values">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">sort_dict_by_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#sort_dict_by_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.sort_dict_by_values" title="Permalink to this definition"></a></dt>
+<dd><p>Return a sorted dict by values with top k reserved</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.split_java_identifier">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">split_java_identifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">java_style_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#split_java_identifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.split_java_identifier" title="Permalink to this definition"></a></dt>
+<dd><p>Split words in java’s identifier style into natural language phrase.
+e.g.1, SuperNaturalPower =&gt; Super Natural Power.
+e.g.2, APIReference =&gt; API reference</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.to_identifier">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">to_identifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#to_identifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.to_identifier" title="Permalink to this definition"></a></dt>
+<dd><p>Change a variable name to a valid identifier</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.general_utils.uniqify">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.general_utils.</span></span><span class="sig-name descname"><span class="pre">uniqify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ls</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/general_utils.html#uniqify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.general_utils.uniqify" title="Permalink to this definition"></a></dt>
+<dd><p>Return a list of unique elements without messing around the order</p>
+</dd></dl>
+
+</section>
+<section id="module-deeponto.utils.logging">
+<span id="deeponto-utils-logging-module"></span><h2>deeponto.utils.logging module<a class="headerlink" href="#module-deeponto.utils.logging" title="Permalink to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="deeponto.utils.logging.RuntimeFormatter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeponto.utils.logging.</span></span><span class="sig-name descname"><span class="pre">RuntimeFormatter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/logging.html#RuntimeFormatter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.logging.RuntimeFormatter" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Formatter</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.utils.logging.RuntimeFormatter.formatTime">
+<span class="sig-name descname"><span class="pre">formatTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datefmt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/logging.html#RuntimeFormatter.formatTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.logging.RuntimeFormatter.formatTime" title="Permalink to this definition"></a></dt>
+<dd><p>Record relative runtime in hr:min:sec format</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.logging.banner_msg">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.logging.</span></span><span class="sig-name descname"><span class="pre">banner_msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">banner_len</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">70</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sym</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'#'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/logging.html#banner_msg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.logging.banner_msg" title="Permalink to this definition"></a></dt>
+<dd><p>Print banner message:</p>
+<section id="example">
+<h3>###                            example                             ###<a class="headerlink" href="#example" title="Permalink to this heading"></a></h3>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.logging.create_logger">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.logging.</span></span><span class="sig-name descname"><span class="pre">create_logger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/logging.html#create_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.logging.create_logger" title="Permalink to this definition"></a></dt>
+<dd><p>Create logger for both console info and saved info</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.logging.credit">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.logging.</span></span><span class="sig-name descname"><span class="pre">credit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">link</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/logging.html#credit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.logging.credit" title="Permalink to this definition"></a></dt>
+<dd><p>Add credit tagger to any external functions</p>
+</dd></dl>
+
+</section>
+<section id="module-deeponto.utils.oaei_utils">
+<span id="deeponto-utils-oaei-utils-module"></span><h2>deeponto.utils.oaei_utils module<a class="headerlink" href="#module-deeponto.utils.oaei_utils" title="Permalink to this heading"></a></h2>
+<p>Utilities for OAEI</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.utils.oaei_utils.read_oaei_mappings">
+<span class="sig-prename descclassname"><span class="pre">deeponto.utils.oaei_utils.</span></span><span class="sig-name descname"><span class="pre">read_oaei_mappings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rdf_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/oaei_utils.html#read_oaei_mappings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.oaei_utils.read_oaei_mappings" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rdf_file</strong> – path to mappings in rdf format</p></li>
+<li><p><strong>src_onto</strong> – source ontology iri abbreviation, e.g. fma</p></li>
+<li><p><strong>tgt_onto</strong> – target ontology iri abbreviation, e.g. nci</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mappings(=;&gt;,&lt;), mappings(?)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-deeponto.utils.tree">
+<span id="deeponto-utils-tree-module"></span><h2>deeponto.utils.tree module<a class="headerlink" href="#module-deeponto.utils.tree" title="Permalink to this heading"></a></h2>
+<p>A tree implementation for ranges (without partial overlap).
+- parent node’s range fully covers child node’s range, e.g., [1, 10] isParentOf [2, 5]
+- partial overlap between ranges not allowed, e.g., [2, 4] and [3, 5] cannot appear in the same RangeNodeTree
+- non-overlap ranges are on different branches
+- child nodes are ordered according to their relative positions</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="deeponto.utils.tree.RangeNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeponto.utils.tree.</span></span><span class="sig-name descname"><span class="pre">RangeNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/tree.html#RangeNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.tree.RangeNode" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NodeMixin</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.utils.tree.RangeNode.insert_child">
+<span class="sig-name descname"><span class="pre">insert_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#deeponto.utils.tree.RangeNode" title="deeponto.utils.tree.RangeNode"><span class="pre">RangeNode</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/tree.html#RangeNode.insert_child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.tree.RangeNode.insert_child" title="Permalink to this definition"></a></dt>
+<dd><p>Child nodes have a smaller (inclusive) range
+e.g., [2, 5] is a child of [1, 6]</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.utils.tree.RangeNode.print_tree">
+<span class="sig-name descname"><span class="pre">print_tree</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/tree.html#RangeNode.print_tree"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.tree.RangeNode.print_tree" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.utils.tree.RangeNode.sort_by_start">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sort_by_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#deeponto.utils.tree.RangeNode" title="deeponto.utils.tree.RangeNode"><span class="pre">RangeNode</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/utils/tree.html#RangeNode.sort_by_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.utils.tree.RangeNode.sort_by_start" title="Permalink to this definition"></a></dt>
+<dd><p>A sorting function that sorts the nodes by their starting positions</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-deeponto.utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-deeponto.utils" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="deeponto.onto.text.html" class="btn btn-neutral float-left" title="deeponto.onto.text package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

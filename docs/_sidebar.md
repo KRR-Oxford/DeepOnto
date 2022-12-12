@@ -21,3 +21,4 @@ limitations under the License.
 - [OM Resources](om_resources.md)
 - [Reasoning](reasoning.md)
 - [Data Structures](data_structures.md)
+- [API](deeponto.html)

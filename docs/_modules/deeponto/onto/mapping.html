@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.onto.mapping &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">deeponto</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../deeponto.html">deeponto</a></li>
+      <li class="breadcrumb-item active">deeponto.onto.mapping</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeponto.onto.mapping</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.</span>
+
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;Class for ontology entity mappings.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+
+<span class="kn">from</span> <span class="nn">deeponto</span> <span class="kn">import</span> <span class="n">SavedObj</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">sort_dict_by_values</span><span class="p">,</span> <span class="n">read_table</span>
+
+<span class="n">DEFAULT_REL</span> <span class="o">=</span> <span class="s2">&quot;&lt;?rel&gt;&quot;</span>
+<span class="n">DUP_STRATEGIES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;average&quot;</span><span class="p">,</span> <span class="s2">&quot;kept_new&quot;</span><span class="p">,</span> <span class="s2">&quot;kept_old&quot;</span><span class="p">]</span>
+<span class="n">DEFAULT_DUP_STRATEGY</span> <span class="o">=</span> <span class="n">DUP_STRATEGIES</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+<span class="c1">##################################################################################</span>
+<span class="c1">###                         basic mapping structure                            ###</span>
+<span class="c1">##################################################################################</span>
+
+
+<div class="viewcode-block" id="EntityMapping"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.EntityMapping">[docs]</a><span class="k">class</span> <span class="nc">EntityMapping</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">src_ent_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tgt_ent_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_REL</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">src_ent_iri</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tail</span> <span class="o">=</span> <span class="n">tgt_ent_iri</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rel</span> <span class="o">=</span> <span class="n">rel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
+
+<div class="viewcode-block" id="EntityMapping.to_tuple"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.EntityMapping.to_tuple">[docs]</a>    <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;EntityMapping(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span></div>
+
+
+<div class="viewcode-block" id="EntityMappingList"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.EntityMappingList">[docs]</a><span class="k">class</span> <span class="nc">EntityMappingList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+<div class="viewcode-block" id="EntityMappingList.append"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.EntityMappingList.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">em</span><span class="p">:</span> <span class="n">EntityMapping</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">em</span><span class="p">,</span> <span class="n">EntityMapping</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">em</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Only EntityMapping can be added to the list.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="EntityMappingList.topk"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.EntityMappingList.topk">[docs]</a>    <span class="k">def</span> <span class="nf">topk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return top K scored mappings from the list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">EntityMappingList</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">score</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">))[:</span><span class="n">k</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="EntityMappingList.sorted"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.EntityMappingList.sorted">[docs]</a>    <span class="k">def</span> <span class="nf">sorted</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the sorted entity mapping list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="EntityMappingList.to_tuples"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.EntityMappingList.to_tuples">[docs]</a>    <span class="k">def</span> <span class="nf">to_tuples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">em</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="n">em</span><span class="o">.</span><span class="n">tail</span><span class="p">)</span> <span class="k">for</span> <span class="n">em</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="o">.</span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">slice</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">EntityMappingList</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">result</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">+</span> <span class="s2">&quot;(</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">em</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">info</span> <span class="o">+=</span> <span class="s2">&quot;  &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">em</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;,</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">info</span> <span class="o">+=</span> <span class="s2">&quot;)&quot;</span>
+        <span class="k">return</span> <span class="n">info</span>
+
+<div class="viewcode-block" id="EntityMappingList.read_table_mappings"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.EntityMappingList.read_table_mappings">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">read_table_mappings</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">table_mappings_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">rel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_REL</span><span class="p">,</span>
+        <span class="n">n_best</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read mappings from csv/tsv files and preserve mappings with scores &gt;= threshold</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span><span class="n">table_mappings_path</span><span class="p">)</span>
+        <span class="n">mappings</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">dp</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">dp</span><span class="p">[</span><span class="s2">&quot;Score&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">:</span>
+                <span class="n">mappings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EntityMapping</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="s2">&quot;SrcEntity&quot;</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="s2">&quot;TgtEntity&quot;</span><span class="p">],</span> <span class="n">rel</span><span class="p">,</span> <span class="n">dp</span><span class="p">[</span><span class="s2">&quot;Score&quot;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">mappings</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">n_best</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="AnchorMapping"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.AnchorMapping">[docs]</a><span class="k">class</span> <span class="nc">AnchorMapping</span><span class="p">(</span><span class="n">EntityMapping</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A special EntityMapping that serves as an &quot;anchor&quot; for its candidates&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">src_ent_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">tgt_ent_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">rel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_REL</span><span class="p">,</span>
+        <span class="n">score</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">cand_maps</span><span class="p">:</span> <span class="n">EntityMapping</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_ent_iri</span><span class="p">,</span> <span class="n">rel</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">candidates</span> <span class="o">=</span> <span class="n">EntityMappingList</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">cand</span> <span class="ow">in</span> <span class="n">cand_maps</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_candidate</span><span class="p">(</span><span class="n">cand</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Anchor: EntityMapping(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;Candidates: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">candidates</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="AnchorMapping.add_candidate"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.AnchorMapping.add_candidate">[docs]</a>    <span class="k">def</span> <span class="nf">add_candidate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cand_map</span><span class="p">:</span> <span class="n">EntityMapping</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add candidate mappings whose relations and head entities are the </span>
+<span class="sd">        same as the anchor mapping&#39;s.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span> <span class="o">!=</span> <span class="n">cand_map</span><span class="o">.</span><span class="n">rel</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Expect relation of candidate mapping to &quot;</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;be </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="si">}</span><span class="s2"> but got </span><span class="si">{</span><span class="n">cand_map</span><span class="o">.</span><span class="n">rel</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">!=</span> <span class="n">cand_map</span><span class="o">.</span><span class="n">head</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Candidate mapping does not have the same head entity as the anchor mapping.&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">candidates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cand_map</span><span class="p">)</span></div></div>
+
+
+<span class="c1">##################################################################################</span>
+<span class="c1">###                            entity mapping collection                       ###</span>
+<span class="c1">##################################################################################</span>
+
+
+<div class="viewcode-block" id="OntoMappings"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.OntoMappings">[docs]</a><span class="k">class</span> <span class="nc">OntoMappings</span><span class="p">(</span><span class="n">SavedObj</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">n_best</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">rel</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">dup_strategy</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_DUP_STRATEGY</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">ent_mappings</span><span class="p">:</span> <span class="n">EntityMapping</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Store ranked (by score) mappings for each head entity in Dict:</span>
+<span class="sd">        {</span>
+<span class="sd">            ...</span>
+<span class="sd">            &quot;head_ent_i&quot;: Sorted({</span>
+<span class="sd">                ...</span>
+<span class="sd">                &quot;tail_ent_j&quot;: score(i, j)</span>
+<span class="sd">                ...</span>
+<span class="sd">                })</span>
+<span class="sd">            ...</span>
+<span class="sd">        }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="n">flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rel</span> <span class="o">=</span> <span class="n">rel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span> <span class="o">=</span> <span class="n">n_best</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dup_strategy</span> <span class="o">=</span> <span class="n">dup_strategy</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">dup_strategy</span> <span class="ow">in</span> <span class="n">DUP_STRATEGIES</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_many</span><span class="p">(</span><span class="o">*</span><span class="n">ent_mappings</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">.maps&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;flag&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="p">,</span>
+            <span class="s2">&quot;relation&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span>
+            <span class="s2">&quot;n_best&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span><span class="p">,</span>
+            <span class="s2">&quot;num_heads&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_dict</span><span class="p">),</span>
+            <span class="s2">&quot;num_maps&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Total number of ranked mappings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">map_dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">map_dict</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+
+<div class="viewcode-block" id="OntoMappings.save_instance"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.OntoMappings.save_instance">[docs]</a>    <span class="k">def</span> <span class="nf">save_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">saved_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;save the current instance locally</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_instance</span><span class="p">(</span><span class="n">saved_path</span><span class="p">)</span>
+        <span class="c1"># also save in readable formats of the ranked alignment set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_dict</span><span class="p">,</span> <span class="n">saved_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_name</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">saved_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_name</span><span class="si">}</span><span class="s2">.tsv&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OntoMappings.topks_for_ent"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.OntoMappings.topks_for_ent">[docs]</a>    <span class="k">def</span> <span class="nf">topks_for_ent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_ent_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">K</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return ranked mappings for a particular entry (head) entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ls</span> <span class="o">=</span> <span class="n">EntityMappingList</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">tgt_ent_iri</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_dict</span><span class="p">[</span><span class="n">src_ent_iri</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">())[:</span><span class="n">K</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">score</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">:</span>
+                <span class="n">ls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EntityMapping</span><span class="p">(</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_ent_iri</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="n">score</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">ls</span></div>
+
+<div class="viewcode-block" id="OntoMappings.topks"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.OntoMappings.topks">[docs]</a>    <span class="k">def</span> <span class="nf">topks</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">K</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">as_tuples</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">include_scores</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the top ranked anchor mappings for each head entity with scores &gt;= threshold,</span>
+<span class="sd">        output mappings are transformed to tuples</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># NOTE: when K = None, slicing automatically gives the whole length</span>
+        <span class="c1"># i.e., ls[:None] == ls[:len(ls)]</span>
+        <span class="n">topks_for_all</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">src_ent_iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">topks_for_all</span><span class="p">[</span><span class="n">src_ent_iri</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">topks_for_ent</span><span class="p">(</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">as_tuples</span><span class="p">:</span>
+            <span class="n">tps</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">topks_for_all</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">include_scores</span><span class="p">:</span>
+                    <span class="n">tps</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">em</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="n">em</span><span class="o">.</span><span class="n">tail</span><span class="p">)</span> <span class="k">for</span> <span class="n">em</span> <span class="ow">in</span> <span class="n">v</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">tps</span> <span class="o">+=</span> <span class="p">[(</span><span class="n">em</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="n">em</span><span class="o">.</span><span class="n">tail</span><span class="p">,</span> <span class="n">em</span><span class="o">.</span><span class="n">score</span><span class="p">)</span> <span class="k">for</span> <span class="n">em</span> <span class="ow">in</span> <span class="n">v</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">tps</span>
+        <span class="k">return</span> <span class="n">topks_for_all</span></div>
+
+<div class="viewcode-block" id="OntoMappings.to_tuples"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.OntoMappings.to_tuples">[docs]</a>    <span class="k">def</span> <span class="nf">to_tuples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">include_scores</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+        <span class="sd">&quot;&quot;&quot;Unravel the mappings from dict to tuples</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">topks</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">as_tuples</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_scores</span><span class="o">=</span><span class="n">include_scores</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OntoMappings.to_df"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.OntoMappings.to_df">[docs]</a>    <span class="k">def</span> <span class="nf">to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Unravel the mappings from dict to dataframe</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">triples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">to_tuples</span><span class="p">(</span><span class="n">include_scores</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">map_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">triples</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SrcEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;TgtEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;Score&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">map_df</span></div>
+
+<div class="viewcode-block" id="OntoMappings.add"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.OntoMappings.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">em</span><span class="p">:</span> <span class="n">EntityMapping</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a new entity mapping or add an existing mapping to update mapping score (take average)</span>
+<span class="sd">        while keeping the ranking</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_mapping</span><span class="p">(</span><span class="n">em</span><span class="p">)</span>
+        <span class="c1"># average the mapping scores if already existed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_existed_mapping</span><span class="p">(</span><span class="n">em</span><span class="p">):</span>
+            <span class="n">old_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict</span><span class="p">[</span><span class="n">em</span><span class="o">.</span><span class="n">head</span><span class="p">][</span><span class="n">em</span><span class="o">.</span><span class="n">tail</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found an existing mapping...&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">[Old]: </span><span class="si">{</span><span class="n">EntityMapping</span><span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="n">em</span><span class="o">.</span><span class="n">tail</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="n">old_score</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">[New]: </span><span class="si">{</span><span class="n">EntityMapping</span><span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="n">em</span><span class="o">.</span><span class="n">tail</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="n">em</span><span class="o">.</span><span class="n">score</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">[Update strategy]: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dup_strategy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dup_strategy</span> <span class="o">==</span> <span class="s2">&quot;average&quot;</span><span class="p">:</span>
+                <span class="n">new_score</span> <span class="o">=</span> <span class="p">(</span><span class="n">old_score</span> <span class="o">+</span> <span class="n">em</span><span class="o">.</span><span class="n">score</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dup_strategy</span> <span class="o">==</span> <span class="s2">&quot;kept_new&quot;</span><span class="p">:</span>
+                <span class="n">new_score</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">score</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># for &quot;kept_old&quot;</span>
+                <span class="n">new_score</span> <span class="o">=</span> <span class="n">old_score</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> ==&gt; update score to </span><span class="si">{</span><span class="n">new_score</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map_dict</span><span class="p">[</span><span class="n">em</span><span class="o">.</span><span class="n">head</span><span class="p">][</span><span class="n">em</span><span class="o">.</span><span class="n">tail</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_score</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">map_dict</span><span class="p">[</span><span class="n">em</span><span class="o">.</span><span class="n">head</span><span class="p">][</span><span class="n">em</span><span class="o">.</span><span class="n">tail</span><span class="p">]</span> <span class="o">=</span> <span class="n">em</span><span class="o">.</span><span class="n">score</span>
+        <span class="c1"># rank according to mapping scores and preserve n_best (if specified)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_dict</span><span class="p">[</span><span class="n">em</span><span class="o">.</span><span class="n">head</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_dict_by_values</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">map_dict</span><span class="p">[</span><span class="n">em</span><span class="o">.</span><span class="n">head</span><span class="p">],</span> <span class="n">top_k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_best</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OntoMappings.add_many"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.OntoMappings.add_many">[docs]</a>    <span class="k">def</span> <span class="nf">add_many</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">ems</span><span class="p">:</span> <span class="n">EntityMapping</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a list of new mappings while keeping the ranking</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">em</span> <span class="ow">in</span> <span class="n">ems</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">em</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OntoMappings.validate_mapping"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.OntoMappings.validate_mapping">[docs]</a>    <span class="k">def</span> <span class="nf">validate_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">em</span><span class="p">:</span> <span class="n">EntityMapping</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">em</span><span class="o">.</span><span class="n">rel</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;expected mapping relation: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="si">}</span><span class="s2">) but received </span><span class="si">{</span><span class="n">em</span><span class="o">.</span><span class="n">rel</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OntoMappings.is_existed_mapping"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.OntoMappings.is_existed_mapping">[docs]</a>    <span class="k">def</span> <span class="nf">is_existed_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">em</span><span class="p">:</span> <span class="n">EntityMapping</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">em</span><span class="o">.</span><span class="n">tail</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_dict</span><span class="p">[</span><span class="n">em</span><span class="o">.</span><span class="n">head</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="OntoMappings.read_table_mappings"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.OntoMappings.read_table_mappings">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">read_table_mappings</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">table_mappings_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;src2tgt&quot;</span><span class="p">,</span>
+        <span class="n">n_best</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">rel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_REL</span><span class="p">,</span>
+        <span class="n">dup_strategy</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_DUP_STRATEGY</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read mappings from csv/tsv files and preserve mappings with scores &gt;= threshold</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span><span class="n">table_mappings_path</span><span class="p">)</span>
+        <span class="n">onto_mappings</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">flag</span><span class="o">=</span><span class="n">flag</span><span class="p">,</span> <span class="n">n_best</span><span class="o">=</span><span class="n">n_best</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="n">rel</span><span class="p">,</span> <span class="n">dup_strategy</span><span class="o">=</span><span class="n">dup_strategy</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">dp</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">score</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">if</span> <span class="s2">&quot;Score&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="s2">&quot;Score&quot;</span><span class="p">]</span>
+            <span class="n">onto_mappings</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">EntityMapping</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="s2">&quot;SrcEntity&quot;</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="s2">&quot;TgtEntity&quot;</span><span class="p">],</span> <span class="n">rel</span><span class="p">,</span> <span class="n">score</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">onto_mappings</span></div></div>
+
+
+<div class="viewcode-block" id="AnchoredOntoMappings"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings">[docs]</a><span class="k">class</span> <span class="nc">AnchoredOntoMappings</span><span class="p">(</span><span class="n">SavedObj</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">n_best</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span>
+        <span class="n">rel</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">dup_strategy</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_DUP_STRATEGY</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">anchor_mappings</span><span class="p">:</span> <span class="n">AnchorMapping</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Store ranked (by score) mappings for each reference (head, tail) pairs:</span>
+<span class="sd">        {</span>
+<span class="sd">            ...</span>
+<span class="sd">            (&quot;anchor_head_ent_i&quot;, &quot;anchor_tail_ent_i&quot;: {</span>
+<span class="sd">            ...</span>
+<span class="sd">            Sorted({</span>
+<span class="sd">                ...</span>
+<span class="sd">                &quot;tail_ent_j&quot;: score(i, j) # NOTE: anchor_tail_ent_i is somewhere</span>
+<span class="sd">                ...</span>
+<span class="sd">                })</span>
+<span class="sd">            ...</span>
+<span class="sd">            }</span>
+<span class="sd">            ...</span>
+<span class="sd">        }</span>
+<span class="sd">        NOTE: [anchor_head, anchor_tail] ensures uniqueness to a anchor mapping</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="n">flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span> <span class="o">=</span> <span class="n">n_best</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rel</span> <span class="o">=</span> <span class="n">rel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dup_strategy</span> <span class="o">=</span> <span class="n">dup_strategy</span>
+        <span class="c1"># save mappings in disjoint partitions to prevent overriding keys (src entities)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">dict</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cand2anchors</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_many</span><span class="p">(</span><span class="o">*</span><span class="n">anchor_mappings</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">.anchored.maps&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;flag&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="p">,</span>
+            <span class="s2">&quot;relation&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span>
+            <span class="s2">&quot;n_best&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span><span class="p">,</span>
+            <span class="s2">&quot;num_anchors&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="p">),</span>
+            <span class="s2">&quot;num_maps&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Total number of ranked mappings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">map_dict</span><span class="p">)</span> <span class="k">for</span> <span class="n">map_dict</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+
+<div class="viewcode-block" id="AnchoredOntoMappings.save_instance"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.save_instance">[docs]</a>    <span class="k">def</span> <span class="nf">save_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">saved_path</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;save the current instance locally</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">save_instance</span><span class="p">(</span><span class="n">saved_path</span><span class="p">)</span>
+        <span class="c1"># also save a readable format of the ranked alignment set</span>
+        <span class="n">anchor2cand_json</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="n">anchor2cand_json</span><span class="p">,</span> <span class="n">saved_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_name</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">to_df</span><span class="p">()</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">saved_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">saved_name</span><span class="si">}</span><span class="s2">.tsv&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnchoredOntoMappings.add"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anchor_map</span><span class="p">:</span> <span class="n">AnchorMapping</span><span class="p">,</span> <span class="n">allow_existed</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given an anchor mapping, add a new candidate mapping or add an existing </span>
+<span class="sd">        candidate mapping to update mapping score (take average) while keeping the ranking</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_anchor_mapping</span><span class="p">(</span><span class="n">anchor_map</span><span class="p">)</span>
+        <span class="n">existed_cands</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">existed_cands_for_anchor</span><span class="p">(</span><span class="n">anchor_map</span><span class="p">)</span>
+        <span class="n">new_cands</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">anchor_map</span><span class="o">.</span><span class="n">candidates</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">existed_cands</span><span class="p">))</span>
+
+        <span class="c1"># update new candidate mappings</span>
+        <span class="k">for</span> <span class="n">cand_map</span> <span class="ow">in</span> <span class="n">new_cands</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="p">[</span><span class="n">anchor_map</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()][</span><span class="n">cand_map</span><span class="o">.</span><span class="n">tail</span><span class="p">]</span> <span class="o">=</span> <span class="n">cand_map</span><span class="o">.</span><span class="n">score</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cand2anchors</span><span class="p">[</span><span class="n">cand_map</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">anchor_map</span><span class="o">.</span><span class="n">tail</span><span class="p">)</span>
+
+        <span class="c1"># address exisitng candidate mappings</span>
+        <span class="k">if</span> <span class="n">existed_cands</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">allow_existed</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Duplicate mappings not allowed ...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">cand_map</span> <span class="ow">in</span> <span class="n">existed_cands</span><span class="p">:</span>
+            <span class="c1"># average/kept_new/kept_old the mapping scores if already existed</span>
+            <span class="n">old_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="p">[</span><span class="n">anchor_map</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()][</span><span class="n">cand_map</span><span class="o">.</span><span class="n">tail</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found an existing mapping...&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">[Old]: </span><span class="si">{</span><span class="n">EntityMapping</span><span class="p">(</span><span class="n">cand_map</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="n">cand_map</span><span class="o">.</span><span class="n">tail</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="n">old_score</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">[New]: </span><span class="si">{</span><span class="n">EntityMapping</span><span class="p">(</span><span class="n">cand_map</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="n">cand_map</span><span class="o">.</span><span class="n">tail</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="n">cand_map</span><span class="o">.</span><span class="n">score</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">[Update strategy]: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dup_strategy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dup_strategy</span> <span class="o">==</span> <span class="s2">&quot;average&quot;</span><span class="p">:</span>
+                <span class="n">new_score</span> <span class="o">=</span> <span class="p">(</span><span class="n">old_score</span> <span class="o">+</span> <span class="n">cand_map</span><span class="o">.</span><span class="n">score</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">dup_strategy</span> <span class="o">==</span> <span class="s2">&quot;kept_new&quot;</span><span class="p">:</span>
+                <span class="n">new_score</span> <span class="o">=</span> <span class="n">cand_map</span><span class="o">.</span><span class="n">score</span>
+            <span class="k">else</span><span class="p">:</span>  <span class="c1"># for &quot;kept_old&quot;</span>
+                <span class="n">new_score</span> <span class="o">=</span> <span class="n">old_score</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2"> ==&gt; update score to </span><span class="si">{</span><span class="n">new_score</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="p">[</span><span class="n">anchor_map</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()][</span><span class="n">cand_map</span><span class="o">.</span><span class="n">tail</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_score</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cand2anchors</span><span class="p">[</span><span class="n">cand_map</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">anchor_map</span><span class="o">.</span><span class="n">tail</span><span class="p">)</span>
+        <span class="c1"># rank according to mapping scores and preserve n_best (if specified)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="p">[</span><span class="n">anchor_map</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()]</span> <span class="o">=</span> <span class="n">sort_dict_by_values</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="p">[</span><span class="n">anchor_map</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()],</span> <span class="n">top_k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_best</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnchoredOntoMappings.add_many"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.add_many">[docs]</a>    <span class="k">def</span> <span class="nf">add_many</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">anchor_maps</span><span class="p">:</span> <span class="n">AnchorMapping</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a list of anchor-cand mapping pairs while keeping the ranking</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">am</span> <span class="ow">in</span> <span class="n">anchor_maps</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">am</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnchoredOntoMappings.fill_scored_maps"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.fill_scored_maps">[docs]</a>    <span class="k">def</span> <span class="nf">fill_scored_maps</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scored_onto_maps</span><span class="p">:</span> <span class="n">OntoMappings</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Fill mapping score from scored onto mappings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="n">scored_onto_maps</span><span class="o">.</span><span class="n">flag</span>
+        <span class="n">num_valid</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">num_filled</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">scored_onto_maps</span><span class="o">.</span><span class="n">map_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">tgt_ent_iri</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cand2anchors</span><span class="p">[</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_ent_iri</span><span class="p">]:</span>
+                    <span class="n">num_valid</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">for</span> <span class="n">anchor_tail</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cand2anchors</span><span class="p">[</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_ent_iri</span><span class="p">]:</span>
+                        <span class="n">num_filled</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="p">[</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">anchor_tail</span><span class="p">][</span><span class="n">tgt_ent_iri</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="p">[</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">anchor_tail</span><span class="p">]</span> <span class="o">=</span> <span class="n">sort_dict_by_values</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="p">[</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">anchor_tail</span><span class="p">],</span> <span class="n">top_k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_best</span>
+                    <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num_valid</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">scored_onto_maps</span><span class="p">)</span><span class="si">}</span><span class="s2"> of *unique* scored mappings are valid and filled to corresponding anchors.&quot;</span>
+        <span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num_filled</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="si">}</span><span class="s2"> of anchored mappings are scored; for local ranking evaluation, all anchored mappings should be scored.&quot;</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnchoredOntoMappings.unscored_cand_maps"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.unscored_cand_maps">[docs]</a>    <span class="k">def</span> <span class="nf">unscored_cand_maps</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OntoMappings</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return all candidate mappings with no scores and anchors (so that duplicates will be merged)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">unscored_cands</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dup_strategy</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">cand_tup</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cand2anchors</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">cand_map</span> <span class="o">=</span> <span class="n">EntityMapping</span><span class="p">(</span><span class="n">cand_tup</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cand_tup</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">unscored_cands</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cand_map</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">unscored_cands</span></div>
+    
+<div class="viewcode-block" id="AnchoredOntoMappings.flattened"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.flattened">[docs]</a>    <span class="k">def</span> <span class="nf">flattened</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OntoMappings</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Covert to scored OntoMappings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">scored_cands</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dup_strategy</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">anchor_tup</span><span class="p">,</span> <span class="n">cands</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">head</span> <span class="o">=</span> <span class="n">anchor_tup</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">tail</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="n">cands</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>   
+                <span class="n">cand_map</span> <span class="o">=</span> <span class="n">EntityMapping</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
+                <span class="n">scored_cands</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">cand_map</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">scored_cands</span></div>
+
+<div class="viewcode-block" id="AnchoredOntoMappings.to_df"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.to_df">[docs]</a>    <span class="k">def</span> <span class="nf">to_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_scores</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Unravel the anchor mappings from dict to dataframe</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">anchor_map_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SrcEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;TgtEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;TgtCandidates&quot;</span><span class="p">,</span> <span class="s2">&quot;CandScores&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">ref_tup</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">tgt_cands</span><span class="p">,</span> <span class="n">cand_scores</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">v</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+            <span class="n">anchor_map_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref_tup</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ref_tup</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">tgt_cands</span><span class="p">,</span> <span class="n">cand_scores</span><span class="p">]</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">with_scores</span><span class="p">:</span>
+            <span class="n">anchor_map_df</span> <span class="o">=</span> <span class="n">anchor_map_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CandScores&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">anchor_map_df</span></div>
+
+<div class="viewcode-block" id="AnchoredOntoMappings.validate_anchor_mapping"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.validate_anchor_mapping">[docs]</a>    <span class="k">def</span> <span class="nf">validate_anchor_mapping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">am</span><span class="p">:</span> <span class="n">AnchorMapping</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">am</span><span class="o">.</span><span class="n">rel</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expect anchor mapping relation </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="si">}</span><span class="s2">) but got </span><span class="si">{</span><span class="n">am</span><span class="o">.</span><span class="n">rel</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AnchoredOntoMappings.existed_cands_for_anchor"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.existed_cands_for_anchor">[docs]</a>    <span class="k">def</span> <span class="nf">existed_cands_for_anchor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anchor_map</span><span class="p">:</span> <span class="n">AnchorMapping</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if candidate mappings for an anchor already exist</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">existed_cands</span> <span class="o">=</span> <span class="n">EntityMappingList</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">cand</span> <span class="ow">in</span> <span class="n">anchor_map</span><span class="o">.</span><span class="n">candidates</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cand</span><span class="o">.</span><span class="n">tail</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchor2cands</span><span class="p">[</span><span class="n">anchor_map</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">existed_cands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cand</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">existed_cands</span></div>
+
+<div class="viewcode-block" id="AnchoredOntoMappings.read_table_mappings"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.read_table_mappings">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">read_table_mappings</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">table_mappings_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;src2tgt&quot;</span><span class="p">,</span>
+        <span class="n">n_best</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">rel</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_REL</span><span class="p">,</span>
+        <span class="n">dup_strategy</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_DUP_STRATEGY</span><span class="p">,</span>
+        <span class="n">is_ranked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Read mappings from csv/tsv files and preserve mappings with scores &gt;= threshold</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span><span class="n">table_mappings_path</span><span class="p">)</span>
+        <span class="n">anchored_onto_mappings</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="n">flag</span><span class="o">=</span><span class="n">flag</span><span class="p">,</span> <span class="n">n_best</span><span class="o">=</span><span class="n">n_best</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="n">rel</span><span class="p">,</span> <span class="n">dup_strategy</span><span class="o">=</span><span class="n">dup_strategy</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">dp</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">anchor_map</span> <span class="o">=</span> <span class="n">AnchorMapping</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="s2">&quot;SrcEntity&quot;</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="s2">&quot;TgtEntity&quot;</span><span class="p">],</span> <span class="n">rel</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+            <span class="n">tgt_cands</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="s2">&quot;TgtCandidates&quot;</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="s2">&quot;CandScores&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+                <span class="n">cand_scores</span> <span class="o">=</span> <span class="n">ast</span><span class="o">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;CandScores&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># if already ranked from left to right, adding fake scores to preserve ranking</span>
+                <span class="k">if</span> <span class="n">is_ranked</span><span class="p">:</span>
+                    <span class="n">cand_scores</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">tgt_cands</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tgt_cands</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">cand_scores</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">tgt_cands</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tgt_cands</span><span class="p">)):</span>
+                <span class="n">cand_map</span> <span class="o">=</span> <span class="n">EntityMapping</span><span class="p">(</span><span class="n">anchor_map</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="n">tgt_cands</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">rel</span><span class="p">,</span> <span class="n">cand_scores</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">anchor_map</span><span class="o">.</span><span class="n">add_candidate</span><span class="p">(</span><span class="n">cand_map</span><span class="p">)</span>
+            <span class="n">anchored_onto_mappings</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">anchor_map</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">anchored_onto_mappings</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

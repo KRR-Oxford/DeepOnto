@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.onto.ontology_subs &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">deeponto</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../deeponto.html">deeponto</a></li>
+      <li class="breadcrumb-item active">deeponto.onto.ontology_subs</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeponto.onto.ontology_subs</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file is copied from the bert_subsumption experiment repository (the original file ontology.py)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">owlready2</span> <span class="kn">import</span> <span class="n">class_construct</span><span class="p">,</span> <span class="n">get_ontology</span><span class="p">,</span> <span class="n">default_world</span><span class="p">,</span> <span class="n">IRIS</span><span class="p">,</span> <span class="n">owl</span>
+<span class="kn">from</span> <span class="nn">owlready2.entity</span> <span class="kn">import</span> <span class="n">ThingClass</span>
+<span class="kn">from</span> <span class="nn">owlready2.prop</span> <span class="kn">import</span> <span class="n">ObjectPropertyClass</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+
+<div class="viewcode-block" id="OntologySubs"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs">[docs]</a><span class="k">class</span> <span class="nc">OntologySubs</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onto_file</span><span class="p">,</span> <span class="n">label_property</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onto_file</span> <span class="o">=</span> <span class="n">onto_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onto</span> <span class="o">=</span> <span class="n">get_ontology</span><span class="p">(</span><span class="n">onto_file</span><span class="p">)</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">label_property</span> <span class="o">=</span> <span class="n">label_property</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">default_world</span><span class="o">.</span><span class="n">as_rdflib_graph</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_property</span><span class="p">:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="s1">&#39;SELECT ?s ?o WHERE {?s &lt;</span><span class="si">%s</span><span class="s1">&gt; ?o.}&#39;</span> <span class="o">%</span> <span class="n">p</span>
+            <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">q</span><span class="p">)):</span>
+                <span class="n">iri</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">n3</span><span class="p">()[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">lit</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">lit</span><span class="p">,</span> <span class="s1">&#39;language&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">lit</span><span class="o">.</span><span class="n">language</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">lit</span><span class="o">.</span><span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;en&#39;</span> <span class="ow">or</span>
+                                                 <span class="n">lit</span><span class="o">.</span><span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;en-us&#39;</span> <span class="ow">or</span> <span class="n">lit</span><span class="o">.</span><span class="n">language</span> <span class="o">==</span> <span class="s1">&#39;en-gb&#39;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">lit</span><span class="o">.</span><span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">iri</span><span class="p">]:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">iri</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lit</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">iri</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">lit</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">named_classes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_named_classes</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">className_label</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">c_iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">className_label</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">IRIS</span><span class="p">[</span><span class="n">c_iri</span><span class="p">])]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">c_iri</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name_restrictions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restrictions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">restrictionsName_label</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_classes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">is_a</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_target_some_restriction</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">parent</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">name_restrictions</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">parent</span><span class="p">)]</span> <span class="o">=</span> <span class="n">parent</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">restrictions</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrictionsName_label</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">restrictionsName_label</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">parent</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restriction_to_label</span><span class="p">(</span><span class="n">restriction</span><span class="o">=</span><span class="n">parent</span><span class="p">)</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Generate descriptions towards a restriction</span>
+<span class="sd">        involving properties of FoodOn:</span>
+<span class="sd">        {&#39;composed primarily of&#39;, &#39;derives from&#39;, &#39;develops from&#39;, &#39;has consumer&#39;, &#39;has country of origin&#39;,</span>
+<span class="sd">            &#39;has defining ingredient&#39;, &#39;has food substance analog&#39;, &#39;has ingredient&#39;, &#39;has input&#39;, &#39;has member&#39;,</span>
+<span class="sd">            &#39;has output&#39;, &#39;has part&#39;, &#39;has participant&#39;, &#39;has quality&#39;, &#39;has substance added&#39;, &#39;in taxon&#39;,</span>
+<span class="sd">            &#39;input of&#39;, &#39;is about&#39;, &#39;member of&#39;, &#39;output of&#39;, &#39;part of&#39;, &#39;produced by&#39;, &#39;surrounded by&#39;}</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="OntologySubs.restriction_to_label"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.restriction_to_label">[docs]</a>    <span class="k">def</span> <span class="nf">restriction_to_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">restriction</span><span class="p">):</span>
+        <span class="n">p_label</span> <span class="o">=</span> <span class="n">restriction</span><span class="o">.</span><span class="n">property</span><span class="o">.</span><span class="n">label</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">p_label</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;of&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">p_label</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;from&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">p_label</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;by&#39;</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="n">p_label</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;about&#39;</span><span class="p">)):</span>
+            <span class="n">p_label</span> <span class="o">=</span> <span class="n">p_label</span> <span class="o">+</span> <span class="s1">&#39; of&#39;</span>
+
+        <span class="n">descriptions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39; | &#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">restriction</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+            <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;something </span><span class="si">%s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="n">p_label</span>
+            <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">restriction</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; | &#39;</span><span class="p">):</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">className_label</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">desc</span> <span class="o">=</span> <span class="n">desc</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39; or &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+            <span class="n">descriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="s1">&#39; &amp; &#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">restriction</span><span class="o">.</span><span class="n">value</span><span class="p">):</span>
+
+            <span class="c1"># this is a special case with Not in FoodOn</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">restriction</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;obo.FOODON_00002275 &amp; obo.FOODON_00003202 &amp; Not(obo.FOODON_00001138)&#39;</span><span class="p">:</span>
+                <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;something </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> and </span><span class="si">%s</span><span class="s1"> and not </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">p_label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">className_label</span><span class="p">[</span><span class="s1">&#39;obo.FOODON_00002275&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                                                              <span class="bp">self</span><span class="o">.</span><span class="n">className_label</span><span class="p">[</span><span class="s1">&#39;obo.FOODON_00003202&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                                                              <span class="bp">self</span><span class="o">.</span><span class="n">className_label</span><span class="p">[</span><span class="s1">&#39;obo.FOODON_00001138&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">descriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;something </span><span class="si">%s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="n">p_label</span>
+                <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">restriction</span><span class="o">.</span><span class="n">value</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &amp; &#39;</span><span class="p">):</span>
+                    <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">className_label</span><span class="p">[</span><span class="n">item</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">desc</span> <span class="o">=</span> <span class="n">desc</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="s1">&#39; and &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+                <span class="n">descriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">lab</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">className_label</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">restriction</span><span class="o">.</span><span class="n">value</span><span class="p">)]:</span>
+                <span class="n">desc</span> <span class="o">=</span> <span class="s1">&#39;something </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">p_label</span><span class="p">,</span> <span class="n">lab</span><span class="p">)</span>
+                <span class="n">descriptions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">desc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">descriptions</span></div>
+
+<div class="viewcode-block" id="OntologySubs.is_target_some_restriction"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.is_target_some_restriction">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_target_some_restriction</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+        <span class="c1"># if type(c) == class_construct.Restriction and c.type == 24 and type(c.property) == prop.ObjectPropertyClass \</span>
+        <span class="c1">#        and (type(c.value) == ThingClass or type(c.value) == Or or type(c.value) == And) \</span>
+        <span class="c1">#        and (&#39;some&#39; not in str(c.value) and &#39;only&#39; not in str(c.value) and</span>
+        <span class="c1">#             &#39;min&#39; not in str(c.value) and &#39;exactly&#39; not in str(c.value) and</span>
+        <span class="c1">#             &#39;max&#39; not in str(c.value)):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="n">class_construct</span><span class="o">.</span><span class="n">Restriction</span> <span class="ow">and</span> <span class="n">c</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="mi">24</span> <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">property</span><span class="p">)</span> <span class="o">==</span> <span class="n">ObjectPropertyClass</span> \
+                <span class="ow">and</span> <span class="nb">type</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="n">ThingClass</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;some&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;only&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span>
+                                                     <span class="s1">&#39;min&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;exactly&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="s1">&#39;max&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get named classes that are not deprecated (excluding OWL Thing)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="OntologySubs.get_named_classes"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.get_named_classes">[docs]</a>    <span class="k">def</span> <span class="nf">get_named_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">named_classes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">classes</span><span class="p">():</span>
+            <span class="k">if</span> <span class="kc">True</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">deprecated</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">c</span> <span class="o">==</span> <span class="n">owl</span><span class="o">.</span><span class="n">Thing</span><span class="p">:</span>
+                <span class="n">named_classes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">named_classes</span></div>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Given a named subclass, get a negative class for a negative subsumption</span>
+<span class="sd">        The current implementation does not consider masked subsumptions</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="OntologySubs.get_negative_sample"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.get_negative_sample">[docs]</a>    <span class="k">def</span> <span class="nf">get_negative_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subclass_str</span><span class="p">,</span> <span class="n">subsumption_type</span><span class="o">=</span><span class="s1">&#39;named class&#39;</span><span class="p">):</span>
+        <span class="n">subclass</span> <span class="o">=</span> <span class="n">IRIS</span><span class="p">[</span><span class="n">subclass_str</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">subsumption_type</span> <span class="o">==</span> <span class="s1">&#39;named class&#39;</span><span class="p">:</span>
+            <span class="n">neg_c</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">named_classes</span><span class="p">)</span> <span class="o">-</span> <span class="n">subclass</span><span class="o">.</span><span class="n">ancestors</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">neg_c</span><span class="o">.</span><span class="n">iri</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">restrictions_ancestors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_all_restriction_ancestors</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">subclass</span><span class="p">)</span>
+            <span class="n">neg_c</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">restrictions</span> <span class="o">-</span> <span class="n">restrictions_ancestors</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">neg_c</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OntologySubs.get_all_restriction_ancestors"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.get_all_restriction_ancestors">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_all_restriction_ancestors</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">ancs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">is_a</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="n">class_construct</span><span class="o">.</span><span class="n">Restriction</span><span class="p">:</span>
+                <span class="n">ancs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">ancestor</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">ancestors</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">ancestor</span><span class="o">.</span><span class="n">is_a</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="n">class_construct</span><span class="o">.</span><span class="n">Restriction</span><span class="p">:</span>
+                    <span class="n">ancs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ancs</span></div>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get declared subsumptions whose parents are named classes (excluding OWL Thing)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="OntologySubs.get_declared_named_class_subsumption"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.get_declared_named_class_subsumption">[docs]</a>    <span class="k">def</span> <span class="nf">get_declared_named_class_subsumption</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">declared_subsumptions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_classes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">is_a</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_normal_named_class</span><span class="p">(</span><span class="n">parent</span><span class="p">):</span>
+                    <span class="n">declared_subsumptions</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">c</span><span class="p">,</span> <span class="n">parent</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">declared_subsumptions</span></div>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get subsumptions whose parents are &quot;some&quot; restrictions that have no restrictions inside</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="OntologySubs.get_declared_restriction_subsumption"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.get_declared_restriction_subsumption">[docs]</a>    <span class="k">def</span> <span class="nf">get_declared_restriction_subsumption</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">declared_subsumptions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_classes</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">is_a</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_target_some_restriction</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="n">parent</span><span class="p">):</span>
+                    <span class="n">declared_subsumptions</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">c</span><span class="p">,</span> <span class="n">parent</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">declared_subsumptions</span></div>
+
+<div class="viewcode-block" id="OntologySubs.is_normal_named_class"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.is_normal_named_class">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">is_normal_named_class</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="n">ThingClass</span> <span class="ow">and</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">owl</span><span class="o">.</span><span class="n">Thing</span> <span class="ow">and</span> <span class="kc">True</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">deprecated</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Get one-hop neighbours of a given class</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="OntologySubs.get_one_hop_neighbours"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.get_one_hop_neighbours">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_one_hop_neighbours</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+        <span class="n">nebs_classes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">subclasses</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span> <span class="o">==</span> <span class="n">ThingClass</span> <span class="ow">and</span> <span class="kc">True</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sub</span><span class="o">.</span><span class="n">deprecated</span><span class="p">:</span>
+                <span class="n">nebs_classes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sub</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sup</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">is_a</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">sup</span><span class="p">)</span> <span class="o">==</span> <span class="n">ThingClass</span> <span class="ow">and</span> <span class="kc">True</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sup</span><span class="o">.</span><span class="n">deprecated</span><span class="p">:</span>
+                <span class="n">nebs_classes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sup</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">nebs_classes</span></div>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Given a class, get its traversal-based subsumptions</span>
+<span class="sd">        If the class is a subclass of a target axiom, get subsumptions from downside</span>
+<span class="sd">        If the class is a supclass of a target axiom, get subsumptions from upside</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="OntologySubs.traversal_subsumptions"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.traversal_subsumptions">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">traversal_subsumptions</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">hop</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;subclass&#39;</span><span class="p">,</span> <span class="n">max_subsumptions</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">subsumptions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">seeds</span> <span class="o">=</span> <span class="p">[</span><span class="bp">cls</span><span class="p">]</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">no_duplicate</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">while</span> <span class="n">d</span> <span class="o">&lt;=</span> <span class="n">hop</span><span class="p">:</span>
+            <span class="n">new_seeds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">seeds</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;subclass&#39;</span><span class="p">:</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">subclasses</span><span class="p">())</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">no_duplicate</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">tmp</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="n">ThingClass</span> <span class="ow">and</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">owl</span><span class="o">.</span><span class="n">Thing</span> <span class="ow">and</span> <span class="kc">True</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">deprecated</span><span class="p">:</span>
+                            <span class="n">subsumptions</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">c</span><span class="p">,</span> <span class="n">s</span><span class="p">])</span>
+                            <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_seeds</span><span class="p">:</span>
+                                <span class="n">new_seeds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;supclass&#39;</span><span class="p">:</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">is_a</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">no_duplicate</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">tmp</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="n">ThingClass</span> <span class="ow">and</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">owl</span><span class="o">.</span><span class="n">Thing</span> <span class="ow">and</span> <span class="kc">True</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">deprecated</span><span class="p">:</span>
+                            <span class="n">subsumptions</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
+                            <span class="k">if</span> <span class="n">c</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">new_seeds</span><span class="p">:</span>
+                                <span class="n">new_seeds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Unknown direction: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">direction</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">subsumptions</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">max_subsumptions</span><span class="p">:</span>
+                <span class="n">subsumptions</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">subsumptions</span><span class="p">,</span> <span class="n">max_subsumptions</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">seeds</span> <span class="o">=</span> <span class="n">new_seeds</span>
+                <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">seeds</span><span class="p">)</span>
+                <span class="n">d</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">subsumptions</span><span class="p">,</span> <span class="n">no_duplicate</span></div>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Given a class, get its path subsumptions</span>
+<span class="sd">        If the class is a subclass of a target axiom, get subsumptions from downside</span>
+<span class="sd">        If the class is a supclass of a target axiom, get subsumptions from upside</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="OntologySubs.path_subsumptions"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.path_subsumptions">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">path_subsumptions</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">hop</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;subclass&#39;</span><span class="p">):</span>
+        <span class="n">subsumptions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="bp">cls</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">no_duplicate</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">while</span> <span class="n">d</span> <span class="o">&lt;=</span> <span class="n">hop</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;subclass&#39;</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">seed</span><span class="o">.</span><span class="n">subclasses</span><span class="p">())</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">no_duplicate</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">tmp</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="n">ThingClass</span> <span class="ow">and</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">owl</span><span class="o">.</span><span class="n">Thing</span> <span class="ow">and</span> <span class="kc">True</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">deprecated</span><span class="p">:</span>
+                            <span class="n">subsumptions</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">c</span><span class="p">,</span> <span class="n">seed</span><span class="p">])</span>
+                            <span class="n">seed</span> <span class="o">=</span> <span class="n">c</span>
+                            <span class="n">end</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="k">break</span>
+                <span class="k">if</span> <span class="n">end</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">elif</span> <span class="n">direction</span> <span class="o">==</span> <span class="s1">&#39;supclass&#39;</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">seed</span><span class="o">.</span><span class="n">is_a</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">no_duplicate</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">tmp</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="n">ThingClass</span> <span class="ow">and</span> <span class="n">c</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">owl</span><span class="o">.</span><span class="n">Thing</span> <span class="ow">and</span> <span class="kc">True</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">deprecated</span><span class="p">:</span>
+                            <span class="n">subsumptions</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">seed</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
+                            <span class="n">seed</span> <span class="o">=</span> <span class="n">c</span>
+                            <span class="n">end</span> <span class="o">=</span> <span class="kc">False</span>
+                            <span class="k">break</span>
+                <span class="k">if</span> <span class="n">end</span><span class="p">:</span>
+                    <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;Unknown direction: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">direction</span><span class="p">)</span>
+
+            <span class="n">d</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">subsumptions</span><span class="p">,</span> <span class="n">no_duplicate</span></div>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Transform a subsumption to string with &lt;SUB&gt; and classes&#39; labels</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="OntologySubs.subsumption_to_str"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.subsumption_to_str">[docs]</a>    <span class="k">def</span> <span class="nf">subsumption_to_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subsum</span><span class="p">):</span>
+        <span class="n">subc</span><span class="p">,</span> <span class="n">supc</span> <span class="o">=</span> <span class="n">subsum</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">subsum</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">subs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">subc</span><span class="o">.</span><span class="n">iri</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">subc</span><span class="o">.</span><span class="n">iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">sups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">supc</span><span class="o">.</span><span class="n">iri</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">supc</span><span class="o">.</span><span class="n">iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> &lt;SUB&gt; </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">subs</span><span class="p">,</span> <span class="n">sups</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OntologySubs.set_masked_subsumptions"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.set_masked_subsumptions">[docs]</a>    <span class="k">def</span> <span class="nf">set_masked_subsumptions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subsumptions_to_mask</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">subsumptions</span> <span class="ow">in</span> <span class="n">subsumptions_to_mask</span><span class="p">:</span>
+            <span class="n">subc</span><span class="p">,</span> <span class="n">supc</span> <span class="o">=</span> <span class="n">IRIS</span><span class="p">[</span><span class="n">subsumptions</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">IRIS</span><span class="p">[</span><span class="n">subsumptions</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+            <span class="c1"># in case the sup class is an restriction</span>
+            <span class="k">if</span> <span class="n">supc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">subsumptions</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_restrictions</span><span class="p">:</span>
+                <span class="n">supc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name_restrictions</span><span class="p">[</span><span class="n">subsumptions</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+            <span class="k">if</span> <span class="n">supc</span> <span class="ow">in</span> <span class="n">subc</span><span class="o">.</span><span class="n">is_a</span><span class="p">:</span>
+                <span class="n">subc</span><span class="o">.</span><span class="n">is_a</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">supc</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OntologySubs.subclass_to_string"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.subclass_to_string">[docs]</a>    <span class="k">def</span> <span class="nf">subclass_to_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subcls</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="n">substrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">subcls</span><span class="p">]</span> <span class="k">if</span> <span class="n">subcls</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span> <span class="k">else</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;use_one_label&#39;</span><span class="p">]:</span>
+            <span class="n">substrs</span> <span class="o">=</span> <span class="n">substrs</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;isolated&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">substrs</span>
+
+        <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;traversal&#39;</span><span class="p">:</span>
+            <span class="n">subs_list_strs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;context_dup&#39;</span><span class="p">]):</span>
+                <span class="n">context_sub</span><span class="p">,</span> <span class="n">no_duplicate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">traversal_subsumptions</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">IRIS</span><span class="p">[</span><span class="n">subcls</span><span class="p">],</span>
+                                                                        <span class="n">hop</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_hop&#39;</span><span class="p">],</span>
+                                                                        <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;subclass&#39;</span><span class="p">,</span>
+                                                                        <span class="n">max_subsumptions</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span>
+                                                                            <span class="s1">&#39;prompt_max_subsumptions&#39;</span><span class="p">])</span>
+                <span class="n">subs_list</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">subsumption_to_str</span><span class="p">(</span><span class="n">subsum</span><span class="p">)</span> <span class="k">for</span> <span class="n">subsum</span> <span class="ow">in</span> <span class="n">context_sub</span><span class="p">]</span>
+                <span class="n">subs_list_str</span> <span class="o">=</span> <span class="s1">&#39; &lt;SEP&gt; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subs_list</span><span class="p">)</span>
+                <span class="n">subs_list_strs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subs_list_str</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">no_duplicate</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+            <span class="n">strs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">subs_list_str</span> <span class="ow">in</span> <span class="n">subs_list_strs</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">substr</span> <span class="ow">in</span> <span class="n">substrs</span><span class="p">:</span>
+                    <span class="n">s1</span> <span class="o">=</span> <span class="n">substr</span> <span class="o">+</span> <span class="s1">&#39; &lt;SEP&gt; &#39;</span> <span class="o">+</span> <span class="n">subs_list_str</span>
+                    <span class="n">strs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">strs</span>
+
+        <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span>
+            <span class="n">sep_token</span> <span class="o">=</span> <span class="s1">&#39;&lt;SUB&gt;&#39;</span> <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;use_sub_special_token&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&lt;SEP&gt;&#39;</span>
+
+            <span class="n">s1_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;context_dup&#39;</span><span class="p">]):</span>
+                <span class="n">context_sub</span><span class="p">,</span> <span class="n">no_duplicate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_subsumptions</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">IRIS</span><span class="p">[</span><span class="n">subcls</span><span class="p">],</span>
+                                                                   <span class="n">hop</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_hop&#39;</span><span class="p">],</span>
+                                                                   <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;subclass&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">context_sub</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">s1</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">context_sub</span><span class="p">)):</span>
+                        <span class="n">subsum</span> <span class="o">=</span> <span class="n">context_sub</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">context_sub</span><span class="p">)</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                        <span class="n">subc</span> <span class="o">=</span> <span class="n">subsum</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">s1</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">subc</span><span class="o">.</span><span class="n">iri</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">subc</span><span class="o">.</span><span class="n">iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">sep_token</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">substr</span> <span class="ow">in</span> <span class="n">substrs</span><span class="p">:</span>
+                        <span class="n">s1_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">s1</span> <span class="o">+</span> <span class="n">substr</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">substr</span> <span class="ow">in</span> <span class="n">substrs</span><span class="p">:</span>
+                        <span class="n">s1_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sep_token</span><span class="p">,</span> <span class="n">substr</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">no_duplicate</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">s1_set</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OntologySubs.supclass_to_samples"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.supclass_to_samples">[docs]</a>    <span class="k">def</span> <span class="nf">supclass_to_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">supcls</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">subsumption_type</span><span class="o">=</span><span class="s1">&#39;named class&#39;</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="n">subsumption_type</span> <span class="o">==</span> <span class="s1">&#39;named class&#39;</span><span class="p">:</span>
+            <span class="n">supstrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">supcls</span><span class="p">]</span> <span class="k">if</span> <span class="n">supcls</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span> <span class="k">else</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">supcls</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrictionsName_label</span><span class="p">:</span>
+                <span class="n">supstrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrictionsName_label</span><span class="p">[</span><span class="n">supcls</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: </span><span class="si">%s</span><span class="s1"> has no descriptions&#39;</span> <span class="o">%</span> <span class="n">supcls</span><span class="p">)</span>
+                <span class="n">supstrs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;use_one_label&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">subsumption_type</span> <span class="o">==</span> <span class="s1">&#39;named class&#39;</span><span class="p">:</span>
+                <span class="n">supstrs</span> <span class="o">=</span> <span class="n">supstrs</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;isolated&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">supstrs</span>
+
+        <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;traversal&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">subsumption_type</span> <span class="o">==</span> <span class="s1">&#39;named class&#39;</span><span class="p">:</span>
+                <span class="n">sups_list_strs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;context_dup&#39;</span><span class="p">]):</span>
+                    <span class="n">context_sup</span><span class="p">,</span> <span class="n">no_duplicate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">traversal_subsumptions</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">IRIS</span><span class="p">[</span><span class="n">supcls</span><span class="p">],</span>
+                                                                            <span class="n">hop</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_hop&#39;</span><span class="p">],</span>
+                                                                            <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;supclass&#39;</span><span class="p">,</span>
+                                                                            <span class="n">max_subsumptions</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span>
+                                                                                <span class="s1">&#39;prompt_max_subsumptions&#39;</span><span class="p">])</span>
+                    <span class="n">sups_list</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">subsumption_to_str</span><span class="p">(</span><span class="n">subsum</span><span class="p">)</span> <span class="k">for</span> <span class="n">subsum</span> <span class="ow">in</span> <span class="n">context_sup</span><span class="p">]</span>
+                    <span class="n">sups_list_str</span> <span class="o">=</span> <span class="s1">&#39; &lt;SEP&gt; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sups_list</span><span class="p">)</span>
+                    <span class="n">sups_list_strs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sups_list_str</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">no_duplicate</span><span class="p">:</span>
+                        <span class="k">break</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sups_list_strs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">supstrs</span><span class="p">)</span>
+
+            <span class="n">strs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">sups_list_str</span> <span class="ow">in</span> <span class="n">sups_list_strs</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">supstr</span> <span class="ow">in</span> <span class="n">supstrs</span><span class="p">:</span>
+                    <span class="n">s2</span> <span class="o">=</span> <span class="n">supstr</span> <span class="o">+</span> <span class="s1">&#39; &lt;SEP&gt; &#39;</span> <span class="o">+</span> <span class="n">sups_list_str</span>
+                    <span class="n">strs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s2</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">strs</span>
+
+
+        <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span>
+            <span class="n">sep_token</span> <span class="o">=</span> <span class="s1">&#39;&lt;SUB&gt;&#39;</span> <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;use_sub_special_token&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&lt;SEP&gt;&#39;</span>
+
+            <span class="k">if</span> <span class="n">subsumption_type</span> <span class="o">==</span> <span class="s1">&#39;named class&#39;</span><span class="p">:</span>
+                <span class="n">s2_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;context_dup&#39;</span><span class="p">]):</span>
+                    <span class="n">context_sup</span><span class="p">,</span> <span class="n">no_duplicate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_subsumptions</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">IRIS</span><span class="p">[</span><span class="n">supcls</span><span class="p">],</span>
+                                                                       <span class="n">hop</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_hop&#39;</span><span class="p">],</span>
+                                                                       <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;supclass&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">context_sup</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">s2</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                        <span class="k">for</span> <span class="n">subsum</span> <span class="ow">in</span> <span class="n">context_sup</span><span class="p">:</span>
+                            <span class="n">supc</span> <span class="o">=</span> <span class="n">subsum</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                            <span class="n">s2</span> <span class="o">+=</span> <span class="s1">&#39; </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sep_token</span><span class="p">,</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">supc</span><span class="o">.</span><span class="n">iri</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">supc</span><span class="o">.</span><span class="n">iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">supstr</span> <span class="ow">in</span> <span class="n">supstrs</span><span class="p">:</span>
+                            <span class="n">s2_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">supstr</span> <span class="o">+</span> <span class="n">s2</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">supstr</span> <span class="ow">in</span> <span class="n">supstrs</span><span class="p">:</span>
+                            <span class="n">s2_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">supstr</span><span class="p">,</span> <span class="n">sep_token</span><span class="p">))</span>
+
+                    <span class="k">if</span> <span class="n">no_duplicate</span><span class="p">:</span>
+                        <span class="k">break</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">s2_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">supstrs</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">s2_set</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;unknown context type </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_type&#39;</span><span class="p">])</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Extract string pairs for subsumption axioms</span>
+<span class="sd">        prompt type: isolated, traversal, random walk</span>
+<span class="sd">        sample label: None, or label number (e.g., 1 and 0 for binary classification)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+<div class="viewcode-block" id="OntologySubs.subsumptions_to_samples"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.subsumptions_to_samples">[docs]</a>    <span class="k">def</span> <span class="nf">subsumptions_to_samples</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subsumptions</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">sample_label</span><span class="p">,</span> <span class="n">subsumption_type</span><span class="o">=</span><span class="s1">&#39;named class&#39;</span><span class="p">):</span>
+        <span class="n">local_samples</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">subs</span> <span class="ow">in</span> <span class="n">subsumptions</span><span class="p">:</span>
+            <span class="n">subcls</span><span class="p">,</span> <span class="n">supcls</span> <span class="o">=</span> <span class="n">subs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">subs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">substrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">subcls</span><span class="p">]</span> <span class="k">if</span> <span class="n">subcls</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span> <span class="k">else</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">subsumption_type</span> <span class="o">==</span> <span class="s1">&#39;named class&#39;</span><span class="p">:</span>
+                <span class="n">supstrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">supcls</span><span class="p">]</span> <span class="k">if</span> <span class="n">supcls</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span> <span class="k">else</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">supcls</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrictionsName_label</span><span class="p">:</span>
+                    <span class="n">supstrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">restrictionsName_label</span><span class="p">[</span><span class="n">supcls</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: </span><span class="si">%s</span><span class="s1"> has no descriptions&#39;</span> <span class="o">%</span> <span class="n">supcls</span><span class="p">)</span>
+                    <span class="n">supstrs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&#39;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;use_one_label&#39;</span><span class="p">]:</span>
+                <span class="n">substrs</span> <span class="o">=</span> <span class="n">substrs</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">supstrs</span> <span class="o">=</span> <span class="n">supstrs</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;isolated&#39;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">substr</span> <span class="ow">in</span> <span class="n">substrs</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">supstr</span> <span class="ow">in</span> <span class="n">supstrs</span><span class="p">:</span>
+                        <span class="n">local_samples</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">substr</span><span class="p">,</span> <span class="n">supstr</span><span class="p">])</span>
+
+            <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;traversal&#39;</span><span class="p">:</span>
+                <span class="n">subs_list_strs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;context_dup&#39;</span><span class="p">]):</span>
+                    <span class="n">context_sub</span><span class="p">,</span> <span class="n">no_duplicate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">traversal_subsumptions</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">IRIS</span><span class="p">[</span><span class="n">subcls</span><span class="p">],</span>
+                                                                            <span class="n">hop</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_hop&#39;</span><span class="p">],</span>
+                                                                            <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;subclass&#39;</span><span class="p">,</span>
+                                                                            <span class="n">max_subsumptions</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span>
+                                                                                <span class="s1">&#39;prompt_max_subsumptions&#39;</span><span class="p">])</span>
+                    <span class="n">subs_list</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">subsumption_to_str</span><span class="p">(</span><span class="n">subsum</span><span class="p">)</span> <span class="k">for</span> <span class="n">subsum</span> <span class="ow">in</span> <span class="n">context_sub</span><span class="p">]</span>
+                    <span class="n">subs_list_str</span> <span class="o">=</span> <span class="s1">&#39; &lt;SEP&gt; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">subs_list</span><span class="p">)</span>
+                    <span class="n">subs_list_strs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">subs_list_str</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">no_duplicate</span><span class="p">:</span>
+                        <span class="k">break</span>
+
+                <span class="k">if</span> <span class="n">subsumption_type</span> <span class="o">==</span> <span class="s1">&#39;named class&#39;</span><span class="p">:</span>
+                    <span class="n">sups_list_strs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;context_dup&#39;</span><span class="p">]):</span>
+                        <span class="n">context_sup</span><span class="p">,</span> <span class="n">no_duplicate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">traversal_subsumptions</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">IRIS</span><span class="p">[</span><span class="n">supcls</span><span class="p">],</span>
+                                                                                <span class="n">hop</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_hop&#39;</span><span class="p">],</span>
+                                                                                <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;supclass&#39;</span><span class="p">,</span>
+                                                                                <span class="n">max_subsumptions</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span>
+                                                                                    <span class="s1">&#39;prompt_max_subsumptions&#39;</span><span class="p">])</span>
+                        <span class="n">sups_list</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">subsumption_to_str</span><span class="p">(</span><span class="n">subsum</span><span class="p">)</span> <span class="k">for</span> <span class="n">subsum</span> <span class="ow">in</span> <span class="n">context_sup</span><span class="p">]</span>
+                        <span class="n">sups_list_str</span> <span class="o">=</span> <span class="s1">&#39; &lt;SEP&gt; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sups_list</span><span class="p">)</span>
+                        <span class="n">sups_list_strs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sups_list_str</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">no_duplicate</span><span class="p">:</span>
+                            <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">sups_list_strs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">supstrs</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">subs_list_str</span> <span class="ow">in</span> <span class="n">subs_list_strs</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">substr</span> <span class="ow">in</span> <span class="n">substrs</span><span class="p">:</span>
+                        <span class="n">s1</span> <span class="o">=</span> <span class="n">substr</span> <span class="o">+</span> <span class="s1">&#39; &lt;SEP&gt; &#39;</span> <span class="o">+</span> <span class="n">subs_list_str</span>
+                        <span class="k">for</span> <span class="n">sups_list_str</span> <span class="ow">in</span> <span class="n">sups_list_strs</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">supstr</span> <span class="ow">in</span> <span class="n">supstrs</span><span class="p">:</span>
+                                <span class="n">s2</span> <span class="o">=</span> <span class="n">supstr</span> <span class="o">+</span> <span class="s1">&#39; &lt;SEP&gt; &#39;</span> <span class="o">+</span> <span class="n">sups_list_str</span>
+                                <span class="n">local_samples</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">])</span>
+
+            <span class="k">elif</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;path&#39;</span><span class="p">:</span>
+                <span class="n">sep_token</span> <span class="o">=</span> <span class="s1">&#39;&lt;SUB&gt;&#39;</span> <span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;use_sub_special_token&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&lt;SEP&gt;&#39;</span>
+
+                <span class="n">s1_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;context_dup&#39;</span><span class="p">]):</span>
+                    <span class="n">context_sub</span><span class="p">,</span> <span class="n">no_duplicate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_subsumptions</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">IRIS</span><span class="p">[</span><span class="n">subcls</span><span class="p">],</span>
+                                                                       <span class="n">hop</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_hop&#39;</span><span class="p">],</span>
+                                                                       <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;subclass&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">context_sub</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">s1</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">context_sub</span><span class="p">)):</span>
+                            <span class="n">subsum</span> <span class="o">=</span> <span class="n">context_sub</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">context_sub</span><span class="p">)</span> <span class="o">-</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                            <span class="n">subc</span> <span class="o">=</span> <span class="n">subsum</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="n">s1</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">subc</span><span class="o">.</span><span class="n">iri</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">subc</span><span class="o">.</span><span class="n">iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+                                              <span class="n">sep_token</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">substr</span> <span class="ow">in</span> <span class="n">substrs</span><span class="p">:</span>
+                            <span class="n">s1_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">s1</span> <span class="o">+</span> <span class="n">substr</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">for</span> <span class="n">substr</span> <span class="ow">in</span> <span class="n">substrs</span><span class="p">:</span>
+                            <span class="n">s1_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sep_token</span><span class="p">,</span> <span class="n">substr</span><span class="p">))</span>
+
+                    <span class="k">if</span> <span class="n">no_duplicate</span><span class="p">:</span>
+                        <span class="k">break</span>
+
+                <span class="k">if</span> <span class="n">subsumption_type</span> <span class="o">==</span> <span class="s1">&#39;named class&#39;</span><span class="p">:</span>
+                    <span class="n">s2_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;context_dup&#39;</span><span class="p">]):</span>
+                        <span class="n">context_sup</span><span class="p">,</span> <span class="n">no_duplicate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path_subsumptions</span><span class="p">(</span><span class="bp">cls</span><span class="o">=</span><span class="n">IRIS</span><span class="p">[</span><span class="n">supcls</span><span class="p">],</span>
+                                                                           <span class="n">hop</span><span class="o">=</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_hop&#39;</span><span class="p">],</span>
+                                                                           <span class="n">direction</span><span class="o">=</span><span class="s1">&#39;supclass&#39;</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">context_sup</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">s2</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                            <span class="k">for</span> <span class="n">subsum</span> <span class="ow">in</span> <span class="n">context_sup</span><span class="p">:</span>
+                                <span class="n">supc</span> <span class="o">=</span> <span class="n">subsum</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                                <span class="n">s2</span> <span class="o">+=</span> <span class="s1">&#39; </span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">sep_token</span><span class="p">,</span>
+                                                  <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">supc</span><span class="o">.</span><span class="n">iri</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">supc</span><span class="o">.</span><span class="n">iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">supstr</span> <span class="ow">in</span> <span class="n">supstrs</span><span class="p">:</span>
+                                <span class="n">s2_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">supstr</span> <span class="o">+</span> <span class="n">s2</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">for</span> <span class="n">supstr</span> <span class="ow">in</span> <span class="n">supstrs</span><span class="p">:</span>
+                                <span class="n">s2_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">supstr</span><span class="p">,</span> <span class="n">sep_token</span><span class="p">))</span>
+
+                        <span class="k">if</span> <span class="n">no_duplicate</span><span class="p">:</span>
+                            <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">s2_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">supstrs</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">s1</span> <span class="ow">in</span> <span class="n">s1_set</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">s2</span> <span class="ow">in</span> <span class="n">s2_set</span><span class="p">:</span>
+                        <span class="n">local_samples</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">])</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;unknown context type </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;task&#39;</span><span class="p">][</span><span class="s1">&#39;prompt_type&#39;</span><span class="p">])</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">sample_label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">local_samples</span><span class="p">)):</span>
+                <span class="n">local_samples</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_label</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">local_samples</span></div>
+
+
+<div class="viewcode-block" id="OntologySubs.complement_iri_name_to_label"><a class="viewcode-back" href="../../../deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.complement_iri_name_to_label">[docs]</a>    <span class="k">def</span> <span class="nf">complement_iri_name_to_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_classes</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">iri</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">:</span>
+                <span class="n">iri_name</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">iri</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="sd">&quot;&quot;&quot;parse the URI name (camel cases)&quot;&quot;&quot;</span>
+                <span class="n">uri_name</span> <span class="o">=</span> <span class="n">iri_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span> \
+                    <span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+                <span class="n">words</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">uri_name</span><span class="o">.</span><span class="n">split</span><span class="p">():</span>
+                    <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">finditer</span><span class="p">(</span><span class="s1">&#39;.+?(?:(?&lt;=[a-z])(?=[A-Z])|(?&lt;=[A-Z])(?=[A-Z][a-z])|$)&#39;</span><span class="p">,</span> <span class="n">item</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+                        <span class="n">word</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                        <span class="n">words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">word</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">iri</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="p">]</span></div></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

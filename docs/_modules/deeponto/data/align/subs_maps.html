@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.data.align.subs_maps &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">deeponto</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../deeponto.html">deeponto</a></li>
+      <li class="breadcrumb-item active">deeponto.data.align.subs_maps</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeponto.data.align.subs_maps</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.</span>
+
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;Generate Subsumption Mappings from Equivalence Mappings&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="kn">from</span> <span class="nn">deeponto.onto.graph.graph_utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">super_thing_classes_of</span><span class="p">,</span>
+    <span class="n">sub_thing_classes_of</span><span class="p">,</span>
+    <span class="n">thing_class_descendants_of</span><span class="p">,</span>
+    <span class="n">thing_class_ancestors_of</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">uniqify</span>
+<span class="kn">from</span> <span class="nn">deeponto.onto.mapping</span> <span class="kn">import</span> <span class="n">OntoMappings</span>
+
+<span class="n">subs_rels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">]</span>  <span class="c1"># &quot;&lt;&quot; means broadMatch (IS-A); &quot;&gt;&quot; means narrowMatch (more specific)</span>
+
+
+<div class="viewcode-block" id="SubsumptionMappingGenerator"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.subs_maps.SubsumptionMappingGenerator">[docs]</a><span class="k">class</span> <span class="nc">SubsumptionMappingGenerator</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+        <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+        <span class="n">rel</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">equiv_mappings_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">max_subs_ratio</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># maximum subsumption mappings generated form an equiv mapping</span>
+        <span class="c1"># delete_equiv_src: bool = False,</span>
+        <span class="n">is_delete_equiv_tgt</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+        <span class="n">max_hop</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>  <span class="c1"># maximum hops between a subsumption class pair</span>
+    <span class="p">):</span>
+        <span class="c1"># super().__init__(src_onto, tgt_onto)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span> <span class="o">=</span> <span class="n">src_onto</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span> <span class="o">=</span> <span class="n">tgt_onto</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rel</span> <span class="o">=</span> <span class="n">rel</span>
+        <span class="c1"># the move function is either towards ancestors or descendants</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span> <span class="o">==</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">move</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">super_thing_classes_of</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span> <span class="o">==</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">move</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">sub_thing_classes_of</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown subsumption relation: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_hop</span> <span class="o">=</span> <span class="n">max_hop</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">equiv_maps</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">equiv_mappings_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">equiv_pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">equiv_maps</span><span class="o">.</span><span class="n">to_tuples</span><span class="p">()</span>
+        <span class="c1"># easy check for equivalence mappings</span>
+        <span class="n">check_pair</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">equiv_pairs</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">check_pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="n">check_pair</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">subs_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hop_record</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>  <span class="c1"># record at how many hops is each subs pair constructed</span>
+        <span class="c1"># for None, define it as the number of all target classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_subs_ratio</span> <span class="o">=</span> <span class="n">max_subs_ratio</span> <span class="k">if</span> <span class="n">max_subs_ratio</span> <span class="k">else</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="p">)</span>
+
+        <span class="c1">#  self.delete_equiv_src = delete_equiv_src  # delete the source equiv class or not</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_delete_equiv_tgt</span> <span class="o">=</span> <span class="n">is_delete_equiv_tgt</span>  <span class="c1"># delete the target equiv class or not</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete_status</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="p">)</span>  <span class="c1"># keep track which entites are marked for deletion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">construct_status</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="p">)</span>  <span class="c1"># keep track which entites are marked for construction</span>
+
+<div class="viewcode-block" id="SubsumptionMappingGenerator.renew_subs"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.renew_subs">[docs]</a>    <span class="k">def</span> <span class="nf">renew_subs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subs_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hop_record</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete_status</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="p">)</span>  <span class="c1"># keep track which entites are marked for deletion</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">construct_status</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span>
+            <span class="k">lambda</span><span class="p">:</span> <span class="kc">False</span>
+        <span class="p">)</span>  <span class="c1"># keep track which entites are marked for construction</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Initialize new subsumption generation record ...&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SubsumptionMappingGenerator.static_subs_construct"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.static_subs_construct">[docs]</a>    <span class="k">def</span> <span class="nf">static_subs_construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A *static* algorithm for subsumption mapping construction:</span>
+<span class="sd">        1. mark all equiv targets as to be deleted;</span>
+<span class="sd">        2. skip all these equiv targets in subs construction.</span>
+<span class="sd">        This algorithm is *static* because the class marking is performed</span>
+<span class="sd">        before subsumption mapping construction.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renew_subs</span><span class="p">()</span>
+        <span class="c1"># (1) mark all equiv targets as to be deleted</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_delete_equiv_tgt</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">tgt_equiv</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equiv_pairs</span><span class="p">:</span>
+                <span class="n">tgt_equiv_ent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">iri</span><span class="o">=</span><span class="n">tgt_equiv</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="c1"># mark deleted only if any subs can be generated</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">tgt_equiv_ent</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">delete_status</span><span class="p">[</span><span class="n">tgt_equiv</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="k">for</span> <span class="n">src_equiv</span><span class="p">,</span> <span class="n">tgt_equiv</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equiv_pairs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subs_pairs</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subs_from_an_equiv</span><span class="p">(</span><span class="n">src_equiv</span><span class="p">,</span> <span class="n">tgt_equiv</span><span class="p">)</span>
+        <span class="c1"># remove duplicates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subs_pairs</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subs_pairs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SubsumptionMappingGenerator.online_subs_construct"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.online_subs_construct">[docs]</a>    <span class="k">def</span> <span class="nf">online_subs_construct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;An *online* algorithm for subsumption mapping construction:</span>
+<span class="sd">        1. an equiv pair is skipped if the target side is marked constructed;</span>
+<span class="sd">        2. a subs pair is skipped if the target side is marked deleted.</span>
+<span class="sd">        This algorithm is *online* because the class marking is performed for</span>
+<span class="sd">        each equiv pair instantly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renew_subs</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">src_equiv</span><span class="p">,</span> <span class="n">tgt_equiv</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equiv_pairs</span><span class="p">:</span>
+            <span class="c1"># (1) an equiv pair is skipped if the target side is marked constructed</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_delete_equiv_tgt</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">construct_status</span><span class="p">[</span><span class="n">tgt_equiv</span><span class="p">]:</span>
+                <span class="k">continue</span>
+            <span class="c1"># get subs pairs from current equiv pair</span>
+            <span class="n">cur_subs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subs_from_an_equiv</span><span class="p">(</span><span class="n">src_equiv</span><span class="p">,</span> <span class="n">tgt_equiv</span><span class="p">)</span>
+            <span class="c1"># if any subs are generated, mark the target class for deletion</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_delete_equiv_tgt</span> <span class="ow">and</span> <span class="n">cur_subs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">delete_status</span><span class="p">[</span><span class="n">tgt_equiv</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="c1"># feed to the final output</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">subs_pairs</span> <span class="o">+=</span> <span class="n">cur_subs</span>
+        <span class="c1"># remove duplicates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">subs_pairs</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subs_pairs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SubsumptionMappingGenerator.subs_from_an_equiv"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.subs_from_an_equiv">[docs]</a>    <span class="k">def</span> <span class="nf">subs_from_an_equiv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_ent_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tgt_ent_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate subsumption candidates (thus mappings) from the target ontology </span>
+<span class="sd">        based on an equivalence mappings; this method adopts BFS to search valid</span>
+<span class="sd">        ancestors or descendants (of the target equiv class) that are not marked as</span>
+<span class="sd">        to be deleted. The deletion-marked list is updated outside this method.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tgt_ent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">iri</span><span class="o">=</span><span class="n">tgt_ent_iri</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="c1"># NOTE: do not construct what have been deleted</span>
+        <span class="n">valid_neighbours</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">frontier</span> <span class="o">=</span> <span class="p">[</span><span class="n">tgt_ent</span><span class="p">]</span>
+        <span class="n">explored</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">hop</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">num_added</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_neighbours</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_subs_ratio</span> <span class="ow">and</span> <span class="n">hop</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_hop</span><span class="p">:</span>
+            <span class="n">cur_hop_neighbours</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">ent</span> <span class="ow">in</span> <span class="n">frontier</span><span class="p">:</span>
+                <span class="n">neighbours_of_ent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">neighbour</span> <span class="ow">in</span> <span class="n">neighbours_of_ent</span><span class="p">:</span>
+                    <span class="c1"># deleted targets were updated outside of this method</span>
+                    <span class="c1"># (2) a subs pair is skipped if the target side is marked deleted</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_delete_equiv_tgt</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_status</span><span class="p">[</span><span class="n">neighbour</span><span class="o">.</span><span class="n">iri</span><span class="p">]:</span>
+                        <span class="k">continue</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">hop_record</span><span class="p">[</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">neighbour</span><span class="o">.</span><span class="n">iri</span><span class="p">]</span> <span class="o">=</span> <span class="n">hop</span>
+                    <span class="n">valid_neighbours</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">neighbour</span><span class="o">.</span><span class="n">iri</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;found (</span><span class="si">{</span><span class="n">tgt_ent_iri</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="si">}</span><span class="s2">) </span><span class="si">{</span><span class="n">neighbour</span><span class="o">.</span><span class="n">iri</span><span class="si">}</span><span class="s2"> at </span><span class="si">{</span><span class="n">hop</span><span class="si">}</span><span class="s2"> hops ...&quot;</span><span class="p">)</span>
+                    <span class="c1"># update the construction status for the neighbour (target side)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">construct_status</span><span class="p">[</span><span class="n">neighbour</span><span class="o">.</span><span class="n">iri</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="n">num_added</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">num_added</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_subs_ratio</span><span class="p">:</span>
+                        <span class="k">break</span>
+                <span class="n">cur_hop_neighbours</span> <span class="o">+=</span> <span class="n">neighbours_of_ent</span>
+                <span class="n">explored</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ent</span><span class="p">)</span>
+            <span class="c1"># renew the frontier to the next hops neighbours along the correct direction</span>
+            <span class="n">frontier</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cur_hop_neighbours</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">explored</span><span class="p">))</span>
+            <span class="n">hop</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># combine target neighbours with source entity to form subsumption mappings</span>
+        <span class="n">subs_pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">neighbour_iri</span><span class="p">)</span> <span class="k">for</span> <span class="n">neighbour_iri</span> <span class="ow">in</span> <span class="n">valid_neighbours</span><span class="p">]</span>
+        <span class="c1"># assert len(subs_pairs) == len(set(subs_pairs))</span>
+
+        <span class="c1"># NOTE: this is an ad-hoc online deletion process</span>
+        <span class="c1"># if self.is_delete_equiv_tgt:</span>
+        <span class="c1">#     self.deleted_tgts.append(tgt_ent_name)</span>
+
+        <span class="k">return</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">subs_pairs</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="SubsumptionMappingGenerator.subs_pairs_to_tsv"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.subs_pairs_to_tsv">[docs]</a>    <span class="k">def</span> <span class="nf">subs_pairs_to_tsv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">saved_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save the computed subs_pairs in .tsv</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SrcEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;TgtEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;Score&quot;</span><span class="p">,</span>  <span class="s2">&quot;Relation&quot;</span><span class="p">,</span> <span class="s2">&quot;Hop&quot;</span><span class="p">])</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">subs_pair</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">subs_pairs</span><span class="p">:</span>
+            <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">subs_pair</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">subs_pair</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mf">1.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hop_record</span><span class="p">[</span><span class="n">subs_pair</span><span class="p">]]</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">saved_path</span> <span class="o">+</span> <span class="s2">&quot;/subs_maps.tsv&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SubsumptionMappingGenerator.preserved_tgt_iris"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.preserved_tgt_iris">[docs]</a>    <span class="k">def</span> <span class="nf">preserved_tgt_iris</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return target class IRIs that are not marked for deletion</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">preserved</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">tgt_ent_iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_status</span><span class="p">[</span><span class="n">tgt_ent_iri</span><span class="p">]:</span>
+                <span class="n">preserved</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tgt_ent_iri</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">preserved</span></div>
+
+<div class="viewcode-block" id="SubsumptionMappingGenerator.validate_subs"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.validate_subs">[docs]</a>    <span class="k">def</span> <span class="nf">validate_subs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subs_pair</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Validate if a subsumption mapping based on the equivalent mappings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_ent_iri</span> <span class="o">=</span> <span class="n">subs_pair</span>
+        <span class="n">tgt_ent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">iri</span><span class="o">=</span><span class="n">tgt_ent_iri</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span> <span class="o">==</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">:</span>
+            <span class="n">subs_related</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">thing_class_ancestors_of</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">rel</span> <span class="o">==</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">:</span>
+            <span class="n">subs_related</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">e</span><span class="p">:</span> <span class="n">thing_class_descendants_of</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">equiv_tgt_iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equiv_maps</span><span class="o">.</span><span class="n">map_dict</span><span class="p">[</span><span class="n">src_ent_iri</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">equiv_tgt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">iri</span><span class="o">=</span><span class="n">equiv_tgt_iri</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">tgt_ent</span> <span class="ow">in</span> <span class="n">subs_related</span><span class="p">(</span><span class="n">equiv_tgt</span><span class="p">):</span>
+                <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="k">return</span> <span class="kc">False</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

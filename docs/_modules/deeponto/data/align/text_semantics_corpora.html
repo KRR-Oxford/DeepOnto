@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.data.align.text_semantics_corpora &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">deeponto</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../deeponto.html">deeponto</a></li>
+      <li class="breadcrumb-item active">deeponto.data.align.text_semantics_corpora</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeponto.data.align.text_semantics_corpora</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.</span>
+
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;Script for BERTMap&#39;s Text Semantics Corpora</span>
+
+<span class="sd">*An importance notice*: to avoid that the auxiliary ontology might have the same IRI </span>
+<span class="sd">as the SRC or TGT ontologies so that OwlReady2 cannot distinguish them, we load aux ontos</span>
+<span class="sd">only after we have built (intra-onto / cross-onto) corpora for SRC and TGT ontologies</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">TYPE_CHECKING</span>
+<span class="c1"># to avoid circular imports</span>
+<span class="k">if</span> <span class="n">TYPE_CHECKING</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
+    <span class="kn">from</span> <span class="nn">deeponto.onto.mapping</span> <span class="kn">import</span> <span class="n">OntoMappings</span>
+    
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">redirect_stdout</span>
+
+<span class="kn">from</span> <span class="nn">deeponto.onto.text</span> <span class="kn">import</span> <span class="n">Thesaurus</span>
+<span class="kn">from</span> <span class="nn">deeponto</span> <span class="kn">import</span> <span class="n">SavedObj</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">uniqify</span><span class="p">,</span> <span class="n">create_path</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils.logging</span> <span class="kn">import</span> <span class="n">banner_msg</span>
+
+<span class="c1"># Although all the below corpus classes inherit SavedObj, it&#39;s not efficient to save everything</span>
+<span class="c1"># instead, saving only the sampled data and statistics seems more reasonable</span>
+
+
+<div class="viewcode-block" id="TextSemanticsCorpora"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora">[docs]</a><span class="k">class</span> <span class="nc">TextSemanticsCorpora</span><span class="p">(</span><span class="n">SavedObj</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+        <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+        <span class="n">known_mappings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OntoMappings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">aux_ontos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Ontology</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">neg_ratio</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span> <span class="o">=</span> <span class="n">src_onto</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span> <span class="o">=</span> <span class="n">tgt_onto</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_mappings</span> <span class="o">=</span> <span class="n">known_mappings</span>
+        <span class="c1"># list of auxiliary ontologies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aux_ontos</span> <span class="o">=</span> <span class="n">aux_ontos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply_transitivity</span> <span class="o">=</span> <span class="n">apply_transitivity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neg_ratio</span> <span class="o">=</span> <span class="n">neg_ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">positives</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hard_negatives</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;transitivity&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_transitivity</span><span class="p">,</span>
+            <span class="s2">&quot;num_known_mappings&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">known_mappings</span><span class="o">.</span><span class="n">to_tuples</span><span class="p">())</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_mappings</span>
+            <span class="k">else</span> <span class="s2">&quot;N/A&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;num_aux_ontos&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aux_ontos</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">aux_ontos</span> <span class="k">else</span> <span class="s2">&quot;N/A&quot;</span><span class="p">,</span>
+        <span class="p">}</span>  <span class="c1"># storing the statistics of corpora</span>
+
+        <span class="c1"># build thesaurus and then text semantics sub-corpora from various sources</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thesaurus</span> <span class="o">=</span> <span class="n">Thesaurus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_transitivity</span><span class="p">)</span>
+
+        <span class="c1"># intra-onto</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">intra_onto_corpus_src</span> <span class="o">=</span> <span class="n">TextSemanticsCorpusforOnto</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">thesaurus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neg_ratio</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="s2">&quot;src&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_samples_from_sub_corpus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intra_onto_corpus_src</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">intra_onto_corpus_tgt</span> <span class="o">=</span> <span class="n">TextSemanticsCorpusforOnto</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">thesaurus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neg_ratio</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="s2">&quot;tgt&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_samples_from_sub_corpus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intra_onto_corpus_tgt</span><span class="p">)</span>
+
+        <span class="c1"># cross-onto</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cross_onto_corpus</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_mappings</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cross_onto_corpus</span> <span class="o">=</span> <span class="n">TextSemanticsCorpusforMappings</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">known_mappings</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">thesaurus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neg_ratio</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_samples_from_sub_corpus</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cross_onto_corpus</span><span class="p">)</span>
+
+        <span class="c1"># complementary</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comple_corpora</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">aux_ontos</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feed_auxiliary_ontos</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">aux_ontos</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_transitivity</span><span class="p">:</span>
+            <span class="c1"># copy and mark the individually retrieved samples as &quot;isolated&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">positives_isolated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">positives</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives_isolated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives</span>
+            <span class="c1"># self.hard_negatives_isolated = self.hard_negatives</span>
+            <span class="c1"># only the merged section is needed in this case because all synonym groups are merged by transitivity</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">positives</span> <span class="o">=</span> <span class="n">Thesaurus</span><span class="o">.</span><span class="n">positive_sampling</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">thesaurus</span><span class="o">.</span><span class="n">merged_section</span><span class="p">[</span><span class="s2">&quot;synonym_groups&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="c1"># however, the hard negatives rely on individual ontology structure, so we keep the hard negatives</span>
+            <span class="c1"># and amend more soft negatives</span>
+            <span class="n">total_neg_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neg_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positives</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives</span> <span class="o">=</span> <span class="n">Thesaurus</span><span class="o">.</span><span class="n">random_negative_sampling</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">thesaurus</span><span class="o">.</span><span class="n">merged_section</span><span class="p">[</span><span class="s2">&quot;synonym_groups&quot;</span><span class="p">],</span>
+                <span class="n">neg_num</span><span class="o">=</span><span class="n">total_neg_num</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hard_negatives</span><span class="p">),</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">positives</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positives</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hard_negatives</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hard_negatives</span><span class="p">)</span>
+        <span class="c1"># now we combine the soft and hard negatives and remove duplicates</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">negatives</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hard_negatives</span><span class="p">)</span>
+        <span class="c1"># we then remove the invalid negatives (which appear in the positives)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">negatives</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">remove_invalid_negatives</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positives</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">negatives</span><span class="p">)</span>
+        <span class="c1"># TODO: the number of negatives does not strictly follow the ratio after uniqifying</span>
+        <span class="c1"># TODO: maybe it is better to down sample the negatives again here before fine-tuning</span>
+        <span class="c1"># TODO: will leave for future improvement</span>
+
+        <span class="c1"># record the stats</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;num_positives&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positives</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;num_negatives&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">negatives</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;soft_negatives&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">[</span><span class="s2">&quot;num_hard_negatives&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hard_negatives</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;txtsem.corpora&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">)</span>
+
+<div class="viewcode-block" id="TextSemanticsCorpora.save_instance"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.save_instance">[docs]</a>    <span class="k">def</span> <span class="nf">save_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">saved_path</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="s2">&quot;txtsem&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save only the generated samples and corresponding statistics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">create_path</span><span class="p">(</span><span class="n">saved_path</span><span class="p">)</span>
+        <span class="n">saved_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;stats&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+            <span class="s2">&quot;positives&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positives</span><span class="p">],</span>
+            <span class="s2">&quot;negatives&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="n">neg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">neg</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">neg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">negatives</span><span class="p">],</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="n">saved_data</span><span class="p">,</span> <span class="n">saved_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">)</span>
+        <span class="c1"># also save the corpora construction report</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">saved_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">.report.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">report_sub_corpora_info</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="TextSemanticsCorpora.report_sub_corpora_info"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.report_sub_corpora_info">[docs]</a>    <span class="k">def</span> <span class="nf">report_sub_corpora_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print individual sub-corpora information</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Text Semantics Corpora (Overall)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Intra-onto Corpus from Source Ontology&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intra_onto_corpus_src</span><span class="p">))</span>
+        <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Intra-onto Corpus from Target Ontology&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intra_onto_corpus_tgt</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_onto_corpus</span><span class="p">:</span>
+            <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Cross-onto Corpus from Src2Tgt Mappings&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cross_onto_corpus</span><span class="p">))</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">comple_corpora</span><span class="p">:</span>
+            <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Complemenatry Corpora from Auxiliary Ontologies&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">cp_corpus</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">comple_corpora</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">cp_corpus</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="TextSemanticsCorpora.feed_auxiliary_ontos"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.feed_auxiliary_ontos">[docs]</a>    <span class="k">def</span> <span class="nf">feed_auxiliary_ontos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">new_aux_ontos</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Feed auxiliary ontologies for data augmentation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">aux_onto</span> <span class="ow">in</span> <span class="n">new_aux_ontos</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">aux_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">base_iri</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">base_iri</span>
+                <span class="ow">or</span> <span class="n">aux_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">base_iri</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">base_iri</span>
+            <span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="s2">&quot;The loaded auxiliary ontology has the same IRI as SRC or TGT ontology &quot;</span>
+                    <span class="o">+</span> <span class="s2">&quot;which makes it having a duplicated owl object (because Owlready2 can load) &quot;</span>
+                    <span class="o">+</span> <span class="s2">&quot;just one ontology of the same IRI; Please delete the auxiliary ontology dir &quot;</span>
+                    <span class="o">+</span> <span class="s2">&quot;and modify its IRI to a temporarily fake one and it will not affect BERTMap alignment&quot;</span>
+                <span class="p">)</span>
+            <span class="n">aux_corpus</span> <span class="o">=</span> <span class="n">TextSemanticsCorpusforOnto</span><span class="p">(</span>
+                <span class="n">aux_onto</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">thesaurus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">neg_ratio</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="s2">&quot;aux&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aux_ontos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">aux_onto</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">comple_corpora</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">aux_corpus</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_samples_from_sub_corpus</span><span class="p">(</span><span class="n">aux_corpus</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TextSemanticsCorpora.add_samples_from_sub_corpus"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.add_samples_from_sub_corpus">[docs]</a>    <span class="k">def</span> <span class="nf">add_samples_from_sub_corpus</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">sub_corpus</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">TextSemanticsCorpusforOnto</span><span class="p">,</span> <span class="n">TextSemanticsCorpusforMappings</span><span class="p">]</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add positives and negatives into the final collections</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">positives</span> <span class="o">+=</span> <span class="n">sub_corpus</span><span class="o">.</span><span class="n">positives</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives</span> <span class="o">+=</span> <span class="n">sub_corpus</span><span class="o">.</span><span class="n">soft_negatives</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hard_negatives</span> <span class="o">+=</span> <span class="n">sub_corpus</span><span class="o">.</span><span class="n">hard_negatives</span></div>
+
+<div class="viewcode-block" id="TextSemanticsCorpora.remove_invalid_negatives"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.remove_invalid_negatives">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">remove_invalid_negatives</span><span class="p">(</span><span class="n">pos_samples</span><span class="p">:</span> <span class="n">List</span><span class="p">,</span> <span class="n">neg_samples</span><span class="p">:</span> <span class="n">List</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove elements in negative samples that have been occurred in positive samples</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Removing invalid negatives that have been occurred in positive samples ...&quot;</span><span class="p">)</span>
+        <span class="n">pos_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">pos_samples</span><span class="p">)</span>
+        <span class="n">neg_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">neg_samples</span><span class="p">)</span>
+        <span class="n">intersection</span> <span class="o">=</span> <span class="n">pos_set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">neg_set</span><span class="p">)</span>
+        <span class="n">cleaned_neg_samples</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">neg_set</span> <span class="o">-</span> <span class="n">intersection</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">[before]=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">neg_samples</span><span class="p">)</span><span class="si">}</span><span class="s2">; [after]=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cleaned_neg_samples</span><span class="p">)</span><span class="si">}</span><span class="s2">; [removed]=</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">intersection</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">cleaned_neg_samples</span></div></div>
+
+
+<div class="viewcode-block" id="TextSemanticsCorpusforOnto"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforOnto">[docs]</a><span class="k">class</span> <span class="nc">TextSemanticsCorpusforOnto</span><span class="p">(</span><span class="n">SavedObj</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class for contructing text semantics Corpora from an individual ontology</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">thesaurus</span><span class="p">:</span> <span class="n">Thesaurus</span><span class="p">,</span> <span class="n">neg_ratio</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;src&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onto</span> <span class="o">=</span> <span class="n">onto</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thesaurus</span> <span class="o">=</span> <span class="n">thesaurus</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neg_ratio</span> <span class="o">=</span> <span class="n">neg_ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="n">flag</span>  <span class="c1"># can be &quot;src&quot;, &quot;tgt&quot; or &quot;aux&quot;</span>
+        <span class="c1"># extract synonyms from individual onto and add it into the thesaurus</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">synonym_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thesaurus</span><span class="o">.</span><span class="n">add_synonyms_from_ontos</span><span class="p">(</span><span class="n">onto</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">positives</span> <span class="o">=</span> <span class="n">Thesaurus</span><span class="o">.</span><span class="n">positive_sampling</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">synonym_field</span><span class="p">)</span>
+        <span class="c1"># we sample for each positive sample R negative samples</span>
+        <span class="n">total_neg_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neg_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positives</span><span class="p">)</span>
+        <span class="c1"># hard negatives are not always available so we compute them first</span>
+        <span class="c1"># ideally they should be half of the negatives</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hard_negatives</span> <span class="o">=</span> <span class="n">Thesaurus</span><span class="o">.</span><span class="n">disjointness_negative_sampling</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">sib_labs</span><span class="p">(),</span> <span class="n">neg_num</span><span class="o">=</span><span class="p">(</span><span class="n">total_neg_num</span> <span class="o">//</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="c1"># soft negatives are almost always available so we amend more if we do not have enough negatives</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives</span> <span class="o">=</span> <span class="n">Thesaurus</span><span class="o">.</span><span class="n">random_negative_sampling</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">synonym_field</span><span class="p">,</span> <span class="n">neg_num</span><span class="o">=</span><span class="p">(</span><span class="n">total_neg_num</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hard_negatives</span><span class="p">))</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">negatives</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hard_negatives</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;transitivity&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">thesaurus</span><span class="o">.</span><span class="n">apply_transitivity</span><span class="p">,</span>
+            <span class="s2">&quot;onto&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;flag&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="p">,</span>
+            <span class="s2">&quot;num_positives&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positives</span><span class="p">),</span>
+            <span class="s2">&quot;num_negatives&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">negatives</span><span class="p">),</span>
+            <span class="s2">&quot;num_soft_negatives&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives</span><span class="p">),</span>
+            <span class="s2">&quot;num_hard_negatives&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hard_negatives</span><span class="p">),</span>
+        <span class="p">}</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;txtsem.corpus.onto&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;---------- Ontology ----------</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">info</span> <span class="o">+=</span> <span class="s2">&quot;---------- Intra-onto Corpus ----------</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">info</span>
+
+<div class="viewcode-block" id="TextSemanticsCorpusforOnto.save_instance"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforOnto.save_instance">[docs]</a>    <span class="k">def</span> <span class="nf">save_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">saved_path</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="s2">&quot;txtsem.onto&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save only the generated samples and corresponding statistics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">create_path</span><span class="p">(</span><span class="n">saved_path</span><span class="p">)</span>
+        <span class="n">saved_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;stats&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+            <span class="s2">&quot;positives&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positives</span><span class="p">],</span>
+            <span class="s2">&quot;negatives&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="n">neg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">neg</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">neg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">negatives</span><span class="p">],</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="n">saved_data</span><span class="p">,</span> <span class="n">saved_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">)</span>
+        <span class="c1"># also save the construction report</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">saved_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">.report.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="TextSemanticsCorpusforMappings"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforMappings">[docs]</a><span class="k">class</span> <span class="nc">TextSemanticsCorpusforMappings</span><span class="p">(</span><span class="n">SavedObj</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+        <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+        <span class="n">onto_mappings</span><span class="p">:</span> <span class="n">OntoMappings</span><span class="p">,</span>
+        <span class="n">thesaurus</span><span class="p">:</span> <span class="n">Thesaurus</span><span class="p">,</span>
+        <span class="n">neg_ratio</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span> <span class="o">=</span> <span class="n">src_onto</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span> <span class="o">=</span> <span class="n">tgt_onto</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onto_mappings</span> <span class="o">=</span> <span class="n">onto_mappings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thesaurus</span> <span class="o">=</span> <span class="n">thesaurus</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neg_ratio</span> <span class="o">=</span> <span class="n">neg_ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flag</span> <span class="o">=</span> <span class="s2">&quot;src2tgt&quot;</span>
+
+        <span class="c1"># extract synonyms from mappings and add it into the thesaurus</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cross_onto_synonym_field</span> <span class="o">=</span> <span class="n">thesaurus</span><span class="o">.</span><span class="n">add_matched_synonyms_from_mappings</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto_mappings</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">positives</span> <span class="o">=</span> <span class="n">Thesaurus</span><span class="o">.</span><span class="n">positive_sampling_from_paired_groups</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cross_onto_synonym_field</span>
+        <span class="p">)</span>
+        <span class="c1"># we sample for each positive sample R negative samples</span>
+        <span class="n">total_neg_num</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neg_ratio</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positives</span><span class="p">)</span>
+        <span class="c1"># only soft negatives are available at cross-onto level</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives</span> <span class="o">=</span> <span class="n">Thesaurus</span><span class="o">.</span><span class="n">random_negative_sampling_from_paired_groups</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cross_onto_synonym_field</span><span class="p">,</span> <span class="n">neg_num</span><span class="o">=</span><span class="n">total_neg_num</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hard_negatives</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">negatives</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">soft_negatives</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;transitivity&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">thesaurus</span><span class="o">.</span><span class="n">apply_transitivity</span><span class="p">,</span>
+            <span class="s2">&quot;src_onto&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;tgt_onto&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;flag&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="p">,</span>
+            <span class="s2">&quot;num_positives&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">positives</span><span class="p">),</span>
+            <span class="s2">&quot;num_negatives&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">negatives</span><span class="p">),</span>
+            <span class="s2">&quot;num_mappings&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onto_mappings</span><span class="o">.</span><span class="n">to_tuples</span><span class="p">()),</span>
+        <span class="p">}</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;txtsem.corpus.maps&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="s2">&quot;---------- SRC Ontology ----------</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">info</span> <span class="o">+=</span> <span class="s2">&quot;---------- TGT Ontology ----------</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="n">info</span> <span class="o">+=</span> <span class="s2">&quot;---------- Cross-onto Corpus ----------</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">info</span>
+
+<div class="viewcode-block" id="TextSemanticsCorpusforMappings.save_instance"><a class="viewcode-back" href="../../../../deeponto.data.align.html#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforMappings.save_instance">[docs]</a>    <span class="k">def</span> <span class="nf">save_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">saved_path</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="s2">&quot;txtsem.maps&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save only the generated samples and corresponding statistics</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">create_path</span><span class="p">(</span><span class="n">saved_path</span><span class="p">)</span>
+        <span class="n">saved_data</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;stats&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats</span><span class="p">,</span>
+            <span class="s2">&quot;positives&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">positives</span><span class="p">],</span>
+            <span class="s2">&quot;negatives&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="n">neg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">neg</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">neg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">negatives</span><span class="p">],</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="n">saved_data</span><span class="p">,</span> <span class="n">saved_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">)</span>
+        <span class="c1"># also save the construction report</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">saved_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">.report.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
