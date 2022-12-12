@@ -17,19 +17,19 @@ limitations under the License.
 # Script Usage
 
 ?>DeepOnto provides scripts (see `DeepOnto/scripts`) for different purposes. 
-- `onto_match.py`: using implemented Ontology Matching (OM) models.
+- `bertmap.py`: using BERTMap or BERTMap-Lite for ontology matching (OM).
 - `om_eval.py`: evaluate the performance of OM models.
 - `onto_prune.py`: pruning an ontology while preserving the hierarchy of remaining classes.
-- `om_subs.py`: generating inter-ontology subsumption mappings from inter-ontology equivalence mappings.
+- `om_subs.py`: generating cross-ontology subsumption mappings from cross-ontology equivalence mappings.
 - `om_cands.py`: generating (hard) negative candidate mappings for given positive reference mappings.
 
 Please see the following sections for example usage.
 
 <!-- !> Contents regarding `pair_score` mode of OM and `om_cands.py` are not fully ready. -->
 
-## Ontology Matching
+## Ontology Matching with BERTMap
 
-There are two modes for OM: `global_match` and `pair_score`. `global_match` aims to compute mappings given two input ontologies and `pair_score` is for scoring provided class pairs. For both modes, the source and target input ontologies are required; for `pair_score`, an input file containing the unscored class pairs and a flag that indicates the direction of the class pairs (`src2tgt` or `tgt2src`) are further required (see [below](using_deeponto?id=pair_scoring)).
+There are two modes for OM with BERTMap: `global_match` and `pair_score`. `global_match` aims to compute mappings given two input ontologies and `pair_score` is for scoring provided class pairs. For both modes, the source and target input ontologies are required; for `pair_score`, an input file containing the unscored class pairs and a flag that indicates the direction of the class pairs (`src2tgt` or `tgt2src`) are further required (see [below](using_deeponto?id=pair_scoring)).
 
 ?> `Precision`, `Recall`, and `F-score` are frequently used in evaluating `global_match`; whereas `Accuracy` can be used in evaluating any class pair input, ranking-based metrics like `Hits@K` and `MRR` are used in evaluating `pair_score` when the input class pairs are grouped as *1 positive + N negatives*. See our [resource paper](https://arxiv.org/abs/2205.03447) for detailed guidance of ontology matching evaluation.  
 
@@ -76,8 +76,7 @@ Enter a number: 0
 ######################################################################
 
 [0]: bertmap
-[1]: string_match
-[2]: edit_sim
+[1]: bertmap-lite (edit-sim)
 Enter a number: 0
 ```
 
@@ -136,8 +135,7 @@ Enter a number: 1
 ######################################################################
 
 [0]: bertmap
-[1]: string_match
-[2]: edit_sim
+[1]: bertmap-lite (edit-sim)
 Enter a number: 0
 ```
 
