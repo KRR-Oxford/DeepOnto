@@ -16,9 +16,9 @@ limitations under the License.
 
 <!-- - **DeepOnto** -->
 - [About](/)
-- [Useful Scripts](using_deeponto.md)
-- [OM Models](om_models.md)
+<!-- - [Useful Scripts](using_deeponto.md) -->
+- [BERTMap](bertmap.md)
 - [OM Resources](om_resources.md)
 - [Reasoning](reasoning.md)
-- [Data Structures](data_structures.md)
+<!-- - [Data Structures](data_structures.md) -->
 - [API](deeponto.html)
