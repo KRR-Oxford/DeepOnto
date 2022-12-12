@@ -1,0 +1,5 @@
+1. sphinx-apidoc -f -o ./source ../../src/deeponto
+
+2. make clean && make html
+
+3. remove the index.html file 
