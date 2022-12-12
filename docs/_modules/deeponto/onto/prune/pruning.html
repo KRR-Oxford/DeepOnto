@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.onto.prune.pruning &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">deeponto</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../deeponto.html">deeponto</a></li>
+      <li class="breadcrumb-item active">deeponto.onto.prune.pruning</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeponto.onto.prune.pruning</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.</span>
+
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;Provide utilities for pruning an ontology to a sub-ontology&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">owlready2</span> <span class="kn">import</span> <span class="n">ThingClass</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">import</span> <span class="nn">deeponto</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">run_jar</span>
+<span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
+
+<span class="c1"># strategies for hierarchy preservation</span>
+<span class="n">preserve_strategies</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;simplest&quot;</span><span class="p">,</span> <span class="s2">&quot;logic_module&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="OntoPruner"><a class="viewcode-back" href="../../../../deeponto.onto.prune.html#deeponto.onto.prune.pruning.OntoPruner">[docs]</a><span class="k">class</span> <span class="nc">OntoPruner</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">saved_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">onto_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">preserved_iris_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">preserve_strategy</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;simplest&quot;</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">saved_path</span> <span class="o">=</span> <span class="n">saved_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onto_path</span> <span class="o">=</span> <span class="n">onto_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pruned_onto</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preserved_iris_path</span> <span class="o">=</span> <span class="n">preserved_iris_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preserve_strategy</span> <span class="o">=</span> <span class="n">preserve_strategy</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">onto</span> <span class="o">=</span> <span class="n">Ontology</span><span class="o">.</span><span class="n">from_new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onto_path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">preserved_iris_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preserved_iris</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()]</span>
+        
+<div class="viewcode-block" id="OntoPruner.run"><a class="viewcode-back" href="../../../../deeponto.onto.prune.html#deeponto.onto.prune.pruning.OntoPruner.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run pruning</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">preserve_strategy</span> <span class="o">==</span> <span class="s2">&quot;simplest&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pruned_onto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simple_prune</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">preserve_strategy</span> <span class="o">==</span> <span class="s2">&quot;logic_module&quot;</span><span class="p">:</span>
+            <span class="c1"># TODO: pruning with logic module </span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown preserve strategy: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">preserve_strategy</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OntoPruner.simple_prune"><a class="viewcode-back" href="../../../../deeponto.onto.prune.html#deeponto.onto.prune.pruning.OntoPruner.simple_prune">[docs]</a>    <span class="k">def</span> <span class="nf">simple_prune</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The simplest pruning method: isolating non-preserved classes</span>
+<span class="sd">        and link their parents and children recursively.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># perform class isolation and parent-child linking</span>
+        <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">classes</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">cl</span><span class="o">.</span><span class="n">iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">preserved_iris</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">isolate_class</span><span class="p">(</span><span class="n">cl</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># save the isolated ontology</span>
+        <span class="n">isolated_onto_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_path</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.kept.owl&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">isolated_onto_path</span><span class="p">)</span>
+
+        <span class="c1"># use java program for pruning</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">jar_preserve</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">isolated_onto_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">preserved_iris_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_path</span>
+        <span class="p">)</span>
+        
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">isolated_onto_path</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OntoPruner.jar_preserve"><a class="viewcode-back" href="../../../../deeponto.onto.prune.html#deeponto.onto.prune.pruning.OntoPruner.jar_preserve">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">jar_preserve</span><span class="p">(</span><span class="n">onto_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">onto_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">preserved_iris_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">saved_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Launch the jar program for class deletion</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">jar</span> <span class="o">=</span> <span class="n">deeponto</span><span class="o">.</span><span class="vm">__file__</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;__init__.py&quot;</span><span class="p">,</span> <span class="s2">&quot;onto/prune/preserve_iris.jar&quot;</span><span class="p">)</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;java -jar </span><span class="si">{</span><span class="n">jar</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">onto_name</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">onto_path</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">preserved_iris_path</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">saved_path</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">run_jar</span><span class="p">(</span><span class="n">command</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="OntoPruner.overlap_count"><a class="viewcode-back" href="../../../../deeponto.onto.prune.html#deeponto.onto.prune.pruning.OntoPruner.overlap_count">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">overlap_count</span><span class="p">(</span><span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">preserved_iris</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Count how many classes are included in the input class names</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">class_iris</span> <span class="o">=</span> <span class="p">[</span><span class="n">cl</span><span class="o">.</span><span class="n">iri</span> <span class="k">for</span> <span class="n">cl</span> <span class="ow">in</span> <span class="n">onto</span><span class="o">.</span><span class="n">owl</span><span class="o">.</span><span class="n">classes</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">class_iris</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">preserved_iris</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="OntoPruner.isolate_class"><a class="viewcode-back" href="../../../../deeponto.onto.prune.html#deeponto.onto.prune.pruning.OntoPruner.isolate_class">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">isolate_class</span><span class="p">(</span><span class="n">cl</span><span class="p">:</span> <span class="n">ThingClass</span><span class="p">,</span> <span class="n">keep_hierarchy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Isolate an entity class from its parents and chilren and optionally</span>
+<span class="sd">        reconstruct the hierarchy between them (parent &lt;subs&gt; child)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># save the children and parents first</span>
+        <span class="n">children</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">subclasses</span><span class="p">()))</span>
+        <span class="n">parents</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">cl</span><span class="o">.</span><span class="n">is_a</span><span class="p">))</span>
+        <span class="c1"># for each child, delete the class itself as a parent</span>
+        <span class="c1"># and add the class&#39;s parents as parents</span>
+        <span class="c1"># e.g., if A &lt;subs&gt; B &lt;subs&gt; C and B needs to be removed</span>
+        <span class="c1"># then construct A &lt;subs&gt; C and let B alone (use OWLAPI to delete)</span>
+        <span class="k">if</span> <span class="n">keep_hierarchy</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Link the parents and children of the isolated class: </span><span class="si">{</span><span class="n">cl</span><span class="o">.</span><span class="n">iri</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+                <span class="n">ch</span><span class="o">.</span><span class="n">is_a</span> <span class="o">+=</span> <span class="n">parents</span>
+                <span class="k">if</span> <span class="n">cl</span> <span class="ow">in</span> <span class="n">ch</span><span class="o">.</span><span class="n">is_a</span><span class="p">:</span>
+                    <span class="n">ch</span><span class="o">.</span><span class="n">is_a</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>  <span class="c1"># isolate cl from its child</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;cl&#39;</span><span class="p">,</span> <span class="n">cl</span><span class="p">,</span> <span class="s1">&#39;not in child</span><span class="se">\&#39;</span><span class="s1">s parents:&#39;</span><span class="p">,</span> <span class="n">ch</span><span class="o">.</span><span class="n">is_a</span><span class="p">)</span>
+        <span class="c1"># isolate cl from its parents</span>
+        <span class="n">cl</span><span class="o">.</span><span class="n">is_a</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

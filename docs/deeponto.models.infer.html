@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.models.infer package &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="deeponto.models.infer.deprecated package" href="deeponto.models.infer.deprecated.html" />
+    <link rel="prev" title="deeponto.models.align.logmap_java.java-dependencies package" href="deeponto.models.align.logmap_java.java-dependencies.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">deeponto</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="deeponto.html">deeponto package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="deeponto.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.html">deeponto.bert package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.config.html">deeponto.config package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.html">deeponto.data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.evaluation.html">deeponto.evaluation package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="deeponto.models.html">deeponto.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html">deeponto.onto package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.utils.html">deeponto.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto.flagged_obj">deeponto.flagged_obj module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto.saved_obj">deeponto.saved_obj module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">deeponto</a></li>
+          <li class="breadcrumb-item"><a href="deeponto.html">deeponto package</a></li>
+          <li class="breadcrumb-item"><a href="deeponto.models.html">deeponto.models package</a></li>
+      <li class="breadcrumb-item active">deeponto.models.infer package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/deeponto.models.infer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="deeponto-models-infer-package">
+<h1>deeponto.models.infer package<a class="headerlink" href="#deeponto-models-infer-package" title="Permalink to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deeponto.models.infer.deprecated.html">deeponto.models.infer.deprecated package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.models.infer.deprecated.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.models.infer.deprecated.html#module-deeponto.models.infer.deprecated.inference_pipeline">deeponto.models.infer.deprecated.inference_pipeline module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.models.infer.deprecated.html#deeponto.models.infer.deprecated.inference_pipeline.InferencePipeline"><code class="docutils literal notranslate"><span class="pre">InferencePipeline</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.infer.deprecated.html#deeponto.models.infer.deprecated.inference_pipeline.InferencePipeline.run"><code class="docutils literal notranslate"><span class="pre">InferencePipeline.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.infer.deprecated.html#deeponto.models.infer.deprecated.inference_pipeline.InferencePipeline.train"><code class="docutils literal notranslate"><span class="pre">InferencePipeline.train()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.models.infer.deprecated.html#module-deeponto.models.infer.deprecated.manual">deeponto.models.infer.deprecated.manual module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.models.infer.deprecated.html#deeponto.models.infer.deprecated.manual.inference_label_words"><code class="docutils literal notranslate"><span class="pre">inference_label_words()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.models.infer.deprecated.html#deeponto.models.infer.deprecated.manual.inference_templates"><code class="docutils literal notranslate"><span class="pre">inference_templates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.models.infer.deprecated.html#module-deeponto.models.infer.deprecated">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-deeponto.models.infer.infer_pipeline">
+<span id="deeponto-models-infer-infer-pipeline-module"></span><h2>deeponto.models.infer.infer_pipeline module<a class="headerlink" href="#module-deeponto.models.infer.infer_pipeline" title="Permalink to this heading"></a></h2>
+<p>Script for running openprompt models for OntoLAMA</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.models.infer.infer_pipeline.build_dataloader">
+<span class="sig-prename descclassname"><span class="pre">deeponto.models.infer.infer_pipeline.</span></span><span class="sig-name descname"><span class="pre">build_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">PreTrainedTokenizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer_wrapper_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TokenizerWrapper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CfgNode</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/models/infer/infer_pipeline.html#build_dataloader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.models.infer.infer_pipeline.build_dataloader" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.models.infer.infer_pipeline.run_inference">
+<span class="sig-prename descclassname"><span class="pre">deeponto.models.infer.infer_pipeline.</span></span><span class="sig-name descname"><span class="pre">run_inference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/models/infer/infer_pipeline.html#run_inference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.models.infer.infer_pipeline.run_inference" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.models.infer.infer_pipeline.trainer">
+<span class="sig-prename descclassname"><span class="pre">deeponto.models.infer.infer_pipeline.</span></span><span class="sig-name descname"><span class="pre">trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">EXP_PATH</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Processor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/models/infer/infer_pipeline.html#trainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.models.infer.infer_pipeline.trainer" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-deeponto.models.infer">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-deeponto.models.infer" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="deeponto.models.align.logmap_java.java-dependencies.html" class="btn btn-neutral float-left" title="deeponto.models.align.logmap_java.java-dependencies package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="deeponto.models.infer.deprecated.html" class="btn btn-neutral float-right" title="deeponto.models.infer.deprecated package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

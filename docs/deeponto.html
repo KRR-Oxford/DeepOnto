@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto package &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="deeponto.bert package" href="deeponto.bert.html" />
+    <link rel="prev" title="deeponto" href="modules.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">deeponto</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">deeponto package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.html">deeponto.bert package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.config.html">deeponto.config package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.html">deeponto.data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.evaluation.html">deeponto.evaluation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.html">deeponto.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html">deeponto.onto package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.utils.html">deeponto.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-deeponto.flagged_obj">deeponto.flagged_obj module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deeponto.flagged_obj.FlaggedObj"><code class="docutils literal notranslate"><span class="pre">FlaggedObj</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-deeponto.saved_obj">deeponto.saved_obj module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deeponto.saved_obj.SavedObj"><code class="docutils literal notranslate"><span class="pre">SavedObj</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-deeponto">Module contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#deeponto.init_jvm"><code class="docutils literal notranslate"><span class="pre">init_jvm()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">deeponto</a></li>
+      <li class="breadcrumb-item active">deeponto package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/deeponto.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="deeponto-package">
+<h1>deeponto package<a class="headerlink" href="#deeponto-package" title="Permalink to this heading"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="deeponto.bert.html">deeponto.bert package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.bert.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.bert.static.html">deeponto.bert.static package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.static.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.static.html#module-deeponto.bert.static.bert_static_base">deeponto.bert.static.bert_static_base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.static.html#module-deeponto.bert.static.bert_static_embeds">deeponto.bert.static.bert_static_embeds module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.static.html#module-deeponto.bert.static.bert_static_seq_classifier">deeponto.bert.static.bert_static_seq_classifier module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.static.html#module-deeponto.bert.static.bert_static_subs">deeponto.bert.static.bert_static_subs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.static.html#module-deeponto.bert.static">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.bert.train.html">deeponto.bert.train package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.train.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.train.html#module-deeponto.bert.train.bert_train_base">deeponto.bert.train.bert_train_base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.train.html#module-deeponto.bert.train.bert_train_seq_classfier">deeponto.bert.train.bert_train_seq_classfier module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.train.html#module-deeponto.bert.train.bert_train_subs">deeponto.bert.train.bert_train_subs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.train.html#module-deeponto.bert.train">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.bert.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.bert.html#module-deeponto.bert.bert_args">deeponto.bert.bert_args module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.bert.html#deeponto.bert.bert_args.BertArguments"><code class="docutils literal notranslate"><span class="pre">BertArguments</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.html#deeponto.bert.bert_args.BertArguments.generate_training_args"><code class="docutils literal notranslate"><span class="pre">BertArguments.generate_training_args()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.bert.html#module-deeponto.bert">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deeponto.config.html">deeponto.config package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.config.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.config.html#module-deeponto.config.input_config">deeponto.config.input_config module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.config.html#deeponto.config.input_config.InputConfig"><code class="docutils literal notranslate"><span class="pre">InputConfig</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.config.html#deeponto.config.input_config.InputConfig.add_param_group"><code class="docutils literal notranslate"><span class="pre">InputConfig.add_param_group()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.config.html#deeponto.config.input_config.InputConfig.edit_config"><code class="docutils literal notranslate"><span class="pre">InputConfig.edit_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.config.html#deeponto.config.input_config.InputConfig.load_config"><code class="docutils literal notranslate"><span class="pre">InputConfig.load_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.config.html#deeponto.config.input_config.InputConfig.new_config"><code class="docutils literal notranslate"><span class="pre">InputConfig.new_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.config.html#deeponto.config.input_config.InputConfig.preview_and_save"><code class="docutils literal notranslate"><span class="pre">InputConfig.preview_and_save()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.config.html#module-deeponto.config">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deeponto.data.html">deeponto.data package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.data.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.data.align.html">deeponto.data.align package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.align.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.align.html#module-deeponto.data.align.cand_maps">deeponto.data.align.cand_maps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.align.html#module-deeponto.data.align.subs_maps">deeponto.data.align.subs_maps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.align.html#module-deeponto.data.align.text_semantics_corpora">deeponto.data.align.text_semantics_corpora module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.align.html#module-deeponto.data.align">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.data.infer.html">deeponto.data.infer package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.html#module-deeponto.data.infer.infer_utils">deeponto.data.infer.infer_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.infer.html#module-deeponto.data.infer">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.data.html#module-deeponto.data">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deeponto.evaluation.html">deeponto.evaluation package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.evaluation.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.evaluation.html#module-deeponto.evaluation.align_eval">deeponto.evaluation.align_eval module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.evaluation.html#deeponto.evaluation.align_eval.global_match_eval"><code class="docutils literal notranslate"><span class="pre">global_match_eval()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.evaluation.html#deeponto.evaluation.align_eval.global_match_select"><code class="docutils literal notranslate"><span class="pre">global_match_select()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.evaluation.html#deeponto.evaluation.align_eval.local_rank_eval"><code class="docutils literal notranslate"><span class="pre">local_rank_eval()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.evaluation.html#deeponto.evaluation.align_eval.pred_thresholding"><code class="docutils literal notranslate"><span class="pre">pred_thresholding()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.evaluation.html#module-deeponto.evaluation.eval_metrics">deeponto.evaluation.eval_metrics module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.evaluation.html#deeponto.evaluation.eval_metrics.f1"><code class="docutils literal notranslate"><span class="pre">f1()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.evaluation.html#deeponto.evaluation.eval_metrics.f_score"><code class="docutils literal notranslate"><span class="pre">f_score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.evaluation.html#deeponto.evaluation.eval_metrics.hits_at_k"><code class="docutils literal notranslate"><span class="pre">hits_at_k()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.evaluation.html#deeponto.evaluation.eval_metrics.mean_reciprocal_rank"><code class="docutils literal notranslate"><span class="pre">mean_reciprocal_rank()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.evaluation.html#deeponto.evaluation.eval_metrics.precision"><code class="docutils literal notranslate"><span class="pre">precision()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.evaluation.html#deeponto.evaluation.eval_metrics.recall"><code class="docutils literal notranslate"><span class="pre">recall()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.evaluation.html#module-deeponto.evaluation">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deeponto.models.html">deeponto.models package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.models.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.models.align.html">deeponto.models.align package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.align.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.align.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.align.html#module-deeponto.models.align.align_base">deeponto.models.align.align_base module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.align.html#module-deeponto.models.align.align_pipeline">deeponto.models.align.align_pipeline module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.align.html#module-deeponto.models.align.bertmap">deeponto.models.align.bertmap module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.align.html#module-deeponto.models.align.edit_sim">deeponto.models.align.edit_sim module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.align.html#module-deeponto.models.align.string_match">deeponto.models.align.string_match module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.align.html#module-deeponto.models.align">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.models.infer.html">deeponto.models.infer package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.infer.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.infer.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.infer.html#module-deeponto.models.infer.infer_pipeline">deeponto.models.infer.infer_pipeline module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.infer.html#module-deeponto.models.infer">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.models.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.models.html#module-deeponto.models.pipeline_base">deeponto.models.pipeline_base module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.models.html#deeponto.models.pipeline_base.OntoPipelineBase"><code class="docutils literal notranslate"><span class="pre">OntoPipelineBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.html#deeponto.models.pipeline_base.OntoPipelineBase.complete_path"><code class="docutils literal notranslate"><span class="pre">OntoPipelineBase.complete_path()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.html#deeponto.models.pipeline_base.OntoPipelineBase.from_saved"><code class="docutils literal notranslate"><span class="pre">OntoPipelineBase.from_saved()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.html#deeponto.models.pipeline_base.OntoPipelineBase.load_model"><code class="docutils literal notranslate"><span class="pre">OntoPipelineBase.load_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.html#deeponto.models.pipeline_base.OntoPipelineBase.load_onto"><code class="docutils literal notranslate"><span class="pre">OntoPipelineBase.load_onto()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.html#deeponto.models.pipeline_base.OntoPipelineBase.run"><code class="docutils literal notranslate"><span class="pre">OntoPipelineBase.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.models.html#module-deeponto.models">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deeponto.onto.html">deeponto.onto package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.onto.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.onto.graph.html">deeponto.onto.graph package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.graph.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.graph.html#module-deeponto.onto.graph.graph_utils">deeponto.onto.graph.graph_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.graph.html#module-deeponto.onto.graph.iter_map_extend">deeponto.onto.graph.iter_map_extend module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.graph.html#module-deeponto.onto.graph">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.onto.logic.html">deeponto.onto.logic package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.logic.html#subpackages">Subpackages</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.logic.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.logic.html#module-deeponto.onto.logic.logic_utils">deeponto.onto.logic.logic_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.logic.html#module-deeponto.onto.logic.reasoner">deeponto.onto.logic.reasoner module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.logic.html#module-deeponto.onto.logic">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.onto.prune.html">deeponto.onto.prune package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.prune.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.prune.html#module-deeponto.onto.prune.pruning">deeponto.onto.prune.pruning module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.prune.html#module-deeponto.onto.prune">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.onto.text.html">deeponto.onto.text package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.text.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.text.html#module-deeponto.onto.text.text_utils">deeponto.onto.text.text_utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.text.html#module-deeponto.onto.text.thesaurus">deeponto.onto.text.thesaurus module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.text.html#module-deeponto.onto.text.tokenizer">deeponto.onto.text.tokenizer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.text.html#module-deeponto.onto.text">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.onto.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.onto.html#module-deeponto.onto.iris">deeponto.onto.iris module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.onto.html#module-deeponto.onto.mapping">deeponto.onto.mapping module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchorMapping"><code class="docutils literal notranslate"><span class="pre">AnchorMapping</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchorMapping.add_candidate"><code class="docutils literal notranslate"><span class="pre">AnchorMapping.add_candidate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings"><code class="docutils literal notranslate"><span class="pre">AnchoredOntoMappings</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.add"><code class="docutils literal notranslate"><span class="pre">AnchoredOntoMappings.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.add_many"><code class="docutils literal notranslate"><span class="pre">AnchoredOntoMappings.add_many()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.existed_cands_for_anchor"><code class="docutils literal notranslate"><span class="pre">AnchoredOntoMappings.existed_cands_for_anchor()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.fill_scored_maps"><code class="docutils literal notranslate"><span class="pre">AnchoredOntoMappings.fill_scored_maps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.flattened"><code class="docutils literal notranslate"><span class="pre">AnchoredOntoMappings.flattened()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.read_table_mappings"><code class="docutils literal notranslate"><span class="pre">AnchoredOntoMappings.read_table_mappings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.save_instance"><code class="docutils literal notranslate"><span class="pre">AnchoredOntoMappings.save_instance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.to_df"><code class="docutils literal notranslate"><span class="pre">AnchoredOntoMappings.to_df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.unscored_cand_maps"><code class="docutils literal notranslate"><span class="pre">AnchoredOntoMappings.unscored_cand_maps()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings.validate_anchor_mapping"><code class="docutils literal notranslate"><span class="pre">AnchoredOntoMappings.validate_anchor_mapping()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.EntityMapping"><code class="docutils literal notranslate"><span class="pre">EntityMapping</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.EntityMapping.to_tuple"><code class="docutils literal notranslate"><span class="pre">EntityMapping.to_tuple()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.EntityMappingList"><code class="docutils literal notranslate"><span class="pre">EntityMappingList</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.EntityMappingList.append"><code class="docutils literal notranslate"><span class="pre">EntityMappingList.append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.EntityMappingList.read_table_mappings"><code class="docutils literal notranslate"><span class="pre">EntityMappingList.read_table_mappings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.EntityMappingList.sorted"><code class="docutils literal notranslate"><span class="pre">EntityMappingList.sorted()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.EntityMappingList.to_tuples"><code class="docutils literal notranslate"><span class="pre">EntityMappingList.to_tuples()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.EntityMappingList.topk"><code class="docutils literal notranslate"><span class="pre">EntityMappingList.topk()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings"><code class="docutils literal notranslate"><span class="pre">OntoMappings</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings.add"><code class="docutils literal notranslate"><span class="pre">OntoMappings.add()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings.add_many"><code class="docutils literal notranslate"><span class="pre">OntoMappings.add_many()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings.is_existed_mapping"><code class="docutils literal notranslate"><span class="pre">OntoMappings.is_existed_mapping()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings.read_table_mappings"><code class="docutils literal notranslate"><span class="pre">OntoMappings.read_table_mappings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings.save_instance"><code class="docutils literal notranslate"><span class="pre">OntoMappings.save_instance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings.to_df"><code class="docutils literal notranslate"><span class="pre">OntoMappings.to_df()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings.to_tuples"><code class="docutils literal notranslate"><span class="pre">OntoMappings.to_tuples()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings.topks"><code class="docutils literal notranslate"><span class="pre">OntoMappings.topks()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings.topks_for_ent"><code class="docutils literal notranslate"><span class="pre">OntoMappings.topks_for_ent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings.validate_mapping"><code class="docutils literal notranslate"><span class="pre">OntoMappings.validate_mapping()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.onto.html#module-deeponto.onto.ontology">deeponto.onto.ontology module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology"><code class="docutils literal notranslate"><span class="pre">Ontology</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology.build_inv_idx"><code class="docutils literal notranslate"><span class="pre">Ontology.build_inv_idx()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology.classes"><code class="docutils literal notranslate"><span class="pre">Ontology.classes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology.from_new"><code class="docutils literal notranslate"><span class="pre">Ontology.from_new()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology.from_saved"><code class="docutils literal notranslate"><span class="pre">Ontology.from_saved()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology.idf_select"><code class="docutils literal notranslate"><span class="pre">Ontology.idf_select()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology.iri"><code class="docutils literal notranslate"><span class="pre">Ontology.iri</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology.name_from_iri"><code class="docutils literal notranslate"><span class="pre">Ontology.name_from_iri()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology.obj_from_iri"><code class="docutils literal notranslate"><span class="pre">Ontology.obj_from_iri()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology.path_select"><code class="docutils literal notranslate"><span class="pre">Ontology.path_select()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology.save_instance"><code class="docutils literal notranslate"><span class="pre">Ontology.save_instance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology.search_ent_labs"><code class="docutils literal notranslate"><span class="pre">Ontology.search_ent_labs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology.sib_labs"><code class="docutils literal notranslate"><span class="pre">Ontology.sib_labs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.onto.html#module-deeponto.onto.ontology_subs">deeponto.onto.ontology_subs module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs"><code class="docutils literal notranslate"><span class="pre">OntologySubs</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.complement_iri_name_to_label"><code class="docutils literal notranslate"><span class="pre">OntologySubs.complement_iri_name_to_label()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.get_all_restriction_ancestors"><code class="docutils literal notranslate"><span class="pre">OntologySubs.get_all_restriction_ancestors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.get_declared_named_class_subsumption"><code class="docutils literal notranslate"><span class="pre">OntologySubs.get_declared_named_class_subsumption()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.get_declared_restriction_subsumption"><code class="docutils literal notranslate"><span class="pre">OntologySubs.get_declared_restriction_subsumption()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.get_named_classes"><code class="docutils literal notranslate"><span class="pre">OntologySubs.get_named_classes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.get_negative_sample"><code class="docutils literal notranslate"><span class="pre">OntologySubs.get_negative_sample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.get_one_hop_neighbours"><code class="docutils literal notranslate"><span class="pre">OntologySubs.get_one_hop_neighbours()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.is_normal_named_class"><code class="docutils literal notranslate"><span class="pre">OntologySubs.is_normal_named_class()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.is_target_some_restriction"><code class="docutils literal notranslate"><span class="pre">OntologySubs.is_target_some_restriction()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.path_subsumptions"><code class="docutils literal notranslate"><span class="pre">OntologySubs.path_subsumptions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.restriction_to_label"><code class="docutils literal notranslate"><span class="pre">OntologySubs.restriction_to_label()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.set_masked_subsumptions"><code class="docutils literal notranslate"><span class="pre">OntologySubs.set_masked_subsumptions()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.subclass_to_string"><code class="docutils literal notranslate"><span class="pre">OntologySubs.subclass_to_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.subsumption_to_str"><code class="docutils literal notranslate"><span class="pre">OntologySubs.subsumption_to_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.subsumptions_to_samples"><code class="docutils literal notranslate"><span class="pre">OntologySubs.subsumptions_to_samples()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.supclass_to_samples"><code class="docutils literal notranslate"><span class="pre">OntologySubs.supclass_to_samples()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology_subs.OntologySubs.traversal_subsumptions"><code class="docutils literal notranslate"><span class="pre">OntologySubs.traversal_subsumptions()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.onto.html#module-deeponto.onto">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="deeponto.utils.html">deeponto.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.utils.html#module-deeponto.utils.general_utils">deeponto.utils.general_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.create_path"><code class="docutils literal notranslate"><span class="pre">create_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.data_split"><code class="docutils literal notranslate"><span class="pre">data_split()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.detect_path"><code class="docutils literal notranslate"><span class="pre">detect_path()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.evenly_divide"><code class="docutils literal notranslate"><span class="pre">evenly_divide()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.get_device"><code class="docutils literal notranslate"><span class="pre">get_device()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.load_prompt_data"><code class="docutils literal notranslate"><span class="pre">load_prompt_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.parse_tuple"><code class="docutils literal notranslate"><span class="pre">parse_tuple()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.print_choices"><code class="docutils literal notranslate"><span class="pre">print_choices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.rand_sample_excl"><code class="docutils literal notranslate"><span class="pre">rand_sample_excl()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.read_jsonl"><code class="docutils literal notranslate"><span class="pre">read_jsonl()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.read_table"><code class="docutils literal notranslate"><span class="pre">read_table()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.run_jar"><code class="docutils literal notranslate"><span class="pre">run_jar()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.set_seed"><code class="docutils literal notranslate"><span class="pre">set_seed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.sort_dict_by_values"><code class="docutils literal notranslate"><span class="pre">sort_dict_by_values()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.split_java_identifier"><code class="docutils literal notranslate"><span class="pre">split_java_identifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.to_identifier"><code class="docutils literal notranslate"><span class="pre">to_identifier()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.general_utils.uniqify"><code class="docutils literal notranslate"><span class="pre">uniqify()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.utils.html#module-deeponto.utils.logging">deeponto.utils.logging module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.logging.RuntimeFormatter"><code class="docutils literal notranslate"><span class="pre">RuntimeFormatter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.logging.RuntimeFormatter.formatTime"><code class="docutils literal notranslate"><span class="pre">RuntimeFormatter.formatTime()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.logging.banner_msg"><code class="docutils literal notranslate"><span class="pre">banner_msg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.logging.create_logger"><code class="docutils literal notranslate"><span class="pre">create_logger()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.logging.credit"><code class="docutils literal notranslate"><span class="pre">credit()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.utils.html#module-deeponto.utils.oaei_utils">deeponto.utils.oaei_utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.oaei_utils.read_oaei_mappings"><code class="docutils literal notranslate"><span class="pre">read_oaei_mappings()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.utils.html#module-deeponto.utils.tree">deeponto.utils.tree module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.tree.RangeNode"><code class="docutils literal notranslate"><span class="pre">RangeNode</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.tree.RangeNode.insert_child"><code class="docutils literal notranslate"><span class="pre">RangeNode.insert_child()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.tree.RangeNode.print_tree"><code class="docutils literal notranslate"><span class="pre">RangeNode.print_tree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.utils.html#deeponto.utils.tree.RangeNode.sort_by_start"><code class="docutils literal notranslate"><span class="pre">RangeNode.sort_by_start()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="deeponto.utils.html#module-deeponto.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-deeponto.flagged_obj">
+<span id="deeponto-flagged-obj-module"></span><h2>deeponto.flagged_obj module<a class="headerlink" href="#module-deeponto.flagged_obj" title="Permalink to this heading"></a></h2>
+<p>Super class for objects that need to switch src2tgt and tgt2src flags</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="deeponto.flagged_obj.FlaggedObj">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeponto.flagged_obj.</span></span><span class="sig-name descname"><span class="pre">FlaggedObj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src_onto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology" title="deeponto.onto.ontology.Ontology"><span class="pre">Ontology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tgt_onto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology" title="deeponto.onto.ontology.Ontology"><span class="pre">Ontology</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/flagged_obj.html#FlaggedObj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.flagged_obj.FlaggedObj" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.flagged_obj.FlaggedObj.renew">
+<span class="sig-name descname"><span class="pre">renew</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/flagged_obj.html#FlaggedObj.renew"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.flagged_obj.FlaggedObj.renew" title="Permalink to this definition"></a></dt>
+<dd><p>Renew alignment direction to src2tgt</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.flagged_obj.FlaggedObj.switch">
+<span class="sig-name descname"><span class="pre">switch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/flagged_obj.html#FlaggedObj.switch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.flagged_obj.FlaggedObj.switch" title="Permalink to this definition"></a></dt>
+<dd><p>Switch alignment direction</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-deeponto.saved_obj">
+<span id="deeponto-saved-obj-module"></span><h2>deeponto.saved_obj module<a class="headerlink" href="#module-deeponto.saved_obj" title="Permalink to this heading"></a></h2>
+<p>Super class for objects that can be created from new or from saved</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="deeponto.saved_obj.SavedObj">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeponto.saved_obj.</span></span><span class="sig-name descname"><span class="pre">SavedObj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saved_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/saved_obj.html#SavedObj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.saved_obj.SavedObj" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.saved_obj.SavedObj.copy2">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">copy2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">destination</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/saved_obj.html#SavedObj.copy2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.saved_obj.SavedObj.copy2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.saved_obj.SavedObj.from_new">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/saved_obj.html#SavedObj.from_new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.saved_obj.SavedObj.from_new" title="Permalink to this definition"></a></dt>
+<dd><p>constructor for new instance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.saved_obj.SavedObj.from_saved">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_saved</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saved_path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/saved_obj.html#SavedObj.from_saved"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.saved_obj.SavedObj.from_saved" title="Permalink to this definition"></a></dt>
+<dd><p>constructor for loading saved instance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.saved_obj.SavedObj.load_json">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saved_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/deeponto/saved_obj.html#SavedObj.load_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.saved_obj.SavedObj.load_json" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.saved_obj.SavedObj.load_pkl">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_pkl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saved_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/saved_obj.html#SavedObj.load_pkl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.saved_obj.SavedObj.load_pkl" title="Permalink to this definition"></a></dt>
+<dd><p>load the pickled part of the SavedObj</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.saved_obj.SavedObj.print_json">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">print_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/saved_obj.html#SavedObj.print_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.saved_obj.SavedObj.print_json" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.saved_obj.SavedObj.report">
+<span class="sig-name descname"><span class="pre">report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/deeponto/saved_obj.html#SavedObj.report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.saved_obj.SavedObj.report" title="Permalink to this definition"></a></dt>
+<dd><p>generate xml report for the saved object</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.saved_obj.SavedObj.save_instance">
+<span class="sig-name descname"><span class="pre">save_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saved_path</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/saved_obj.html#SavedObj.save_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.saved_obj.SavedObj.save_instance" title="Permalink to this definition"></a></dt>
+<dd><p>save the current instance locally</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.saved_obj.SavedObj.save_json">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_obj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/saved_obj.html#SavedObj.save_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.saved_obj.SavedObj.save_json" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.saved_obj.SavedObj.save_pkl">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">save_pkl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#deeponto.saved_obj.SavedObj" title="deeponto.saved_obj.SavedObj"><span class="pre">SavedObj</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">saved_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/saved_obj.html#SavedObj.save_pkl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.saved_obj.SavedObj.save_pkl" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-deeponto">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-deeponto" title="Permalink to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.init_jvm">
+<span class="sig-prename descclassname"><span class="pre">deeponto.</span></span><span class="sig-name descname"><span class="pre">init_jvm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">memory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto.html#init_jvm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.init_jvm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="deeponto" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="deeponto.bert.html" class="btn btn-neutral float-right" title="deeponto.bert package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

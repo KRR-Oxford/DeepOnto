@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.models.align.bertmap &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../modules.html">deeponto</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../deeponto.html">deeponto</a></li>
+      <li class="breadcrumb-item active">deeponto.models.align.bertmap</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeponto.models.align.bertmap</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.</span>
+
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;Class for BERTMap</span>
+
+<span class="sd">*An importance notice*: to avoid that the auxiliary ontology might have the same IRI </span>
+<span class="sd">as the SRC or TGT ontologies so that OwlReady2 cannot distinguish them, we load aux ontos</span>
+<span class="sd">only after we have built (intra-onto / cross-onto) corpora for SRC and TGT ontologies</span>
+
+<span class="sd">*Another interesting fact*: since cross-onto corpora do not depend on the owl object after</span>
+<span class="sd">parsing into our Ontology class, so even destroying the SRC and TGT owls will not make a </span>
+<span class="sd">difference for creating validation and testing mapping corpora</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+
+<span class="kn">import</span> <span class="nn">deeponto</span>
+<span class="kn">from</span> <span class="nn">deeponto.bert</span> <span class="kn">import</span> <span class="n">BertArguments</span>
+<span class="kn">from</span> <span class="nn">deeponto.bert.static</span> <span class="kn">import</span> <span class="n">BertStaticForSequenceClassification</span>
+<span class="kn">from</span> <span class="nn">deeponto.bert.train</span> <span class="kn">import</span> <span class="n">BertTrainerForSequenceClassification</span>
+<span class="kn">from</span> <span class="nn">deeponto.onto.text</span> <span class="kn">import</span> <span class="n">Tokenizer</span><span class="p">,</span> <span class="n">Thesaurus</span>
+<span class="kn">from</span> <span class="nn">deeponto.data.align</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TextSemanticsCorpora</span><span class="p">,</span>
+    <span class="n">TextSemanticsCorpusforMappings</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">deeponto.onto.graph</span> <span class="kn">import</span> <span class="n">IterativeMappingExtension</span>
+<span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
+<span class="kn">from</span> <span class="nn">deeponto.onto.mapping</span> <span class="kn">import</span> <span class="n">OntoMappings</span>
+<span class="kn">from</span> <span class="nn">deeponto.evaluation.align_eval</span> <span class="kn">import</span> <span class="n">pred_thresholding</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">detect_path</span><span class="p">,</span> <span class="n">create_path</span><span class="p">,</span> <span class="n">uniqify</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils.logging</span> <span class="kn">import</span> <span class="n">banner_msg</span>
+<span class="kn">from</span> <span class="nn">deeponto</span> <span class="kn">import</span> <span class="n">SavedObj</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">OntoAlignBase</span>
+
+
+<div class="viewcode-block" id="BERTMap"><a class="viewcode-back" href="../../../../deeponto.models.align.html#deeponto.models.align.bertmap.BERTMap">[docs]</a><span class="k">class</span> <span class="nc">BERTMap</span><span class="p">(</span><span class="n">OntoAlignBase</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+        <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+        <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Tokenizer</span><span class="p">,</span>
+        <span class="n">bert_args</span><span class="p">:</span> <span class="n">BertArguments</span><span class="p">,</span>  <span class="c1"># arguments for BERT fine-tuning</span>
+        <span class="n">cand_pool_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="n">n_best</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">saved_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="n">train_mappings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OntoMappings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># cross-ontology corpus if provided</span>
+        <span class="n">validation_mappings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OntoMappings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># for validation</span>
+        <span class="n">test_mappings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OntoMappings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>  <span class="c1"># TODO: we may not need the testing data</span>
+        <span class="n">aux_ontos</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Ontology</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>  <span class="c1"># complementary corpus if provided</span>
+        <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># obtain more synonyms/non-synonyms by applying transitivity?</span>
+        <span class="n">neg_ratio</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">apply_string_match</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+            <span class="n">src_onto</span><span class="o">=</span><span class="n">src_onto</span><span class="p">,</span>
+            <span class="n">tgt_onto</span><span class="o">=</span><span class="n">tgt_onto</span><span class="p">,</span>
+            <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">,</span>
+            <span class="n">cand_pool_size</span><span class="o">=</span><span class="n">cand_pool_size</span><span class="p">,</span>
+            <span class="n">rel</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span>
+            <span class="n">n_best</span><span class="o">=</span><span class="n">n_best</span><span class="p">,</span>
+            <span class="n">is_trainable</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">is_val_model_select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="c1"># if validation mappings are not provided, we use the default hyperparams</span>
+            <span class="n">default_hyperparams</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">0.9995</span><span class="p">,</span> <span class="s2">&quot;map_type&quot;</span><span class="p">:</span> <span class="s2">&quot;src2tgt&quot;</span><span class="p">},</span>
+            <span class="n">saved_path</span><span class="o">=</span><span class="n">saved_path</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bert_args</span> <span class="o">=</span> <span class="n">bert_args</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">known_mappings</span> <span class="o">=</span> <span class="n">train_mappings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val_mappings</span> <span class="o">=</span> <span class="n">validation_mappings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_mappings</span> <span class="o">=</span> <span class="n">test_mappings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aux_ontos</span> <span class="o">=</span> <span class="n">aux_ontos</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply_transitivity</span> <span class="o">=</span> <span class="n">apply_transitivity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">neg_ratio</span> <span class="o">=</span> <span class="n">neg_ratio</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">apply_string_match</span> <span class="o">=</span> <span class="n">apply_string_match</span>
+
+        <span class="c1"># text semantics corpora</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corpora_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_path</span> <span class="o">+</span> <span class="s2">&quot;/corpora&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_corpora</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_maps_corpus</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_maps_corpus</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">construct_corpora</span><span class="p">()</span>
+
+        <span class="c1"># fine-tuning data from corpora</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_data_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_path</span> <span class="o">+</span> <span class="s2">&quot;/fine_tune/data&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_data</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_fine_tune_data</span><span class="p">(</span><span class="n">split_ratio</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+        <span class="c1"># BERT model initialization</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_model_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">saved_path</span> <span class="o">+</span> <span class="s2">&quot;/fine_tune/model&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bert_classifier</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Refinement initialization</span>
+        <span class="c1"># NOTE: init of global_match_dir is moved on OntoAlign Class</span>
+        <span class="c1"># self.global_match_dir = self.saved_path + &quot;/global_match&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_match_refined_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_match_dir</span> <span class="o">+</span> <span class="s2">&quot;/refined&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_extender</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># if validation mappings are not provided, we use the default hyperparams</span>
+        <span class="c1"># self.best_hyperparams = {&quot;threshold&quot;: 0.999, &quot;map_type&quot;: &quot;src2tgt&quot;}</span>
+
+    <span class="c1">##################################################################################</span>
+    <span class="c1">###                            Corpora &amp; Fine-tune                             ###</span>
+    <span class="c1">##################################################################################</span>
+
+<div class="viewcode-block" id="BERTMap.train"><a class="viewcode-back" href="../../../../deeponto.models.align.html#deeponto.models.align.bertmap.BERTMap.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;BERT synonym classifier fine-tuning</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Fine-tune BERT Synonym Classifier&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">detect_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_model_path</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">bert_args</span><span class="o">.</span><span class="n">resume_from_ckp</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">detect_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_model_path</span><span class="p">):</span>
+                <span class="n">create_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_model_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">bert_args</span><span class="o">.</span><span class="n">resume_from_ckp</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Start training from scratch ...&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Resume training from previous checkpoint...&quot;</span><span class="p">)</span>
+            <span class="n">bert_classifier</span> <span class="o">=</span> <span class="n">BertTrainerForSequenceClassification</span><span class="p">(</span>
+                <span class="n">bert_args</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bert_args</span><span class="p">,</span>
+                <span class="n">train_data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">],</span>
+                <span class="n">val_data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">],</span>
+                <span class="n">test_data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">],</span>
+            <span class="p">)</span>
+            <span class="n">bert_classifier</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">bert_classifier</span><span class="o">.</span><span class="n">test_data</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generate synonym classification results on intermediate testing set ...&quot;</span><span class="p">)</span>
+                <span class="n">intermediate_test_results</span> <span class="o">=</span> <span class="n">bert_classifier</span><span class="o">.</span><span class="n">trainer</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                    <span class="n">bert_classifier</span><span class="o">.</span><span class="n">test_data</span>
+                <span class="p">)</span>
+                <span class="n">data_size_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">bert_classifier</span><span class="o">.</span><span class="n">train_size</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">bert_classifier</span><span class="o">.</span><span class="n">val_size</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">bert_classifier</span><span class="o">.</span><span class="n">test_size</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">intermediate_test_results</span><span class="p">[</span><span class="s2">&quot;train-val-test_sizes&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_size_string</span>
+                <span class="n">SavedObj</span><span class="o">.</span><span class="n">print_json</span><span class="p">(</span><span class="n">intermediate_test_results</span><span class="p">)</span>
+                <span class="n">SavedObj</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span>
+                    <span class="n">intermediate_test_results</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_model_path</span> <span class="o">+</span> <span class="s2">&quot;/interm_test_results.json&quot;</span><span class="p">,</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;found an existing BERT model directory, delete it and re-run if it&#39;s empty ...&quot;</span><span class="p">)</span>
+        <span class="n">best_checkpoint</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_model_path</span><span class="p">):</span>
+            <span class="c1"># only 1 checkpoint is saved so the latest one is the best</span>
+            <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;checkpoint&quot;</span><span class="p">):</span>
+                <span class="n">trainer_state</span> <span class="o">=</span> <span class="n">SavedObj</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_model_path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s2">/trainer_state.json&quot;</span>
+                <span class="p">)</span>
+                <span class="n">checkpoint</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+                    <span class="n">trainer_state</span><span class="p">[</span><span class="s2">&quot;best_model_checkpoint&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="p">)</span>
+                <span class="k">if</span> <span class="n">checkpoint</span> <span class="o">&gt;</span> <span class="n">best_checkpoint</span><span class="p">:</span>
+                    <span class="n">best_checkpoint</span> <span class="o">=</span> <span class="n">checkpoint</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;found new checkpoint: </span><span class="si">{</span><span class="n">best_checkpoint</span><span class="si">}</span><span class="s2"> ...&quot;</span><span class="p">)</span>
+        <span class="n">banner_msg</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found Saved Best Checkpoint: </span><span class="si">{</span><span class="n">best_checkpoint</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bert_args</span><span class="o">.</span><span class="n">bert_checkpoint</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_model_path</span><span class="si">}</span><span class="s2">/checkpoint-</span><span class="si">{</span><span class="n">best_checkpoint</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bert_classifier</span> <span class="o">=</span> <span class="n">BertStaticForSequenceClassification</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bert_args</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BERTMap.construct_corpora"><a class="viewcode-back" href="../../../../deeponto.models.align.html#deeponto.models.align.bertmap.BERTMap.construct_corpora">[docs]</a>    <span class="k">def</span> <span class="nf">construct_corpora</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load corpora data from new construction or saved directory</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Text Semantics Corpora</span>
+        <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Text Semantics Corpora&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">detect_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpora_path</span><span class="p">):</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Create text semantics corpora for *train-val* in fine-tuning ...&quot;</span><span class="p">)</span>
+            <span class="n">text_semantics_corpora</span> <span class="o">=</span> <span class="n">TextSemanticsCorpora</span><span class="p">(</span>
+                <span class="n">src_onto</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="p">,</span>
+                <span class="n">tgt_onto</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="p">,</span>
+                <span class="n">known_mappings</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">known_mappings</span><span class="p">,</span>
+                <span class="n">aux_ontos</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">aux_ontos</span><span class="p">,</span>
+                <span class="n">apply_transitivity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_transitivity</span><span class="p">,</span>
+                <span class="n">neg_ratio</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">neg_ratio</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">text_semantics_corpora</span><span class="o">.</span><span class="n">save_instance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpora_path</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="s2">&quot;train-val&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aux_ontos</span> <span class="o">=</span> <span class="n">text_semantics_corpora</span><span class="o">.</span><span class="n">aux_ontos</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Save the main corpora data and construction report ...&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_mappings</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Create text semantics corpora for *val* (from mappings) in fine-tuning ...&quot;</span><span class="p">)</span>
+                <span class="n">validation_corpus</span> <span class="o">=</span> <span class="n">TextSemanticsCorpusforMappings</span><span class="p">(</span>
+                    <span class="n">src_onto</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="p">,</span>
+                    <span class="n">tgt_onto</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="p">,</span>
+                    <span class="n">onto_mappings</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">val_mappings</span><span class="p">,</span>
+                    <span class="n">thesaurus</span><span class="o">=</span><span class="n">Thesaurus</span><span class="p">(</span><span class="n">apply_transitivity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_transitivity</span><span class="p">),</span>
+                <span class="p">)</span>
+                <span class="n">validation_corpus</span><span class="o">.</span><span class="n">save_instance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpora_path</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="s2">&quot;val.maps&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Save the validation corpora data and construction report ...&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_mappings</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;Create text semantics corpora for *testing* (from mappings) in fine-tuning ...&quot;</span>
+                <span class="p">)</span>
+                <span class="n">testing_corpus</span> <span class="o">=</span> <span class="n">TextSemanticsCorpusforMappings</span><span class="p">(</span>
+                    <span class="n">src_onto</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="p">,</span>
+                    <span class="n">tgt_onto</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="p">,</span>
+                    <span class="n">onto_mappings</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">test_mappings</span><span class="p">,</span>
+                    <span class="n">thesaurus</span><span class="o">=</span><span class="n">Thesaurus</span><span class="p">(</span><span class="n">apply_transitivity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">apply_transitivity</span><span class="p">),</span>
+                <span class="p">)</span>
+                <span class="n">testing_corpus</span><span class="o">.</span><span class="n">save_instance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpora_path</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="s2">&quot;test.maps&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Save the testing corpora data and construction report ...&quot;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;found an existing corpora directory, delete it and re-run if it&#39;s empty ...&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;if constructed, check details in `report.txt` ...&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loading the constructed corpora data ...&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_corpora</span> <span class="o">=</span> <span class="n">SavedObj</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpora_path</span> <span class="o">+</span> <span class="s2">&quot;/train-val.json&quot;</span><span class="p">)</span>
+        <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Corpora Statistics (Train-Val)&quot;</span><span class="p">)</span>
+        <span class="n">SavedObj</span><span class="o">.</span><span class="n">print_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">main_corpora</span><span class="p">[</span><span class="s2">&quot;stats&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">detect_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpora_path</span> <span class="o">+</span> <span class="s2">&quot;/val.maps.json&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">val_maps_corpus</span> <span class="o">=</span> <span class="n">SavedObj</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpora_path</span> <span class="o">+</span> <span class="s2">&quot;/val.maps.json&quot;</span><span class="p">)</span>
+            <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Corpora Statistics (Val-Maps)&quot;</span><span class="p">)</span>
+            <span class="n">SavedObj</span><span class="o">.</span><span class="n">print_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val_maps_corpus</span><span class="p">[</span><span class="s2">&quot;stats&quot;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">detect_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpora_path</span> <span class="o">+</span> <span class="s2">&quot;/test.maps.json&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_maps_corpus</span> <span class="o">=</span> <span class="n">SavedObj</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corpora_path</span> <span class="o">+</span> <span class="s2">&quot;/test.maps.json&quot;</span><span class="p">)</span>
+            <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Corpora Statistics (Test-Maps)&quot;</span><span class="p">)</span>
+            <span class="n">SavedObj</span><span class="o">.</span><span class="n">print_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_maps_corpus</span><span class="p">[</span><span class="s2">&quot;stats&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="BERTMap.load_fine_tune_data"><a class="viewcode-back" href="../../../../deeponto.models.align.html#deeponto.models.align.bertmap.BERTMap.load_fine_tune_data">[docs]</a>    <span class="k">def</span> <span class="nf">load_fine_tune_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">split_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get data for fine-tuning from the corpora</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Fine-tuning Data&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">detect_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_data_path</span><span class="p">):</span>
+            <span class="n">fine_tune_data</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;stats&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Splitting main corpora into training and validation (</span><span class="si">{</span><span class="n">split_ratio</span> <span class="o">*</span> <span class="mi">100</span><span class="si">}</span><span class="s2">%) data ...&quot;</span>
+            <span class="p">)</span>
+            <span class="n">main_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_corpora</span><span class="p">[</span><span class="s2">&quot;positives&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">main_corpora</span><span class="p">[</span><span class="s2">&quot;negatives&quot;</span><span class="p">]</span>
+            <span class="n">main_train</span><span class="p">,</span> <span class="n">main_val</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">main_data</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="n">split_ratio</span><span class="p">)</span>
+            <span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">main_train</span>
+            <span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">main_val</span>
+            <span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_maps_corpus</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Get additional validation data from validation mappings ...&quot;</span><span class="p">)</span>
+                <span class="c1"># TODO: we do not care about duplicates here because label pairs from mappings are of higher importance</span>
+                <span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">val_maps_corpus</span><span class="p">[</span><span class="s2">&quot;positives&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">val_maps_corpus</span><span class="p">[</span><span class="s2">&quot;negatives&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_maps_corpus</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Get additional testing data from testing mappings ...&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">=&gt; These testing mapppings do not make any decision on model selection ...&quot;</span>
+                <span class="p">)</span>
+                <span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">test_maps_corpus</span><span class="p">[</span><span class="s2">&quot;positives&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_maps_corpus</span><span class="p">[</span><span class="s2">&quot;negatives&quot;</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;stats&quot;</span><span class="p">][</span><span class="s2">&quot;n_train&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">])</span>
+            <span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;stats&quot;</span><span class="p">][</span><span class="s2">&quot;n_val&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">])</span>
+            <span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;stats&quot;</span><span class="p">][</span><span class="s2">&quot;n_test&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">])</span>
+            <span class="n">create_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_data_path</span><span class="p">)</span>
+            <span class="n">SavedObj</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="n">fine_tune_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_data_path</span> <span class="o">+</span> <span class="s2">&quot;/data.json&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;found an existing fine-tune data directory, delete it and re-run if it&#39;s empty ...&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_data</span> <span class="o">=</span> <span class="n">SavedObj</span><span class="o">.</span><span class="n">load_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_data_path</span> <span class="o">+</span> <span class="s2">&quot;/data.json&quot;</span><span class="p">)</span>
+        <span class="n">SavedObj</span><span class="o">.</span><span class="n">print_json</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fine_tune_data</span><span class="p">[</span><span class="s2">&quot;stats&quot;</span><span class="p">])</span></div>
+
+    <span class="c1">##################################################################################</span>
+    <span class="c1">###                            Mapping Refinement                              ###</span>
+    <span class="c1">##################################################################################</span>
+
+<div class="viewcode-block" id="BERTMap.refinement"><a class="viewcode-back" href="../../../../deeponto.models.align.html#deeponto.models.align.bertmap.BERTMap.refinement">[docs]</a>    <span class="k">def</span> <span class="nf">refinement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">map_type_to_extend</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">extension_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply mapping refinement as a post-processing for the scored mappings</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1">############################## Mapping Extensions #############################</span>
+        <span class="n">banner_msg</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mapping Refinement: Extension (</span><span class="si">{</span><span class="n">map_type_to_extend</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+
+        <span class="c1"># we extend on both src2tgt and tgt2src if combined is the best</span>
+        <span class="n">logmap_lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">map_file_path_to_refine</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">map_type_to_extend</span> <span class="o">==</span> <span class="s2">&quot;src2tgt&quot;</span> <span class="ow">or</span> <span class="n">map_type_to_extend</span> <span class="o">==</span> <span class="s2">&quot;combined&quot;</span><span class="p">:</span>
+            <span class="n">src2tgt_maps</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">from_saved</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">global_match_dir</span> <span class="o">+</span> <span class="s2">&quot;/src2tgt&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mapping_extension</span><span class="p">(</span><span class="n">src2tgt_maps</span><span class="p">,</span> <span class="s2">&quot;src2tgt&quot;</span><span class="p">,</span> <span class="n">extension_threshold</span><span class="p">)</span>
+            <span class="n">src2tgt_maps_extended</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">from_saved</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">global_match_refined_dir</span> <span class="o">+</span> <span class="s2">&quot;/src2tgt.extended&quot;</span>
+            <span class="p">)</span>
+            <span class="c1"># for logmap repair formatting</span>
+            <span class="n">logmap_lines</span> <span class="o">+=</span> <span class="n">BERTMap</span><span class="o">.</span><span class="n">repair_formatting</span><span class="p">(</span>
+                <span class="n">src2tgt_maps_extended</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">best_hyperparams</span><span class="p">[</span><span class="s2">&quot;threshold&quot;</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">global_match_refined_dir</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/src2tgt.extended&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">map_file_path_to_refine</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">global_match_refined_dir</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/src2tgt.extended/src2tgt.logmap.txt&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">map_type_to_extend</span> <span class="o">==</span> <span class="s2">&quot;tgt2src&quot;</span> <span class="ow">or</span> <span class="n">map_type_to_extend</span> <span class="o">==</span> <span class="s2">&quot;combined&quot;</span><span class="p">:</span>
+            <span class="n">tgt2src_maps</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">from_saved</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">global_match_dir</span> <span class="o">+</span> <span class="s2">&quot;/tgt2src&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">mapping_extension</span><span class="p">(</span><span class="n">tgt2src_maps</span><span class="p">,</span> <span class="s2">&quot;tgt2src&quot;</span><span class="p">,</span> <span class="n">extension_threshold</span><span class="p">)</span>
+            <span class="n">tgt2src_maps_extended</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">from_saved</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">global_match_refined_dir</span> <span class="o">+</span> <span class="s2">&quot;/tgt2src.extended&quot;</span>
+            <span class="p">)</span>
+            <span class="c1"># for logmap repair formatting</span>
+            <span class="n">logmap_lines</span> <span class="o">+=</span> <span class="n">BERTMap</span><span class="o">.</span><span class="n">repair_formatting</span><span class="p">(</span>
+                <span class="n">tgt2src_maps_extended</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">best_hyperparams</span><span class="p">[</span><span class="s2">&quot;threshold&quot;</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">global_match_refined_dir</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/tgt2src.extended&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">map_file_path_to_refine</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">global_match_refined_dir</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/tgt2src.extended/tgt2src.logmap.txt&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># for logmap repair formatting when type=combined; we merge src2tgt and tgt2src</span>
+        <span class="k">if</span> <span class="n">map_type_to_extend</span> <span class="o">==</span> <span class="s2">&quot;combined&quot;</span><span class="p">:</span>
+            <span class="n">logmap_lines</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">logmap_lines</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">global_match_refined_dir</span> <span class="o">+</span> <span class="s2">&quot;/combined.logmap.txt&quot;</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">logmap_lines</span><span class="p">)</span>
+            <span class="n">map_file_path_to_refine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_match_refined_dir</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/combined.logmap.txt&quot;</span>
+
+        <span class="c1">############################## Mapping Repair #############################</span>
+        <span class="n">banner_msg</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mapping Refinement: Repair (</span><span class="si">{</span><span class="n">map_type_to_extend</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mapping_repair</span><span class="p">(</span>
+            <span class="n">formatted_file_path</span><span class="o">=</span><span class="n">map_file_path_to_refine</span><span class="p">,</span>
+            <span class="n">output_dir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">global_match_refined_dir</span><span class="p">,</span>
+            <span class="n">map_type_to_repair</span><span class="o">=</span><span class="n">map_type_to_extend</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BERTMap.mapping_extension"><a class="viewcode-back" href="../../../../deeponto.models.align.html#deeponto.models.align.bertmap.BERTMap.mapping_extension">[docs]</a>    <span class="k">def</span> <span class="nf">mapping_extension</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">selected_maps</span><span class="p">:</span> <span class="n">OntoMappings</span><span class="p">,</span> <span class="n">map_type_to_extend</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">extension_threshold</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply the iterative mapping extension algorithm</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">detect_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">global_match_refined_dir</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">map_type_to_extend</span><span class="si">}</span><span class="s2">.extended&quot;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;found existing extended </span><span class="si">{</span><span class="n">map_type_to_extend</span><span class="si">}</span><span class="s2"> mappings; skip mapping extension ...&quot;</span>
+            <span class="p">)</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_extender</span> <span class="o">=</span> <span class="n">IterativeMappingExtension</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="p">,</span>
+            <span class="n">selected_maps</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ent_pair_score</span><span class="p">,</span>
+            <span class="n">extension_threshold</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_extender</span><span class="o">.</span><span class="n">run_extension</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">map_extender</span><span class="o">.</span><span class="n">onto_mappings</span><span class="o">.</span><span class="n">save_instance</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">global_match_refined_dir</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">map_type_to_extend</span><span class="si">}</span><span class="s2">.extended&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping Extension Finished</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BERTMap.repair_formatting"><a class="viewcode-back" href="../../../../deeponto.models.align.html#deeponto.models.align.bertmap.BERTMap.repair_formatting">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">repair_formatting</span><span class="p">(</span><span class="n">onto_mappings</span><span class="p">:</span> <span class="n">OntoMappings</span><span class="p">,</span> <span class="n">best_val_threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Formatting the mappings into LogMap format</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">pred_thresholding</span><span class="p">(</span><span class="n">onto_mappings</span><span class="p">,</span> <span class="n">best_val_threshold</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_ent_iri</span> <span class="ow">in</span> <span class="n">preds</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">onto_mappings</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;src2tgt&quot;</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="n">onto_mappings</span><span class="o">.</span><span class="n">map_dict</span><span class="p">[</span><span class="n">src_ent_iri</span><span class="p">][</span><span class="n">tgt_ent_iri</span><span class="p">]</span>
+            <span class="k">elif</span> <span class="n">onto_mappings</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;tgt2src&quot;</span><span class="p">:</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="n">onto_mappings</span><span class="o">.</span><span class="n">map_dict</span><span class="p">[</span><span class="n">tgt_ent_iri</span><span class="p">][</span><span class="n">src_ent_iri</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown mapping flag: </span><span class="si">{</span><span class="n">onto_mappings</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">src_ent_iri</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="n">tgt_ent_iri</span><span class="si">}</span><span class="s2">|=|</span><span class="si">{</span><span class="n">score</span><span class="si">}</span><span class="s2">|CLS</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">formatted_file</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">onto_mappings</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">.logmap.txt&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">formatted_file</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">lines</span></div>
+
+<div class="viewcode-block" id="BERTMap.mapping_repair"><a class="viewcode-back" href="../../../../deeponto.models.align.html#deeponto.models.align.bertmap.BERTMap.mapping_repair">[docs]</a>    <span class="k">def</span> <span class="nf">mapping_repair</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formatted_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">map_type_to_repair</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Apply java commands of LogMap DEBUGGER</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">detect_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">global_match_refined_dir</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;/</span><span class="si">{</span><span class="n">map_type_to_repair</span><span class="si">}</span><span class="s2">.repaired&quot;</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;found existing extended </span><span class="si">{</span><span class="n">map_type_to_repair</span><span class="si">}</span><span class="s2"> mappings; skip mapping repair ...&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="c1"># apply java commands of LogMap DEBUGGER</span>
+        <span class="n">repair_tool_dir</span> <span class="o">=</span> <span class="n">deeponto</span><span class="o">.</span><span class="vm">__file__</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;__init__.py&quot;</span><span class="p">,</span> <span class="s2">&quot;models/align/logmap_java&quot;</span><span class="p">)</span>
+        <span class="n">src_onto_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">owl_path</span><span class="p">)</span>
+        <span class="n">tgt_onto_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl_path</span><span class="p">)</span>
+        <span class="n">repair_saved_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">map_type_to_repair</span><span class="si">}</span><span class="s2">.repaired&quot;</span><span class="p">)</span>
+        <span class="n">formatted_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">formatted_file_path</span><span class="p">)</span>
+        <span class="n">create_path</span><span class="p">(</span><span class="n">repair_saved_path</span><span class="p">)</span>
+        <span class="n">repair_command</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;java -jar </span><span class="si">{</span><span class="n">repair_tool_dir</span><span class="si">}</span><span class="s2">/logmap-matcher-4.0.jar DEBUGGER &quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;file:</span><span class="si">{</span><span class="n">src_onto_path</span><span class="si">}</span><span class="s2"> file:</span><span class="si">{</span><span class="n">tgt_onto_path</span><span class="si">}</span><span class="s2"> TXT </span><span class="si">{</span><span class="n">formatted_file_path</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">repair_saved_path</span><span class="si">}</span><span class="s2"> false true&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run the following java command for repair:</span><span class="se">\n</span><span class="si">{</span><span class="n">repair_command</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">repair_process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">repair_command</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">repair_process</span><span class="o">.</span><span class="n">communicate</span><span class="p">(</span><span class="n">timeout</span><span class="o">=</span><span class="mi">600</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">TimeoutExpired</span><span class="p">:</span>
+            <span class="n">repair_process</span><span class="o">.</span><span class="n">kill</span><span class="p">()</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">repair_process</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+
+        <span class="n">repaired_file</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">map_type_to_repair</span><span class="si">}</span><span class="s2">.repaired/mappings_repaired_with_LogMap.tsv&quot;</span>
+        <span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">repaired_file</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+        <span class="n">formatted_repaired_file</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">map_type_to_repair</span><span class="si">}</span><span class="s2">.repaired/</span><span class="si">{</span><span class="n">map_type_to_repair</span><span class="si">}</span><span class="s2">.maps.tsv&quot;</span>
+        <span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">formatted_repaired_file</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;SrcEntity</span><span class="se">\t</span><span class="s2">TgtEntity</span><span class="se">\t</span><span class="s2">Score</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
+                <span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_ent_iri</span><span class="p">,</span> <span class="n">score</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">src_ent_iri</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">tgt_ent_iri</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">score</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># after repair the direction is always src2tgt</span>
+        <span class="n">repaired_mappings</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span>
+            <span class="n">formatted_repaired_file</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="s2">&quot;final_output&quot;</span> 
+        <span class="p">)</span>
+        <span class="n">repaired_mappings</span><span class="o">.</span><span class="n">save_instance</span><span class="p">(</span><span class="n">repair_saved_path</span><span class="p">)</span>
+        <span class="c1"># Save another copy of output mappings</span>
+        <span class="n">repaired_mappings</span><span class="o">.</span><span class="n">save_instance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">global_match_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Mapping Repair Finished</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    <span class="c1">##################################################################################</span>
+    <span class="c1">###                            Mapping Computation                             ###</span>
+    <span class="c1">##################################################################################</span>
+
+<div class="viewcode-block" id="BERTMap.string_match"><a class="viewcode-back" href="../../../../deeponto.models.align.html#deeponto.models.align.bertmap.BERTMap.string_match">[docs]</a>    <span class="k">def</span> <span class="nf">string_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_ent_labs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">tgt_ent_labs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Predict `easy` mappings by applying string-matching</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">overlap_labs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">src_ent_labs</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">tgt_ent_labs</span><span class="p">))</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">overlap_labs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BERTMap.ent_pair_score"><a class="viewcode-back" href="../../../../deeponto.models.align.html#deeponto.models.align.bertmap.BERTMap.ent_pair_score">[docs]</a>    <span class="k">def</span> <span class="nf">ent_pair_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_ent_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tgt_ent_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute mapping score between a cross-ontology entity pair</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">src_ent_labs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="p">[</span><span class="n">src_ent_iri</span><span class="p">]</span>
+        <span class="n">tgt_ent_labs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="p">[</span><span class="n">tgt_ent_iri</span><span class="p">]</span>
+        <span class="c1"># apply string-match before using bert</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_string_match</span><span class="p">:</span>
+            <span class="n">prelim_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">string_match</span><span class="p">(</span><span class="n">src_ent_labs</span><span class="p">,</span> <span class="n">tgt_ent_labs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">prelim_score</span> <span class="o">==</span> <span class="mf">1.0</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">prelim_score</span>
+        <span class="c1"># apply BERT classifier and define mapping score := Average(SynonymScores)</span>
+        <span class="n">src_tgt_lab_product</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">src_ent_labs</span><span class="p">,</span> <span class="n">tgt_ent_labs</span><span class="p">))</span>
+        <span class="c1"># only one element tensor is able to be extracted as a scalar by .item()</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bert_classifier</span><span class="p">(</span><span class="n">src_tgt_lab_product</span><span class="p">))</span><span class="o">.</span><span class="n">item</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BERTMap.fixed_src_ent_pair_score"><a class="viewcode-back" href="../../../../deeponto.models.align.html#deeponto.models.align.bertmap.BERTMap.fixed_src_ent_pair_score">[docs]</a>    <span class="k">def</span> <span class="nf">fixed_src_ent_pair_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_ent_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tgt_cand_iris</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot;Compute mapping scores between a source entity and a batch of target entities</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mappings_for_ent</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fixed_src_ent_pair_score</span><span class="p">(</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_cand_iris</span><span class="p">)</span>
+        <span class="c1"># follow naming convention in global_match_for_ent and add dummy cand selection scores</span>
+        <span class="n">tgt_cands</span> <span class="o">=</span> <span class="p">[(</span><span class="n">t</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tgt_cand_iris</span><span class="p">]</span>
+        <span class="n">tgt_cands_for_bert</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># for string_match</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_string_match</span><span class="p">:</span>
+            <span class="n">src_ent_labs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="p">[</span><span class="n">src_ent_iri</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">tgt_cand_iri</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tgt_cands</span><span class="p">:</span>
+                <span class="n">tgt_ent_labs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="p">[</span><span class="n">tgt_cand_iri</span><span class="p">]</span>
+                <span class="n">mapping_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">string_match</span><span class="p">(</span><span class="n">src_ent_labs</span><span class="p">,</span> <span class="n">tgt_ent_labs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">mapping_score</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># save mappings only with positive mapping scores</span>
+                    <span class="n">mappings_for_ent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">set_mapping</span><span class="p">(</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_cand_iri</span><span class="p">,</span> <span class="n">mapping_score</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">tgt_cands_for_bert</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">tgt_cand_iri</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+
+        <span class="c1"># for bert synonym classifier</span>
+        <span class="n">tgt_cands</span> <span class="o">=</span> <span class="n">tgt_cands_for_bert</span>
+        <span class="n">labs_batches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batched_lab_products_for_ent</span><span class="p">(</span>
+            <span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_cands</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bert_args</span><span class="o">.</span><span class="n">batch_size_for_prediction</span>
+        <span class="p">)</span>  <span class="c1"># [{&quot;labs&quot;: [], &quot;lens&quot;: []}]</span>
+        <span class="n">batch_base_idx</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># after each batch, the base index will be increased by # of covered target candidates</span>
+
+        <span class="k">for</span> <span class="n">labs_batch</span> <span class="ow">in</span> <span class="n">labs_batches</span><span class="p">:</span>
+            <span class="n">batch_scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bert_classifier</span><span class="p">(</span><span class="n">labs_batch</span><span class="p">[</span><span class="s2">&quot;labs&quot;</span><span class="p">])</span>
+            <span class="n">pooled_scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_pooling</span><span class="p">(</span><span class="n">batch_scores</span><span class="p">,</span> <span class="n">labs_batch</span><span class="p">[</span><span class="s2">&quot;lens&quot;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pooled_scores</span><span class="p">)):</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="n">pooled_scores</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">batch_base_idx</span>
+                <span class="n">tgt_ent_iri</span> <span class="o">=</span> <span class="n">tgt_cands</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">mappings_for_ent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">set_mapping</span><span class="p">(</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_ent_iri</span><span class="p">,</span> <span class="n">score</span><span class="o">.</span><span class="n">item</span><span class="p">()))</span>
+            <span class="n">batch_base_idx</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="n">labs_batch</span><span class="p">[</span><span class="s2">&quot;lens&quot;</span><span class="p">]</span>
+            <span class="p">)</span>  <span class="c1"># num of lens is exactly the num of tgt candidates in this batch</span>
+
+        <span class="n">mappings_for_ent</span> <span class="o">=</span> <span class="n">mappings_for_ent</span><span class="o">.</span><span class="n">sorted</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">src_ent_iri</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">mappings_for_ent</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mappings_for_ent</span></div>
+
+<div class="viewcode-block" id="BERTMap.global_mappings_for_ent"><a class="viewcode-back" href="../../../../deeponto.models.align.html#deeponto.models.align.bertmap.BERTMap.global_mappings_for_ent">[docs]</a>    <span class="k">def</span> <span class="nf">global_mappings_for_ent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_ent_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute cross-ontology mappings for a source entity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">mappings_for_ent</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">global_mappings_for_ent</span><span class="p">(</span><span class="n">src_ent_iri</span><span class="p">)</span>
+        <span class="c1"># select target candidates and compute score for each</span>
+        <span class="n">tgt_cands</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">idf_select_for_ent</span><span class="p">(</span><span class="n">src_ent_iri</span><span class="p">)</span>  <span class="c1"># [(tgt_id, idf_score)]</span>
+
+        <span class="c1"># for string_match</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">apply_string_match</span><span class="p">:</span>
+            <span class="n">src_ent_labs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="p">[</span><span class="n">src_ent_iri</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">tgt_cand_iri</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tgt_cands</span><span class="p">:</span>
+                <span class="n">tgt_ent_labs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">iri2labs</span><span class="p">[</span><span class="n">tgt_cand_iri</span><span class="p">]</span>
+                <span class="n">mapping_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">string_match</span><span class="p">(</span><span class="n">src_ent_labs</span><span class="p">,</span> <span class="n">tgt_ent_labs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">mapping_score</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># save mappings only with positive mapping scores</span>
+                    <span class="n">mappings_for_ent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">set_mapping</span><span class="p">(</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_cand_iri</span><span class="p">,</span> <span class="n">mapping_score</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="c1"># output only the top (k=n_best) scored mappings</span>
+            <span class="c1"># return the mappings if there are any string match results</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mappings_for_ent</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">n_best_mappings_for_ent</span> <span class="o">=</span> <span class="n">mappings_for_ent</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_best</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">src_ent_iri</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">n_best_mappings_for_ent</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="n">n_best_mappings_for_ent</span>
+
+        <span class="c1"># for bert synonym classifier</span>
+        <span class="n">labs_batches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batched_lab_products_for_ent</span><span class="p">(</span>
+            <span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_cands</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bert_args</span><span class="o">.</span><span class="n">batch_size_for_prediction</span>
+        <span class="p">)</span>  <span class="c1"># [{&quot;labs&quot;: [], &quot;lens&quot;: []}]</span>
+        <span class="n">batch_base_idx</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># after each batch, the base index will be increased by # of covered target candidates</span>
+        <span class="n">n_best_scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bert_classifier</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">n_best_idxs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bert_classifier</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">labs_batch</span> <span class="ow">in</span> <span class="n">labs_batches</span><span class="p">:</span>
+            <span class="n">batch_scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bert_classifier</span><span class="p">(</span><span class="n">labs_batch</span><span class="p">[</span><span class="s2">&quot;labs&quot;</span><span class="p">])</span>
+            <span class="n">pooled_scores</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">batch_pooling</span><span class="p">(</span><span class="n">batch_scores</span><span class="p">,</span> <span class="n">labs_batch</span><span class="p">[</span><span class="s2">&quot;lens&quot;</span><span class="p">])</span>
+            <span class="c1"># K should be n_best, except when the pooled batch scores do not contain K values</span>
+            <span class="n">K</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">pooled_scores</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pooled_scores</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_best</span>
+            <span class="n">batch_top_k_scores</span><span class="p">,</span> <span class="n">batch_top_k_idxs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="n">pooled_scores</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">K</span><span class="p">)</span>
+            <span class="n">batch_top_k_idxs</span> <span class="o">+=</span> <span class="n">batch_base_idx</span>
+            <span class="c1"># we do the substitution for every batch to prevent from memory overflow</span>
+            <span class="n">n_best_scores</span><span class="p">,</span> <span class="n">best_scores_idxs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">batch_top_k_scores</span><span class="p">,</span> <span class="n">n_best_scores</span><span class="p">]),</span> <span class="n">k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_best</span>
+            <span class="p">)</span>
+            <span class="n">n_best_idxs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">batch_top_k_idxs</span><span class="p">,</span> <span class="n">n_best_idxs</span><span class="p">])[</span><span class="n">best_scores_idxs</span><span class="p">]</span>
+            <span class="c1"># print(f&quot;current nbest idx: {batch_nbest_idxs}&quot;)</span>
+            <span class="n">batch_base_idx</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span>
+                <span class="n">labs_batch</span><span class="p">[</span><span class="s2">&quot;lens&quot;</span><span class="p">]</span>
+            <span class="p">)</span>  <span class="c1"># num of lens is exactly the num of tgt candidates in this batch</span>
+
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">n_best_idxs</span><span class="p">,</span> <span class="n">n_best_scores</span><span class="p">):</span>
+            <span class="c1"># ignore too small values or intial values (-1.0) for dummy mappings</span>
+            <span class="k">if</span> <span class="n">score</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">tgt_ent_iri</span> <span class="o">=</span> <span class="n">tgt_cands</span><span class="p">[</span><span class="n">idx</span><span class="o">.</span><span class="n">item</span><span class="p">()][</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">mappings_for_ent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">set_mapping</span><span class="p">(</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="n">tgt_ent_iri</span><span class="p">,</span> <span class="n">score</span><span class="o">.</span><span class="n">item</span><span class="p">()))</span>
+
+        <span class="c1"># add a dummy mapping for this entity if no mappings found</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mappings_for_ent</span><span class="p">:</span>
+            <span class="n">mappings_for_ent</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">set_mapping</span><span class="p">(</span><span class="n">src_ent_iri</span><span class="p">,</span> <span class="s2">&quot;NullEntity&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+
+        <span class="c1"># output only the top (k=n_best) scored mappings</span>
+        <span class="n">n_best_mappings_for_ent</span> <span class="o">=</span> <span class="n">mappings_for_ent</span><span class="o">.</span><span class="n">topk</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n_best</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">flag</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">src_ent_iri</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">n_best_mappings_for_ent</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">n_best_mappings_for_ent</span></div>
+
+<div class="viewcode-block" id="BERTMap.batch_pooling"><a class="viewcode-back" href="../../../../deeponto.models.align.html#deeponto.models.align.bertmap.BERTMap.batch_pooling">[docs]</a>    <span class="k">def</span> <span class="nf">batch_pooling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_scores</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">,</span> <span class="n">batch_lens</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Split the tensors by specified lengths and compute the mean for each part</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">seq_of_scores</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">batch_scores</span><span class="p">,</span> <span class="n">split_size_or_sections</span><span class="o">=</span><span class="n">batch_lens</span><span class="p">)</span>
+        <span class="n">pooled_batch_scores</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span> <span class="k">for</span> <span class="n">chunk</span> <span class="ow">in</span> <span class="n">seq_of_scores</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">pooled_batch_scores</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

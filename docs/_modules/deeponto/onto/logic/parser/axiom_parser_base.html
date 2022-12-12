@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.onto.logic.parser.axiom_parser_base &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+        <script src="../../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../../../index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../modules.html">deeponto</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../../../deeponto.html">deeponto</a></li>
+      <li class="breadcrumb-item active">deeponto.onto.logic.parser.axiom_parser_base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeponto.onto.logic.parser.axiom_parser_base</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.</span>
+
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;A parser for the OWL axioms (from OWLAPI) based on</span>
+<span class="sd">        1. parentheses matching;</span>
+<span class="sd">        2. tenary tree search</span>
+
+<span class="sd">E.g., &#39;EquivalentClasses(&lt;http://purl.obolibrary.org/obo/FOODON_00001083&gt; ObjectIntersectionOf(&lt;http://purl.obolibrary.org/obo/FOODON_00001133&gt; ObjectSomeValuesFrom(&lt;http://purl.obolibrary.org/obo/RO_0001000&gt; &lt;http://purl.obolibrary.org/obo/FOODON_03411012&gt;)) )&#39;</span>
+<span class="sd">====&gt; [0, [0, [6, 54], [55, [61, 109], [110, [116, 159], [160, 208], 209], 210], 212], 213]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">deeponto.utils.tree</span> <span class="kn">import</span> <span class="n">RangeNode</span>
+
+
+<div class="viewcode-block" id="OWLAxiomParserBase"><a class="viewcode-back" href="../../../../../deeponto.onto.logic.parser.html#deeponto.onto.logic.parser.axiom_parser_base.OWLAxiomParserBase">[docs]</a><span class="k">class</span> <span class="nc">OWLAxiomParserBase</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># abbrevations all have length 5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">abbr</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;ObjectComplementOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[NEG]&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ObjectSomeValuesFrom&quot;</span><span class="p">:</span> <span class="s2">&quot;[EXT]&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ObjectAllValuesFrom&quot;</span><span class="p">:</span> <span class="s2">&quot;[ALL]&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ObjectUnionOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[ORR]&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ObjectIntersectionOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[AND]&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;EquivalentClasses&quot;</span><span class="p">:</span> <span class="s2">&quot;[EQU]&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;SubClassOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[SUB]&quot;</span><span class="p">,</span>  <span class="c1"># self-defined not confirmed in OWLAPI yet</span>
+            <span class="s2">&quot;SuperClassOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[SUP]&quot;</span><span class="p">,</span> <span class="c1"># self-defined not confirmed in OWLAPI yet</span>
+        <span class="p">}</span>
+
+<div class="viewcode-block" id="OWLAxiomParserBase.abbr_axiom_text"><a class="viewcode-back" href="../../../../../deeponto.onto.logic.parser.html#deeponto.onto.logic.parser.axiom_parser_base.OWLAxiomParserBase.abbr_axiom_text">[docs]</a>    <span class="k">def</span> <span class="nf">abbr_axiom_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axiom_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Abbreviate logical operand expressions in an OWLAPI axiom text</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        axiom_text : str</span>
+<span class="sd">            string representation of an OWLAPI axiom</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        str</span>
+<span class="sd">            modified expression of an OWLAPI axiom where the logical operands are abbreviated</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">abbr</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">axiom_text</span> <span class="o">=</span> <span class="n">axiom_text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">axiom_text</span></div>
+
+<div class="viewcode-block" id="OWLAxiomParserBase.parse"><a class="viewcode-back" href="../../../../../deeponto.onto.logic.parser.html#deeponto.onto.logic.parser.axiom_parser_base.OWLAxiomParserBase.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axiom_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Parse the OWL Axiom based on the tenary tree search (RangeNode) and the </span>
+<span class="sd">        parentheses matching algorithms</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        axiom_text : str</span>
+<span class="sd">            string representation of an OWLAPI axiom</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        RangeNode</span>
+<span class="sd">            a tree stucture parsed from the OWLAPI axiom text</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">axiom_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">abbr_axiom_text</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">)</span>
+        <span class="c1"># print(&quot;To parse the following (transformed) axiom text:\n&quot;, axiom_text)</span>
+        <span class="c1"># parse complex patterns first</span>
+        <span class="n">cur_parsed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">)</span>
+        <span class="c1"># parse the IRI patterns latter</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">,</span> <span class="n">cur_parsed</span><span class="p">,</span> <span class="n">for_iri</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_parse</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">axiom_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">cur_parsed</span><span class="p">:</span> <span class="n">RangeNode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">for_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Parse the OWL Axiom based on the tenary tree search (RangeNode) and the </span>
+<span class="sd">        parentheses matching algorithms</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        axiom_text : str</span>
+<span class="sd">            string representation of an OWLAPI axiom</span>
+<span class="sd">        cur_parsed : RangeNode, optional</span>
+<span class="sd">            intermediate tree structure parsed from an OWLAPI axiom text, by default None</span>
+<span class="sd">        for_iri : bool, optional</span>
+<span class="sd">            parse regarding the IRI strings instead of the logical operands or not, by default False</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        RangeNode</span>
+<span class="sd">            a tree stucture parsed from the OWLAPI axiom text</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        RuntimeError</span>
+<span class="sd">            raise if the OWLAPI axiom text is invalid </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">cur_parsed</span><span class="p">:</span>
+            <span class="c1"># a root node that covers the entire sentence</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Root&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">axiom_text</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">cur_parsed</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">left_par</span> <span class="o">=</span> <span class="s2">&quot;(&quot;</span>
+        <span class="n">right_par</span> <span class="o">=</span> <span class="s2">&quot;)&quot;</span>
+        <span class="k">if</span> <span class="n">for_iri</span><span class="p">:</span>
+            <span class="n">left_par</span> <span class="o">=</span> <span class="s2">&quot;&lt;&quot;</span>
+            <span class="n">right_par</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">left_par</span><span class="p">:</span>
+                <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">right_par</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">start</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                    <span class="n">end</span> <span class="o">=</span> <span class="n">i</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">for_iri</span><span class="p">:</span>
+                        <span class="c1"># the first five characters refer to the complex pattern type</span>
+                        <span class="n">node</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span>
+                            <span class="n">start</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span>
+                            <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                            <span class="nb">type</span><span class="o">=</span><span class="n">axiom_text</span><span class="p">[</span><span class="n">start</span> <span class="o">-</span> <span class="mi">5</span> <span class="p">:</span> <span class="n">start</span><span class="p">],</span>
+                            <span class="n">text</span><span class="o">=</span><span class="n">axiom_text</span><span class="p">[</span><span class="n">start</span> <span class="o">-</span> <span class="mi">5</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
+                        <span class="p">)</span>
+                        <span class="n">parsed</span><span class="o">.</span><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># no preceding characters for just atomic class (IRI)</span>
+                        <span class="n">node</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span>
+                            <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;IRI&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">axiom_text</span><span class="p">[</span><span class="n">start</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                        <span class="p">)</span>
+                        <span class="n">parsed</span><span class="o">.</span><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Too many closing parentheses&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">stack</span><span class="p">:</span>  <span class="c1"># check if stack is empty afterwards</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Too many opening parentheses&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">parsed</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

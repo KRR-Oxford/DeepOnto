@@ -1,0 +1,9 @@
+{% extends "!layout.html" %}
+{% block extrahead %}
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+{% endblock %}

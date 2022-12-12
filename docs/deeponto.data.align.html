@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.data.align package &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="deeponto.data.infer package" href="deeponto.data.infer.html" />
+    <link rel="prev" title="deeponto.data package" href="deeponto.data.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">deeponto</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="deeponto.html">deeponto package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="deeponto.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.html">deeponto.bert package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.config.html">deeponto.config package</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="deeponto.data.html">deeponto.data package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.evaluation.html">deeponto.evaluation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.html">deeponto.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html">deeponto.onto package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.utils.html">deeponto.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto.flagged_obj">deeponto.flagged_obj module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto.saved_obj">deeponto.saved_obj module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">deeponto</a></li>
+          <li class="breadcrumb-item"><a href="deeponto.html">deeponto package</a></li>
+          <li class="breadcrumb-item"><a href="deeponto.data.html">deeponto.data package</a></li>
+      <li class="breadcrumb-item active">deeponto.data.align package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/deeponto.data.align.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="deeponto-data-align-package">
+<h1>deeponto.data.align package<a class="headerlink" href="#deeponto-data-align-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-deeponto.data.align.cand_maps">
+<span id="deeponto-data-align-cand-maps-module"></span><h2>deeponto.data.align.cand_maps module<a class="headerlink" href="#module-deeponto.data.align.cand_maps" title="Permalink to this heading"></a></h2>
+<p>Provide functions for generating negative candidates</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="deeponto.data.align.cand_maps.MappingCandidateGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeponto.data.align.cand_maps.</span></span><span class="sig-name descname"><span class="pre">MappingCandidateGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saved_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">src_onto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology" title="deeponto.onto.ontology.Ontology"><span class="pre">Ontology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tgt_onto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology" title="deeponto.onto.ontology.Ontology"><span class="pre">Ontology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_mappings_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_ref_mappings_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenizer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.text.html#deeponto.onto.text.tokenizer.Tokenizer" title="deeponto.onto.text.tokenizer.Tokenizer"><span class="pre">Tokenizer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_hops</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avoid_ancestors</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avoid_descendents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/cand_maps.html#MappingCandidateGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.cand_maps.MappingCandidateGenerator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="deeponto.html#deeponto.flagged_obj.FlaggedObj" title="deeponto.flagged_obj.FlaggedObj"><code class="xref py py-class docutils literal notranslate"><span class="pre">FlaggedObj</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.cand_maps.MappingCandidateGenerator.avoided_family_of">
+<span class="sig-name descname"><span class="pre">avoided_family_of</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ThingClass</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/cand_maps.html#MappingCandidateGenerator.avoided_family_of"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.cand_maps.MappingCandidateGenerator.avoided_family_of" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the (direct) family members of an entity class
+which should be avoided in subsumption matching</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.cand_maps.MappingCandidateGenerator.current_anchor_mappings">
+<span class="sig-name descname"><span class="pre">current_anchor_mappings</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings" title="deeponto.onto.mapping.AnchoredOntoMappings"><span class="pre">AnchoredOntoMappings</span></a></span></span><a class="reference internal" href="_modules/deeponto/data/align/cand_maps.html#MappingCandidateGenerator.current_anchor_mappings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.cand_maps.MappingCandidateGenerator.current_anchor_mappings" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.cand_maps.MappingCandidateGenerator.current_ref_dict">
+<span class="sig-name descname"><span class="pre">current_ref_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/cand_maps.html#MappingCandidateGenerator.current_ref_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.cand_maps.MappingCandidateGenerator.current_ref_dict" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.cand_maps.MappingCandidateGenerator.idf_sample">
+<span class="sig-name descname"><span class="pre">idf_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_tgt_ent_iri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/cand_maps.html#MappingCandidateGenerator.idf_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.cand_maps.MappingCandidateGenerator.idf_sample" title="Permalink to this definition"></a></dt>
+<dd><p>Sample negative candidates using inverted index-based idf scoring</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.cand_maps.MappingCandidateGenerator.init_anchors">
+<span class="sig-name descname"><span class="pre">init_anchors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/cand_maps.html#MappingCandidateGenerator.init_anchors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.cand_maps.MappingCandidateGenerator.init_anchors" title="Permalink to this definition"></a></dt>
+<dd><p>Add all the reference anchor mappings as a candidate mapping first</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.cand_maps.MappingCandidateGenerator.mixed_sample">
+<span class="sig-name descname"><span class="pre">mixed_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_tgt_ent_iri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">excluded_ref_tgts</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">strategy2nums</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/cand_maps.html#MappingCandidateGenerator.mixed_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.cand_maps.MappingCandidateGenerator.mixed_sample" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly select specified candidates for each strategy;
+amend random samples if not meeting the number</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.cand_maps.MappingCandidateGenerator.neighbour_sample">
+<span class="sig-name descname"><span class="pre">neighbour_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_tgt_ent_iri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/cand_maps.html#MappingCandidateGenerator.neighbour_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.cand_maps.MappingCandidateGenerator.neighbour_sample" title="Permalink to this definition"></a></dt>
+<dd><p>Sample negative candidates from nearest nearest (starting from 1-hop)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.cand_maps.MappingCandidateGenerator.random_sample">
+<span class="sig-name descname"><span class="pre">random_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_tgt_ent_iri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_cands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/cand_maps.html#MappingCandidateGenerator.random_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.cand_maps.MappingCandidateGenerator.random_sample" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly select n target candidates</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.cand_maps.MappingCandidateGenerator.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">strategy2nums</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/cand_maps.html#MappingCandidateGenerator.sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.cand_maps.MappingCandidateGenerator.sample" title="Permalink to this definition"></a></dt>
+<dd><p>Sample for both src2tgt and tgt2src sides</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.cand_maps.MappingCandidateGenerator.sample_for_all_one_side">
+<span class="sig-name descname"><span class="pre">sample_for_all_one_side</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">strategy2nums</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/cand_maps.html#MappingCandidateGenerator.sample_for_all_one_side"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.cand_maps.MappingCandidateGenerator.sample_for_all_one_side" title="Permalink to this definition"></a></dt>
+<dd><p>Sample negative candidates as per specified strategy-number pairs</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-deeponto.data.align.subs_maps">
+<span id="deeponto-data-align-subs-maps-module"></span><h2>deeponto.data.align.subs_maps module<a class="headerlink" href="#module-deeponto.data.align.subs_maps" title="Permalink to this heading"></a></h2>
+<p>Generate Subsumption Mappings from Equivalence Mappings</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="deeponto.data.align.subs_maps.SubsumptionMappingGenerator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeponto.data.align.subs_maps.</span></span><span class="sig-name descname"><span class="pre">SubsumptionMappingGenerator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src_onto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology" title="deeponto.onto.ontology.Ontology"><span class="pre">Ontology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tgt_onto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology" title="deeponto.onto.ontology.Ontology"><span class="pre">Ontology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">rel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">equiv_mappings_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_subs_ratio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_delete_equiv_tgt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_hop</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/subs_maps.html#SubsumptionMappingGenerator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.subs_maps.SubsumptionMappingGenerator" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.subs_maps.SubsumptionMappingGenerator.online_subs_construct">
+<span class="sig-name descname"><span class="pre">online_subs_construct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/subs_maps.html#SubsumptionMappingGenerator.online_subs_construct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.online_subs_construct" title="Permalink to this definition"></a></dt>
+<dd><p>An <em>online</em> algorithm for subsumption mapping construction:
+1. an equiv pair is skipped if the target side is marked constructed;
+2. a subs pair is skipped if the target side is marked deleted.
+This algorithm is <em>online</em> because the class marking is performed for
+each equiv pair instantly.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.subs_maps.SubsumptionMappingGenerator.preserved_tgt_iris">
+<span class="sig-name descname"><span class="pre">preserved_tgt_iris</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/subs_maps.html#SubsumptionMappingGenerator.preserved_tgt_iris"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.preserved_tgt_iris" title="Permalink to this definition"></a></dt>
+<dd><p>Return target class IRIs that are not marked for deletion</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.subs_maps.SubsumptionMappingGenerator.renew_subs">
+<span class="sig-name descname"><span class="pre">renew_subs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/subs_maps.html#SubsumptionMappingGenerator.renew_subs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.renew_subs" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.subs_maps.SubsumptionMappingGenerator.static_subs_construct">
+<span class="sig-name descname"><span class="pre">static_subs_construct</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/subs_maps.html#SubsumptionMappingGenerator.static_subs_construct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.static_subs_construct" title="Permalink to this definition"></a></dt>
+<dd><p>A <em>static</em> algorithm for subsumption mapping construction:
+1. mark all equiv targets as to be deleted;
+2. skip all these equiv targets in subs construction.
+This algorithm is <em>static</em> because the class marking is performed
+before subsumption mapping construction.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.subs_maps.SubsumptionMappingGenerator.subs_from_an_equiv">
+<span class="sig-name descname"><span class="pre">subs_from_an_equiv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src_ent_iri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tgt_ent_iri</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/subs_maps.html#SubsumptionMappingGenerator.subs_from_an_equiv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.subs_from_an_equiv" title="Permalink to this definition"></a></dt>
+<dd><p>Generate subsumption candidates (thus mappings) from the target ontology
+based on an equivalence mappings; this method adopts BFS to search valid
+ancestors or descendants (of the target equiv class) that are not marked as
+to be deleted. The deletion-marked list is updated outside this method.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.subs_maps.SubsumptionMappingGenerator.subs_pairs_to_tsv">
+<span class="sig-name descname"><span class="pre">subs_pairs_to_tsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saved_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/subs_maps.html#SubsumptionMappingGenerator.subs_pairs_to_tsv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.subs_pairs_to_tsv" title="Permalink to this definition"></a></dt>
+<dd><p>Save the computed subs_pairs in .tsv</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.subs_maps.SubsumptionMappingGenerator.validate_subs">
+<span class="sig-name descname"><span class="pre">validate_subs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subs_pair</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/subs_maps.html#SubsumptionMappingGenerator.validate_subs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.subs_maps.SubsumptionMappingGenerator.validate_subs" title="Permalink to this definition"></a></dt>
+<dd><p>Validate if a subsumption mapping based on the equivalent mappings</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-deeponto.data.align.text_semantics_corpora">
+<span id="deeponto-data-align-text-semantics-corpora-module"></span><h2>deeponto.data.align.text_semantics_corpora module<a class="headerlink" href="#module-deeponto.data.align.text_semantics_corpora" title="Permalink to this heading"></a></h2>
+<p>Script for BERTMap’s Text Semantics Corpora</p>
+<p><em>An importance notice</em>: to avoid that the auxiliary ontology might have the same IRI
+as the SRC or TGT ontologies so that OwlReady2 cannot distinguish them, we load aux ontos
+only after we have built (intra-onto / cross-onto) corpora for SRC and TGT ontologies</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeponto.data.align.text_semantics_corpora.</span></span><span class="sig-name descname"><span class="pre">TextSemanticsCorpora</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src_onto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology" title="deeponto.onto.ontology.Ontology"><span class="pre">Ontology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tgt_onto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology" title="deeponto.onto.ontology.Ontology"><span class="pre">Ontology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">known_mappings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings" title="deeponto.onto.mapping.OntoMappings"><span class="pre">OntoMappings</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aux_ontos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology" title="deeponto.onto.ontology.Ontology"><span class="pre">Ontology</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_transitivity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neg_ratio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/text_semantics_corpora.html#TextSemanticsCorpora"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="deeponto.html#deeponto.saved_obj.SavedObj" title="deeponto.saved_obj.SavedObj"><code class="xref py py-class docutils literal notranslate"><span class="pre">SavedObj</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.add_samples_from_sub_corpus">
+<span class="sig-name descname"><span class="pre">add_samples_from_sub_corpus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sub_corpus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforOnto" title="deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforOnto"><span class="pre">TextSemanticsCorpusforOnto</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforMappings" title="deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforMappings"><span class="pre">TextSemanticsCorpusforMappings</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/text_semantics_corpora.html#TextSemanticsCorpora.add_samples_from_sub_corpus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.add_samples_from_sub_corpus" title="Permalink to this definition"></a></dt>
+<dd><p>Add positives and negatives into the final collections</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.feed_auxiliary_ontos">
+<span class="sig-name descname"><span class="pre">feed_auxiliary_ontos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">new_aux_ontos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology" title="deeponto.onto.ontology.Ontology"><span class="pre">Ontology</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/text_semantics_corpora.html#TextSemanticsCorpora.feed_auxiliary_ontos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.feed_auxiliary_ontos" title="Permalink to this definition"></a></dt>
+<dd><p>Feed auxiliary ontologies for data augmentation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.remove_invalid_negatives">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remove_invalid_negatives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neg_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/text_semantics_corpora.html#TextSemanticsCorpora.remove_invalid_negatives"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.remove_invalid_negatives" title="Permalink to this definition"></a></dt>
+<dd><p>Remove elements in negative samples that have been occurred in positive samples</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.report_sub_corpora_info">
+<span class="sig-name descname"><span class="pre">report_sub_corpora_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/text_semantics_corpora.html#TextSemanticsCorpora.report_sub_corpora_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.report_sub_corpora_info" title="Permalink to this definition"></a></dt>
+<dd><p>Print individual sub-corpora information</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.save_instance">
+<span class="sig-name descname"><span class="pre">save_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saved_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'txtsem'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/text_semantics_corpora.html#TextSemanticsCorpora.save_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpora.save_instance" title="Permalink to this definition"></a></dt>
+<dd><p>Save only the generated samples and corresponding statistics</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforMappings">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeponto.data.align.text_semantics_corpora.</span></span><span class="sig-name descname"><span class="pre">TextSemanticsCorpusforMappings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src_onto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology" title="deeponto.onto.ontology.Ontology"><span class="pre">Ontology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tgt_onto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology" title="deeponto.onto.ontology.Ontology"><span class="pre">Ontology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">onto_mappings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings" title="deeponto.onto.mapping.OntoMappings"><span class="pre">OntoMappings</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">thesaurus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.text.html#deeponto.onto.text.thesaurus.Thesaurus" title="deeponto.onto.text.thesaurus.Thesaurus"><span class="pre">Thesaurus</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">neg_ratio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/text_semantics_corpora.html#TextSemanticsCorpusforMappings"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforMappings" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="deeponto.html#deeponto.saved_obj.SavedObj" title="deeponto.saved_obj.SavedObj"><code class="xref py py-class docutils literal notranslate"><span class="pre">SavedObj</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforMappings.save_instance">
+<span class="sig-name descname"><span class="pre">save_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saved_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'txtsem.maps'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/text_semantics_corpora.html#TextSemanticsCorpusforMappings.save_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforMappings.save_instance" title="Permalink to this definition"></a></dt>
+<dd><p>Save only the generated samples and corresponding statistics</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforOnto">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deeponto.data.align.text_semantics_corpora.</span></span><span class="sig-name descname"><span class="pre">TextSemanticsCorpusforOnto</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">onto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.ontology.Ontology" title="deeponto.onto.ontology.Ontology"><span class="pre">Ontology</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">thesaurus</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.text.html#deeponto.onto.text.thesaurus.Thesaurus" title="deeponto.onto.text.thesaurus.Thesaurus"><span class="pre">Thesaurus</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">neg_ratio</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'src'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/text_semantics_corpora.html#TextSemanticsCorpusforOnto"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforOnto" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="deeponto.html#deeponto.saved_obj.SavedObj" title="deeponto.saved_obj.SavedObj"><code class="xref py py-class docutils literal notranslate"><span class="pre">SavedObj</span></code></a></p>
+<p>Class for contructing text semantics Corpora from an individual ontology</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforOnto.save_instance">
+<span class="sig-name descname"><span class="pre">save_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">saved_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'txtsem.onto'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/data/align/text_semantics_corpora.html#TextSemanticsCorpusforOnto.save_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.data.align.text_semantics_corpora.TextSemanticsCorpusforOnto.save_instance" title="Permalink to this definition"></a></dt>
+<dd><p>Save only the generated samples and corresponding statistics</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-deeponto.data.align">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-deeponto.data.align" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="deeponto.data.html" class="btn btn-neutral float-left" title="deeponto.data package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="deeponto.data.infer.html" class="btn btn-neutral float-right" title="deeponto.data.infer package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.evaluation package &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="deeponto.models package" href="deeponto.models.html" />
+    <link rel="prev" title="deeponto.data.infer.subs package" href="deeponto.data.infer.subs.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">deeponto</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="deeponto.html">deeponto package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="deeponto.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="deeponto.bert.html">deeponto.bert package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.config.html">deeponto.config package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.data.html">deeponto.data package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">deeponto.evaluation package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.models.html">deeponto.models package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.onto.html">deeponto.onto package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="deeponto.utils.html">deeponto.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto.flagged_obj">deeponto.flagged_obj module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto.saved_obj">deeponto.saved_obj module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="deeponto.html#module-deeponto">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">deeponto</a></li>
+          <li class="breadcrumb-item"><a href="deeponto.html">deeponto package</a></li>
+      <li class="breadcrumb-item active">deeponto.evaluation package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/deeponto.evaluation.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="deeponto-evaluation-package">
+<h1>deeponto.evaluation package<a class="headerlink" href="#deeponto-evaluation-package" title="Permalink to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
+</section>
+<section id="module-deeponto.evaluation.align_eval">
+<span id="deeponto-evaluation-align-eval-module"></span><h2>deeponto.evaluation.align_eval module<a class="headerlink" href="#module-deeponto.evaluation.align_eval" title="Permalink to this heading"></a></h2>
+<p>Script for evaluating implemented ontology matching models.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.evaluation.align_eval.global_match_eval">
+<span class="sig-prename descclassname"><span class="pre">deeponto.evaluation.align_eval.</span></span><span class="sig-name descname"><span class="pre">global_match_eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_ref_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processed_pred</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_more_f_scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/evaluation/align_eval.html#global_match_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.evaluation.align_eval.global_match_eval" title="Permalink to this definition"></a></dt>
+<dd><p>Eval on Precision, Recall, and F-score (most general OM eval)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.evaluation.align_eval.global_match_select">
+<span class="sig-prename descclassname"><span class="pre">deeponto.evaluation.align_eval.</span></span><span class="sig-name descname"><span class="pre">global_match_select</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">global_match_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_ref_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_ref_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_ref_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_ref_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_procs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/evaluation/align_eval.html#global_match_select"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.evaluation.align_eval.global_match_select" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.evaluation.align_eval.local_rank_eval">
+<span class="sig-prename descclassname"><span class="pre">deeponto.evaluation.align_eval.</span></span><span class="sig-name descname"><span class="pre">local_rank_eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_anchored_maps_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">ks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/evaluation/align_eval.html#local_rank_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.evaluation.align_eval.local_rank_eval" title="Permalink to this definition"></a></dt>
+<dd><p>Eval on Hits&#64;K, MRR (estimating OM performance)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.evaluation.align_eval.pred_thresholding">
+<span class="sig-prename descclassname"><span class="pre">deeponto.evaluation.align_eval.</span></span><span class="sig-name descname"><span class="pre">pred_thresholding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_maps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.OntoMappings" title="deeponto.onto.mapping.OntoMappings"><span class="pre">OntoMappings</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/evaluation/align_eval.html#pred_thresholding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.evaluation.align_eval.pred_thresholding" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-deeponto.evaluation.eval_metrics">
+<span id="deeponto-evaluation-eval-metrics-module"></span><h2>deeponto.evaluation.eval_metrics module<a class="headerlink" href="#module-deeponto.evaluation.eval_metrics" title="Permalink to this heading"></a></h2>
+<p>Define evaluation metrics for different tasks</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.evaluation.eval_metrics.f1">
+<span class="sig-prename descclassname"><span class="pre">deeponto.evaluation.eval_metrics.</span></span><span class="sig-name descname"><span class="pre">f1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_ref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/evaluation/eval_metrics.html#f1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.evaluation.eval_metrics.f1" title="Permalink to this definition"></a></dt>
+<dd><p>Semantics-aware F1 score when precision and recall are equally important, i.e.:
+F1 = 2 * P * R / (P + R).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.evaluation.eval_metrics.f_score">
+<span class="sig-prename descclassname"><span class="pre">deeponto.evaluation.eval_metrics.</span></span><span class="sig-name descname"><span class="pre">f_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">null_ref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Iterable</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/evaluation/eval_metrics.html#f_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.evaluation.eval_metrics.f_score" title="Permalink to this definition"></a></dt>
+<dd><p>Semantics-aware F-score with factor β where elements in the {null_set} should be ignored,
+i.e.: neither +ve nor -ve.</p>
+<p>Check concepts at: <a class="reference external" href="https://lawhy.github.io//pythagorean-means/">https://lawhy.github.io//pythagorean-means/</a>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.evaluation.eval_metrics.hits_at_k">
+<span class="sig-prename descclassname"><span class="pre">deeponto.evaluation.eval_metrics.</span></span><span class="sig-name descname"><span class="pre">hits_at_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_maps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings" title="deeponto.onto.mapping.AnchoredOntoMappings"><span class="pre">AnchoredOntoMappings</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_tuples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/evaluation/eval_metrics.html#hits_at_k"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.evaluation.eval_metrics.hits_at_k" title="Permalink to this definition"></a></dt>
+<dd><p>Hits&#64;K = # hits at top K / # testing samples</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.evaluation.eval_metrics.mean_reciprocal_rank">
+<span class="sig-prename descclassname"><span class="pre">deeponto.evaluation.eval_metrics.</span></span><span class="sig-name descname"><span class="pre">mean_reciprocal_rank</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred_maps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="deeponto.onto.html#deeponto.onto.mapping.AnchoredOntoMappings" title="deeponto.onto.mapping.AnchoredOntoMappings"><span class="pre">AnchoredOntoMappings</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_tuples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/deeponto/evaluation/eval_metrics.html#mean_reciprocal_rank"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.evaluation.eval_metrics.mean_reciprocal_rank" title="Permalink to this definition"></a></dt>
+<dd><p>MRR = (sum_i 1 / rank_i) / # testing samples</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.evaluation.eval_metrics.precision">
+<span class="sig-prename descclassname"><span class="pre">deeponto.evaluation.eval_metrics.</span></span><span class="sig-name descname"><span class="pre">precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/deeponto/evaluation/eval_metrics.html#precision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.evaluation.eval_metrics.precision" title="Permalink to this definition"></a></dt>
+<dd><p>% of predictions are correct:
+P = TP / (TP + FP)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="deeponto.evaluation.eval_metrics.recall">
+<span class="sig-prename descclassname"><span class="pre">deeponto.evaluation.eval_metrics.</span></span><span class="sig-name descname"><span class="pre">recall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Iterable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/deeponto/evaluation/eval_metrics.html#recall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deeponto.evaluation.eval_metrics.recall" title="Permalink to this definition"></a></dt>
+<dd><p>% of correct retrieved:
+R = TP / (TP + FN)</p>
+</dd></dl>
+
+</section>
+<section id="module-deeponto.evaluation">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-deeponto.evaluation" title="Permalink to this heading"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="deeponto.data.infer.subs.html" class="btn btn-neutral float-left" title="deeponto.data.infer.subs package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="deeponto.models.html" class="btn btn-neutral float-right" title="deeponto.models package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

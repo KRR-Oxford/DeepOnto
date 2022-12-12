@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deeponto.evaluation.align_eval &mdash; DeepOnto 0.3.1 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = document.body.innerHTML.replace(/ module/g, '');
+    document.body.innerHTML = document.body.innerHTML.replace(/ package/g, '');
+  }
+</script>
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> DeepOnto
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">deeponto</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">DeepOnto</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+          <li class="breadcrumb-item"><a href="../../deeponto.html">deeponto</a></li>
+      <li class="breadcrumb-item active">deeponto.evaluation.align_eval</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deeponto.evaluation.align_eval</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.</span>
+
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="sd">&quot;&quot;&quot;Script for evaluating implemented ontology matching models.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">multiprocessing_on_dill</span> <span class="k">as</span> <span class="nn">mt</span>
+
+<span class="kn">from</span> <span class="nn">deeponto</span> <span class="kn">import</span> <span class="n">SavedObj</span>
+<span class="kn">from</span> <span class="nn">deeponto.onto.mapping</span> <span class="kn">import</span> <span class="n">OntoMappings</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">evenly_divide</span><span class="p">,</span> <span class="n">detect_path</span><span class="p">,</span> <span class="n">uniqify</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils.logging</span> <span class="kn">import</span> <span class="n">banner_msg</span>
+<span class="kn">from</span> <span class="nn">deeponto.evaluation.eval_metrics</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="pred_thresholding"><a class="viewcode-back" href="../../../deeponto.evaluation.html#deeponto.evaluation.align_eval.pred_thresholding">[docs]</a><span class="k">def</span> <span class="nf">pred_thresholding</span><span class="p">(</span><span class="n">pred_maps</span><span class="p">:</span> <span class="n">OntoMappings</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+
+    <span class="c1"># load all prediction mappings from the saved directory</span>
+    <span class="n">filtered_pred</span> <span class="o">=</span> <span class="n">pred_maps</span><span class="o">.</span><span class="n">topks</span><span class="p">(</span><span class="n">K</span><span class="o">=</span><span class="n">pred_maps</span><span class="o">.</span><span class="n">n_best</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span> <span class="n">as_tuples</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">pred_maps</span><span class="o">.</span><span class="n">flag</span> <span class="o">==</span> <span class="s2">&quot;tgt2src&quot;</span><span class="p">:</span>
+        <span class="c1"># reverse (head, tail) to match src2tgt</span>
+        <span class="n">filtered_pred</span> <span class="o">=</span> <span class="p">[(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="n">filtered_pred</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">filtered_pred</span></div>
+
+
+<div class="viewcode-block" id="global_match_eval"><a class="viewcode-back" href="../../../deeponto.evaluation.html#deeponto.evaluation.align_eval.global_match_eval">[docs]</a><span class="k">def</span> <span class="nf">global_match_eval</span><span class="p">(</span>
+    <span class="n">pred_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">ref_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">null_ref_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">processed_pred</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">flag</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">show_more_f_scores</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Eval on Precision, Recall, and F-score (most general OM eval)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">banner_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Eval using P, R, F-score with threshold: </span><span class="si">{</span><span class="n">threshold</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">if</span> <span class="n">flag</span><span class="p">:</span>
+        <span class="n">banner_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; (</span><span class="si">{</span><span class="n">flag</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="n">banner_msg</span><span class="p">(</span><span class="n">banner_str</span><span class="p">)</span>
+
+    <span class="c1"># load prediction mappings from the saved directory</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">processed_pred</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">pred_maps</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">from_saved</span><span class="p">(</span><span class="n">pred_path</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">pred_maps</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">pred_path</span><span class="p">)</span>
+            
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">pred_thresholding</span><span class="p">(</span><span class="n">pred_maps</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">processed_pred</span>
+
+    <span class="c1"># load reference mappings and (opt) null mappings</span>
+    <span class="n">ref</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">ref_path</span><span class="p">)</span><span class="o">.</span><span class="n">to_tuples</span><span class="p">()</span>
+    <span class="n">null_ref</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">OntoMappings</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">null_ref_path</span><span class="p">)</span><span class="o">.</span><span class="n">to_tuples</span><span class="p">()</span> <span class="k">if</span> <span class="n">null_ref_path</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">f1</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">null_ref</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">show_more_f_scores</span><span class="p">:</span>
+        <span class="n">results_favour_recall</span> <span class="o">=</span> <span class="n">f_score</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">null_ref</span><span class="o">=</span><span class="n">null_ref</span><span class="p">)</span>
+        <span class="n">results_favour_precision</span> <span class="o">=</span> <span class="n">f_score</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">ref</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">null_ref</span><span class="o">=</span><span class="n">null_ref</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="s2">&quot;f_2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">results_favour_recall</span><span class="p">[</span><span class="s2">&quot;f_score&quot;</span><span class="p">]</span>
+        <span class="n">results</span><span class="p">[</span><span class="s2">&quot;f_0.5&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">results_favour_precision</span><span class="p">[</span><span class="s2">&quot;f_score&quot;</span><span class="p">]</span>
+    <span class="n">SavedObj</span><span class="o">.</span><span class="n">print_json</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+
+
+<div class="viewcode-block" id="global_match_select"><a class="viewcode-back" href="../../../deeponto.evaluation.html#deeponto.evaluation.align_eval.global_match_select">[docs]</a><span class="k">def</span> <span class="nf">global_match_select</span><span class="p">(</span>
+    <span class="n">global_match_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">train_ref_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">val_ref_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">test_ref_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">null_ref_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">num_procs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+<span class="p">):</span>
+
+    <span class="c1"># grid search the following mapping thresholds and mappings</span>
+    <span class="n">thresholds</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">evenly_divide</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">evenly_divide</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.97</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">evenly_divide</span><span class="p">(</span><span class="mf">0.98</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">,</span> <span class="mi">19</span><span class="p">)</span>
+        <span class="o">+</span> <span class="n">evenly_divide</span><span class="p">(</span><span class="mf">0.9991</span><span class="p">,</span> <span class="mf">0.9995</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">mapping_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;src2tgt&quot;</span><span class="p">,</span> <span class="s2">&quot;tgt2src&quot;</span><span class="p">,</span> <span class="s2">&quot;combined&quot;</span><span class="p">]</span>
+
+    <span class="c1"># load src2tgt and tgt2src mappings</span>
+    <span class="n">src2tgt_pred_maps</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">tgt2src_pred_maps</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">detect_path</span><span class="p">(</span><span class="n">global_match_dir</span> <span class="o">+</span> <span class="s2">&quot;/src2tgt&quot;</span><span class="p">):</span>
+        <span class="n">src2tgt_pred_maps</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">from_saved</span><span class="p">(</span><span class="n">global_match_dir</span> <span class="o">+</span> <span class="s2">&quot;/src2tgt&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">detect_path</span><span class="p">(</span><span class="n">global_match_dir</span> <span class="o">+</span> <span class="s2">&quot;/tgt2src&quot;</span><span class="p">):</span>
+        <span class="n">tgt2src_pred_maps</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">from_saved</span><span class="p">(</span><span class="n">global_match_dir</span> <span class="o">+</span> <span class="s2">&quot;/tgt2src&quot;</span><span class="p">)</span>
+    <span class="n">pred_batches</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">thresholds</span><span class="p">:</span>
+        <span class="n">threshold</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="n">src2tgt_pred</span> <span class="o">=</span> <span class="n">pred_thresholding</span><span class="p">(</span><span class="n">src2tgt_pred_maps</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span> <span class="k">if</span> <span class="n">src2tgt_pred_maps</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="n">tgt2src_pred</span> <span class="o">=</span> <span class="n">pred_thresholding</span><span class="p">(</span><span class="n">tgt2src_pred_maps</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)</span> <span class="k">if</span> <span class="n">tgt2src_pred_maps</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="n">combined_pred</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">src2tgt_pred</span> <span class="o">+</span> <span class="n">tgt2src_pred</span><span class="p">)</span>
+        <span class="n">pred_batches</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">src2tgt_pred</span><span class="p">,</span> <span class="n">tgt2src_pred</span><span class="p">,</span> <span class="n">combined_pred</span><span class="p">,</span> <span class="n">threshold</span><span class="p">))</span>
+
+    <span class="c1"># merge the reference mappings with the null reference mappings because</span>
+    <span class="c1"># they should be ignored in hyperparam selection</span>
+    <span class="n">val_results_dir</span> <span class="o">=</span> <span class="n">global_match_dir</span> <span class="o">+</span> <span class="s2">&quot;/val_results&quot;</span>
+    <span class="n">merged_null_ref_path</span> <span class="o">=</span> <span class="n">val_results_dir</span> <span class="o">+</span> <span class="s2">&quot;/null_refs.val.tsv&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">detect_path</span><span class="p">(</span><span class="n">merged_null_ref_path</span><span class="p">):</span>
+        <span class="n">train_ref</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">OntoMappings</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">train_ref_path</span><span class="p">)</span><span class="o">.</span><span class="n">to_tuples</span><span class="p">()</span> <span class="k">if</span> <span class="n">train_ref_path</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="p">)</span>
+        <span class="n">null_ref</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">OntoMappings</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">null_ref_path</span><span class="p">)</span><span class="o">.</span><span class="n">to_tuples</span><span class="p">()</span> <span class="k">if</span> <span class="n">null_ref_path</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="p">)</span>
+        <span class="n">test_ref</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">test_ref_path</span><span class="p">)</span><span class="o">.</span><span class="n">to_tuples</span><span class="p">()</span> <span class="k">if</span> <span class="n">test_ref_path</span> <span class="k">else</span> <span class="p">[]</span>
+
+        <span class="n">null_ref</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">null_ref</span> <span class="o">+</span> <span class="n">train_ref</span> <span class="o">+</span> <span class="n">test_ref</span>
+        <span class="p">)</span>  <span class="c1"># only val ref is not ignored during hyperparam selection</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">merged_null_ref_path</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;SrcEntity</span><span class="se">\t</span><span class="s2">TgtEntity</span><span class="se">\t</span><span class="s2">Score</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">src_ent</span><span class="p">,</span> <span class="n">tgt_ent</span> <span class="ow">in</span> <span class="n">null_ref</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">src_ent</span><span class="si">}</span><span class="se">\t</span><span class="si">{</span><span class="n">tgt_ent</span><span class="si">}</span><span class="se">\t</span><span class="s2">1.0</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># invoke 10 threads for faster hyperparam selection</span>
+    <span class="n">pool</span> <span class="o">=</span> <span class="n">mt</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">num_procs</span><span class="p">)</span>
+    <span class="n">eval_results</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">src2tgt</span><span class="p">,</span> <span class="n">tgt2src</span><span class="p">,</span> <span class="n">combined</span><span class="p">,</span> <span class="n">thr</span> <span class="ow">in</span> <span class="n">pred_batches</span><span class="p">:</span>
+        <span class="n">eval_results</span><span class="p">[</span><span class="n">thr</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;src2tgt&quot;</span><span class="p">:</span> <span class="n">src2tgt</span><span class="p">,</span> <span class="s2">&quot;tgt2src&quot;</span><span class="p">:</span> <span class="n">tgt2src</span><span class="p">,</span> <span class="s2">&quot;combined&quot;</span><span class="p">:</span> <span class="n">combined</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">map_type</span> <span class="ow">in</span> <span class="n">mapping_types</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">preds</span><span class="p">[</span><span class="n">map_type</span><span class="p">]:</span>
+                <span class="n">eval_results</span><span class="p">[</span><span class="n">thr</span><span class="p">][</span><span class="n">map_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">apply_async</span><span class="p">(</span>
+                    <span class="n">global_match_eval</span><span class="p">,</span>
+                    <span class="n">args</span><span class="o">=</span><span class="p">(</span>
+                        <span class="kc">None</span><span class="p">,</span>
+                        <span class="n">val_ref_path</span><span class="p">,</span>
+                        <span class="n">merged_null_ref_path</span><span class="p">,</span>
+                        <span class="n">thr</span><span class="p">,</span>
+                        <span class="n">preds</span><span class="p">[</span><span class="n">map_type</span><span class="p">],</span>
+                        <span class="n">map_type</span><span class="p">,</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">eval_results</span><span class="p">[</span><span class="n">thr</span><span class="p">][</span><span class="n">map_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">apply_async</span><span class="p">(</span>
+                    <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;P&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;f_score&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,)</span>
+                <span class="p">)</span>
+    <span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+
+    <span class="n">best_results</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;threshold&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">&quot;map_type&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="s2">&quot;best_f1&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">serialized_eval_results</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">thr</span><span class="p">,</span> <span class="n">results</span> <span class="ow">in</span> <span class="n">eval_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">serialized_eval_results</span><span class="p">[</span><span class="n">thr</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">map_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;combined&quot;</span><span class="p">,</span> <span class="s2">&quot;src2tgt&quot;</span><span class="p">,</span> <span class="s2">&quot;tgt2src&quot;</span><span class="p">]:</span>
+            <span class="n">scores</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">map_type</span><span class="p">]</span>
+            <span class="n">scores</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="n">serialized_eval_results</span><span class="p">[</span><span class="n">thr</span><span class="p">][</span><span class="n">map_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">scores</span>
+            <span class="k">if</span> <span class="n">scores</span><span class="p">[</span><span class="s2">&quot;f_score&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">best_results</span><span class="p">[</span><span class="s2">&quot;best_f1&quot;</span><span class="p">]:</span>
+                <span class="n">best_results</span><span class="p">[</span><span class="s2">&quot;threshold&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">thr</span>
+                <span class="n">best_results</span><span class="p">[</span><span class="s2">&quot;map_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">map_type</span>
+                <span class="n">best_results</span><span class="p">[</span><span class="s2">&quot;best_f1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="s2">&quot;f_score&quot;</span><span class="p">]</span>
+
+    <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Best Hyperparameters for Validation&quot;</span><span class="p">)</span>
+    <span class="n">SavedObj</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="n">serialized_eval_results</span><span class="p">,</span> <span class="n">val_results_dir</span> <span class="o">+</span> <span class="s2">&quot;/results.val.json&quot;</span><span class="p">)</span>
+    <span class="n">SavedObj</span><span class="o">.</span><span class="n">print_json</span><span class="p">(</span><span class="n">best_results</span><span class="p">)</span>
+    <span class="n">SavedObj</span><span class="o">.</span><span class="n">save_json</span><span class="p">(</span><span class="n">best_results</span><span class="p">,</span> <span class="n">val_results_dir</span> <span class="o">+</span> <span class="s2">&quot;/best_hyperparams.val.json&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="local_rank_eval"><a class="viewcode-back" href="../../../deeponto.evaluation.html#deeponto.evaluation.align_eval.local_rank_eval">[docs]</a><span class="k">def</span> <span class="nf">local_rank_eval</span><span class="p">(</span><span class="n">pred_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ref_anchored_maps_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="n">ks</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Eval on Hits@K, MRR (estimating OM performance) </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">banner_msg</span><span class="p">(</span><span class="s2">&quot;Eval using Hits@K, MRR&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ref_anchored_maps_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.tsv&quot;</span><span class="p">):</span>
+        <span class="n">ref_anchored_maps</span> <span class="o">=</span> <span class="n">AnchoredOntoMappings</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">ref_anchored_maps_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ref_anchored_maps</span> <span class="o">=</span> <span class="n">AnchoredOntoMappings</span><span class="o">.</span><span class="n">from_saved</span><span class="p">(</span><span class="n">ref_anchored_maps_path</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">pred_maps</span> <span class="o">=</span> <span class="n">OntoMappings</span><span class="o">.</span><span class="n">from_saved</span><span class="p">(</span><span class="n">pred_path</span><span class="p">)</span>
+        <span class="n">ref_anchored_maps</span><span class="o">.</span><span class="n">fill_scored_maps</span><span class="p">(</span><span class="n">pred_maps</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="c1"># for those with already ranked mapppings</span>
+        <span class="n">pred_maps</span> <span class="o">=</span> <span class="n">AnchoredOntoMappings</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">pred_path</span><span class="p">,</span> <span class="n">is_ranked</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">set</span><span class="p">(</span><span class="n">pred_maps</span><span class="o">.</span><span class="n">anchor2cands</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">==</span> <span class="nb">set</span><span class="p">(</span><span class="n">ref_anchored_maps</span><span class="o">.</span><span class="n">anchor2cands</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="c1"># the ranked input should have the same set of anchors as the reference anchor mappings</span>
+            <span class="n">ref_anchored_maps</span> <span class="o">=</span> <span class="n">pred_maps</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not find correct anchors.&quot;</span><span class="p">)</span>
+    <span class="c1"># print(ref_anchor_maps.anchor2cand)</span>
+
+    <span class="c1"># load reference mappings and (opt) null mappings</span>
+    <span class="c1"># ref = OntoMappings.read_tsv_mappings(ref_path, 0.0).to_tuples()</span>
+    <span class="n">ref_pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ref_anchored_maps</span><span class="o">.</span><span class="n">anchor2cands</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;MRR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">mean_reciprocal_rank</span><span class="p">(</span><span class="n">ref_anchored_maps</span><span class="p">,</span> <span class="n">ref_pairs</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ks</span><span class="p">:</span>
+        <span class="n">results</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Hits@</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">hits_at_k</span><span class="p">(</span><span class="n">ref_anchored_maps</span><span class="p">,</span> <span class="n">ref_pairs</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">SavedObj</span><span class="o">.</span><span class="n">print_json</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">results</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Yuan He (KRR-Oxford).</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
