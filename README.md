@@ -72,16 +72,18 @@ DeepOnto has implemented a family of BERT-based Ontology Matching (OM) models in
 - **BERTMap** and **BERTMapLt** (EditSim) for equivalence OM;
 - **BERTSubs** (not ready) for subsumption OM.
 
+?> Click [here](https://krr-oxford.github.io/DeepOnto/#/bertmap) for BERT-based OM.
+
 It also incorporates the OM resource **Bio-ML**:
 -  Download link: *https://doi.org/10.5281/zenodo.6510086* (CC BY 4.0 International);
 -  Instructions: *https://krr-oxford.github.io/DeepOnto/#/om_resources*;
 -  OAEI track: *https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/*.
 
+?> Click [here](https://krr-oxford.github.io/DeepOnto/#/om_resources) for OM resources.
+
 ### Using OWLAPI Reasoner in Python
 
 Thanks for [JPype](https://jpype.readthedocs.io/en/latest/), we can use the OWLAPI reasoner in Python for better integration with the deep learning modules. See the page [here](reasoning.md) for more information.
-
-?> Click [here](https://krr-oxford.github.io/DeepOnto/#/using_deeponto) for script usage related to supported features.
 
 ## License
 
