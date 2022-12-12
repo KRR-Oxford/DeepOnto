@@ -91,7 +91,7 @@ There are two evaluation schemes (**local ranking** and **global matching**) and
 
   #### **AnchoredOntoMappings**
 
-  Load the whole data folder using [`AnchoredOntoMappings`](data_structures?id=anchoredontomappings) implemented in DeepOnto: 
+  Load the whole data folder using [`AnchoredOntoMappings`](om_resources?id=anchoredontomappings) implemented in DeepOnto: 
 
   ```python
   from deeponto.onto.mapping import AnchoredOntoMappings
@@ -278,7 +278,7 @@ Several python classes for entity (in string) mappings are defined here as main 
 
 ### EntityMapping
 
->  [:link:](https://github.com/KRR-Oxford/DeepOnto/blob/main/src/deeponto/onto/mapping.py)
+>  [:link:](https://krr-oxford.github.io/DeepOnto/_modules/deeponto/onto/mapping.html#EntityMapping)
 *CLASS* &ensp; deeponto.onto.mapping.EntityMapping(<em>src_ent_iri: str, tgt_ent_iri: str, rel: str, score: float</em>)
 
 The basic data structure for representing a mapping between entities.
@@ -308,7 +308,7 @@ src2tgt_map = EntityMapping(
 
 ### AnchorMapping
 
->  [:link:](https://github.com/KRR-Oxford/DeepOnto/blob/main/src/deeponto/onto/mapping.py)
+>  [:link:](https://krr-oxford.github.io/DeepOnto/_modules/deeponto/onto/mapping.html#AnchorMapping)
 *CLASS* &ensp; deeponto.onto.mapping.AnchorMapping(<em>src_ent_iri: str, tgt_ent_iri: str, rel: str, score: float</em>)
 
 It extends from the basic `EntityMapping` and can incorporate other entity mappings as its candidates.
@@ -341,7 +341,7 @@ anchor_map.add_candidate(cand_map)
 
 ### OntoMappings
 
->  [:link:](https://github.com/KRR-Oxford/DeepOnto/blob/main/src/deeponto/onto/mapping.py)
+>  [:link:](https://krr-oxford.github.io/DeepOnto/_modules/deeponto/onto/mapping.html#OntoMappings)
 *CLASS* &ensp; deeponto.onto.mapping.OntoMappings(<em>
         flag: str, 
         n_best: Optional[int],
@@ -405,7 +405,7 @@ onto_maps = OntoMappings.from_saved("./src2tgt_maps")
 
 ### AnchoredOntoMappings
 
->  [:link:](https://github.com/KRR-Oxford/DeepOnto/blob/main/src/deeponto/onto/mapping.py)
+>  [:link:](https://krr-oxford.github.io/DeepOnto/_modules/deeponto/onto/mapping.html#AnchoredOntoMappings)
 *CLASS* &ensp; deeponto.onto.mapping.AnchoredOntoMappings(<em>
         flag: str, 
         n_best: Optional[int],
