@@ -27,7 +27,7 @@ Please see the following sections for example usage.
 
 <!-- !> Contents regarding `pair_score` mode of OM and `om_cands.py` are not fully ready. -->
 
-## Ontology Matching with BERTMap
+## OM with BERTMap
 
 There are two modes for OM with BERTMap: `global_match` and `pair_score`. `global_match` aims to compute mappings given two input ontologies and `pair_score` is for scoring provided class pairs. For both modes, the source and target input ontologies are required; for `pair_score`, an input file containing the unscored class pairs and a flag that indicates the direction of the class pairs (`src2tgt` or `tgt2src`) are further required (see [below](using_deeponto?id=pair_scoring)).
 
@@ -40,20 +40,20 @@ There are two modes for OM with BERTMap: `global_match` and `pair_score`. `globa
 
 In this mode, the OM model is expected to search for all plausible cross-ontology class pairs that are semantically related (through, e.g., equivalence, subsumption). To search and compute mappings globally, the OM model needs to address *(1)* how semantically close two classes are; *(2)* how to search efficiently (naive traversal takes quadratic time). Futher refinement such as extension and repair are also optional for postprocessing.
 
-Parameters for `onto_match.py` in `global_match` mode:
+Parameters for `bertmap.py` in `global_match` mode:
 
 - **saved_path**(*str*): the path to the main output directory.
 - **src_onto**(*str*): the path to the source ontology file.
 - **tgt_onto**(*str*): the path to the target ontology file.
 - **config_path**(*str*): the path to the configuration file, default minimal configurations for each OM model is available at `deeponto_repo/cofig`.
 
-Example usage of `onto_match.py` for global matching:
+Example usage of `bertmap.py` for global matching:
 
 **Step 1**: Run the script with above arguments specified.
 
 ```bash
 # matching DOID and ORDO with minimal configurations
-python onto_match.py \
+python bertmap.py \
 --saved_path "./experiment/doid2ordo" \  
 --src_onto "./data/doid.owl" \
 --tgt_onto "./data/ordo.owl" \
@@ -95,7 +95,7 @@ In this mode, the OM model is expected to compute the matching scores for input 
 - With two columns: `"SrcEntity"` and `"TgtEntity"`, which are pairs of class IRIs from source and target ontologies, respectively.
 - With three columns: `"SrcEntity"`, `"TgtEntity"`, and `"TgtCandidates"`, which are pairs of source-target class IRIs and candidates generated from target ontologies. Please refer to [*local ranking*](om_resources?id=evaluation_framework) evaluation for details.
 
-Parameters for `onto_match.py` in `pair_score` mode:
+Parameters for `bertmap.py` in `pair_score` mode:
 
 - **saved_path**(*str*): the path to the main output directory.
 - **src_onto**(*str*): the path to the source ontology file.
@@ -104,13 +104,13 @@ Parameters for `onto_match.py` in `pair_score` mode:
 - **--to_be_scored_mappings_path**(*str*): the path to the to-be-scored mappings in `.tsv` as described above.
 - **--to_be_scored_mappings_flag**(*str*): the flag that indicates the direction of the to-be-scored class pairs (`src2tgt` or `tgt2src`).
 
-Example usage of `onto_match.py` for pair scoring:
+Example usage of `bertmap.py` for pair scoring:
 
 **Step 1**: Run the script with above arguments specified:
 
 ```bash
 # scoring class pairs DOID and ORDO with minimal configurations
-python onto_match.py \
+python bertmap.py \
 --saved_path "./experiment/doid2ordo" \  
 --src_onto "./data/doid.owl" \
 --tgt_onto "./data/ordo.owl" \
