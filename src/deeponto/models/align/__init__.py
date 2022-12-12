@@ -19,8 +19,8 @@ from .align_pipeline import OntoAlignPipeline
 
 # implemented models
 learning_based_models = ["bertmap"]
-rule_based_models = ["string_match", "edit_sim"]
-multi_procs_models = ["string_match", "edit_sim"]
+rule_based_models = ["bertmap-lite (edit-sim)"]
+multi_procs_models = ["bertmap-lite (edit-sim)"]
 implemented_models = learning_based_models + rule_based_models
 
 # support alignment modes

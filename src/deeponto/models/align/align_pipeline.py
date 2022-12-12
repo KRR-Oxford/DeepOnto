@@ -187,7 +187,7 @@ class OntoAlignPipeline(OntoPipelineBase):
                 saved_path=self.paths["model"],
             )
 
-        elif self.model_name == "edit_sim":
+        elif self.model_name == "edit_sim" or self.model_name == "bertmap-lite (edit-sim)":
             align_model = EditSimilarity(
                 src_onto=self.src_onto,
                 tgt_onto=self.tgt_onto,

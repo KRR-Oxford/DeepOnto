@@ -55,7 +55,7 @@ def onto_match(
     print_choices(supported_modes)
     mode = supported_modes[click.prompt("Enter a number", type=int)]
 
-    banner_msg("Choose an Implemented OM Model")
+    banner_msg("Choose a BERTMap variant")
     print_choices(implemented_models)
     model_name = implemented_models[click.prompt("Enter a number", type=int)]
 
