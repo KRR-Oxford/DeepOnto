@@ -27,9 +27,9 @@
     "corpora": {
         "apply_transitivity": false,
         "neg_ratio": 4,
-        "train_mappings_path": null,
-        "val_mappings_path": null,
-        "test_mappings_path": null,
+        "train_mappings_path": "(optional) path to train.tsv",
+        "val_mappings_path": "(optional) path to val.tsv",
+        "test_mappings_path": "(optional) path to test.tsv",
         "null_mappings_path": null,
         "aux_onto_paths": []
     },
