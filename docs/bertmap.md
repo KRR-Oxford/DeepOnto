@@ -77,8 +77,6 @@ Then the script will do the followings:
 - Train the scoring function with constructed data if the selected model is learning-based;
 - Globally compute the mappings and apply any refinement steps if any.
 
-?> Depending on the specific configurations of the selected model, the outputs could be different. Please refer to the documentation page of [OM models](om_models.md) for details.
-
 
 ### Pair Scoring
 
