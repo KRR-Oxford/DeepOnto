@@ -79,7 +79,7 @@ class BertArguments:
             do_eval=True,
             save_steps=eval_steps,
             load_best_model_at_end=True,
-            save_total_limit=1,
+            save_total_limit=2,
             metric_for_best_model=metric_for_best_model,
             greater_is_better=greater_is_better,
         )
