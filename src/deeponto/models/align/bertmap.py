@@ -149,9 +149,8 @@ class BERTMap(OntoAlignBase):
                 )
         else:
             print("found an existing BERT model directory, delete it and re-run if it's empty ...")
-        best_checkpoint = 0
+        best_checkpoint = -1
         for file in os.listdir(self.fine_tune_model_path):
-            # only 1 checkpoint is saved so the latest one is the best
             if file.startswith("checkpoint"):
                 trainer_state = SavedObj.load_json(
                     f"{self.fine_tune_model_path}/{file}/trainer_state.json"
@@ -162,6 +161,8 @@ class BERTMap(OntoAlignBase):
                 if checkpoint > best_checkpoint:
                     best_checkpoint = checkpoint
                     print(f"found new checkpoint: {best_checkpoint} ...")
+        if best_checkpoint == -1:
+            raise RuntimeError("Could not find any saved checkpoints ...")
         banner_msg(f"Found Saved Best Checkpoint: {best_checkpoint}")
         self.bert_args.bert_checkpoint = f"{self.fine_tune_model_path}/checkpoint-{best_checkpoint}"
         self.bert_classifier = BertStaticForSequenceClassification(self.bert_args)
