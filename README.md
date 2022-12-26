@@ -83,7 +83,7 @@ It also incorporates the OM resource **Bio-ML**:
 
 ### Using OWLAPI Reasoner in Python
 
-Thanks for [JPype](https://jpype.readthedocs.io/en/latest/), we can use the OWLAPI reasoner in Python for better integration with the deep learning modules. See the page [here](reasoning.md) for more information.
+Thanks for [JPype](https://jpype.readthedocs.io/en/latest/), we can use the OWLAPI reasoner in Python for better integration with the deep learning modules. See the page [here](https://krr-oxford.github.io/DeepOnto/#/reasoning) for more information.
 
 ## License
 
