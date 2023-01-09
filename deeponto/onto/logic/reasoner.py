@@ -19,9 +19,9 @@ from typing import List
 from collections import defaultdict
 import warnings
 import enlighten
-from deeponto import init_jvm, OWL_THING, OWL_NOTHING, OWL_BOTTOM_OBJECT_PROP, OWL_TOP_OBJECT_PROP
+from deeponto import OWL_THING, OWL_NOTHING, OWL_BOTTOM_OBJECT_PROP, OWL_TOP_OBJECT_PROP
 
-init_jvm("2g")
+# init_jvm("2g")
 
 # from java.io import *  # type: ignore
 # from java.util import *  # type: ignore

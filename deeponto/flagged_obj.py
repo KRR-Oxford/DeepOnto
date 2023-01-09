@@ -16,7 +16,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from itertools import cycle
-from deeponto.onto import Ontology
 
 # to avoid circular imports
 if TYPE_CHECKING:
