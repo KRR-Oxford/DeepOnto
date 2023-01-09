@@ -32,27 +32,6 @@ class Tokenizer:
     def tokenize_all(self, texts_list):
         return list(chain.from_iterable(self(txt) for txt in texts_list))
 
-    # @staticmethod
-    # def merge_sub_word_tokens(sub_word_tokens: List[str]):
-    #     """Merge the sub-word tokens into their original words by detecting the 
-    #     prefix `##`.
-    #     """
-    #     original_words = []
-    #     cur_word = ""
-    #     for t in sub_word_tokens:
-    #         if t.startswith("##"):
-    #             cur_word += t[2:]
-    #         else:
-    #             if cur_word:
-    #                 # save the merged word
-    #                 original_words.append(cur_word)
-    #             # start with a new word
-    #             cur_word = t
-    #             # save the new cur_word if it is the last one
-    #             if cur_word == sub_word_tokens[-1]:
-    #                 original_words.append(cur_word)
-    #     return original_words
-
     @classmethod
     def from_pretrained(cls, pretrained_path: str = "bert-base-uncased"):
         """huggingface sub-word level tokenizer (statistics-based)

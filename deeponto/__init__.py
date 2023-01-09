@@ -40,7 +40,3 @@ def init_jvm(memory):
     if jpype.isJVMStarted():
         print("JVM started successfully ...")
 
-OWL_THING = "http://www.w3.org/2002/07/owl#Thing"
-OWL_NOTHING = "http://www.w3.org/2002/07/owl#Nothing"
-OWL_TOP_OBJECT_PROP = "http://www.w3.org/2002/07/owl#topObjectProperty"
-OWL_BOTTOM_OBJECT_PROP = "http://www.w3.org/2002/07/owl#bottomObjectProperty"

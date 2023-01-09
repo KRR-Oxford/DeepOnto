@@ -11,5 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from .general_utils import *
+from .file_processing import FileProcessor
+from .text_processing import TextProcessor, Tokenizer, InvertedIndex
 from .logging import credit

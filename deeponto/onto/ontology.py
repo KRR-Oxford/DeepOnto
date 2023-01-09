@@ -11,274 +11,253 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Class that extends the owlready2 Ontology for convenient access to textual and structural information
-
-NOTE: the logical information is handled by the OWLAPI library (see onto.logic.reasoner)
-
-Known issues for owlready2:
-- No new object will be created when loading ontologies of the same IRIs 
-    - Solution: beforing handling the second owl of same IRI, destroy the cache in the first one
-
-"""
+"""Ontology Classs, extended from OWLAPI"""
 
 from __future__ import annotations
 
 import os
-from typing import Optional, List
+from typing import Optional, List, Union
 from collections import defaultdict
+from yacs.config import CfgNode
 from owlready2 import get_ontology, default_world
 from owlready2.entity import ThingClass
 from pathlib import Path
 
-from deeponto import SavedObj
-from .text import Tokenizer, text_utils
+from deeponto.utils import FileProcessor, TextProcessor, Tokenizer, InvertedIndex
+from deeponto import init_jvm
+
+# initialise JVM for python-java interaction
+init_jvm("2g")
+
+from java.io import File  # type: ignore
+from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
+from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression  # type: ignore
+from org.semanticweb.HermiT import ReasonerFactory  # type: ignore
+from org.semanticweb.owlapi.util import OWLObjectDuplicator  # type: ignore
+from org.semanticweb.owlapi.search import EntitySearcher  # type: ignore
+
+# IRIs for special entities
+OWL_THING = "http://www.w3.org/2002/07/owl#Thing"
+OWL_NOTHING = "http://www.w3.org/2002/07/owl#Nothing"
+OWL_TOP_OBJECT_PROPERTY = "http://www.w3.org/2002/07/owl#topObjectProperty"
+OWL_BOTTOM_OBJECT_PROPERTY = "http://www.w3.org/2002/07/owl#bottomObjectProperty"
+OWL_TOP_DATA_PROPERTY = "https://www.w3.org/2002/07/owl#topDataProperty"
+OWL_BOTTOM_DATA_PROPERTY = "https://www.w3.org/2002/07/owl#bottomDataProperty"
+RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
+
+TOP_BOTTOMS = CfgNode(
+    {
+        "Classes": {"TOP": OWL_THING, "BOTTOM": OWL_NOTHING},
+        "ObjectProperties": {"TOP": OWL_TOP_OBJECT_PROPERTY, "BOTTOM": OWL_BOTTOM_OBJECT_PROPERTY},
+        "DataProperties": {"TOP": OWL_TOP_DATA_PROPERTY, "BOTTOM": OWL_BOTTOM_DATA_PROPERTY},
+    }
+)
 
 
-class Ontology(SavedObj):
+class Ontology:
+    """Ontology class that extends from the Java library OWLAPI.
+
+    Attributes:
+        owl_path (str): A string indicating the path to the OWL ontology file.
+        owl_manager (OWLOntologyManager): An instance of OWLOntologyManager.
+        owl_onto (OWLOntology): An instance of OWLOntology loaded from `owl_path`.
+        owl_iri (str): The IRI of the imported OWLOntology instance.
+        owl_classes (dict): A dictionary that stores the (iri, ontology class) pairs.
+        owl_object_properties (dict): A dictionary that stores the (iri, ontology object property) pairs.
+        owl_data_properties (dict): A dictionary that stores the (iri, ontology data property) pairs.
+        owl_data_factor (OWLDataFactory): An instance of OWLDataFactory for manipulating axioms.
+    """
+
     def __init__(self, owl_path: str):
-        # owlready2 attributes
         self.owl_path = os.path.abspath(owl_path)
-        self.owl = get_ontology(f"file://{owl_path}").load()
-        # self.graph = default_world.as_rdflib_graph()  # rdf graph
-        # NOTE: list of label properties (in IRIs)
-        self.lab_props = None
-        # entity or property IRIs to their labels (via specified annotation properties)
-        self.iri2labs = None
-        # inverted index for class labels
-        self.inv_idx = None
+        self.owl_manager = OWLManager.createOWLOntologyManager()
+        self.owl_onto = self.owl_manager.loadOntologyFromOntologyDocument(
+            IRI.create("file:///" + self.owl_path)
+        )
+        self.owl_iri = str(self.owl_onto.getOntologyID().getOntologyIRI().get())
+        self.owl_classes = self.get_owl_objects("Classes")
+        self.owl_object_properties = self.get_owl_objects("ObjectProperties")
+        self.owl_data_properties = self.get_owl_objects("DataProperties")
+        self.owl_data_factory = self.owl_manager.getOWLDataFactory()
+        self.owl_annotation_properties = self.get_owl_objects("AnnotationProperties")
 
-        # stat attributes
-        self.num_classes = None
-        self.num_labs = None
-        self.avg_labs = None
-        self.num_entries_inv_idx = None
-        super().__init__(self.owl.name)
+    @property
+    def OWLThing(self):
+        return self.owl_data_factory.getOWLThing()
 
-    @classmethod
-    def from_new(
-        cls,
-        onto_path: str,
-        lab_props: List[str] = ["http://www.w3.org/2000/01/rdf-schema#label"],
-        tokenizer: Optional[Tokenizer] = None,
-        uncased_labels: bool = True,
-    ) -> Ontology:
-        """Initialise a new Ontology instance and coduct pre-processing
+    @property
+    def OWLNothing(self):
+        return self.owl_data_factory.getOWLNothing()
 
-        Parameters
-        ----------
-        onto_path : str
-            path to the ontology file to be processed
-        lab_props : List[str], optional
-            annotation properties considered as the class labels, by default ["http://www.w3.org/2000/01/rdf-schema#label"]
-        tokenizer : Optional[Tokenizer], optional
-            tokenizer used for creating the inverted index, by default None
-        uncased_labels : bool, optional
-            lowercased the pre-processed class labels or not, by default True
+    @property
+    def OWLTopObjectProperty(self):
+        return self.owl_data_factory.getOWLTopObjectProperty()
 
-        Returns
-        -------
-        Ontology
-            a pre-processed Ontology instance
-        """
-        onto = cls(onto_path)
-        onto.lab_props = lab_props
-        onto.iri2labs = defaultdict(list)
-        onto.num_classes = 0
-        onto.num_labs = 0
-        for cl in onto.owl.classes():
-            onto.iri2labs[cl.iri] = text_utils.labs_from_props(
-                cl.iri, onto.lab_props, uncased_labels
-            )
-            onto.num_labs += len(onto.iri2labs[cl.iri])
-            onto.num_classes += 1
-        onto.avg_labs = round(onto.num_labs / onto.num_classes, 2)
-        # for (sub-)word inverted index
-        if tokenizer:
-            onto.build_inv_idx(tokenizer, cut=0)
-        print(onto)
-        return onto
+    @property
+    def OWLBottomObjectProperty(self):
+        return self.owl_data_factory.getOWLBottomObjectProperty()
 
-    @classmethod
-    def from_saved(cls, saved_path: str) -> Optional[Ontology]:
-        """Load an instance of pre-processed ontologies from the specified path.
+    @property
+    def OWLTopDataProperty(self):
+        return self.owl_data_factory.getOWLTopDataProperty()
 
-        Parameters
-        ----------
-        saved_path : str
-            path to save the pre-processed ontology
-
-        Returns
-        -------
-        Optional[Ontology]
-            loaded pre-processed ontology
-
-        Raises
-        ------
-        FileNotFoundError
-            raise if the required files are missing
-        """
-        try:
-            onto = cls.load_pkl(saved_path)
-            owl_file_name = onto.owl_path.split("/")[-1]
-            onto.owl_path = saved_path + "/" + owl_file_name
-            onto.owl = get_ontology(f"file://{onto.owl_path}").load()
-            return onto
-        except:
-            raise FileNotFoundError(f"please check file integrity in : {saved_path})")
-
-    def save_instance(self, saved_path: str):
-        """Save the current instance of an pre-processed ontologies
-        
-        The saved Ontology consists of a owl file and a pkl file with all the
-        data (class2idx, idx2labs, inv_idx, ...) generated from construction
-
-        Parameters
-        ----------
-        saved_path : str
-            path to save the Ontology instance
-        """
-        Path(saved_path).mkdir(parents=True, exist_ok=True)
-        self.copy2(self.owl_path, saved_path)
-        owl_file_name = self.owl_path.split("/")[-1]
-        self.owl_path = saved_path + "/" + owl_file_name
-        # the owlready2 ontology cannot be pickled, so saved as a separate file
-        delattr(self, "owl")
-        # delattr(self, "graph")
-        self.save_pkl(self, saved_path)
-        # load back the owl ontology after saving the pickled parts
-        self.owl = get_ontology(f"file://{self.owl_path}").load()
+    @property
+    def OWLBottomDataProperty(self):
+        return self.owl_data_factory.getOWLBottomDataProperty()
 
     def __str__(self) -> str:
         self.info = {
-            "owl_name": self.owl.name,
-            "num_classes": self.num_classes,
-            "lab_probs": [self.name_from_iri(p) for p in self.lab_props if self.obj_from_iri(p)],
-            "num_labs": self.num_labs,
-            "avg_labs": self.avg_labs,
-            "num_entries_inv_idx": self.num_entries_inv_idx,
+            "loaded_from": os.path.normpath(self.owl_path).split(os.path.sep)[-1],
+            "num_classes": len(self.owl_classes),
         }
+        return FileProcessor.print_dict(self.info)
 
-        return super().report(**self.info)
+    def get_owl_objects(self, entity_type: str):
+        """Get OWLObject instances from the ontology.
 
-    @property
-    def classes(self):
-        return list(self.owl.classes())
+        Args:
+            entity_type (str): Options are "Classes", "ObjectProperties", "DatasetProperties", etc.
 
-    @property
-    def iri(self):
-        return self.owl.base_iri
-
-    @classmethod
-    def obj_from_iri(cls, iri: str):
-        """Return an owlready2 entity given its IRI
-        
-        Parameters
-        ----------
-        iri : str
-            the IRI of the entity
-
-        Returns
-        -------
-        owlready2.Entity
-            the owlready2 entity that has the specified IRI
+        Returns:
+            dict: A dictionary that stores the (IRI, OWLObject) pairs
         """
-        return default_world[iri]
+        owl_objects = dict()
+        source = getattr(self.owl_onto, f"get{entity_type}InSignature")
+        for cl in source():
+            owl_objects[str(cl.getIRI())] = cl
+        return owl_objects
 
-    @classmethod
-    def name_from_iri(cls, iri: str):
-        """Return the entity name of the specified IRI
-
-        Parameters
-        ----------
-        iri : str
-            the IRI of the owlready2 entity
-
-        Returns
-        -------
-        str
-            the entity name of the specified IRI
+    def get_owl_object_from_iri(self, iri: str):
+        """Get an OWLObject instance given its IRI.
         """
-        return str(cls.obj_from_iri(iri))
-
-    def search_ent_labs(self, ent: ThingClass):
-        """Search labels for a given owlready2 ThingClass
-
-        Parameters
-        ----------
-        ent : ThingClass
-            the ThingClass object to search for labels
-
-        Returns
-        -------
-        list
-            the labels for the given ThingClass
-
-        Raises
-        ------
-        ValueError
-            raise if the given ThingClass is not found
-        """
-        if ent.iri in self.iri2labs.keys():
-            return self.iri2labs[ent.iri]
+        if iri in self.owl_classes.keys():
+            return self.owl_classes[iri]
+        elif iri in self.owl_object_properties.keys():
+            return self.owl_object_properties[iri]
+        elif iri in self.owl_data_properties.keys():
+            return self.owl_data_properties[iri]
+        elif iri in self.owl_annotation_properties.keys():
+            return self.owl_annotation_properties[iri]
         else:
-            raise ValueError(f'Input entity class "{ent.iri}" is not found in the ontology ...')
+            raise KeyError(f"Cannot retrieve unknown IRI: {iri}.")
 
-    def sib_labs(self):
-        """Return all the label groups extracted from sibling classes of this ontology as a 3-D list:
+    def get_owl_object_annotations(
+        self,
+        owl_object: Union[OWLObject, str],
+        annotation_property_iri: Optional[str] = None,
+        annotation_language_tag: Optional[str] = None,
+        apply_lowercasing: bool = True,
+    ):
+        """Get the annotations of the given OWLObject instance.
 
-        Returns
-        -------
-        List[List[List]]
-            -   1st list for different sibling groups;
-            -   2nd list for different siblings;
-            -   3rd list for different labels.
+        Args:
+            owl_object (Union[OWLObject, str]): An OWLObject instance or its IRI.
+            annotation_property_iri (Optional[str], optional): 
+                Any particular annotation property IRI of interest. Defaults to None.
+            annotation_language_tag (Optional[str], optional): 
+                Any particular annotation language tag of interest; 
+                NOTE that not every annotation has a language tag. 
+                Defaults to None. Options are "en", "de" etc.
+            apply_lowercasing (bool): Whether or not to apply lowercasing to annotation literals. 
+                Defaults to True.
+        Returns:
+            List[str]: A list of annotation literals of the given OWLObject.
         """
-        return text_utils.sib_labs(self.classes, self.lab_props)
+        if isinstance(owl_object, str):
+            owl_object = self.get_owl_object_from_iri(owl_object)
 
-    def build_inv_idx(self, tokenizer, cut: int = 0) -> None:
-        """Create inverted index based on the extracted labels of an ontology
+        annotation_property = None
+        if annotation_property_iri:
+            # return an empty list if `annotation_property_iri` does not exist in this OWLOntology`
+            annotation_property = self.get_owl_object_from_iri(annotation_property_iri)
 
-        Parameters
-        ----------
-        tokenizer : Tokenizer
-            text tokenizer, word-level or sub-word-level
-        cut : int, optional
-            keep tokens with length > cut , by default 0
+        annotations = []
+        for annotation in EntitySearcher.getAnnotations(
+            owl_object, self.owl_onto, annotation_property
+        ):
+
+            annotation = annotation.getValue()
+            # boolean that indicates whether the annotation's language is of interest
+            fit_language = False
+            if not annotation_language_tag:
+                # it is set to `True` if `annotation_langauge` is not specified
+                fit_language = True
+            else:
+                # restrict the annotations to a language if specified
+                try:
+                    # NOTE: not every annotation has a language attribute
+                    fit_language = annotation.getLang() == annotation_language_tag
+                except:
+                    pass
+
+            if fit_language:
+                # only get annotations that have a literal value
+                if annotation.isLiteral():
+                    annotations.append(
+                        TextProcessor.process_annotation_literal(
+                            str(annotation.getLiteral()), apply_lowercasing
+                        )
+                    )
+
+        return set(annotations)
+
+    def build_annotation_index(
+        self,
+        annotation_property_iris: Optional[List[str]] = None,
+        entity_type: str = "Classes",
+        apply_lowercasing: bool = True,
+    ):
+        """Build an annotation index for a given type of entities.
+
+        NOTE: only English labels are considererd (with English language tag)
+        
+        Args:
+            annotation_property_iris (List[str]): A list of annotation property IRIs; 
+                if not provided, all English annotations are considered. Defaults to None.
+            entity_type (str, optional): The entity type to be considered. Defaults to "Classes". 
+                Options are "Classes", "ObjectProperties", "DatasetProperties", etc.
+            apply_lowercasing (bool): Whether or not to apply lowercasing to annotation literals. 
+                Defaults to True.
         """
-        self.inv_idx = defaultdict(list)
-        for cls_iri, cls_labs in self.iri2labs.items():
-            for tk in tokenizer.tokenize_all(cls_labs):
-                if len(tk) > cut:
-                    self.inv_idx[tk].append(cls_iri)
-        self.num_entries_inv_idx = len(self.inv_idx)
 
-    def idf_select(self, ent_toks, pool_size: int = 200) -> List[str]:
-        """Select entities based on idf scores calculated from the pre-computed inverted index
+        annotation_index = defaultdict(set)
+        # example: Classes => owl_classes; ObjectProperties => owl_object_properties
+        entity_type = (
+            "owl_" + TextProcessor.split_java_identifier(entity_type).replace(" ", "_").lower()
+        )
+        entity_index = getattr(self, entity_type)
 
-        Parameters
-        ----------
-        ent_toks : List[str]
-            tokenized entity labels
-        pool_size : int, optional
-            maximum number of candidates considered, by default 200
+        if not annotation_property_iris:
+            annotation_property_iris = [RDFS_LABEL]  # rdfs:label is the default annotation property
 
-        Returns
-        -------
-        List[str]
-            candidates ranked by idf scores
-        """
-        cand_pool = text_utils.idf_select(ent_toks, self.inv_idx, pool_size)
-        # print three selected examples
-        examples = [
-            (self.name_from_iri(ent_iri), round(idf_score, 1))
-            for ent_iri, idf_score in cand_pool[: min(pool_size, 3)]
+        # preserve available annotation properties
+        annotation_property_iris = [
+            airi
+            for airi in annotation_property_iris
+            if airi in self.owl_annotation_properties.keys()
         ]
-        info = {"num_candidates": len(cand_pool)}
-        for i in range(len(examples)):
-            info[f"example_{i+1}"] = examples[i]
-        print(self.report(root_name="Selection.Info", **info))
-        return cand_pool
 
-    def path_select(self, pool_size: int = 200) -> List[str]:
-        # TODO
-        pass
+        # build the annotation index without duplicated literals
+        for airi in annotation_property_iris:
+            for iri, entity in entity_index.items():
+                annotation_index[iri].update(
+                    self.get_owl_object_annotations(
+                        owl_object=entity,
+                        annotation_property_iri=airi,
+                        annotation_language_tag=None,
+                        apply_lowercasing=apply_lowercasing,
+                    )
+                )
+
+        return annotation_index, annotation_property_iris
+
+    def build_inverted_annotation_index(self, annotation_index: dict, tokenizer: Tokenizer):
+        """Builds an inverted annotation index given an annotation index and a tokenizer.
+        """
+        return InvertedIndex(annotation_index, tokenizer)
+
+    def save_onto(self, save_path: str):
+        """Save the OWL Ontology file to the given path
+        """
+        self.owl_onto.saveOntology(IRI.create(File(save_path).toURI()))
+
