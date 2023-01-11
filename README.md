@@ -30,15 +30,20 @@ limitations under the License.
   A package for ontology engineering with deep learning. 
 </p>
 
-## About <!-- {docsify-ignore} -->
+
+!!! news "NEWS"
+
+    - [2023 Jan] A major update of DeepOnto including:
+        - Rewrite code to build on the OWLAPI and remove owlready2 from the essential dependencies.
+## About
 
 DeepOnto aims to provide implemented deep learning models and an evaluation platform for various ontology engineering purposes. 
 
-- **Documentation**: *https://krr-oxford.github.io/DeepOnto/#/*.
-- **Github Repository**: *https://github.com/KRR-Oxford/DeepOnto*. 
-- **PyPI**: *https://pypi.org/project/deeponto/*. (experimental)
+- **Documentation**: *<https://krr-oxford.github.io/DeepOnto/>*.
+- **Github Repository**: *<https://github.com/KRR-Oxford/DeepOnto>*. 
+- **PyPI**: *<https://pypi.org/project/deeponto/>*. (experimental)
 
-To use DeepOnto scripts, it is sufficient to git the project and run the scripts directly; to build on a new project extending DeepOnto, please install DeepOnto from PyPI by:
+To use DeepOnto [scripts](link-to-scripts), it is sufficient to git the project and run the scripts directly; to build on a new project extending DeepOnto, please install DeepOnto from PyPI by:
 
 ```bash
 pip install deeponto
@@ -48,8 +53,7 @@ pip install deeponto
 
 DeepOnto is mainly extended from the following packages:
 
-- [OwlReady2](https://owlready2.readthedocs.io/) for basic ontology processing.
-- [OWLAPI](http://owlapi.sourceforge.net/) (in Java) for advanced ontology processing. The Python-Java interaction relies on what has been implemented in [mOWL](https://mowl.readthedocs.io/en/latest/index.html) which uses [JPype](https://jpype.readthedocs.io/en/latest/).
+- [OWLAPI](http://owlapi.sourceforge.net/) (in Java) for ontology processing. The Python-Java interaction relies on what has been implemented in [mOWL](https://mowl.readthedocs.io/en/latest/index.html) which uses [JPype](https://jpype.readthedocs.io/en/latest/).
 - [Transformers](https://github.com/huggingface/transformers) for pre-trained language models.
 
 To use DeepOnto, please manually configure Pytorch installation using:
@@ -64,40 +68,48 @@ Then, install other dependencies in [`requirement.txt`](https://raw.githubuserco
 pip install -r requirements.txt
 ```
 
+
 ## Main Features
+
+
+### Extending the OWLAPI
+
+Thanks for [JPype](https://jpype.readthedocs.io/en/latest/), we can use the OWLAPI library in Python for better integration with the deep learning modules. For basic usage, see [`Ontology`][deeponto.onto.Ontology] and [`OntologyReasoner`][deeponto.onto.OntologyReasoner] classes in the package reference.
 
 ### Ontology Matching 
 
 DeepOnto has implemented a family of BERT-based Ontology Matching (OM) models including:
-- **BERTMap** and **BERTMapLt** (EditSim) for equivalence OM;
-- **BERTSubs** (not ready) for subsumption OM.
 
-?> Click [here](https://krr-oxford.github.io/DeepOnto/#/bertmap) for BERT-based OM.
+  - **BERTMap** and **BERTMapLt** (EditSim) for equivalence OM;
+  - **BERTSubs** (not ready) for subsumption OM.
+
+<!-- link to be changed -->
+> Click [here](https://krr-oxford.github.io/DeepOnto/#/bertmap) for BERT-based OM.
 
 It also incorporates the OM resource **Bio-ML**:
--  Download link: *https://doi.org/10.5281/zenodo.6510086* (CC BY 4.0 International);
--  Instructions: *https://krr-oxford.github.io/DeepOnto/#/om_resources*;
--  OAEI track: *https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/*.
 
-?> Click [here](https://krr-oxford.github.io/DeepOnto/#/om_resources) for OM resources.
+  -  Download link: *<https://doi.org/10.5281/zenodo.6510086>* (CC BY 4.0 International);
+  -  Instructions: *<https://krr-oxford.github.io/DeepOnto/#/om_resources>*;
+  -  OAEI track: *<https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/>*.
 
-### Using OWLAPI Reasoner in Python
-
-Thanks for [JPype](https://jpype.readthedocs.io/en/latest/), we can use the OWLAPI reasoner in Python for better integration with the deep learning modules. See the page [here](https://krr-oxford.github.io/DeepOnto/#/reasoning) for more information.
+<!-- link to be changed -->
+> Click [here](https://krr-oxford.github.io/DeepOnto/#/om_resources) for OM resources.
 
 ## License
 
-Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.
+!!! license "License"
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at *http://www.apache.org/licenses/LICENSE-2.0*
+    Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at *http://www.apache.org/licenses/LICENSE-2.0*
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
 
 ## Publications
 
