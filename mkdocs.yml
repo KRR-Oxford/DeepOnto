@@ -1,0 +1,35 @@
+site_name: DeepOnto
+# sit_url: https://krr-oxford.github.io/DeepOnto/
+repo_url: https://github.com/KRR-Oxford/DeepOnto
+
+# theme: readthedocs
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.indexes 
+
+
+nav:
+    - GET STARTED: 
+      - index.md
+      - Bio-ML: pages/om_resources.md
+    - PACKAGE REFERENCE:
+        - Ontology: 
+          - Ontology: reference/ontology.md
+          - OntologyReasoner: reference/ontology_reasoner.md
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences 
+  - pymdownx.inlinehilite
+  - admonition
+  - pymdownx.details
+
+plugins:
+  - include-markdown
+  - search
+  - mkdocstrings
