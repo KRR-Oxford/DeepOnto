@@ -12,4 +12,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from .ontology import Ontology, OntologyReasoner
-from .ontology_subs import OntologySubs
