@@ -15,13 +15,13 @@
 
 from __future__ import annotations
 
-from typing import List, Set, Tuple, Optional
+from typing import Optional
 import logging
 import datetime
 import time
-import itertools
-import random
+import torch
 import xml.etree.ElementTree as ET
+import subprocess
 
 def uniqify(ls):
     """Return a list of unique elements and preserve ordering.
@@ -130,3 +130,29 @@ def read_oaei_mappings(rdf_file: str):
     print('#Maps ("?"):', len(ignored_mappings))
 
     return ref_mappings, ignored_mappings
+
+
+def get_device(device_num: int = 0):
+    """Get a device (GPU or CPU) for the torch model
+    """
+    # If there's a GPU available...
+    if torch.cuda.is_available():
+        # Tell PyTorch to use the GPU.
+        device = torch.device(f"cuda:{device_num}")
+        print("There are %d GPU(s) available." % torch.cuda.device_count())
+        print("We will use the GPU:", torch.cuda.get_device_name(device_num))
+    # If not...
+    else:
+        print("No GPU available, using the CPU instead.")
+        device = torch.device("cpu")
+    return device
+
+def run_jar(command: str):
+    """Run jar command using subprocess.
+    """
+    proc = subprocess.Popen(command.split(" "))
+    try:
+        _, _ = proc.communicate(timeout=600)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        _, _ = proc.communicate()

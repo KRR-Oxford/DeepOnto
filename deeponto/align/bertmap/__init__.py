@@ -17,3 +17,5 @@ from .text_semantics import (
     CrossOntologyTextSemanticsCorpus,
     TextSemanticsCorpora,
 )
+from .bert_classifier import BERTSynonymClassifier
+
