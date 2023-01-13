@@ -30,7 +30,6 @@ limitations under the License.
   A package for ontology engineering with deep learning. 
 </p>
 
-
 !!! news "NEWS"
 
     - [2023 Jan] A major update of DeepOnto including:

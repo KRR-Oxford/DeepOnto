@@ -21,6 +21,7 @@ import dill as pickle
 import os
 import shutil
 from pathlib import Path
+import pandas as pd
 from lxml import etree, builder
 
 
@@ -59,7 +60,7 @@ class FileProcessor:
             raise RuntimeError(f"Unsupported saving format: {save_path}")
     
     @staticmethod
-    def load_json(save_path: str):
+    def load_file(save_path: str):
         """Load an object of a certain format.
         """
         if save_path.endswith(".json"):
@@ -104,3 +105,27 @@ class FileProcessor:
     #     root = getattr(xml, root_name)(*elems)
     #     string = etree.tostring(root, pretty_print=True).decode()
     #     return string
+
+
+    def read_table(table_file_path: str):
+        r"""Read `csv` or `tsv` file as pandas dataframe without treating `"NULL"`, `"null"`, and `"n/a"` as an empty string.
+        """
+        # TODO: this might change with the version of pandas
+        na_vals = pd.io.parsers.readers.STR_NA_VALUES.difference({"NULL", "null", "n/a"})
+        sep = "\t" if table_file_path.endswith(".tsv") else ","
+        return pd.read_csv(table_file_path, sep=sep, na_values=na_vals, keep_default_na=False)
+
+
+    def read_jsonl(file_path: str):
+        """Read `.jsonl` file (list of json) introduced in the BLINK project.
+        """
+        results = []
+        key_set = []
+        with open(file_path, "r", encoding="utf-8-sig") as f:
+            lines = f.readlines()
+            for line in lines:
+                record = json.loads(line)
+                results.append(record)
+                key_set += list(record.keys())
+        print(f"all available keys: {set(key_set)}")
+        return results

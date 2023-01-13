@@ -7,17 +7,21 @@ theme:
   name: material
   features:
     - navigation.sections
-    - navigation.indexes 
+    - toc.integrate
+    - navigation.top
+    - header.autohide
+    - toc.follow
 
 
 nav:
     - GET STARTED: 
-      - index.md
+      - Introduction: index.md
       - Bio-ML: pages/om_resources.md
     - PACKAGE REFERENCE:
-        - Ontology: 
-          - Ontology: reference/ontology.md
-          - OntologyReasoner: reference/ontology_reasoner.md
+        - Ontology: deeponto/onto/index.md
+        - BERTMap: deeponto/align/bertmap/index.md
+
+
 
 extra_css:
   - stylesheets/extra.css
@@ -28,8 +32,23 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - admonition
   - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
 
 plugins:
   - include-markdown
   - search
-  - mkdocstrings
+  - autorefs
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            show_root_toc_entry: false
+            members_order: source
+
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
