@@ -264,7 +264,7 @@ class OntoMappings(SavedObj):
         else:
             self.map_dict[em.head][em.tail] = em.score
         # rank according to mapping scores and preserve n_best (if specified)
-        self.map_dict[em.head] = sort_dict_by_values(self.map_dict[em.head], top_k=self.n_best)
+        self.map_dict[em.head] = sort_dict_by_values(self.map_dict[em.head], k=self.n_best)
 
     def add_many(self, *ems: EntityMapping):
         """Add a list of new mappings while keeping the ranking
@@ -395,7 +395,7 @@ class AnchoredOntoMappings(SavedObj):
             self.cand2anchors[cand_map.to_tuple()].append(anchor_map.tail)
         # rank according to mapping scores and preserve n_best (if specified)
         self.anchor2cands[anchor_map.to_tuple()] = sort_dict_by_values(
-            self.anchor2cands[anchor_map.to_tuple()], top_k=self.n_best
+            self.anchor2cands[anchor_map.to_tuple()], k=self.n_best
         )
 
     def add_many(self, *anchor_maps: AnchorMapping):
@@ -418,7 +418,7 @@ class AnchoredOntoMappings(SavedObj):
                         num_filled += 1
                         self.anchor2cands[src_ent_iri, anchor_tail][tgt_ent_iri] = score
                     self.anchor2cands[src_ent_iri, anchor_tail] = sort_dict_by_values(
-                        self.anchor2cands[src_ent_iri, anchor_tail], top_k=self.n_best
+                        self.anchor2cands[src_ent_iri, anchor_tail], k=self.n_best
                     )
         print(
             f"{num_valid}/{len(scored_onto_maps)} of *unique* scored mappings are valid and filled to corresponding anchors."

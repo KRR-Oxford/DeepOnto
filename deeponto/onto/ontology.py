@@ -19,9 +19,8 @@ from typing import Optional, List, Union
 from collections import defaultdict
 from yacs.config import CfgNode
 import warnings
-import pprint
 
-from deeponto.utils import TextProcessor, Tokenizer, InvertedIndex, banner_message
+from deeponto.utils import TextProcessor, Tokenizer, InvertedIndex, FileProcessor
 from deeponto.utils.decorators import paper
 from deeponto import init_jvm
 
@@ -157,14 +156,16 @@ class Ontology:
             pass
 
     def __str__(self) -> str:
-        info = {
-            "loaded_from": os.path.normpath(self.owl_path).split(os.path.sep)[-1],
-            "num_classes": len(self.owl_classes),
-            "num_object_properties": len(self.owl_object_properties),
-            "num_data_properties": len(self.owl_data_properties),
-            "num_annotation_properties": len(self.owl_annotation_properties),
+        self.info = {
+            type(self).__name__: {
+                "loaded_from": os.path.normpath(self.owl_path).split(os.path.sep)[-1],
+                "num_classes": len(self.owl_classes),
+                "num_object_properties": len(self.owl_object_properties),
+                "num_data_properties": len(self.owl_data_properties),
+                "num_annotation_properties": len(self.owl_annotation_properties),
+            }
         }
-        return pprint.pformat(info)
+        return FileProcessor.print_dict(self.info)
 
     def get_owl_objects(self, entity_type: str):
         """Get an index of `OWLObject` of certain type from the ontology.
@@ -635,7 +636,7 @@ class OntologyReasoner:
         self.reload_reasoner()
 
         # check if they are still satisfiable
-        still_satisfiable = self.owl_reasoner.isSatisfiable(owl_class1) 
+        still_satisfiable = self.owl_reasoner.isSatisfiable(owl_class1)
         still_satisfiable = still_satisfiable and self.owl_reasoner.isSatisfiable(owl_class2)
         print(f"[CHECK1 {still_satisfiable}] input classes are still satisfiable;")
 
@@ -643,13 +644,13 @@ class OntologyReasoner:
         undo_change_result = self.onto.owl_onto.applyChange(undo_change)
         print(f"[{str(undo_change_result)}] Removing the axiom from the ontology.")
         self.reload_reasoner()
-        
+
         # failing first check, there is no need to do the second.
         if not still_satisfiable:
             print("Failed `satisfiability check`, skip the `common descendant` check.")
             print(f"[PASSED {still_satisfiable}] assumed disjointness check done.")
             return False
-        
+
         # otherwise, the classes are still satisfiable and we should conduct the second check
         has_common_descendants = self.check_common_descendants(owl_class1, owl_class2)
         print(f"[CHECK2 {not has_common_descendants}] input classes have NO common descendant.")
@@ -705,7 +706,7 @@ class OntologyReasoner:
 
         # Check for entailed subsumption,
         # common descendants and common instances
-        
+
         has_subsumption = self.check_subsumption(owl_class1, owl_class2)
         has_subsumption = has_subsumption or self.check_subsumption(owl_class2, owl_class1)
         print(f"[CHECK1 {not has_subsumption}] input classes have NO subsumption relationship;")
@@ -713,14 +714,14 @@ class OntologyReasoner:
             print("Failed the `subsumption check`, skip the `common descendant` check.")
             print(f"[PASSED {not has_subsumption}] assumed disjointness check done.")
             return False
-            
+
         has_common_descendants = self.check_common_descendants(owl_class1, owl_class2)
         print(f"[CHECK2 {not has_common_descendants}] input classes have NO common descendant;")
         if has_common_descendants:
             print("Failed the `common descendant check`, skip the `common instance` check.")
             print(f"[PASSED {not has_common_descendants}] assumed disjointness check done.")
             return False
-        
+
         # TODO: `check_common_instances` is still experimental because we have not tested it with ontologies of rich ABox.
         has_common_instances = self.check_common_instances(owl_class1, owl_class2)
         print(f"[CHECK3 {not has_common_instances}] input classes have NO common instance;")

@@ -52,4 +52,7 @@
   -webkit-mask-image: var(--md-admonition-icon--credit);
           mask-image: var(--md-admonition-icon--credit);
 }
-  
+
+:not([data-md-state="blur"]) + nav {
+  display: none;
+}

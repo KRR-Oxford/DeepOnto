@@ -1,3 +1,10 @@
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+# PEP 621 dependencies declaration
+# adapt to your dependencies manager
+[project]
+dependencies = [
+    "mkdocstrings-python",
+]

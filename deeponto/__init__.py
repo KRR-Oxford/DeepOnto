@@ -12,12 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from .saved_obj import SavedObj
-from .flagged_obj import FlaggedObj
-
-# import some essentail pacakages that are not directly used but are dependencies
-import cython
-import pipreqs
+# some dependencies that are not directly used in the package 
+import pipreqs  # for generating minimum requirements
+import ipykernel, ipywidgets  # for jupyter notebook
+import mkdocs # for documentation (see whatever is missing with `mkdocs serve`)
 
 # the following code is credited to the mOWL library 
 import mowl
