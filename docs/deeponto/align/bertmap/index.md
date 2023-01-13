@@ -7,11 +7,12 @@
 
 <!-- ## Build Text Semantics Corpora -->
 
-::: deeponto.align.bertmap.models
+
+::: deeponto.align.bertmap.text_semantics
     handler: python
     heading_level: 2
 
 
-::: deeponto.align.bertmap.text_semantics
+::: deeponto.align.bertmap.bert
     handler: python
     heading_level: 2
