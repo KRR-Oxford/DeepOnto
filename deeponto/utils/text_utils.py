@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Utility functions for text processing."""
 
 from __future__ import annotations
 
@@ -23,9 +22,10 @@ import math
 from transformers import AutoTokenizer
 import spacy
 from spacy.lang.en import English
+import xml.etree.ElementTree as ET
 
 
-class TextProcessor:
+class TextUtils:
     def __init__(self):
         """Provides text processing utilities.
         """
@@ -49,7 +49,7 @@ class TextProcessor:
         # if the annotation literal is a valid identifier with first letter capitalised
         # we suspect that it could be a Java style identifier that needs to be split
         if annotation_literal[0].isupper() and annotation_literal.isidentifier():
-            annotation_literal = TextProcessor.split_java_identifier(annotation_literal)
+            annotation_literal = TextUtils.split_java_identifier(annotation_literal)
 
         # lowercase the annotation literal if specfied
         if apply_lowercasing:

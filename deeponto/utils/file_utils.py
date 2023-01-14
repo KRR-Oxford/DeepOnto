@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Utility functions for file processing."""
 
 from __future__ import annotations
 
@@ -22,10 +21,11 @@ import os
 import shutil
 from pathlib import Path
 import pandas as pd
-from lxml import etree, builder
+import xml.etree.ElementTree as ET
+import subprocess
 
 
-class FileProcessor:
+class FileUtils:
     def __init__(self):
         """Provides file processing utilities.
         """
@@ -93,20 +93,8 @@ class FileProcessor:
         except shutil.SameFileError:
             print(f"same file exists at {destination}")
 
-    # @staticmethod
-    # def report(root_name: str, **kwargs) -> str:
-    #     """Generate xml report for the saved object
-    #     """
-    #     xml = builder.ElementMaker()
-    #     # root_name = type(self).__name__ if not root_name else root_name
-    #     elems = []
-    #     for k, v in kwargs.items():
-    #         elems.append(getattr(xml, k)(str(v)))
-    #     root = getattr(xml, root_name)(*elems)
-    #     string = etree.tostring(root, pretty_print=True).decode()
-    #     return string
 
-
+    @staticmethod
     def read_table(table_file_path: str):
         r"""Read `csv` or `tsv` file as pandas dataframe without treating `"NULL"`, `"null"`, and `"n/a"` as an empty string.
         """
@@ -115,7 +103,7 @@ class FileProcessor:
         sep = "\t" if table_file_path.endswith(".tsv") else ","
         return pd.read_csv(table_file_path, sep=sep, na_values=na_vals, keep_default_na=False)
 
-
+    @staticmethod
     def read_jsonl(file_path: str):
         """Read `.jsonl` file (list of json) introduced in the BLINK project.
         """
@@ -129,3 +117,57 @@ class FileProcessor:
                 key_set += list(record.keys())
         print(f"all available keys: {set(key_set)}")
         return results
+    
+    @staticmethod
+    def read_oaei_mappings(rdf_file: str):
+        """To read mapping files in the OAEI rdf format.
+        
+        Args:
+            rdf_file: path to mappings in rdf format
+            src_onto: source ontology iri abbreviation, e.g. fma
+            tgt_onto: target ontology iri abbreviation, e.g. nci
+        Returns:
+            mappings(=;>,<), mappings(?)
+        """
+        xml_root = ET.parse(rdf_file).getroot()
+        ref_mappings = []  # where relation is "="
+        ignored_mappings = []  # where relation is "?"
+
+        for elem in xml_root.iter():
+            # every Cell contains a mapping of en1 -rel(some value)-> en2
+            if "Cell" in elem.tag:
+                en1, en2, rel, measure = None, None, None, None
+                for sub_elem in elem:
+                    if "entity1" in sub_elem.tag:
+                        en1 = list(sub_elem.attrib.values())[0]
+                    elif "entity2" in sub_elem.tag:
+                        en2 = list(sub_elem.attrib.values())[0]
+                    elif "relation" in sub_elem.tag:
+                        rel = sub_elem.text
+                    elif "measure" in sub_elem.tag:
+                        measure = sub_elem.text
+                row = (en1, en2, measure)
+                # =: equivalent; > superset of; < subset of.
+                if rel == "=" or rel == ">" or rel == "<":
+                    # rel.replace("&gt;", ">").replace("&lt;", "<")
+                    ref_mappings.append(row)
+                elif rel == "?":
+                    ignored_mappings.append(row)
+                else:
+                    print("Unknown Relation Warning: ", rel)
+
+        print('#Maps ("="):', len(ref_mappings))
+        print('#Maps ("?"):', len(ignored_mappings))
+
+        return ref_mappings, ignored_mappings
+    
+    @staticmethod
+    def run_jar(jar_command: str):
+        """Run jar command using subprocess.
+        """
+        proc = subprocess.Popen(jar_command.split(" "))
+        try:
+            _, _ = proc.communicate(timeout=600)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+            _, _ = proc.communicate()

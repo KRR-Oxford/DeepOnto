@@ -21,7 +21,7 @@ import ast
 import pprintpp
 
 from deeponto.onto import Ontology
-from deeponto.utils import FileProcessor
+from deeponto.utils import FileUtils
 
 if TYPE_CHECKING:
     from org.semanticweb.owlapi.model import OWLObject  # type: ignore
@@ -121,7 +121,7 @@ class EntityMapping:
         Returns:
             List[EntityMapping]: A list of entity mappings loaded from the table file.
         """
-        df = FileProcessor.read_table(table_of_mappings_file)
+        df = FileUtils.read_table(table_of_mappings_file)
         entity_mappings = []
         for _, dp in df.iterrows():
             if is_reference:

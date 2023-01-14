@@ -22,8 +22,10 @@ import pandas as pd
 from transformers import TrainingArguments, AutoModelForSequenceClassification, Trainer
 from datasets import Dataset
 from sklearn.metrics import accuracy_score
+import numpy as np
+import random
 
-from deeponto.utils import get_device, Tokenizer, FileProcessor
+from deeponto.utils import Tokenizer, FileUtils
 
 
 class BERTSynonymClassifier:
@@ -82,7 +84,7 @@ class BERTSynonymClassifier:
             print("The BERT model is set to eval mode for making predictions.")
             self.model.eval()
             # TODO: to implement multi-gpus for inference
-            self.device = get_device(device_num=0)
+            self.device = self.get_device(device_num=0)
             self.model.to(self.device)
         # load the pre-trained BERT model for fine-tuning
         else:
@@ -104,7 +106,7 @@ class BERTSynonymClassifier:
                 "num_validation": len(self.validation_data),
                 "num_testing": len(self.testing_data) if testing_data else None,
             }
-            print(f"Data statistics:\n{FileProcessor.print_dict(self.data_stat)}")
+            print(f"Data statistics:\n{FileUtils.print_dict(self.data_stat)}")
 
             # generate training arguments
             epoch_steps = (
@@ -207,3 +209,27 @@ class BERTSynonymClassifier:
         acc = accuracy_score(labels, preds)
         return {"accuracy": acc}
 
+    @staticmethod
+    def get_device(device_num: int = 0):
+        """Get a device (GPU or CPU) for the torch model
+        """
+        # If there's a GPU available...
+        if torch.cuda.is_available():
+            # Tell PyTorch to use the GPU.
+            device = torch.device(f"cuda:{device_num}")
+            print("There are %d GPU(s) available." % torch.cuda.device_count())
+            print("We will use the GPU:", torch.cuda.get_device_name(device_num))
+        # If not...
+        else:
+            print("No GPU available, using the CPU instead.")
+            device = torch.device("cpu")
+        return device
+
+    @staticmethod
+    def set_seed(seed_val: int = 888):
+        """Set random seed for reproducible results.
+        """
+        random.seed(seed_val)
+        np.random.seed(seed_val)
+        torch.manual_seed(seed_val)
+        torch.cuda.manual_seed_all(seed_val)

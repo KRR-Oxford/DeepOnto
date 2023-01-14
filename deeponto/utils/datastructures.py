@@ -11,19 +11,36 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""A tree implementation for ranges (without partial overlap).
-- parent node's range fully covers child node's range, e.g., [1, 10] isParentOf [2, 5]
-- partial overlap between ranges not allowed, e.g., [2, 4] and [3, 5] cannot appear in the same RangeNodeTree
-- non-overlap ranges are on different branches 
-- child nodes are ordered according to their relative positions
-"""
 
 from __future__ import annotations
+
 from anytree import NodeMixin, RenderTree
-from typing import List
-import math
+from typing import List, Optional
+
+
+def uniqify(ls):
+    """Return a list of unique elements without messing around the order
+    """
+    non_empty_ls = list(filter(lambda x: x != "", ls))
+    return list(dict.fromkeys(non_empty_ls))
+
+
+def sort_dict_by_values(dic: dict, desc: bool = True, k: Optional[int] = None):
+    """Return a sorted dict by values with first k reserved if provided.
+    """
+    sorted_items = list(sorted(dic.items(), key=lambda item: item[1], reverse=desc))
+    return dict(sorted_items[:k])
+
 
 class RangeNode(NodeMixin):
+    """A tree implementation for ranges (without partial overlap).
+    
+        - parent node's range fully covers child node's range, e.g., `[1, 10]` is a parent of `[2, 5]`.
+        - partial overlap between ranges not allowed, e.g., `[2, 4]` and `[3, 5]` cannot appear in the same `RangeNodeTree`.
+        - non-overlap ranges are on different branches.
+        - child nodes are ordered according to their relative positions.
+    """
+
     def __init__(self, start, end, **kwargs):
         if start >= end:
             raise RuntimeError("invalid start and end positions ...")
@@ -32,11 +49,21 @@ class RangeNode(NodeMixin):
         for k, v in kwargs.items():
             setattr(self, k, v)
         super().__init__()
-        
+
     # def __eq__(self, other: RangeNode):
     #     return self.start == other.start and self.end == other.end
-        
+
     def __gt__(self, other: RangeNode):
+        r"""Modified compare function for a range.
+        
+        There are three kinds of comparisons:
+        
+            - $R_1 \leq R_2$: if range $R_1$ is completely contained in range $R_2$.
+            - $R_1 \gt R_2$: if range $R_2$ is completely contained in range $R_1$.
+            - `"irrelevant"`: if range $R_1$ and range $R_2$ have no overlap.
+            
+        NOTE that partial overlap is not allowed.
+        """
         if other.start <= self.start and self.end <= other.end:
             return False
         elif self.start <= other.start and other.end <= self.end:
@@ -46,19 +73,17 @@ class RangeNode(NodeMixin):
             return "irrelevant"
         else:
             raise RuntimeError("compared ranges have partial overlap ...")
-        
+
     @staticmethod
     def sort_by_start(nodes: List[RangeNode]):
-        """A sorting function that sorts the nodes by their starting positions
+        """A sorting function that sorts the nodes by their starting positions.
         """
-        temp = {
-            sib: sib.start for sib in nodes
-        }
+        temp = {sib: sib.start for sib in nodes}
         return list(dict(sorted(temp.items(), key=lambda item: item[1])).keys())
-    
+
     def insert_child(self, node: RangeNode):
         """Child nodes have a smaller (inclusive) range
-        e.g., [2, 5] is a child of [1, 6]
+        e.g., `[2, 5]` is a child of `[1, 6]`.
         """
         if node > self:
             raise RuntimeError("invalid child node")
@@ -85,14 +110,14 @@ class RangeNode(NodeMixin):
         else:
             node.parent = self
             self.children = [node]
-    
+
     def __repr__(self):
         # only present downwards (down, left, right)
         printed = f"[{self.start}, {self.end}]"
         if self.children:
             printed = f"[{self.start}, {str(list(self.children))[1:-1]}, {self.end}]"
         return printed
-    
+
     def print_tree(self):
         print(RenderTree(self))
 
