@@ -20,7 +20,7 @@ from collections import defaultdict
 from yacs.config import CfgNode
 import warnings
 
-from deeponto.utils import TextProcessor, Tokenizer, InvertedIndex, FileProcessor
+from deeponto.utils import TextUtils, Tokenizer, InvertedIndex, FileUtils
 from deeponto.utils.decorators import paper
 from deeponto import init_jvm
 
@@ -158,14 +158,14 @@ class Ontology:
     def __str__(self) -> str:
         self.info = {
             type(self).__name__: {
-                "loaded_from": os.path.normpath(self.owl_path).split(os.path.sep)[-1],
+                "loaded_from": os.path.basename(self.owl_path),
                 "num_classes": len(self.owl_classes),
                 "num_object_properties": len(self.owl_object_properties),
                 "num_data_properties": len(self.owl_data_properties),
                 "num_annotation_properties": len(self.owl_annotation_properties),
             }
         }
-        return FileProcessor.print_dict(self.info)
+        return FileUtils.print_dict(self.info)
 
     def get_owl_objects(self, entity_type: str):
         """Get an index of `OWLObject` of certain type from the ontology.
@@ -252,7 +252,7 @@ class Ontology:
                 # only get annotations that have a literal value
                 if annotation.isLiteral():
                     annotations.append(
-                        TextProcessor.process_annotation_literal(
+                        TextUtils.process_annotation_literal(
                             str(annotation.getLiteral()), apply_lowercasing
                         )
                     )
@@ -332,7 +332,7 @@ class Ontology:
         annotation_index = defaultdict(set)
         # example: Classes => owl_classes; ObjectProperties => owl_object_properties
         entity_type = (
-            "owl_" + TextProcessor.split_java_identifier(entity_type).replace(" ", "_").lower()
+            "owl_" + TextUtils.split_java_identifier(entity_type).replace(" ", "_").lower()
         )
         entity_index = getattr(self, entity_type)
 
@@ -439,7 +439,12 @@ class OntologyReasoner:
             return False
 
     def super_entities_of(self, entity: OWLObject, direct: bool = False):
-        """Return the IRIs of super-entities of a given `OWLObject`.
+        r"""Return the IRIs of super-entities of a given `OWLObject` according to the reasoner.
+        
+        A mixture of `getSuperClasses`, `getSuperObjectProperties`, `getSuperDataProperties`
+        functions imported from the OWLAPI reasoner. The type of input entity will be 
+        automatically determined. The top entity such as `owl:Thing` is ignored.
+        
 
         Args:
             entity (OWLObject): An `OWLObject` entity of interest.
@@ -460,7 +465,11 @@ class OntologyReasoner:
         return super_entity_iris
 
     def sub_entities_of(self, entity: OWLObject, direct: bool = False):
-        """Return the IRIs of sub-entities of a given `OWLObject`.
+        """Return the IRIs of sub-entities of a given `OWLObject` according to the reasoner.
+        
+        A mixture of `getSubClasses`, `getSubObjectProperties`, `getSubDataProperties`
+        functions imported from the OWLAPI reasoner. The type of input entity will be 
+        automatically determined. The bottom entity such as `owl:Nothing` is ignored.
 
         Args:
             entity (OWLObject): An `OWLObject` entity of interest.

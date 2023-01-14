@@ -13,6 +13,6 @@
     heading_level: 2
 
 
-::: deeponto.align.bertmap.bert
+::: deeponto.align.bertmap.bert_classifier
     handler: python
     heading_level: 2

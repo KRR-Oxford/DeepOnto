@@ -19,7 +19,16 @@ nav:
       - Bio-ML: pages/om_resources.md
     - PACKAGE REFERENCE:
         - Ontology: deeponto/onto/index.md
-        - BERTMap: deeponto/align/bertmap/index.md
+        - Ontology Alignment:
+          - Mapping: deeponto/align/mapping.md
+          - BERTMap: deeponto/align/bertmap/index.md
+          - LogMap: deeponto/align/logmap/index.md
+        - Utilities: 
+          - Text Utilities: deeponto/utils/text_utils.md
+          - File Utilities: deeponto/utils/file_utils.md
+          - Logging: deeponto/utils/logging.md
+          - Datastructures: deeponto/utils/datastructures.md
+          - Decorators: deeponto/utils/decorators.md
 
 
 
