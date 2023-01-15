@@ -1,0 +1,146 @@
+print_output|false
+bad_score_scope|0.0
+good_isub_anchors|0.98
+good_isub_candidates|0.95
+good_confidence|0.50
+good_sim_coocurrence|0.08
+min_conf_pro_map|0.80
+confidence_composed_mappings1|0.8
+confidence_composed_mappings2|0.7
+avoid_redundant_labels|true
+use_stemming|false
+max_redundancy_labels|3
+max_ambiguity|4
+good_ambiguity|2
+use_overlapping|true
+min_size_overlapping|15000
+output_class_mappings|true
+property_matching|true
+output_prop_mappings|true
+instance_matching|true
+output_instance_mappings|true
+#only for statistics
+output_instance_mapping_files|false
+reason_datatypes|false
+reasoner|HermiT
+#reasoner|ELK
+#Repair
+perform_repair|true
+#Global information for Downling and Gallier
+glogal_info|true
+timeout|25
+reverse_labels=false
+output_equivalences_only|false
+second_chance_conflicts|true
+#Ration 5
+ratio_second_chance_discarded|10
+use_umls_lexicon|true
+allow_bioportal|false
+#Number of mediating ontologies to use from BioPortal
+max_mediating_ontologies|10
+allow_interactivity|false
+allow_multilingual|false
+#false for tests
+is_test_mode_multilingual|false
+use_local_dict|false
+call_online_translator|false
+path_chinese_segmenter_dict|multilingual/dict_ictclas4j
+#on-the-fly dictionaries if translation is not available in local dict or if local dict is not allowed
+path_multilingual_tmp|multilingual
+#path_multilingual_tmp|/home/ernesto/Documents/OAEI_OM_2015/EVAL_2015/dict_multilingual
+#Local precompued disctionary if use_local_dict=true
+path_multilingual_local|multilingual/local
+target_lang|en
+#0=Google, 1=Microsoft, >=2 -> all
+translator_id|9
+annotation_URI|http://www.w3.org/2000/01/rdf-schema#label
+annotation_URI|http://www.geneontology.org/formats/oboInOwl#hasRelatedSynonym
+annotation_URI|http://www.geneontology.org/formats/oboInOwl#hasExactSynonym
+annotation_URI|http://www.geneontology.org/formats/oboInOWL#hasExactSynonym
+#annotation_URI|http://www.geneontology.org/formats/oboInOWL#hasRelatedSynonym
+annotation_URI|http://purl.bioontology.org/ontology/SYN#synonym
+annotation_URI|http://scai.fraunhofer.de/CSEO#Synonym	
+annotation_URI|http://purl.obolibrary.org/obo/synonym
+annotation_URI|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#FULL_SYN
+annotation_URI|http://www.ebi.ac.uk/efo/alternative_term
+annotation_URI|http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#Synonym
+annotation_URI|http://bioontology.org/projects/ontologies/fma/fmaOwlDlComponent_2_0#Synonym
+annotation_URI|http://www.geneontology.org/formats/oboInOwl#hasDefinition
+annotation_URI|http://bioontology.org/projects/ontologies/birnlex#preferred_label
+annotation_URI|http://bioontology.org/projects/ontologies/birnlex#synonyms
+annotation_URI|http://www.w3.org/2004/02/skos/core#prefLabel
+annotation_URI|http://www.w3.org/2004/02/skos/core#altLabel
+annotation_URI|http://xmlns.com/foaf/0.1/name
+annotation_URI|http://dbpedia.org/ontology/synonym
+annotation_URI|http://dbpedia.org/property/title
+annotation_URI|http://dbpedia.org/property/name
+annotation_URI|https://cfpub.epa.gov/ecotox#latinName
+annotation_URI|https://cfpub.epa.gov/ecotox#commonName
+annotation_URI|https://www.ncbi.nlm.nih.gov/taxonomy#scientific_name
+annotation_URI|https://www.ncbi.nlm.nih.gov/taxonomy#synonym
+#annotation_URI|https://www.ncbi.nlm.nih.gov/taxonomy#authority
+#genbank_common_name, in_blast, includes, in-part bring ambiguity
+#annotation_URI|https://www.ncbi.nlm.nih.gov/taxonomy#genbank_common_name
+#annotation_URI|https://www.ncbi.nlm.nih.gov/taxonomy#blast_name
+#annotation_URI|https://www.ncbi.nlm.nih.gov/taxonomy#in-part
+annotation_URI|https://www.ncbi.nlm.nih.gov/taxonomy#equivalent_name
+#annotation_URI|https://www.ncbi.nlm.nih.gov/taxonomy#includes
+annotation_URI|https://www.ncbi.nlm.nih.gov/taxonomy#genbank_synonym
+annotation_URI|https://www.ncbi.nlm.nih.gov/taxonomy#common_name
+#Doremus annotation
+#annotation_URI|http://erlangen-crm.org/current/P3_has_note
+#In case only a subset of the individuals should be matched
+restrict_individual_types|false
+#Categories for individuals (e.g. dbpedia category). Additional compatibility information to class types of an insstance
+category_URI|http://data.doremus.org/ontology#U12_has_genre
+#category_URI|http://data.doremus.org/ontology#U16_has_catalogue_statement
+#Folder with available mappings between categories
+path_mappings_categories|mappings/categories
+##Check about and category for SPIMBENCH
+#Lexical information as assertions
+data_assertion_URI_Indiv|http://xmlns.com/foaf/0.1/name
+data_assertion_URI_Indiv|http://dbpedia.org/ontology/synonym
+data_assertion_URI_Indiv|http://dbpedia.org/property/title
+data_assertion_URI_Indiv|http://dbpedia.org/property/name
+data_assertion_URI_Indiv|http://dbkwik.webdatacommons.org/oldschoolrunescape/property/name
+data_assertion_URI_Indiv|http://dkm.fbk.eu/index.php/BPMN2_Ontology#name
+data_assertion_URI_Indiv|http://dkm.fbk.eu/index.php/BPMN2_Ontology#id
+data_assertion_URI_Indiv|http://xmlns.com/foaf/0.1/isPrimaryTopicOf
+data_assertion_URI_Indiv|http://www.bbc.co.uk/ontologies/creativework/title
+data_assertion_URI_Indiv|http://www.bbc.co.uk/ontologies/creativework/shortTitle
+data_assertion_URI_Indiv|http://www.bbc.co.uk/ontologies/creativework/description
+data_assertion_URI_Indiv|http://islab.di.unimi.it/imoaei2015#name
+#data_assertion_URI_Indiv|http://islab.di.unimi.it/imoaei2015#title
+data_assertion_URI_Indiv|http://oaei.ontologymatching.org/2012/IIMBTBOX/name
+data_assertion_URI_Indiv|http://oaei.ontologymatching.org/2012/IIMBTBOX/article
+data_assertion_URI_Indiv|http://dbpedia.org/ontology/birthName
+data_assertion_URI_Indiv_deep2|http://www.instancematching.org/IIMB2012/ADDONS#has_value
+#data_assertion_URI_Indiv_deep2|http://dkm.fbk.eu/index.php/BPMN2_Ontology#id
+object_assertion_URI_Indiv|http://www.instancematching.org/IIMB2012/ADDONS#article
+object_assertion_URI_Indiv|http://www.instancematching.org/IIMB2012/ADDONS#name
+object_assertion_URI_Indiv|http://www.instancematching.org/label
+object_assertion_URI_Indiv|http://www.instancematching.org/curriculum
+object_assertion_URI_Indiv|http://www.instancematching.org/places
+object_assertion_URI_Indiv|http://www.bbc.co.uk/ontologies/curriculum/about
+object_assertion_URI_Indiv|http://www.bbc.co.uk/ontologies/creativework/about
+object_assertion_URI_Indiv|http://www.tomtom.com/ontologies/traces#hasPoint
+#Allowed types for individuals to be matched: OAEI 2015
+allowed_individual_type|http://islab.di.unimi.it/imoaei2015#Person
+#SPIMBENCH
+allowed_individual_type|http://www.bbc.co.uk/ontologies/creativework/BlogPost
+allowed_individual_type|http://www.bbc.co.uk/ontologies/creativework/NewsItem
+allowed_individual_type|http://www.bbc.co.uk/ontologies/creativework/Programme
+##Process Model Matching 
+allowed_individual_type|http://dkm.fbk.eu/index.php/BPMN2_Ontology#task
+allowed_individual_type|http://dkm.fbk.eu/index.php/BPMN2_Ontology#event
+allowed_individual_type|http://owl.protege.stanford.edu#Transition
+allowed_individual_type|http://owl.protege.stanford.edu#Place
+#Doremus
+allowed_individual_type|http://erlangen-crm.org/efrbroo/F22_Self-Contained_Expression
+##
+#Filter entities from these URIS: not included in Benchmark reference alignment
+filter_entity|http://xmlns.com/foaf/
+filter_entity|http://www.w3.org/1999/02/22-rdf-syntax-ns
+filter_entity|http://purl.org/dc/elements/
+filter_entity|http://mouse.owl#UNDEFINED_part_of
+filter_entity|http://human.owl#UNDEFINED_part_of

@@ -1,0 +1,36 @@
+output_path: null
+
+ontology:
+  src_onto: null  # source ontology file, init to null but necessary
+  tgt_onto: null  # target ontology file, init to null but necessary 
+  annotation_property_iris:
+    - http://www.w3.org/2000/01/rdf-schema#label  # rdfs:label, the basic one
+    - http://www.geneontology.org/formats/oboInOwl#hasSynonym
+    - http://www.geneontology.org/formats/oboInOwl#hasExactSynonym
+    - http://www.w3.org/2004/02/skos/core#exactMatch
+    - http://www.ebi.ac.uk/efo/alternative_term
+    - http://www.orpha.net/ORDO/Orphanet_#symbol
+    - http://purl.org/sig/ont/fma/synonym
+    - http://www.w3.org/2004/02/skos/core#prefLabel
+    - http://www.w3.org/2004/02/skos/core#altLabel
+    - http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#P108
+    - http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#P90
+  
+matching:
+  model: bertmap  # currently supported options are ["bertmap", "bertmaplt"]
+  bert:  
+    path: emilyalsentzer/Bio_ClinicalBERT  # pre-trained BERT path
+    max_input_length: 128 
+    num_training_epochs: 3.0
+    batch_size_for_training: 32
+    batch_size_for_prediction: 64
+  tokenizer: pre-trained  # options are ["pre-trained", "rule-based"]
+                          # if "pre-trained" is selected, it will be loaded from the pre-trained model
+                          # if "rule-based" is selected, it will be loaded from `spacy.English`
+  training_mappings: null  # if provided, cross-ontology corpus will be built
+  validation_mappings: null  # if provided, mapping threshold will be selected on it
+  auxiliary_ontos: [] # a list of auxiliary ontology files used for extra synonym data
+                    # testing mappings are not necessary here
+  n_best_predictions: 10  # the number of best scored mappings preserved in the raw output mappings
+  n_raw_candidates: 200 # the number of potential candidates selected for mapping predictions
+  direction: src2tgt  # options are "src2tgt" or "tgt2src"; e.g., "src2tgt" means searching for a mapping for each source side entity.
