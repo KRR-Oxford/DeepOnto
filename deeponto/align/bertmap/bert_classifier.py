@@ -11,14 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""
-BERTStatic class for handling BERT embeddings and pre-trained/fine-tuned BERT models in eval mode
 
-"static" here means no gradient shift happened...
-"""
-from typing import Tuple, List
+from typing import Tuple, List, Optional, Union
 import torch
-import pandas as pd
 from transformers import TrainingArguments, AutoModelForSequenceClassification, Trainer
 from datasets import Dataset
 from sklearn.metrics import accuracy_score
@@ -29,58 +24,57 @@ from deeponto.utils import Tokenizer, FileUtils
 
 
 class BERTSynonymClassifier:
-    """A BERT class for BERTMap consisting of a BERT model and a downstream binary classifier for synonyms.
+    """A BERT class for BERTMap consisting of a BERT model and a binary synonym classifier.
     
     Attributes:
-        pretrained_path (str): The path to the checkpoint of a pre-trained BERT model.
+        loaded_path (str): The path to the checkpoint of a pre-trained BERT model.
         output_path (str): The path to the output BERT model (usually fine-tuned).
+        eval_mode (bool): Set to `False` if the model is loaded for training.
         max_length_for_input (int): The maximum length of an input sequence.
         num_epochs_for_training (int): The number of epochs for training a BERT model.
         batch_size_for_training (int): The batch size for training a BERT model.
         batch_size_for_prediction (int): The batch size for making predictions.
-        for_training (bool): Set to `True` if the model is loaded for training.
         training_data (Dataset, optional): Data for training the model if `for_training` is set to `True`. Defaults to `None`.
         validation_data (Dataset, optional): Data for validating the model if `for_training` is set to `True`. Defaults to `None`.
-        testing_data (Dataset, optional): Data for testing the model regardless of the value of `for_training`. Defaults to `None`.
         training_args (TrainingArguments, optional): Training arguments for training the model if `for_training` is set to `True`. Defaults to `None`.
-        trainer (Trainer, optional): The model trainer fed with `training_args`. Defaults to `None`.
+        trainer (Trainer, optional): The model trainer fed with `training_args` and data samples. Defaults to `None`.
     """
 
     def __init__(
         self,
-        pretrained_path: str,
+        loaded_path: str,
         output_path: str,
+        eval_mode: bool,
         max_length_for_input: int,
-        num_epochs_for_training: float,
-        batch_size_for_training: int,
-        batch_size_for_prediction: int,
-        for_training: bool,
-        training_data: List[Tuple[str, str, int]] = None,  # (sentence1, sentence2, label)
-        validation_data: List[Tuple[str, str, int]] = None,
-        testing_data: List[Tuple[str, str, int]] = None,
+        num_epochs_for_training: Optional[float] = None,
+        batch_size_for_training: Optional[int] = None,
+        batch_size_for_prediction: Optional[int] = None,
+        training_data: Optional[List[Tuple[str, str, int]]] = None,  # (sentence1, sentence2, label)
+        validation_data: Optional[List[Tuple[str, str, int]]] = None
     ):
         # Load the pretrained BERT model from the given path
-        print(f"Loading a BERT model from: {pretrained_path}.")
+        self.loaded_path = loaded_path
+        print(f"Loading a BERT model from: {self.loaded_path}.")
         self.model = AutoModelForSequenceClassification.from_pretrained(
-            self.args.bert_checkpoint, output_hidden_states=True if for_training else False
+            self.loaded_path, output_hidden_states=eval_mode
         )
-        self.tokenizer = Tokenizer.from_pretrained(pretrained_path)
+        self.tokenizer = Tokenizer.from_pretrained(loaded_path)
 
         self.output_path = output_path
+        self.eval_mode = eval_mode
         self.max_length_for_input = max_length_for_input
         self.num_epochs_for_training = num_epochs_for_training
         self.batch_size_for_training = batch_size_for_training
         self.batch_size_for_prediction = batch_size_for_prediction
-        self.for_training = self.for_training
         self.training_data = None
         self.validation_data = None
-        self.testing_data = None
         self.data_stat = {}
         self.training_args = None
         self.trainer = None
-
+        
+        
         # load the pre-trained BERT model and set it to eval mode (static)
-        if not for_training:
+        if self.eval_mode:
             print("The BERT model is set to eval mode for making predictions.")
             self.model.eval()
             # TODO: to implement multi-gpus for inference
@@ -97,16 +91,12 @@ class BERTSynonymClassifier:
                     "Validation data should be provided when `for_training` is `True`."
                 )
             # load data (max_length is used for truncation)
-            self.training_data = self.load_dataset(training_data)
-            self.validation_data = self.load_dataset(validation_data)
-            if testing_data:
-                self.testing_data = self.load_dataset(testing_data)
+            self.training_data = self.load_dataset(training_data, "training")
+            self.validation_data = self.load_dataset(validation_data, "validation")
             self.data_stat = {
                 "num_training": len(self.training_data),
                 "num_validation": len(self.validation_data),
-                "num_testing": len(self.testing_data) if testing_data else None,
             }
-            print(f"Data statistics:\n{FileUtils.print_dict(self.data_stat)}")
 
             # generate training arguments
             epoch_steps = (
@@ -124,7 +114,7 @@ class BERTSynonymClassifier:
             # generate the training arguments
             self.training_args = TrainingArguments(
                 output_dir=self.output_path,
-                num_train_epochs=self.num_epochs,
+                num_train_epochs=self.num_epochs_for_training,
                 per_device_train_batch_size=self.batch_size_for_training,
                 per_device_eval_batch_size=self.batch_size_for_training,
                 warmup_ratio=0.0,
@@ -136,8 +126,7 @@ class BERTSynonymClassifier:
                 do_train=True,
                 do_eval=True,
                 save_steps=eval_steps,
-                load_best_model_at_end=True,
-                save_total_limit=2,
+                save_total_limit=1
             )
             # build the trainer
             self.trainer = Trainer(
@@ -149,14 +138,13 @@ class BERTSynonymClassifier:
                 tokenizer=self.tokenizer._tokenizer,
             )
 
-    def train(self):
+    def train(self, resume_from_checkpoint: Optional[Union[bool,str]] = None):
         """Start training the BERT model.
         """
-        if not self.for_training:
-            raise RuntimeError("Training cannot be started with `for_training` set to `False`.")
-        self.trainer.train()
-        
-        
+        if self.eval_mode:
+            raise RuntimeError("Training cannot be started in `eval` mode.")
+        self.trainer.train(resume_from_checkpoint=resume_from_checkpoint)
+
     def predict(self, sent_pairs: List[Tuple[str, str]]):
         r"""Run prediction pipeline for the synonym classification.
         
@@ -165,23 +153,26 @@ class BERTSynonymClassifier:
         inputs = self.process_inputs(sent_pairs)
         with torch.no_grad():
             return self.softmax(self.model(**inputs).logits)[:, 1]
-        
 
-    def load_dataset(self, data: List[Tuple[str, str, int]]) -> Dataset:
-        r"""Load the list of `(sentence1, sentence2, label)` samples into a `datasets.Dataset`.
+    def load_dataset(self, data: List[Tuple[str, str, int]], split: str) -> Dataset:
+        r"""Load the list of `(annotation1, annotation2, label)` samples into a `datasets.Dataset`.
         """
-        data_df = pd.DataFrame(data, columns=["sent1", "sent2", "labels"])
-        dataset = Dataset.from_pandas(data_df)
+        
+        def iterate():
+            for sample in data:
+                yield {"annotation1": sample[0], "annotation2": sample[1], "labels": sample[2]}
+
+        dataset = Dataset.from_generator(iterate)
+        # NOTE: no padding here because the Trainer class supports dynamic padding
         dataset = dataset.map(
             lambda examples: self.tokenizer._tokenizer(
-                examples["sent1"],
-                examples["sent2"],
+                examples["annotation1"],
+                examples["annotation2"],
                 max_length=self.max_length_for_input,
-                truncation=True,
+                truncation=True
             ),
             batched=True,
-            batch_size=1024,
-            num_proc=10,
+            desc=f"Load {split} data with batch size 1000:"
         )
         return dataset
 
@@ -193,9 +184,9 @@ class BERTSynonymClassifier:
         """
         return self.tokenizer._tokenizer(
             sent_pairs,
-            padding=True,
             return_tensors="pt",
             max_length=self.max_length_for_input,
+            padding=True,
             truncation=True,
         ).to(self.device)
 

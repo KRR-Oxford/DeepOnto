@@ -42,26 +42,31 @@ DeepOnto aims to provide implemented deep learning models and an evaluation plat
 - **Github Repository**: *<https://github.com/KRR-Oxford/DeepOnto>*. 
 - **PyPI**: *<https://pypi.org/project/deeponto/>*. (experimental)
 
-To use DeepOnto [scripts](link-to-scripts), it is sufficient to git the project and run the scripts directly; to build on a new project extending DeepOnto, please install DeepOnto from PyPI by:
-
-```bash
-pip install deeponto
-```
-
-## Essential Dependencies
+## Installation
 
 DeepOnto is mainly extended from the following packages:
 
 - [OWLAPI](http://owlapi.sourceforge.net/) (in Java) for ontology processing. The Python-Java interaction relies on what has been implemented in [mOWL](https://mowl.readthedocs.io/en/latest/index.html) which uses [JPype](https://jpype.readthedocs.io/en/latest/).
 - [Transformers](https://github.com/huggingface/transformers) for pre-trained language models.
 
-To use DeepOnto, please manually configure Pytorch installation using:
+To use DeepOnto, please manually configure Pytorch installation using, for example:
 
 ```bash
-conda install pytorch torchvision torchaudio cudatoolkit=11.3 -c pytorch
+pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 ```
 
-Then, install other dependencies in [`requirement.txt`](https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/requirements.txt):
+Basic usage of Ontology does not rely on GPUs, but for efficient language model training, please make sure
+`torch.cuda.is_available()` returns `True`.
+
+Other dependencies are specified in `setup.cfg` and `requirements.txt` which are supposed to be installed along with `deeponto`.
+
+Install from PyPi by:
+
+```bash
+pip install deeponto
+```
+
+One can git clone the repository without installing through PyPi and install the dependencies manually by:
 
 ```bash
 pip install -r requirements.txt
