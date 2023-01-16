@@ -30,12 +30,6 @@ class FileUtils:
         """Provides file processing utilities.
         """
         pass
-    
-    @staticmethod
-    def detect_path(path: str) -> bool:
-        """Check if a path exists.
-        """
-        return os.path.exists(path)
 
     @staticmethod
     def create_path(path: str):
@@ -58,7 +52,7 @@ class FileUtils:
                 yaml.dump(obj, output, default_flow_style=False, allow_unicode=True)
         else:
             raise RuntimeError(f"Unsupported saving format: {save_path}")
-    
+
     @staticmethod
     def load_file(save_path: str):
         """Load an object of a certain format.
@@ -93,7 +87,6 @@ class FileUtils:
         except shutil.SameFileError:
             print(f"same file exists at {destination}")
 
-
     @staticmethod
     def read_table(table_file_path: str):
         r"""Read `csv` or `tsv` file as pandas dataframe without treating `"NULL"`, `"null"`, and `"n/a"` as an empty string.
@@ -117,7 +110,7 @@ class FileUtils:
                 key_set += list(record.keys())
         print(f"all available keys: {set(key_set)}")
         return results
-    
+
     @staticmethod
     def read_oaei_mappings(rdf_file: str):
         """To read mapping files in the OAEI rdf format.
@@ -160,7 +153,7 @@ class FileUtils:
         print('#Maps ("?"):', len(ignored_mappings))
 
         return ref_mappings, ignored_mappings
-    
+
     @staticmethod
     def run_jar(jar_command: str):
         """Run jar command using subprocess.

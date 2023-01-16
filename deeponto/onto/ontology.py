@@ -98,6 +98,17 @@ class Ontology:
         self._multi_children_classes = None
         self._sibling_class_groups = None
         self._equiv_axioms = None
+        
+        # summary
+        self.info = {
+            type(self).__name__: {
+                "loaded_from": os.path.basename(self.owl_path),
+                "num_classes": len(self.owl_classes),
+                "num_object_properties": len(self.owl_object_properties),
+                "num_data_properties": len(self.owl_data_properties),
+                "num_annotation_properties": len(self.owl_annotation_properties),
+            }
+        }
 
     @property
     def name(self):
@@ -156,15 +167,6 @@ class Ontology:
             pass
 
     def __str__(self) -> str:
-        self.info = {
-            type(self).__name__: {
-                "loaded_from": os.path.basename(self.owl_path),
-                "num_classes": len(self.owl_classes),
-                "num_object_properties": len(self.owl_object_properties),
-                "num_data_properties": len(self.owl_data_properties),
-                "num_annotation_properties": len(self.owl_annotation_properties),
-            }
-        }
         return FileUtils.print_dict(self.info)
 
     def get_owl_objects(self, entity_type: str):

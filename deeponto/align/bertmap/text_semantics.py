@@ -17,6 +17,7 @@ from __future__ import annotations
 import networkx as nx
 import itertools
 import random
+import os
 from typing import List, Set, Tuple, Optional, Union
 
 from deeponto.onto import Ontology
@@ -358,7 +359,7 @@ class IntraOntologyTextSemanticsCorpus:
                 (neg[0], neg[1], 0) for neg in self.soft_nonsynonyms + self.hard_nonsynonyms
             ],
         }
-        FileUtils.save_file(save_json, save_path + "./intra-onto.corpus.json")
+        FileUtils.save_file(save_json, os.path.join(save_path, "intra-onto.corpus.json"))
 
 
 class CrossOntologyTextSemanticsCorpus:
@@ -424,13 +425,13 @@ class CrossOntologyTextSemanticsCorpus:
                 (neg[0], neg[1], 0) for neg in self.nonsynonyms
             ],
         }
-        FileUtils.save_file(save_json, save_path + "./cross-onto.corpus.json")
+        FileUtils.save_file(save_json, os.path.join(save_path, "cross-onto.corpus.json"))
 
     def synonym_sampling_from_mappings(self):
         r"""Sample synonyms from cross-ontology class mappings.
         
         Arguements of this method are all class attributes. 
-        See [`CrossOntologyTextSemanticsCorpus`][deeponto.align.bertmap.CrossOntologyTextSemanticsCorpus].
+        See [`CrossOntologyTextSemanticsCorpus`][deeponto.align.bertmap.text_semantics.CrossOntologyTextSemanticsCorpus].
         
         !!! note
         
@@ -463,7 +464,7 @@ class CrossOntologyTextSemanticsCorpus:
         r"""Sample non-synonyms from cross-ontology class mappings.
         
         Arguements of this method are all class attributes. 
-        See [`CrossOntologyTextSemanticsCorpus`][deeponto.align.bertmap.CrossOntologyTextSemanticsCorpus].
+        See [`CrossOntologyTextSemanticsCorpus`][deeponto.align.bertmap.text_semantics.CrossOntologyTextSemanticsCorpus].
         
         !!! note
         
@@ -598,7 +599,7 @@ class TextSemanticsCorpora:
                 (neg[0], neg[1], 0) for neg in self.nonsynonyms
             ],
         }
-        FileUtils.save_file(save_json, save_path + "./text_semantics.corpora.json")
+        FileUtils.save_file(save_json, os.path.join(save_path, "text-semantics.corpora.json"))
 
 
     def add_samples_from_sub_corpus(

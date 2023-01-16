@@ -41,12 +41,14 @@ class RuntimeFormatter(logging.Formatter):
 
 
 def create_logger(model_name: str, saved_path: str):
-    """Create logger for both console info and saved info。
+    """Create logger for both console info and saved info.
+    
+    The pre-existed log file will be cleared before writing into new messages.
     """
     logger = logging.getLogger(model_name)
     logger.setLevel(logging.DEBUG)
     # create file handler which logs even debug messages
-    fh = logging.FileHandler(f"{saved_path}/{model_name}.log")
+    fh = logging.FileHandler(f"{saved_path}/{model_name}.log", mode="w")  # "w" means clear the log file before writing
     fh.setLevel(logging.DEBUG)
     # create console handler with a higher log level
     ch = logging.StreamHandler()
