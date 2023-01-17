@@ -19,26 +19,24 @@ from typing import List, Optional
 
 
 def uniqify(ls):
-    """Return a list of unique elements without messing around the order
-    """
+    """Return a list of unique elements without messing around the order"""
     non_empty_ls = list(filter(lambda x: x != "", ls))
     return list(dict.fromkeys(non_empty_ls))
 
 
 def sort_dict_by_values(dic: dict, desc: bool = True, k: Optional[int] = None):
-    """Return a sorted dict by values with first k reserved if provided.
-    """
+    """Return a sorted dict by values with first k reserved if provided."""
     sorted_items = list(sorted(dic.items(), key=lambda item: item[1], reverse=desc))
     return dict(sorted_items[:k])
 
 
 class RangeNode(NodeMixin):
     """A tree implementation for ranges (without partial overlap).
-    
-        - parent node's range fully covers child node's range, e.g., `[1, 10]` is a parent of `[2, 5]`.
-        - partial overlap between ranges not allowed, e.g., `[2, 4]` and `[3, 5]` cannot appear in the same `RangeNodeTree`.
-        - non-overlap ranges are on different branches.
-        - child nodes are ordered according to their relative positions.
+
+    - parent node's range fully covers child node's range, e.g., `[1, 10]` is a parent of `[2, 5]`.
+    - partial overlap between ranges not allowed, e.g., `[2, 4]` and `[3, 5]` cannot appear in the same `RangeNodeTree`.
+    - non-overlap ranges are on different branches.
+    - child nodes are ordered according to their relative positions.
     """
 
     def __init__(self, start, end, **kwargs):
@@ -55,13 +53,13 @@ class RangeNode(NodeMixin):
 
     def __gt__(self, other: RangeNode):
         r"""Modified compare function for a range.
-        
+
         There are three kinds of comparisons:
-        
+
             - $R_1 \leq R_2$: if range $R_1$ is completely contained in range $R_2$.
             - $R_1 \gt R_2$: if range $R_2$ is completely contained in range $R_1$.
             - `"irrelevant"`: if range $R_1$ and range $R_2$ have no overlap.
-            
+
         NOTE that partial overlap is not allowed.
         """
         if other.start <= self.start and self.end <= other.end:
@@ -76,8 +74,7 @@ class RangeNode(NodeMixin):
 
     @staticmethod
     def sort_by_start(nodes: List[RangeNode]):
-        """A sorting function that sorts the nodes by their starting positions.
-        """
+        """A sorting function that sorts the nodes by their starting positions."""
         temp = {sib: sib.start for sib in nodes}
         return list(dict(sorted(temp.items(), key=lambda item: item[1])).keys())
 
@@ -120,4 +117,3 @@ class RangeNode(NodeMixin):
 
     def print_tree(self):
         print(RenderTree(self))
-

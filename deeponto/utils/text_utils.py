@@ -27,8 +27,7 @@ import xml.etree.ElementTree as ET
 
 class TextUtils:
     def __init__(self):
-        """Provides text processing utilities.
-        """
+        """Provides text processing utilities."""
         pass
 
     @staticmethod
@@ -37,10 +36,10 @@ class TextUtils:
 
         Args:
             annotation_literal (str): A literal string of an entity's annotation.
-            apply_lowercasing (bool, optional): A boolean that determines lowercasing or not. Defaults to True.
+            apply_lowercasing (bool, optional): A boolean that determines lowercasing or not. Defaults to `True`.
 
         Returns:
-            str: processed annotation literal string
+            (str): the processed annotation literal string.
         """
 
         # replace the underscores with spaces
@@ -60,7 +59,7 @@ class TextUtils:
     @staticmethod
     def split_java_identifier(java_style_identifier: str):
         """Split words in java's identifier style into natural language phrase.
-        
+
         Examples:
             -  SuperNaturalPower => Super Natural Power
             - APIReference => API Reference
@@ -112,8 +111,7 @@ class Tokenizer:
 
     @classmethod
     def from_pretrained(cls, pretrained_path: str = "bert-base-uncased"):
-        """[Huggingface] Load a sub-word level tokenizer from pre-trained model.
-        """
+        """[Huggingface] Load a sub-word level tokenizer from pre-trained model."""
         instance = cls("pre-trained")
         instance._tokenizer = AutoTokenizer.from_pretrained(pretrained_path)
         instance.tokenize = instance._tokenizer.tokenize
@@ -121,11 +119,10 @@ class Tokenizer:
 
     @classmethod
     def from_rule_based(cls):
-        """[Spacy] Load a word-level (rule-based) tokenizer.
-        """
+        """[Spacy] Load a word-level (rule-based) tokenizer."""
         spacy.prefer_gpu()
         instance = cls("rule-based")
-        instance._tokenizer = English()            
+        instance._tokenizer = English()
         instance.tokenize = lambda texts: [word.text for word in instance._tokenizer(texts).doc]
         return instance
 
@@ -145,10 +142,10 @@ class InvertedIndex:
             # value is a list of strings
             for token in self.tokenizer(v):
                 self.constructed_index[token].append(k)
-    
+
     def idf_select(self, texts: Union[str, List[str]], pool_size: int = 200):
         """Given a list of tokens, select a set candidates based on the inverted document frequency (idf) scores.
-        
+
         We use `idf` instead of  `tf` because labels have different lengths and thus tf is not a fair measure.
         """
         candidate_pool = defaultdict(lambda: 0)
@@ -168,5 +165,3 @@ class InvertedIndex:
         candidate_pool = list(sorted(candidate_pool.items(), key=lambda item: item[1], reverse=True))
         # select the first K ranked
         return candidate_pool[:pool_size]
-
-

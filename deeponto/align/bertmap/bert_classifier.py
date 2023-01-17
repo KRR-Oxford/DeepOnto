@@ -21,8 +21,12 @@ import numpy as np
 import random
 
 from deeponto.utils import Tokenizer, FileUtils
+from deeponto.utils.decorators import paper
 
-
+@paper(
+    "BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)",
+    "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
+)
 class BERTSynonymClassifier:
     """A BERT class for BERTMap consisting of a BERT model and a binary synonym classifier.
     
@@ -38,6 +42,7 @@ class BERTSynonymClassifier:
         validation_data (Dataset, optional): Data for validating the model if `for_training` is set to `True`. Defaults to `None`.
         training_args (TrainingArguments, optional): Training arguments for training the model if `for_training` is set to `True`. Defaults to `None`.
         trainer (Trainer, optional): The model trainer fed with `training_args` and data samples. Defaults to `None`.
+        softmax (torch.nn.SoftMax, optional): The softmax layer used for normalising synonym scores. Defaults to `None`.
     """
 
     def __init__(
@@ -71,7 +76,7 @@ class BERTSynonymClassifier:
         self.data_stat = {}
         self.training_args = None
         self.trainer = None
-        
+        self.softmax = None
         
         # load the pre-trained BERT model and set it to eval mode (static)
         if self.eval_mode:
@@ -80,6 +85,7 @@ class BERTSynonymClassifier:
             # TODO: to implement multi-gpus for inference
             self.device = self.get_device(device_num=0)
             self.model.to(self.device)
+            self.softmax = torch.nn.Softmax(dim=1).to(self.device)
         # load the pre-trained BERT model for fine-tuning
         else:
             if not training_data:
@@ -126,7 +132,8 @@ class BERTSynonymClassifier:
                 do_train=True,
                 do_eval=True,
                 save_steps=eval_steps,
-                save_total_limit=1
+                save_total_limit=2,
+                load_best_model_at_end=True
             )
             # build the trainer
             self.trainer = Trainer(

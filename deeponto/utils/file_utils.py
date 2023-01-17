@@ -27,20 +27,17 @@ import subprocess
 
 class FileUtils:
     def __init__(self):
-        """Provides file processing utilities.
-        """
+        """Provides file processing utilities."""
         pass
 
     @staticmethod
     def create_path(path: str):
-        """Create a path recursively.
-        """
+        """Create a path recursively."""
         Path(path).mkdir(parents=True, exist_ok=True)
 
     @staticmethod
     def save_file(obj, save_path: str, sort_keys: bool = False):
-        """Save an object to a certain format.
-        """
+        """Save an object to a certain format."""
         if save_path.endswith(".json"):
             with open(save_path, "w") as output:
                 json.dump(obj, output, indent=4, separators=(",", ": "), sort_keys=sort_keys)
@@ -55,8 +52,7 @@ class FileUtils:
 
     @staticmethod
     def load_file(save_path: str):
-        """Load an object of a certain format.
-        """
+        """Load an object of a certain format."""
         if save_path.endswith(".json"):
             with open(save_path, "r") as input:
                 return json.load(input)
@@ -71,16 +67,14 @@ class FileUtils:
 
     @staticmethod
     def print_dict(dic: dict):
-        """Pretty print a dictionary.
-        """
+        """Pretty print a dictionary."""
         pretty_print = json.dumps(dic, indent=4, separators=(",", ": "))
         # print(pretty_print)
         return pretty_print
 
     @staticmethod
     def copy2(source: str, destination: str):
-        """Copy a file from source to destination.
-        """
+        """Copy a file from source to destination."""
         try:
             shutil.copy2(source, destination)
             print(f"copied successfully FROM {source} TO {destination}")
@@ -89,8 +83,7 @@ class FileUtils:
 
     @staticmethod
     def read_table(table_file_path: str):
-        r"""Read `csv` or `tsv` file as pandas dataframe without treating `"NULL"`, `"null"`, and `"n/a"` as an empty string.
-        """
+        r"""Read `csv` or `tsv` file as pandas dataframe without treating `"NULL"`, `"null"`, and `"n/a"` as an empty string."""
         # TODO: this might change with the version of pandas
         na_vals = pd.io.parsers.readers.STR_NA_VALUES.difference({"NULL", "null", "n/a"})
         sep = "\t" if table_file_path.endswith(".tsv") else ","
@@ -98,8 +91,7 @@ class FileUtils:
 
     @staticmethod
     def read_jsonl(file_path: str):
-        """Read `.jsonl` file (list of json) introduced in the BLINK project.
-        """
+        """Read `.jsonl` file (list of json) introduced in the BLINK project."""
         results = []
         key_set = []
         with open(file_path, "r", encoding="utf-8-sig") as f:
@@ -113,15 +105,7 @@ class FileUtils:
 
     @staticmethod
     def read_oaei_mappings(rdf_file: str):
-        """To read mapping files in the OAEI rdf format.
-        
-        Args:
-            rdf_file: path to mappings in rdf format
-            src_onto: source ontology iri abbreviation, e.g. fma
-            tgt_onto: target ontology iri abbreviation, e.g. nci
-        Returns:
-            mappings(=;>,<), mappings(?)
-        """
+        """To read mapping files in the OAEI rdf format."""
         xml_root = ET.parse(rdf_file).getroot()
         ref_mappings = []  # where relation is "="
         ignored_mappings = []  # where relation is "?"
@@ -156,8 +140,7 @@ class FileUtils:
 
     @staticmethod
     def run_jar(jar_command: str):
-        """Run jar command using subprocess.
-        """
+        """Run jar command using subprocess."""
         proc = subprocess.Popen(jar_command.split(" "))
         try:
             _, _ = proc.communicate(timeout=600)

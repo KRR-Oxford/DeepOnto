@@ -36,37 +36,45 @@ limitations under the License.
         - Rewrite code to build on the OWLAPI and remove owlready2 from the essential dependencies.
 ## About
 
-DeepOnto aims to provide implemented deep learning models and an evaluation platform for various ontology engineering purposes. 
+$\textsf{DeepOnto}$ aims to provide tools for implementing deep learning models, constructing resources, and conducting evaluation
+for various ontology engineering purposes.
 
 - **Documentation**: *<https://krr-oxford.github.io/DeepOnto/>*.
 - **Github Repository**: *<https://github.com/KRR-Oxford/DeepOnto>*. 
-- **PyPI**: *<https://pypi.org/project/deeponto/>*. (experimental)
+- **PyPI**: *<https://pypi.org/project/deeponto/>*. 
 
 ## Installation
 
-DeepOnto is mainly extended from the following packages:
+### OWLAPI
 
-- [OWLAPI](http://owlapi.sourceforge.net/) (in Java) for ontology processing. The Python-Java interaction relies on what has been implemented in [mOWL](https://mowl.readthedocs.io/en/latest/index.html) which uses [JPype](https://jpype.readthedocs.io/en/latest/).
-- [Transformers](https://github.com/huggingface/transformers) for pre-trained language models.
+$\textsf{DeepOnto}$ relies on [OWLAPI](http://owlapi.sourceforge.net/) version 4 (written in Java) for ontologies. 
 
-To use DeepOnto, please manually configure Pytorch installation using, for example:
+We use what has been implemented in [mOWL](https://mowl.readthedocs.io/en/latest/index.html) that uses [JPype](https://jpype.readthedocs.io/en/latest/) to bridge Python and Java Virtual Machine (JVM).
+
+### Pytorch
+
+$\textsf{DeepOnto}$ relies on [Pytorch](https://pytorch.org/) for deep learning framework.
+
+Configure Pytorch installation with CUDA support using, for example:
 
 ```bash
 pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 ```
 
-Basic usage of Ontology does not rely on GPUs, but for efficient language model training, please make sure
+Basic usage of Ontology does not rely on GPUs, but for efficient deep learning model training, please make sure
 `torch.cuda.is_available()` returns `True`.
 
-Other dependencies are specified in `setup.cfg` and `requirements.txt` which are supposed to be installed along with `deeponto`.
+### Install from PyPI
 
-Install from PyPi by:
+Other dependencies are specified in `setup.cfg` and `requirements.txt` which are supposed to be installed along with `deeponto`.
 
 ```bash
 pip install deeponto
 ```
 
-One can git clone the repository without installing through PyPi and install the dependencies manually by:
+### Use Git Repository
+
+One can git clone the repository without installing through PyPI and install the dependencies manually by:
 
 ```bash
 pip install -r requirements.txt
@@ -75,29 +83,23 @@ pip install -r requirements.txt
 
 ## Main Features
 
-
 ### Extending the OWLAPI
 
-Thanks for [JPype](https://jpype.readthedocs.io/en/latest/), we can use the OWLAPI library in Python for better integration with the deep learning modules. For basic usage, see [`Ontology`][deeponto.onto.Ontology] and [`OntologyReasoner`][deeponto.onto.OntologyReasoner] classes in the package reference.
+$\textsf{DeepOnto}$ extends the OWLAPI library for ontology processing and reasoning, and also for better integration with deep learning modules. 
+The base classes that extend the OWLAPI functionalities are [`Ontology`][deeponto.onto.Ontology] and [`OntologyReasoner`][deeponto.onto.OntologyReasoner]. Examples of how to use them can be found [here](pages/ontology).
 
-### Ontology Matching 
+### BERTMap
 
-DeepOnto has implemented a family of BERT-based Ontology Matching (OM) models including:
+BERTMap [1] is a BERT-based *ontology matching* (OM) system originally developed in [repo](https://github.com/KRR-Oxford/BERTMap) but is now maintained in $\textsf{DeepOnto}$. See how to use BERTMap in this [tutorial](pages/bertmap).
 
-  - **BERTMap** and **BERTMapLt** (EditSim) for equivalence OM;
-  - **BERTSubs** (not ready) for subsumption OM.
+### OM Evaluation
 
-<!-- link to be changed -->
-> Click [here](https://krr-oxford.github.io/DeepOnto/#/bertmap) for BERT-based OM.
+$\textsf{DeepOnto}$ provides an evaluation workaround for OM systems including *global matching* and *local ranking* as proposed in [here](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33) [2]. See how to use this evaluation framework in this [tutorial](pages/om_eval).
 
-It also incorporates the OM resource **Bio-ML**:
+### Bio-ML
 
-  -  Download link: *<https://doi.org/10.5281/zenodo.6510086>* (CC BY 4.0 International);
-  -  Instructions: *<https://krr-oxford.github.io/DeepOnto/#/om_resources>*;
-  -  OAEI track: *<https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/>*.
+Bio-ML [2] is an OM resource and has been integrated into the [Bio-ML track of the OAEI](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/). See [instructions](pages/om_resources) of how to use Bio-ML.
 
-<!-- link to be changed -->
-> Click [here](https://krr-oxford.github.io/DeepOnto/#/om_resources) for OM resources.
 
 ## License
 
@@ -117,6 +119,6 @@ It also incorporates the OM resource **Bio-ML**:
 
 ## Publications
 
-- *Yuan He‚ Jiaoyan Chen‚ Denvar Antonyrajah and Ian Horrocks.* **BERTMap: A BERT−Based Ontology Alignment System**. In Proceedings of 36th AAAI Conference on Artificial Intelligence 2022 (AAAI-2022). /[arxiv](https://arxiv.org/abs/2112.02682)/ /[aaai](https://ojs.aaai.org/index.php/AAAI/article/view/20510)/
-- *Yuan He‚ Jiaoyan Chen‚ Hang Dong, Ernesto Jiménez-Ruiz, Ali Hadian and Ian Horrocks.* **Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching**. The 21st International Semantic Web Conference (ISWC-2022, **Best Resource Paper Candidate**). /[arxiv](https://arxiv.org/abs/2205.03447)/ /[iswc](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33)/
-- *Jiaoyan Chen, Yuan He, Yuxia Geng, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.* **Contextual Semantic Embeddings for Ontology Subsumption Prediction**. 2022 (Under review). /[arxiv](https://arxiv.org/abs/2202.09791)/
+- [1] *Yuan He‚ Jiaoyan Chen‚ Denvar Antonyrajah and Ian Horrocks.* **BERTMap: A BERT−Based Ontology Alignment System**. In Proceedings of 36th AAAI Conference on Artificial Intelligence 2022 (AAAI-2022). /[arxiv](https://arxiv.org/abs/2112.02682)/ /[aaai](https://ojs.aaai.org/index.php/AAAI/article/view/20510)/  <a name="bertmap_paper"></a>
+- [2] *Yuan He‚ Jiaoyan Chen‚ Hang Dong, Ernesto Jiménez-Ruiz, Ali Hadian and Ian Horrocks.* **Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching**. The 21st International Semantic Web Conference (ISWC-2022, **Best Resource Paper Candidate**). /[arxiv](https://arxiv.org/abs/2205.03447)/ /[iswc](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33)/  <a name="bioml_paper"></a>
+- [3] *Jiaoyan Chen, Yuan He, Yuxia Geng, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.* **Contextual Semantic Embeddings for Ontology Subsumption Prediction**. 2022 (Under review). /[arxiv](https://arxiv.org/abs/2202.09791)/  <a name="bertsubs_paper"></a>
