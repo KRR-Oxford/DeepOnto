@@ -26,9 +26,7 @@ import xml.etree.ElementTree as ET
 
 
 class TextUtils:
-    def __init__(self):
-        """Provides text processing utilities."""
-        pass
+    """Provides text processing utilities."""
 
     @staticmethod
     def process_annotation_literal(annotation_literal: str, apply_lowercasing: bool = True):
@@ -95,10 +93,9 @@ class TextUtils:
 
 
 class Tokenizer:
+    """A Tokenizer class for both sub-word (pre-trained) and word (rule-based) level tokenization."""
+
     def __init__(self, tokenizer_type: str):
-        """A Tokenizer class for both sub-word (pre-trained) and
-        word (rule-based) level tokenization.
-        """
         self.type = tokenizer_type
         self._tokenizer = None  # hidden tokenizer
         self.tokenize = None  # the tokenization method
@@ -128,13 +125,15 @@ class Tokenizer:
 
 
 class InvertedIndex:
-    def __init__(self, index: defaultdict, tokenizer: Tokenizer):
-        """Inverted index built from tokens.
+    r"""Inverted index built from a text index.
 
-        Args:
-            index (defaultdict): A dictionary where the values are text strings to be tokenized.
-            tokenizer (Tokenizer): A tokenizer instance to be used.
-        """
+    Attributes:
+        tokenizer (Tokenizer): A tokenizer instance to be used.
+        original_index (defaultdict): A dictionary where the values are text strings to be tokenized.
+        constructed_index (defaultdict): A dictionary that acts as the inverted index of `original_index`.
+    """
+
+    def __init__(self, index: defaultdict, tokenizer: Tokenizer):
         self.tokenizer = tokenizer
         self.original_index = index
         self.constructed_index = defaultdict(list)

@@ -26,9 +26,7 @@ import subprocess
 
 
 class FileUtils:
-    def __init__(self):
-        """Provides file processing utilities."""
-        pass
+    """Provides file processing utilities."""
 
     @staticmethod
     def create_path(path: str):
