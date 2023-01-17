@@ -108,7 +108,7 @@ class Tokenizer:
 
     @classmethod
     def from_pretrained(cls, pretrained_path: str = "bert-base-uncased"):
-        """[Huggingface] Load a sub-word level tokenizer from pre-trained model."""
+        """(Based on **transformers**) Load a sub-word level tokenizer from pre-trained model."""
         instance = cls("pre-trained")
         instance._tokenizer = AutoTokenizer.from_pretrained(pretrained_path)
         instance.tokenize = instance._tokenizer.tokenize
@@ -116,7 +116,7 @@ class Tokenizer:
 
     @classmethod
     def from_rule_based(cls):
-        """[Spacy] Load a word-level (rule-based) tokenizer."""
+        """(Based on **spacy**) Load a word-level (rule-based) tokenizer."""
         spacy.prefer_gpu()
         instance = cls("rule-based")
         instance._tokenizer = English()
