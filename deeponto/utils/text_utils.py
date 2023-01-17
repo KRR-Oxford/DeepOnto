@@ -56,12 +56,12 @@ class TextUtils:
 
     @staticmethod
     def split_java_identifier(java_style_identifier: str):
-        """Split words in java's identifier style into natural language phrase.
+        r"""Split words in java's identifier style into natural language phrase.
 
         Examples:
-            -  SuperNaturalPower => Super Natural Power
-            - APIReference => API Reference
-            - Covid19 => Covid 19
+            - `"SuperNaturalPower"` => `"Super Natural Power"`
+            - `"APIReference"` => `"API Reference"`
+            - `"Covid19"` => `"Covid 19"`
         """
         # split at every capital letter or number (numbers are treated as capital letters)
         raw_words = re.findall("([0-9A-Z][a-z]*)", java_style_identifier)
