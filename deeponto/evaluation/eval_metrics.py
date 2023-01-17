@@ -88,7 +88,7 @@ def hits_at_k(pred_maps: AnchoredOntoMappings, ref_tuples: List[Tuple], k: int):
 
 
 def mean_reciprocal_rank(pred_maps: AnchoredOntoMappings, ref_tuples: List[Tuple]):
-    """MRR = (\sum_i 1 / rank_i) / # testing samples
+    r"""MRR = (\sum_i 1 / rank_i) / # testing samples
     """
     sum_inv_ranks = 0
     for src_ent, tgt_ent in ref_tuples:

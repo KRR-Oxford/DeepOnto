@@ -359,7 +359,8 @@ class Ontology:
 
         return annotation_index, annotation_property_iris
 
-    def build_inverted_annotation_index(self, annotation_index: dict, tokenizer: Tokenizer):
+    @staticmethod
+    def build_inverted_annotation_index(annotation_index: dict, tokenizer: Tokenizer):
         """Build an inverted annotation index given an annotation index and a tokenizer.
         """
         return InvertedIndex(annotation_index, tokenizer)

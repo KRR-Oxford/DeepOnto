@@ -25,16 +25,14 @@ import subprocess
 
 # subclass of logging.Formatter
 class RuntimeFormatter(logging.Formatter):
-    """Auxiliary class for runtime formatting in the logger.
-    """
+    """Auxiliary class for runtime formatting in the logger."""
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.start_time = time.time()
 
     def formatTime(self, record, datefmt=None):
-        """Record relative runtime in hr:min:sec format。
-        """
+        """Record relative runtime in hr:min:sec format。"""
         duration = datetime.datetime.utcfromtimestamp(record.created - self.start_time)
         elapsed = duration.strftime("%H:%M:%S")
         return "{}".format(elapsed)
@@ -42,7 +40,7 @@ class RuntimeFormatter(logging.Formatter):
 
 def create_logger(model_name: str, saved_path: str):
     """Create logger for both console info and saved info.
-    
+
     The pre-existed log file will be cleared before writing into new messages.
     """
     logger = logging.getLogger(model_name)
@@ -54,9 +52,7 @@ def create_logger(model_name: str, saved_path: str):
     ch = logging.StreamHandler()
     ch.setLevel(logging.INFO)
     # create formatter and add it to the handlers
-    formatter = RuntimeFormatter(
-        "[Time: %(asctime)s] - [PID: %(process)d] - [Model: %(name)s] \n%(message)s"
-    )
+    formatter = RuntimeFormatter("[Time: %(asctime)s] - [PID: %(process)d] - [Model: %(name)s] \n%(message)s")
     fh.setFormatter(formatter)
     ch.setFormatter(formatter)
     # add the handlers to the logger
@@ -66,8 +62,7 @@ def create_logger(model_name: str, saved_path: str):
 
 
 def banner_message(message: str, sym="^"):
-    """Print a banner message surrounded by special symbols.
-    """
+    """Print a banner message surrounded by special symbols."""
     print()
     message = message.upper()
     banner_len = len(message) + 4

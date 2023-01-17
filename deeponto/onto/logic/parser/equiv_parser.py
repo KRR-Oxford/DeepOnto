@@ -22,10 +22,10 @@ from deeponto.onto import Ontology
 from deeponto.utils.datastructures import RangeNode
 
 IRI = "<https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)>"
-AND_ATOMS = f"\[AND\]\((?:{IRI}| )+?\)"
-EXT_ATOM = f"\[EXT\]\({IRI} {IRI}\)"
-EXT_AND_ATOMS = f"\[EXT\]\({IRI} {AND_ATOMS}\)"
-AND_MIXED = f"\[AND\]\((?:{IRI}|{EXT_ATOM}|{EXT_AND_ATOMS}| )*?\)"
+AND_ATOMS = r"\[AND\]\((?:{IRI}| )+?\)".format(IRI=IRI)
+EXT_ATOM = r"\[EXT\]\({IRI} {IRI}\)".format(IRI=IRI)
+EXT_AND_ATOMS = r"\[EXT\]\({IRI} {AND_ATOMS}\)".format(IRI=IRI, AND_ATOMS=AND_ATOMS)
+AND_MIXED = r"\[AND\]\((?:{IRI}|{EXT_ATOM}|{EXT_AND_ATOMS}| )*?\)".format(IRI=IRI, EXT_ATOM=EXT_ATOM, EXT_AND_ATOMS=EXT_AND_ATOMS)
 ALL_PATTERNS = [AND_ATOMS, EXT_ATOM, EXT_AND_ATOMS, AND_MIXED]
 
 
@@ -37,7 +37,7 @@ class OWLEquivAxiomParser(OWLAxiomParserBase):
         self.obj_prop_df = pd.read_csv(obj_prop_path, index_col=0) if obj_prop_path else None
 
     def fit(self, pattern: str, axiom_text: str):
-        pattern = f"^\[(EQU|SUB|SUP)\]\(({IRI}) ({pattern})( )*\)$"
+        pattern = r"^\[(EQU|SUB|SUP)\]\(({IRI}) ({pattern})( )*\)$".format(IRI=IRI, pattern=pattern)
         return re.findall(pattern, self.abbr_axiom_text(axiom_text))
 
     @staticmethod
