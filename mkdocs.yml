@@ -15,8 +15,12 @@ theme:
 
 nav:
     - GET STARTED: 
-      - Introduction: index.md
-      - Bio-ML: pages/om_resources.md
+      - Overview: index.md
+      - Usage:
+        - Ontology Processing and Reasoning: pages/ontology.md  # basic usage of ontologies, ontology pruning, etc.
+        - Tutorial for BERTMap: pages/bertmap.md
+        - Tutorial for OM Evaluation: pages/om_eval.md
+        - Instructions of Bio-ML: pages/om_resources.md
     - PACKAGE REFERENCE:
         - Ontology: deeponto/onto/index.md
         - Ontology Alignment:
