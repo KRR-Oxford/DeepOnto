@@ -38,14 +38,17 @@ from .bert_classifier import BERTSynonymClassifier
     "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
 )
 class MappingPredictor:
-    r"""Class for the mapping prediction component of BERTMap and BERTMapLt models.
+    r"""Class for the mapping prediction component of $\textsf{BERTMap}$ and $\textsf{BERTMapLt}$ models.
 
     Attributes:
         tokenizer (Tokenizer): The tokenizer used for constructing the inverted annotation index and candidate selection.
-        inverted_annotation_index (InvertedIndex): The inverted index built from either `src_annotation_index` (matching direction is `src2tgt`)
-            or `tgt_annotation_index` (matching direction is `tgt2src`).
+        src_annotation_index (dict): A dictionary that stores the `(class_iri, class_annotations)` pairs from `src_onto` according to `annotation_property_iris`.
+        tgt_annotation_index (dict): A dictionary that stores the `(class_iri, class_annotations)` pairs from `tgt_onto` according to `annotation_property_iris`.
+        tgt_inverted_annotation_index (InvertedIndex): The inverted index built from `tgt_annotation_index` used for target class candidate selection.
         bert_synonym_classifier (BERTSynonymClassifier, optional): The BERT synonym classifier fine-tuned on text semantics corpora.
-
+        num_raw_candidates (int): The maximum number of selected target class candidates for a source class.
+        num_best_predictions (int): The maximum number of best scored mappings presevred for a source class.
+        batch_size_for_prediction (int): The batch size of class annotation pairs for computing synonym scores.
     """
 
     def __init__(
@@ -82,7 +85,7 @@ class MappingPredictor:
         src_class_annotations: Set[str],
         tgt_class_annotations: Set[str],
     ):
-        r"""BERTMap's main mapping score module which utilises the fine-tuned BERT synonym
+        r"""$\textsf{BERTMap}$'s main mapping score module which utilises the fine-tuned BERT synonym
         classifier.
 
         Compute the **synonym score** for each pair of src-tgt class annotations, and return
@@ -109,7 +112,7 @@ class MappingPredictor:
         tgt_class_annotations: Set[str],
         string_match_only: bool = False,
     ):
-        r"""BERTMap's string match module and BERTMapLt's mapping prediction function.
+        r"""$\textsf{BERTMap}$'s string match module and $\textsf{BERTMapLt}$'s mapping prediction function.
 
         Compute the **normalised edit similarity** (1 - normalised edit distance) for each pair
         of src-tgt class annotations, and return the **maximum** score as the mapping score.
@@ -117,7 +120,7 @@ class MappingPredictor:
         # edge case when src and tgt classes have an exact match of annotation
         if src_class_annotations.intersection(tgt_class_annotations):
             return 1.0
-        # a shortcut to save time for BERTMap
+        # a shortcut to save time for $\textsf{BERTMap}$
         if string_match_only:
             return 0.0
         annotation_pairs = itertools.product(src_class_annotations, tgt_class_annotations)
@@ -128,11 +131,11 @@ class MappingPredictor:
         r"""Predict $N$ best scored mappings for a source ontology class, where
         $N$ is specified in `self.num_best_predictions`.
 
-        !!! notes:
+        !!! note
 
             1. Apply the **string matching** module to compute "easy" mappings.
             2. Return the mappings if found any, or if there is no BERT synonym classifier
-            as in BERTMapLt.
+            as in $\textsf{BERTMapLt}$.
             3. If using the BERT synonym classifier module:
 
                 - Generate batches for class annotation pairs. Each batch contains the combinations of the

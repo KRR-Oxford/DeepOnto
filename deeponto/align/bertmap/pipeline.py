@@ -81,7 +81,7 @@ class BERTMapPipeline:
         finetune_data (dict, optional): A dictionary that stores the `training` and `validation` splits of samples from `corpora`.
         bert (BERTSynonymClassifier, optional): A BERT model for synonym classification and mapping prediction.
         best_checkpoint (str, optional): The path to the best BERT checkpoint which will be loaded after training.
-        mapping_predictor (MappingPredictor):
+        mapping_predictor (MappingPredictor): The predictor function based on class annotations, used for **global matching** or **mapping scoring**.
 
     """
 
