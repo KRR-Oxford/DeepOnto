@@ -122,7 +122,7 @@ class AnnotationThesaurus:
 
         !!! note
 
-            In BERTMap experiments we have considered this as a data augmentation approach
+            In $\textsf{BERTMap}$ experiments we have considered this as a data augmentation approach
             but it does not bring a significant performance improvement. However, if the
             overall number of annotations is not large enough then this could be a good option.
 
@@ -164,10 +164,10 @@ class AnnotationThesaurus:
 
         !!! note
 
-            According to the BERTMap paper, **synonyms** are defined as label pairs that belong
+            According to the $\textsf{BERTMap}$ paper, **synonyms** are defined as label pairs that belong
             to the same ontology class.
 
-        NOTE this has been validated for getting the same results as in the original BERTMap repository.
+        NOTE this has been validated for getting the same results as in the original $\textsf{BERTMap}$ repository.
 
         Args:
             num_samples (int, optional): The (maximum) number of **unique** samples extracted. Defaults to `None`.
@@ -194,7 +194,7 @@ class AnnotationThesaurus:
 
         !!! note
 
-            According to the BERTMap paper, **soft non-synonyms** are defined as label pairs
+            According to the $\textsf{BERTMap}$ paper, **soft non-synonyms** are defined as label pairs
             from two *different* synonym groups that are **randomly** selected.
 
         Args:
@@ -239,7 +239,7 @@ class AnnotationThesaurus:
 
         !!! note
 
-            According to the BERTMap paper, **hard non-synonyms** are defined as label pairs
+            According to the $\textsf{BERTMap}$ paper, **hard non-synonyms** are defined as label pairs
             that belong to two **disjoint** ontology classes. For practical reason, the condition
             is eased to two **sibling** ontology classes.
 
@@ -285,7 +285,7 @@ class IntraOntologyTextSemanticsCorpus:
 
     !!! note
 
-        As defined in the BERTMap paper, the **intra-ontology** text semantics corpus consists
+        As defined in the $\textsf{BERTMap}$ paper, the **intra-ontology** text semantics corpus consists
         of synonym and non-synonym pairs extracted from the ontology class annotations.
 
     Attributes:
@@ -306,7 +306,7 @@ class IntraOntologyTextSemanticsCorpus:
     ):
 
         self.onto = onto
-        # BERTMap does not apply synonym transitivity
+        # $\textsf{BERTMap}$ does not apply synonym transitivity
         self.thesaurus = AnnotationThesaurus(onto, annotation_property_iris, apply_transitivity=False)
 
         self.synonyms = self.thesaurus.synonym_sampling()
@@ -348,7 +348,7 @@ class CrossOntologyTextSemanticsCorpus:
 
     !!! note
 
-        As defined in the BERTMap paper, the **cross-ontology** text semantics corpus consists
+        As defined in the $\textsf{BERTMap}$ paper, the **cross-ontology** text semantics corpus consists
         of synonym and non-synonym pairs extracted from the annotations/labels of class pairs
         involved in the provided cross-ontology mappigns.
 
@@ -414,7 +414,7 @@ class CrossOntologyTextSemanticsCorpus:
 
         !!! note
 
-            According to the BERTMap paper, **cross-ontology synonyms** are defined as label pairs
+            According to the $\textsf{BERTMap}$ paper, **cross-ontology synonyms** are defined as label pairs
             that belong to two **matched** classes. Suppose the class $C$ from the source ontology
             and the class $D$ from the target ontology are matched according to one of the `class_mappings`,
             then the cartesian product of labels of $C$ and labels of $D$ form cross-ontology synonyms.
@@ -447,7 +447,7 @@ class CrossOntologyTextSemanticsCorpus:
 
         !!! note
 
-            According to the BERTMap paper, **cross-ontology non-synonyms** are defined as label pairs
+            According to the $\textsf{BERTMap}$ paper, **cross-ontology non-synonyms** are defined as label pairs
             that belong to two **unmatched** classes. Assume that the provided class mappings are self-contained
             in the sense that they are complete for the classes involved in them, then we can randomly
             sample two cross-ontology classes that are not matched according to the mappings and take
@@ -490,7 +490,7 @@ class TextSemanticsCorpora:
 
     !!! note
 
-        As defined in the BERTMap paper, the collection of text semantics corpora contains
+        As defined in the $\textsf{BERTMap}$ paper, the collection of text semantics corpora contains
         **at least two intra-ontology sub-corpora** from the source and target ontologies, respectively.
         If some class mappings are provided, then a **cross-ontology sub-corpus** will be created.
         If some additional auxiliary ontologies are provided, the intra-ontology corpora created from them

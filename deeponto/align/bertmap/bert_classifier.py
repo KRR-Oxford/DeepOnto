@@ -28,7 +28,7 @@ from deeponto.utils.decorators import paper
     "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
 )
 class BERTSynonymClassifier:
-    """A BERT class for BERTMap consisting of a BERT model and a binary synonym classifier.
+    r"""A BERT class for $\textsf{BERTMap}$ consisting of a BERT model and a binary synonym classifier.
     
     Attributes:
         loaded_path (str): The path to the checkpoint of a pre-trained BERT model.

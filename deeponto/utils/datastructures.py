@@ -54,7 +54,9 @@ class RangeNode(NodeMixin):
     def __gt__(self, other: RangeNode):
         r"""Modified compare function for a range.
 
-        There are three kinds of comparisons:
+        !!! note
+        
+            There are three kinds of comparisons:
 
             - $R_1 \leq R_2$: if range $R_1$ is completely contained in range $R_2$.
             - $R_1 \gt R_2$: if range $R_2$ is completely contained in range $R_1$.
