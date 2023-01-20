@@ -27,6 +27,10 @@ new mapping with score $\geq \kappa$ found or exceed the maximum number of itera
 
 8. Repair the rest of the mappings with the repair module built in LogMap (BERTMap does not focus on mapping repair). In short, a minimum set of inconsistent mappings will be removed (further improve precision).
 
+Get Figure here
+$\textsf{BERTMap}$ (global matching with string match, BERT and mapping refinement)
+$\textsf{BERTMapLt}$ (global matching with string match but without BERT and mapping refinement)
+
 $\textsf{BERTMap}$ with only the string match module and the candidate selection process is referred to as $\textsf{BERTMapLt}$, the light version without BERT training and mapping refinement.
 
 In addition to the traditional OM procedure, the scoring module of $\textsf{BERTMap}$ and $\textsf{BERTMapLt}$ can be used to evaluate any class pair given their annotations. This is useful in ranking-based evaluation. 
