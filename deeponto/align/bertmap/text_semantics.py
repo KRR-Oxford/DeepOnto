@@ -235,7 +235,7 @@ class AnnotationThesaurus:
         return random.choices(self.onto.sibling_class_groups, weights=weights, k=k)
 
     def hard_nonsynonym_sampling(self, num_samples: int, max_iter: int = 5):
-        """Sample **hard** non-synonyms from sibling classes of the input ontology.
+        r"""Sample **hard** non-synonyms from sibling classes of the input ontology.
 
         !!! note
 
