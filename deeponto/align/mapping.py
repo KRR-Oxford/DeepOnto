@@ -82,11 +82,22 @@ class EntityMapping:
         return cls(str(src_entity.getIRI()), str(tgt_entity.getIRI()), relation, score)
 
     def to_tuple(self, with_score: bool = False):
-        """Transform to a tuple representation (`relation` is discarded, `score` is optionally preserved)."""
+        """Transform an entity mapping (`self`) to a tuple representation 
+        
+        Note that `relation` is discarded and `score` is optionally preserved).
+        """
         if with_score:
             return (self.head, self.tail, self.score)
         else:
             return (self.head, self.tail)
+        
+    @staticmethod
+    def as_tuples(entity_mappings: List[EntityMapping], with_score: bool = False):
+        """Transform a list of entity mappings to their tuple representations.
+
+        Note that `relation` is discarded and `score` is optionally preserved).
+        """
+        return [m.to_tuple(with_score=with_score) for m in entity_mappings]
 
     @staticmethod
     def sort_entity_mappings_by_score(entity_mappings: List[EntityMapping], k: Optional[int] = None):
@@ -108,7 +119,7 @@ class EntityMapping:
         threshold: Optional[float] = 0.0,
         relation: str = DEFAULT_REL,
         is_reference: bool = False,
-    ):
+    ) -> List[EntityMapping]:
         r"""Read entity mappings from `.csv` or `.tsv` files.
 
         Args:

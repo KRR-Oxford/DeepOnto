@@ -20,7 +20,6 @@ import os
 from textdistance import levenshtein
 from logging import Logger
 import itertools
-import pprintpp
 import torch
 import pandas as pd
 import enlighten
@@ -33,12 +32,12 @@ from deeponto.utils.decorators import paper
 from .bert_classifier import BERTSynonymClassifier
 
 
-@paper(
-    "BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)",
-    "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
-)
+# @paper(
+#     "BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)",
+#     "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
+# )
 class MappingPredictor:
-    r"""Class for the mapping prediction component of $\textsf{BERTMap}$ and $\textsf{BERTMapLt}$ models.
+    r"""Class for the mapping prediction module of $\textsf{BERTMap}$ and $\textsf{BERTMapLt}$ models.
 
     Attributes:
         tokenizer (Tokenizer): The tokenizer used for constructing the inverted annotation index and candidate selection.
@@ -53,7 +52,7 @@ class MappingPredictor:
 
     def __init__(
         self,
-        logger: Logger,
+        output_path: str,
         tokenizer_path: str,
         src_annotation_index: dict,
         tgt_annotation_index: dict,
@@ -61,9 +60,14 @@ class MappingPredictor:
         num_raw_candidates: Optional[int],
         num_best_predictions: Optional[int],
         batch_size_for_prediction: int,
-        output_path: str,
+        logger: Logger,
+        enlighten_manager: enlighten.Manager,
+        enlighten_status: enlighten.StatusBar,
     ):
         self.logger = logger
+        self.enlighten_manager = enlighten_manager
+        self.enlighten_status = enlighten_status
+
         self.tokenizer = Tokenizer.from_pretrained(tokenizer_path)
 
         self.logger.info("Build inverted annotation index for candidate selection.")
@@ -72,6 +76,7 @@ class MappingPredictor:
         self.tgt_inverted_annotation_index = Ontology.build_inverted_annotation_index(
             tgt_annotation_index, self.tokenizer
         )
+        # the fundamental judgement for whether bertmap or bertmaplt is loaded
         self.bert_synonym_classifier = bert_synonym_classifier
         self.num_raw_candidates = num_raw_candidates
         self.num_best_predictions = num_best_predictions
@@ -104,7 +109,7 @@ class MappingPredictor:
         class_annotation_pairs = list(itertools.product(src_class_annotations, tgt_class_annotations))
         synonym_scores = self.bert_synonym_classifier.predict(class_annotation_pairs)
         # only one element tensor is able to be extracted as a scalar by .item()
-        return torch.mean(synonym_scores).item()
+        return float(torch.mean(synonym_scores).item())
 
     @staticmethod
     def edit_similarity_mapping_score(
@@ -114,11 +119,11 @@ class MappingPredictor:
     ):
         r"""$\textsf{BERTMap}$'s string match module and $\textsf{BERTMapLt}$'s mapping prediction function.
 
-        Compute the **normalised edit similarity** (1 - normalised edit distance) for each pair
+        Compute the **normalised edit similarity** `(1 - normalised edit distance)` for each pair
         of src-tgt class annotations, and return the **maximum** score as the mapping score.
         """
         # edge case when src and tgt classes have an exact match of annotation
-        if src_class_annotations.intersection(tgt_class_annotations):
+        if len(src_class_annotations.intersection(tgt_class_annotations)) > 0:
             return 1.0
         # a shortcut to save time for $\textsf{BERTMap}$
         if string_match_only:
@@ -148,8 +153,9 @@ class MappingPredictor:
         """
 
         src_class_annotations = self.src_annotation_index[src_class_iri]
+        # previously wrongly put tokenizer again !!!
         tgt_class_candidates = self.tgt_inverted_annotation_index.idf_select(
-            self.tokenizer(list(src_class_annotations)), pool_size=self.num_raw_candidates
+            list(src_class_annotations), pool_size=self.num_raw_candidates
         )  # [(tgt_class_iri, idf_score)]
         best_scored_mappings = []
 
@@ -164,14 +170,15 @@ class MappingPredictor:
                     tgt_candidate_annotations,
                     string_match_only=True,
                 )
-                if prelim_score == 1.0:
+                if prelim_score > 0.0:
+                    # if src_class_annotations.intersection(tgt_candidate_annotations):
                     string_matched_mappings.append(
                         self.init_class_mapping(src_class_iri, tgt_candidate_iri, prelim_score)
-                    )   
-                  
+                    )
+
             return string_matched_mappings
 
-        best_scored_mappings = string_match()
+        best_scored_mappings += string_match()
         # return string-matched mappings if found or if there is no bert module (bertmaplt)
         if best_scored_mappings or not self.bert_synonym_classifier:
             self.logger.info(f"The best scored class mappings for {src_class_iri} are\n{best_scored_mappings}")
@@ -239,7 +246,7 @@ class MappingPredictor:
             for candidate_idx, mapping_score in zip(final_best_idxs, final_best_scores):
                 # ignore intial values (-1.0) for dummy mappings
                 # the threshold 0.9 is for mapping extension
-                if mapping_score.item() >= 0.9:
+                if mapping_score.item() > 0.0:
                     tgt_candidate_iri = tgt_class_candidates[candidate_idx.item()][0]
                     bert_matched_mappings.append(
                         self.init_class_mapping(
@@ -250,7 +257,7 @@ class MappingPredictor:
                     )
 
             assert len(bert_matched_mappings) <= self.num_best_predictions
-            self.logger.info(f"The best scored class mappings for {src_class_iri} are\n{bert_matched_mappings}")   
+            self.logger.info(f"The best scored class mappings for {src_class_iri} are\n{bert_matched_mappings}")
             return bert_matched_mappings
 
         return bert_match()
@@ -260,40 +267,41 @@ class MappingPredictor:
 
         See [`global_matching_for_src_class`][deeponto.align.bertmap.mapping_prediction.MappingPredictor.global_matching_for_src_class].
 
-        If this process is accidentally stopped, it can be resumed from already saved predictions.
+        If this process is accidentally stopped, it can be resumed from already saved predictions. The progress
+        bar keeps track of the number of source ontology classes that have been matched.
         """
         self.logger.info("Start global matching for each class in the source ontology.")
 
         match_dir = os.path.join(self.output_path, "match")
         try:
-            mapping_index = FileUtils.load_file(os.path.join(match_dir, "raw-predictions.json"))
+            mapping_index = FileUtils.load_file(os.path.join(match_dir, "raw_mappings.json"))
             self.logger.info("Load the existing mapping prediction file.")
         except:
             mapping_index = dict()
             FileUtils.create_path(match_dir)
-            
-        progress_bar = enlighten.get_manager().counter(
+
+        progress_bar = self.enlighten_manager.counter(
             total=len(self.src_annotation_index), desc="Global Matching", unit="per src class"
         )
+        self.enlighten_status.update(demo="Global Matching (Raw Mappings)")
 
         for i, src_class_iri in enumerate(self.src_annotation_index.keys()):
             if src_class_iri in mapping_index.keys():
-                print(f"Skip matching {src_class_iri} as already computed.")
+                self.logger.info(f"[Class {i}] Skip matching {src_class_iri} as already computed.")
                 progress_bar.update()
                 continue
             mappings = self.global_matching_for_src_class(src_class_iri)
             mapping_index[src_class_iri] = [m.to_tuple(with_score=True) for m in mappings]
 
             if i % 100 == 0 or i == len(self.src_annotation_index) - 1:
-                FileUtils.save_file(mapping_index, os.path.join(match_dir, "raw-predictions.json"))
+                FileUtils.save_file(mapping_index, os.path.join(match_dir, "raw_mappings.json"))
                 # also save a .tsv version
                 mapping_in_tuples = list(itertools.chain.from_iterable(mapping_index.values()))
                 mapping_df = pd.DataFrame(mapping_in_tuples, columns=["SrcEntity", "TgtEntity", "Score"])
-                mapping_df.to_csv(
-                    os.path.join(match_dir, "raw-predictions.tsv"), sep="\t", index=False
-                )
+                mapping_df.to_csv(os.path.join(match_dir, "raw_mappings.tsv"), sep="\t", index=False)
                 self.logger.info("Save currently computed mappings to prevent undesirable loss.")
 
             progress_bar.update()
-            
+
         self.logger.info("Finished global matching for each class in the source ontology.")
+        progress_bar.close()
