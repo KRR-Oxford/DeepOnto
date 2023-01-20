@@ -28,7 +28,9 @@ from deeponto.utils.decorators import paper
 #     "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
 # )
 class BERTSynonymClassifier:
-    r"""A BERT class for $\textsf{BERTMap}$ consisting of a BERT model and a binary synonym classifier.
+    r"""Class for BERT synonym classifier.
+    
+    The main scoring module of $\textsf{BERTMap}$ consisting of a BERT model and a binary synonym classifier.
     
     Attributes:
         loaded_path (str): The path to the checkpoint of a pre-trained BERT model.
@@ -153,7 +155,7 @@ class BERTSynonymClassifier:
         self.trainer.train(resume_from_checkpoint=resume_from_checkpoint)
 
     def predict(self, sent_pairs: List[Tuple[str, str]]):
-        r"""Run prediction pipeline for the synonym classification.
+        r"""Run prediction pipeline for synonym classification.
         
         Return the `softmax` probailities of predicting pairs as synonyms (`index=1`).
         """
