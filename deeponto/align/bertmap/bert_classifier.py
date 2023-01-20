@@ -29,9 +29,9 @@ from deeponto.utils.decorators import paper
 # )
 class BERTSynonymClassifier:
     r"""Class for BERT synonym classifier.
-    
+
     The main scoring module of $\textsf{BERTMap}$ consisting of a BERT model and a binary synonym classifier.
-    
+
     Attributes:
         loaded_path (str): The path to the checkpoint of a pre-trained BERT model.
         output_path (str): The path to the output BERT model (usually fine-tuned).
@@ -57,7 +57,7 @@ class BERTSynonymClassifier:
         batch_size_for_training: Optional[int] = None,
         batch_size_for_prediction: Optional[int] = None,
         training_data: Optional[List[Tuple[str, str, int]]] = None,  # (sentence1, sentence2, label)
-        validation_data: Optional[List[Tuple[str, str, int]]] = None
+        validation_data: Optional[List[Tuple[str, str, int]]] = None,
     ):
         # Load the pretrained BERT model from the given path
         self.loaded_path = loaded_path
@@ -79,25 +79,16 @@ class BERTSynonymClassifier:
         self.training_args = None
         self.trainer = None
         self.softmax = None
-        
+
         # load the pre-trained BERT model and set it to eval mode (static)
         if self.eval_mode:
-            print("The BERT model is set to eval mode for making predictions.")
-            self.model.eval()
-            # TODO: to implement multi-gpus for inference
-            self.device = self.get_device(device_num=0)
-            self.model.to(self.device)
-            self.softmax = torch.nn.Softmax(dim=1).to(self.device)
+            self.eval()
         # load the pre-trained BERT model for fine-tuning
         else:
             if not training_data:
-                raise RuntimeError(
-                    "Training data should be provided when `for_training` is `True`."
-                )
+                raise RuntimeError("Training data should be provided when `for_training` is `True`.")
             if not validation_data:
-                raise RuntimeError(
-                    "Validation data should be provided when `for_training` is `True`."
-                )
+                raise RuntimeError("Validation data should be provided when `for_training` is `True`.")
             # load data (max_length is used for truncation)
             self.training_data = self.load_dataset(training_data, "training")
             self.validation_data = self.load_dataset(validation_data, "validation")
@@ -107,13 +98,9 @@ class BERTSynonymClassifier:
             }
 
             # generate training arguments
-            epoch_steps = (
-                len(self.training_data) // self.batch_size_for_training
-            )  # total steps of an epoch
+            epoch_steps = len(self.training_data) // self.batch_size_for_training  # total steps of an epoch
             if torch.cuda.device_count() > 0:
-                epoch_steps = (
-                    epoch_steps // torch.cuda.device_count()
-                )  # to deal with multi-gpus case
+                epoch_steps = epoch_steps // torch.cuda.device_count()  # to deal with multi-gpus case
             # keep logging steps consisitent even for small batch size
             # report logging on every 0.02 epoch
             logging_steps = int(epoch_steps * 0.02)
@@ -135,7 +122,7 @@ class BERTSynonymClassifier:
                 do_eval=True,
                 save_steps=eval_steps,
                 save_total_limit=2,
-                load_best_model_at_end=True
+                load_best_model_at_end=True,
             )
             # build the trainer
             self.trainer = Trainer(
@@ -147,16 +134,24 @@ class BERTSynonymClassifier:
                 tokenizer=self.tokenizer._tokenizer,
             )
 
-    def train(self, resume_from_checkpoint: Optional[Union[bool,str]] = None):
-        """Start training the BERT model.
-        """
+    def train(self, resume_from_checkpoint: Optional[Union[bool, str]] = None):
+        """Start training the BERT model."""
         if self.eval_mode:
             raise RuntimeError("Training cannot be started in `eval` mode.")
         self.trainer.train(resume_from_checkpoint=resume_from_checkpoint)
 
+    def eval(self):
+        """To eval mode."""
+        print("The BERT model is set to eval mode for making predictions.")
+        self.model.eval()
+        # TODO: to implement multi-gpus for inference
+        self.device = self.get_device(device_num=0)
+        self.model.to(self.device)
+        self.softmax = torch.nn.Softmax(dim=1).to(self.device)
+
     def predict(self, sent_pairs: List[Tuple[str, str]]):
         r"""Run prediction pipeline for synonym classification.
-        
+
         Return the `softmax` probailities of predicting pairs as synonyms (`index=1`).
         """
         inputs = self.process_inputs(sent_pairs)
@@ -164,9 +159,8 @@ class BERTSynonymClassifier:
             return self.softmax(self.model(**inputs).logits)[:, 1]
 
     def load_dataset(self, data: List[Tuple[str, str, int]], split: str) -> Dataset:
-        r"""Load the list of `(annotation1, annotation2, label)` samples into a `datasets.Dataset`.
-        """
-        
+        r"""Load the list of `(annotation1, annotation2, label)` samples into a `datasets.Dataset`."""
+
         def iterate():
             for sample in data:
                 yield {"annotation1": sample[0], "annotation2": sample[1], "labels": sample[2]}
@@ -175,19 +169,16 @@ class BERTSynonymClassifier:
         # NOTE: no padding here because the Trainer class supports dynamic padding
         dataset = dataset.map(
             lambda examples: self.tokenizer._tokenizer(
-                examples["annotation1"],
-                examples["annotation2"],
-                max_length=self.max_length_for_input,
-                truncation=True
+                examples["annotation1"], examples["annotation2"], max_length=self.max_length_for_input, truncation=True
             ),
             batched=True,
-            desc=f"Load {split} data with batch size 1000:"
+            desc=f"Load {split} data with batch size 1000:",
         )
         return dataset
 
     def process_inputs(self, sent_pairs: List[Tuple[str, str]]):
         r"""Process input sentence pairs for the BERT model.
-        
+
         Transform the sentences into BERT input embeddings and load them into the device.
         This function is called only when the BERT model is about to make predictions (`eval` mode).
         """
@@ -201,8 +192,7 @@ class BERTSynonymClassifier:
 
     @staticmethod
     def compute_metrics(pred):
-        """Add more evaluation metrics into the training log.
-        """
+        """Add more evaluation metrics into the training log."""
         # TODO: currently only accuracy is added, will expect more in the future if needed
         labels = pred.label_ids
         preds = pred.predictions.argmax(-1)
@@ -211,8 +201,7 @@ class BERTSynonymClassifier:
 
     @staticmethod
     def get_device(device_num: int = 0):
-        """Get a device (GPU or CPU) for the torch model
-        """
+        """Get a device (GPU or CPU) for the torch model"""
         # If there's a GPU available...
         if torch.cuda.is_available():
             # Tell PyTorch to use the GPU.
@@ -227,8 +216,7 @@ class BERTSynonymClassifier:
 
     @staticmethod
     def set_seed(seed_val: int = 888):
-        """Set random seed for reproducible results.
-        """
+        """Set random seed for reproducible results."""
         random.seed(seed_val)
         np.random.seed(seed_val)
         torch.manual_seed(seed_val)

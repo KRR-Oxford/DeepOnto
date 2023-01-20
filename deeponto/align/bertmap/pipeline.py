@@ -140,6 +140,8 @@ class BERTMapPipeline:
                     {FileUtils.print_dict(self.bert_synonym_classifier.data_stat)}"
                 )
                 self.bert_synonym_classifier.train(self.bert_resume_training)
+                # turn on eval mode after training
+                self.bert_synonym_classifier.eval()
             # NOTE potential redundancy here: after training, load the best checkpoint
             self.best_checkpoint = self.load_best_checkpoint()
             if not self.best_checkpoint:
