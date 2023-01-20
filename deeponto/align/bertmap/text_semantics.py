@@ -26,10 +26,10 @@ from deeponto.utils.decorators import paper
 from deeponto.utils import FileUtils, uniqify
 
 
-@paper(
-    "BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)",
-    "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
-)
+# @paper(
+#     "BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)",
+#     "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
+# )
 class AnnotationThesaurus:
     """A thesaurus class for synonyms and non-synonyms extracted from an ontology.
 
@@ -114,7 +114,7 @@ class AnnotationThesaurus:
 
     @staticmethod
     def merge_synonym_groups_by_transitivity(synonym_groups: List[Set[str]]):
-        """Merge synonym groups by transitivity.
+        r"""Merge synonym groups by transitivity.
 
         Synonym groups that share a common annotation phrase will be merged. NOTE that for
         multiple ontologies, we can merge their synonym groups by first concatenating them

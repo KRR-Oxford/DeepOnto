@@ -18,7 +18,7 @@ from typing import Optional, Callable
 from yacs.config import CfgNode
 import os
 import random
-
+import enlighten
 # import transformers
 
 from deeponto.align.mapping import ReferenceMapping
@@ -29,6 +29,7 @@ from deeponto.utils.logging import create_logger
 from .text_semantics import TextSemanticsCorpora
 from .bert_classifier import BERTSynonymClassifier
 from .mapping_prediction import MappingPredictor
+from .mapping_refinement import MappingRefiner
 
 
 MODEL_OPTIONS = {"bertmap": {"trainable": True}, "bertmaplt": {"trainable": False}}
@@ -36,28 +37,10 @@ DEFAULT_CONFIG_FILE = os.path.join(os.path.dirname(__file__), "default_config.ya
 # transformers.logging.set_verbosity_info()
 
 
-def load_bertmap_config(config_file: Optional[str] = None):
-    """Load the BERTMap configuration in `.yaml`. If the file
-    is not provided, use the default configuration.
-    """
-    if not config_file:
-        config_file = DEFAULT_CONFIG_FILE
-        print(f"Use the default configuration at {DEFAULT_CONFIG_FILE}.")
-    if not config_file.endswith(".yaml"):
-        raise RuntimeError("Configuration file should be in `yaml` format.")
-    return CfgNode(FileUtils.load_file(config_file))
-
-
-def save_bertmap_config(config: CfgNode, config_file: str):
-    """Save the BERTMap configuration in `.yaml`."""
-    with open(config_file, "w") as c:
-        config.dump(stream=c, sort_keys=False, default_flow_style=False)
-
-
-@paper(
-    "BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)",
-    "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
-)
+# @paper(
+#     "BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)",
+#     "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
+# )
 class BERTMapPipeline:
     r"""Class for the whole ontology alignment pipeline of $\textsf{BERTMap}$ and $\textsf{BERTMapLt}$ models.
 
@@ -98,7 +81,6 @@ class BERTMapPipeline:
         self.name = self.config.model
         if not self.name in MODEL_OPTIONS.keys():
             raise RuntimeError(f"`model` {self.name} in the config file is not one of the supported.")
-        self.trainable = MODEL_OPTIONS[self.name]["trainable"]
 
         # create the output directory, e.g., experiments/bertmap
         self.config.output_path = "." if not self.config.output_path else self.config.output_path
@@ -106,8 +88,9 @@ class BERTMapPipeline:
         self.output_path = os.path.join(self.config.output_path, self.name)
         FileUtils.create_path(self.output_path)
 
-        # create logger (hidden attribute)
+        # create logger and progress manager (hidden attribute) 
         self.logger = create_logger(self.name, self.output_path)
+        self.enlighten_manager = enlighten.get_manager()
 
         # ontology
         self.src_onto = src_onto
@@ -116,7 +99,7 @@ class BERTMapPipeline:
         self.logger.info(f"Load the following configurations:\n{FileUtils.print_dict(self.config)}")
         config_path = os.path.join(self.output_path, "config.yaml")
         self.logger.info(f"Save the configuration file at {config_path}.")
-        save_bertmap_config(self.config, config_path)
+        self.save_bertmap_config(self.config, config_path)
 
         # build the annotation thesaurus
         self.src_annotation_index, _ = self.src_onto.build_annotation_index(self.annotation_property_iris)
@@ -148,12 +131,14 @@ class BERTMapPipeline:
         self.bert_resume_training = self.bert_config.resume_training
         self.bert_synonym_classifier = None
         self.best_checkpoint = None
-        if self.trainable:
+        if self.name == "bertmap":
             self.bert_synonym_classifier = self.load_bert_synonym_classifier()
             # train if the loaded classifier is not in eval mode
             if self.bert_synonym_classifier.eval_mode == False:
-                self.logger.info(f"Data statistics:\n \
-                    {FileUtils.print_dict(self.bert_synonym_classifier.data_stat)}")
+                self.logger.info(
+                    f"Data statistics:\n \
+                    {FileUtils.print_dict(self.bert_synonym_classifier.data_stat)}"
+                )
                 self.bert_synonym_classifier.train(self.bert_resume_training)
             # NOTE potential redundancy here: after training, load the best checkpoint
             self.best_checkpoint = self.load_best_checkpoint()
@@ -162,28 +147,51 @@ class BERTMapPipeline:
             self.logger.info(f"Fine-tuning finished, found best checkpoint at {self.best_checkpoint}.")
         else:
             self.logger.info(f"No training needed; skip BERT fine-tuning.")
+            
+        # pretty progress bar tracking
+        self.enlighten_status = self.enlighten_manager.status_bar(
+            status_format=u'Compute & Refine Mappings {fill}Stage: {demo}{fill}{elapsed}',
+            color='bold_underline_bright_white_on_lightslategray',
+            justify=enlighten.Justify.CENTER, demo='Initializing',
+            autorefresh=True, min_delta=0.5
+        )
 
         # mapping predictions
+        self.global_matching_config = self.config.global_matching
         self.mapping_predictor = MappingPredictor(
-            logger=self.logger,
+            output_path=self.output_path,
             tokenizer_path=self.bert_config.pretrained_path,
             src_annotation_index=self.src_annotation_index,
             tgt_annotation_index=self.tgt_annotation_index,
             bert_synonym_classifier=self.bert_synonym_classifier,
-            num_raw_candidates=self.config.global_matching.num_raw_candidates,
-            num_best_predictions=self.config.global_matching.num_best_predictions,
+            num_raw_candidates=self.global_matching_config.num_raw_candidates,
+            num_best_predictions=self.global_matching_config.num_best_predictions,
             batch_size_for_prediction=self.bert_config.batch_size_for_prediction,
-            output_path=self.output_path,
+            logger=self.logger,
+            enlighten_manager=self.enlighten_manager,
+            enlighten_status=self.enlighten_status
         )
+        self.mapping_refiner = None
 
         # if global matching is disabled (potentially used for class pair scoring)
         if self.config.global_matching.enabled:
             self.mapping_predictor.global_matching()
-            if self.trainable:
-                pass
-                ##  mapping refinement (only for bertmap not not bertmaplt)
-                # self.mapping_refiner.iterative_mapping_extension()
-                # self.mapping_refiner.mapping_repair()
+            if self.name == "bertmap":
+                self.mapping_refiner = MappingRefiner(
+                    output_path=self.output_path,
+                    src_onto=self.src_onto,
+                    tgt_onto=self.tgt_onto,
+                    mapping_predictor=self.mapping_predictor,
+                    mapping_extension_threshold=self.global_matching_config.mapping_extension_threshold,
+                    mapping_filtered_threshold=self.global_matching_config.mapping_filtered_threshold,
+                    logger=self.logger,
+                    enlighten_manager=self.enlighten_manager,
+                    enlighten_status=self.enlighten_status
+                )
+                self.mapping_refiner.mapping_extension()
+                self.mapping_refiner.mapping_repair()
+                
+        self.enlighten_status.close()
 
         # class pair scoring is invoked outside
 
@@ -209,7 +217,7 @@ class BERTMapPipeline:
         """
         data_name = "text semantics corpora"
 
-        if self.trainable:
+        if self.name == "bertmap":
 
             def construct():
                 corpora = TextSemanticsCorpora(
@@ -219,6 +227,7 @@ class BERTMapPipeline:
                     class_mappings=self.known_mappings,
                     auxiliary_ontos=self.auxiliary_ontos,
                 )
+                self.logger.info(str(corpora))
                 corpora.save(self.data_path)
 
             return self.load_or_construct(self.corpora_path, data_name, construct)
@@ -238,7 +247,7 @@ class BERTMapPipeline:
         """
         data_name = "fine-tuning data"
 
-        if self.trainable:
+        if self.name == "bertmap":
 
             def construct():
                 finetune_data = dict()
@@ -303,3 +312,21 @@ class BERTMapPipeline:
             best_checkpoint = os.path.join(self.bert_finetuned_path, f"checkpoint-{best_checkpoint}")
 
         return best_checkpoint
+    
+    @staticmethod
+    def load_bertmap_config(config_file: Optional[str] = None):
+        """Load the BERTMap configuration in `.yaml`. If the file
+        is not provided, use the default configuration.
+        """
+        if not config_file:
+            config_file = DEFAULT_CONFIG_FILE
+            print(f"Use the default configuration at {DEFAULT_CONFIG_FILE}.")  
+        if not config_file.endswith(".yaml"):
+            raise RuntimeError("Configuration file should be in `yaml` format.")
+        return CfgNode(FileUtils.load_file(config_file))
+
+    @staticmethod
+    def save_bertmap_config(config: CfgNode, config_file: str):
+        """Save the BERTMap configuration in `.yaml`."""
+        with open(config_file, "w") as c:
+            config.dump(stream=c, sort_keys=False, default_flow_style=False)

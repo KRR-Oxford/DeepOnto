@@ -162,5 +162,6 @@ class InvertedIndex:
                 # each candidate class is scored by sum(idf)
                 candidate_pool[candidate] += idf
         candidate_pool = list(sorted(candidate_pool.items(), key=lambda item: item[1], reverse=True))
+        print(f"Select {min(len(candidate_pool), pool_size)} candidates.")
         # select the first K ranked
         return candidate_pool[:pool_size]

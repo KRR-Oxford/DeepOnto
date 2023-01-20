@@ -11,6 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from .pipeline import BERTMapPipeline, DEFAULT_CONFIG_FILE, load_bertmap_config
 
+from .pipeline import BERTMapPipeline, DEFAULT_CONFIG_FILE
 
+# @paper(
+#     "BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)",
+#     "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
+# )

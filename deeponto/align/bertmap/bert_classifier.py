@@ -23,10 +23,10 @@ import random
 from deeponto.utils import Tokenizer, FileUtils
 from deeponto.utils.decorators import paper
 
-@paper(
-    "BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)",
-    "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
-)
+# @paper(
+#     "BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)",
+#     "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
+# )
 class BERTSynonymClassifier:
     r"""A BERT class for $\textsf{BERTMap}$ consisting of a BERT model and a binary synonym classifier.
     
