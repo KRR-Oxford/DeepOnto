@@ -149,14 +149,6 @@ class BERTMapPipeline:
             self.logger.info(f"Fine-tuning finished, found best checkpoint at {self.best_checkpoint}.")
         else:
             self.logger.info(f"No training needed; skip BERT fine-tuning.")
-            
-        # pretty progress bar tracking
-        self.enlighten_status = self.enlighten_manager.status_bar(
-            status_format=u'Compute & Refine Mappings {fill}Stage: {demo}{fill}{elapsed}',
-            color='bold_underline_bright_white_on_lightslategray',
-            justify=enlighten.Justify.CENTER, demo='Initializing',
-            autorefresh=True, min_delta=0.5
-        )
 
         # mapping predictions
         self.global_matching_config = self.config.global_matching
@@ -174,10 +166,18 @@ class BERTMapPipeline:
             enlighten_status=self.enlighten_status
         )
         self.mapping_refiner = None
+        
+        # pretty progress bar tracking
+        self.enlighten_status = self.enlighten_manager.status_bar(
+            status_format=u'Global Matching{fill}Stage: {demo}{fill}{elapsed}',
+            color='bold_underline_bright_white_on_lightslategray',
+            justify=enlighten.Justify.CENTER, demo='Initializing',
+            autorefresh=True, min_delta=0.5
+        )
 
         # if global matching is disabled (potentially used for class pair scoring)
         if self.config.global_matching.enabled:
-            self.mapping_predictor.global_matching()
+            self.mapping_predictor.mapping_prediction()  # mapping prediction
             if self.name == "bertmap":
                 self.mapping_refiner = MappingRefiner(
                     output_path=self.output_path,
@@ -190,9 +190,12 @@ class BERTMapPipeline:
                     enlighten_manager=self.enlighten_manager,
                     enlighten_status=self.enlighten_status
                 )
-                self.mapping_refiner.mapping_extension()
-                self.mapping_refiner.mapping_repair()
-                
+                self.mapping_refiner.mapping_extension()  # mapping extension
+                self.mapping_refiner.mapping_repair()  # mapping repair
+            self.enlighten_status.update(demo="Finished")  
+        else:
+            self.enlighten_status.update(demo="Skipped")  
+              
         self.enlighten_status.close()
 
         # class pair scoring is invoked outside
