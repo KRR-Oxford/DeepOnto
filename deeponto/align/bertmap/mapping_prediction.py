@@ -14,7 +14,7 @@
 
 from __future__ import annotations
 
-from typing import Optional, List, Set
+from typing import Optional, List, Set, Tuple
 from yacs.config import CfgNode
 import os
 from textdistance import levenshtein
@@ -28,7 +28,6 @@ import enlighten
 from deeponto.align.mapping import EntityMapping
 from deeponto.onto import Ontology
 from deeponto.utils import FileUtils, Tokenizer
-from deeponto.utils.decorators import paper
 from .bert_classifier import BERTSynonymClassifier
 
 
@@ -132,7 +131,7 @@ class MappingPredictor:
         sim_scores = [levenshtein.normalized_similarity(src, tgt) for src, tgt in annotation_pairs]
         return max(sim_scores)
 
-    def global_matching_for_src_class(self, src_class_iri: str) -> List[EntityMapping]:
+    def mapping_prediction_for_src_class(self, src_class_iri: str) -> List[EntityMapping]:
         r"""Predict $N$ best scored mappings for a source ontology class, where
         $N$ is specified in `self.num_best_predictions`.
 
@@ -262,10 +261,10 @@ class MappingPredictor:
 
         return bert_match()
 
-    def global_matching(self):
+    def mapping_prediction(self):
         r"""Apply global matching for each class in the source ontology.
 
-        See [`global_matching_for_src_class`][deeponto.align.bertmap.mapping_prediction.MappingPredictor.global_matching_for_src_class].
+        See [`mapping_prediction_for_src_class`][deeponto.align.bertmap.mapping_prediction.MappingPredictor.mapping_prediction_for_src_class].
 
         If this process is accidentally stopped, it can be resumed from already saved predictions. The progress
         bar keeps track of the number of source ontology classes that have been matched.
@@ -281,16 +280,16 @@ class MappingPredictor:
             FileUtils.create_path(match_dir)
 
         progress_bar = self.enlighten_manager.counter(
-            total=len(self.src_annotation_index), desc="Global Matching", unit="per src class"
+            total=len(self.src_annotation_index), desc="Mapping Prediction", unit="per src class"
         )
-        self.enlighten_status.update(demo="Global Matching (Raw Mappings)")
+        self.enlighten_status.update(demo="Mapping Prediction")
 
         for i, src_class_iri in enumerate(self.src_annotation_index.keys()):
             if src_class_iri in mapping_index.keys():
                 self.logger.info(f"[Class {i}] Skip matching {src_class_iri} as already computed.")
                 progress_bar.update()
                 continue
-            mappings = self.global_matching_for_src_class(src_class_iri)
+            mappings = self.mapping_prediction_for_src_class(src_class_iri)
             mapping_index[src_class_iri] = [m.to_tuple(with_score=True) for m in mappings]
 
             if i % 100 == 0 or i == len(self.src_annotation_index) - 1:
@@ -303,5 +302,5 @@ class MappingPredictor:
 
             progress_bar.update()
 
-        self.logger.info("Finished global matching for each class in the source ontology.")
+        self.logger.info("Finished mapping prediction for each class in the source ontology.")
         progress_bar.close()

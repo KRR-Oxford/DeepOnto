@@ -22,7 +22,6 @@ from typing import List, Set, Tuple, Optional, Union
 
 from deeponto.onto import Ontology
 from deeponto.align.mapping import ReferenceMapping
-from deeponto.utils.decorators import paper
 from deeponto.utils import FileUtils, uniqify
 
 
@@ -556,8 +555,8 @@ class TextSemanticsCorpora:
                 "num_nonsynonyms": len(self.nonsynonyms),
                 "intra_src_onto_corpus": self.intra_src_onto_corpus.info["IntraOntologyTextSemanticsCorpus"],
                 "intra_tgt_onto_corpus": self.intra_tgt_onto_corpus.info["IntraOntologyTextSemanticsCorpus"],
-                "cross_onto_corpus": self.cross_onto_corpus.info if self.cross_onto_corpus else None,
-                "auxiliary_onto_corpora": self.auxiliary_onto_corpora,
+                "cross_onto_corpus": self.cross_onto_corpus.info["CrossOntologyTextSemanticsCorpus"] if self.cross_onto_corpus else None,
+                "auxiliary_onto_corpora": [a.info["IntraOntologyTextSemanticsCorpus"] for a in self.auxiliary_onto_corpora],
             }
         }
 
