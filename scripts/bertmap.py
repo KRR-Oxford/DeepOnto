@@ -29,7 +29,7 @@ import click
 @click.option("-r", "--resume_training", type=bool, default=False)
 def run_bertmap(src_onto_file, tgt_onto_file, config_file, resume_training):
     
-    config = BERTMapPipeline.load_bertmap_config(config_file=config_file)
+    config = BERTMapPipeline.load_bertmap_config(config_file)
     # enable automatic global matching and subsequent mapping refinement
     config.global_matching.enabled = True
     # None for both False and None
