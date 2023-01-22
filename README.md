@@ -129,5 +129,5 @@ $\textsf{DeepOnto}$ provides an evaluation workaround for OM systems including *
 
 Please report any bugs or queries by raising a GitHub issue or sending emails to the maintainer (Yuan He) through:
 
-> ![email](/images/email.png)
+> first_name.last_name@cs.ox.ac.uk
 
