@@ -19,6 +19,7 @@ from typing import Optional, List, Union
 from collections import defaultdict
 from yacs.config import CfgNode
 import warnings
+import itertools
 
 from deeponto.utils import TextUtils, Tokenizer, InvertedIndex, FileUtils
 from deeponto.utils.decorators import paper
@@ -28,10 +29,11 @@ from deeponto import init_jvm
 init_jvm("2g")
 
 from java.io import File  # type: ignore
+from java.util import Collections  # type: ignore
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
 from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLNamedIndividual, OWLAxiom, AddAxiom  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory  # type: ignore
-from org.semanticweb.owlapi.util import OWLObjectDuplicator  # type: ignore
+from org.semanticweb.owlapi.util import OWLObjectDuplicator, OWLEntityRemover  # type: ignore
 from org.semanticweb.owlapi.search import EntitySearcher  # type: ignore
 
 # IRIs for special entities
@@ -392,6 +394,48 @@ class Ontology:
         iri_dict = {IRI.create(entity_iri): IRI.create(replacement_iri)}
         replacer = OWLObjectDuplicator(self.owlDataFactory, iri_dict)
         return replacer.duplicateObject(owl_object)
+    
+    @paper(
+        "Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)",
+        "https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33",
+    )
+    def apply_pruning(self, class_iris_to_be_removed: List[str]):
+        r"""Run pruning given a list of classes that will be pruned.    
+        
+        !!! credit "paper"
+    
+            This refers to the ontology pruning algorithm introduced in the paper: 
+            [Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).
+
+        For each class $c$ to be pruned, subsumption axioms will be created between $c$'s parents and children so as to preserve the
+        relevant hierarchy.
+
+        Args:
+            class_iris_to_be_removed (List[str]): Classes with IRIs in this list will be pruned and the relevant hierarchy will be repaired.
+        """
+        
+        # create the subsumption axioms first
+        for cl_iri in class_iris_to_be_removed:
+            cl = self.get_owl_object_from_iri(cl_iri)
+            cl_parents = self.reasoner.super_entities_of(cl, direct=True)
+            cl_children = self.reasoner.sub_entities_of(cl, direct=True)
+            for parent, child in itertools.product(cl_parents, cl_children):
+                parent = self.get_owl_object_from_iri(parent)
+                child = self.get_owl_object_from_iri(child)
+                sub_axiom = self.owl_data_factory.getOWLSubClassOfAxiom(
+                    child, parent
+                )
+                self.add_axiom(sub_axiom)
+        
+        # apply pruning
+        class_remover = OWLEntityRemover(Collections.singleton(self.owl_onto))
+        for cl_iri in class_iris_to_be_removed:
+            cl = self.get_owl_object_from_iri(cl_iri)
+            cl.accept(class_remover)
+        self.owl_manager.applyChanges(class_remover.getChanges())
+        
+        # remove IRIs in dictionaries?
+        # TODO Test it
 
 
 class OntologyReasoner:
@@ -594,10 +638,7 @@ class OntologyReasoner:
                 return True
         return False
 
-    @paper(
-        "Language Model Analysis for Ontology Subsumption Inference (Under Review)",
-        "link-to-be-upated",
-    )
+
     def check_assumed_disjoint(
         self, owl_class1: OWLClassExpression, owl_class2: OWLClassExpression
     ):

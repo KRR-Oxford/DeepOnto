@@ -122,6 +122,16 @@ for src_class_iri, tgt_class_iri in class_pairs_to_be_scored:
     ...
 ```
 
+!!! tip
+
+    The implemented $\textsf{BERTMap}$ by default searches **for each source ontology class** a set of possible matched target ontology classes.
+    Because of this, it is recommended to set the source ontology as the one with a **smaller number of classes** for efficiency.
+
+    Note that in the original paper, the model is expected to match for both directions `src2tgt` and `tgt2src`, and also consider the combination
+    of both results. However, this does not usually bring better performance and significantly consumes more time. Therefore, this feature is discarded
+    and the users can choose which direction to match.
+
+
 ## Configuration
 
 The default configuration file looks like:
@@ -204,10 +214,3 @@ As mentioned in [usage](#usage), users can disable automatic global matching by 
 `config.global_matching.mapping_extension_threshold` corresponds to the score threshold of mappings used in the iterative mapping extension process. Higher value shortens the time but reduces the recall. 
 
 `config.global_matching.mapping_filtered_threshold` corresponds to the score threshold of mappings preserved for final mapping refinement. 
-
-
-
-
-
-
-

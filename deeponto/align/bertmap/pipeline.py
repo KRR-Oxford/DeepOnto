@@ -149,6 +149,14 @@ class BERTMapPipeline:
             self.logger.info(f"Fine-tuning finished, found best checkpoint at {self.best_checkpoint}.")
         else:
             self.logger.info(f"No training needed; skip BERT fine-tuning.")
+            
+        # pretty progress bar tracking
+        self.enlighten_status = self.enlighten_manager.status_bar(
+            status_format=u'Global Matching{fill}Stage: {demo}{fill}{elapsed}',
+            color='bold_underline_bright_white_on_lightslategray',
+            justify=enlighten.Justify.CENTER, demo='Initializing',
+            autorefresh=True, min_delta=0.5
+        )
 
         # mapping predictions
         self.global_matching_config = self.config.global_matching
@@ -166,14 +174,6 @@ class BERTMapPipeline:
             enlighten_status=self.enlighten_status
         )
         self.mapping_refiner = None
-        
-        # pretty progress bar tracking
-        self.enlighten_status = self.enlighten_manager.status_bar(
-            status_format=u'Global Matching{fill}Stage: {demo}{fill}{elapsed}',
-            color='bold_underline_bright_white_on_lightslategray',
-            justify=enlighten.Justify.CENTER, demo='Initializing',
-            autorefresh=True, min_delta=0.5
-        )
 
         # if global matching is disabled (potentially used for class pair scoring)
         if self.config.global_matching.enabled:

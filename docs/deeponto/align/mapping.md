@@ -1,4 +1,3 @@
-
 ## Overview
 
 Datastructures for ontology entity mappings.
