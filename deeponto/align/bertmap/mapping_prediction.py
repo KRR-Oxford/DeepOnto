@@ -245,7 +245,7 @@ class MappingPredictor:
             for candidate_idx, mapping_score in zip(final_best_idxs, final_best_scores):
                 # ignore intial values (-1.0) for dummy mappings
                 # the threshold 0.9 is for mapping extension
-                if mapping_score.item() > 0.0:
+                if mapping_score.item() >= 0.9:
                     tgt_candidate_iri = tgt_class_candidates[candidate_idx.item()][0]
                     bert_matched_mappings.append(
                         self.init_class_mapping(

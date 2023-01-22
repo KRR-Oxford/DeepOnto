@@ -19,7 +19,7 @@ from collections import defaultdict
 from typing import Optional
 from deeponto.onto.logic.parser import OWLAxiomParserBase
 from deeponto.onto import Ontology
-from deeponto.utils.datastructures import RangeNode
+from deeponto.utils.data_utils import RangeNode
 
 IRI = "<https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)>"
 AND_ATOMS = r"\[AND\]\((?:{IRI}| )+?\)".format(IRI=IRI)

@@ -19,7 +19,7 @@ E.g., 'EquivalentClasses(<http://purl.obolibrary.org/obo/FOODON_00001083> Object
 ====> [0, [0, [6, 54], [55, [61, 109], [110, [116, 159], [160, 208], 209], 210], 212], 213]
 """
 
-from deeponto.utils.datastructures import RangeNode
+from deeponto.utils.data_utils import RangeNode
 
 
 class OWLAxiomParserBase:

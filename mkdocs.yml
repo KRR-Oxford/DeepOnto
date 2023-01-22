@@ -2,6 +2,8 @@ site_name: DeepOnto
 # sit_url: https://krr-oxford.github.io/DeepOnto/
 repo_url: https://github.com/KRR-Oxford/DeepOnto
 
+copyright: Copyright &copy; 2021 Yuan He (KRR-Oxford)
+
 # theme: readthedocs
 theme:
   name: material
@@ -12,12 +14,17 @@ theme:
     - header.autohide
     - toc.follow
 
+# extra:
+#   social:
+#     - icon: fontawesome/solid/paper-plane
+#       link: mailto:yuan.he@cs.ox.ac.uk
+
 
 nav:
     - GET STARTED: 
       - Overview: index.md
       - Usage:
-        - Ontology Processing and Reasoning: pages/ontology.md  # basic usage of ontologies, ontology pruning, etc.
+        - Ontology Processing & Reasoning: pages/ontology.md  # basic usage of ontologies, ontology pruning, etc.
         - Tutorial for BERTMap: pages/bertmap.md
         - Tutorial for OM Evaluation: pages/om_eval.md
         - Instructions of Bio-ML: pages/om_resources.md
@@ -27,11 +34,12 @@ nav:
           - Mapping: deeponto/align/mapping.md
           - BERTMap: deeponto/align/bertmap/index.md
           - LogMap: deeponto/align/logmap/index.md
+          - Evaluation: deeponto/align/evaluation.md
         - Utilities: 
           - Text Utilities: deeponto/utils/text_utils.md
           - File Utilities: deeponto/utils/file_utils.md
           - Logging: deeponto/utils/logging.md
-          - Datastructures: deeponto/utils/datastructures.md
+          - Datastructures: deeponto/utils/data_utils.md
           - Decorators: deeponto/utils/decorators.md
 
 

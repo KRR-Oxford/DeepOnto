@@ -30,10 +30,11 @@ limitations under the License.
   A package for ontology engineering with deep learning. 
 </p>
 
-!!! news "NEWS"
+## News :newspaper:
 
-    - [2023 Jan] A major update of DeepOnto including:
-        - Rewrite code to build on the OWLAPI and remove owlready2 from the essential dependencies.
+- **[2023 Jan]** Rebuild $\textsf{DeepOnto}$ based on the OWLAPI and remove owlready2 from the essential dependencies.
+
+
 ## About
 
 $\textsf{DeepOnto}$ aims to provide tools for implementing deep learning models, constructing resources, and conducting evaluation
@@ -41,7 +42,7 @@ for various ontology engineering purposes.
 
 - **Documentation**: *<https://krr-oxford.github.io/DeepOnto/>*.
 - **Github Repository**: *<https://github.com/KRR-Oxford/DeepOnto>*. 
-- **PyPI**: *<https://pypi.org/project/deeponto/>*. 
+- **PyPI**: *<https://pypi.org/project/deeponto/>* (will be updated after major update). 
 
 ## Installation
 
@@ -90,7 +91,7 @@ The base classes that extend the OWLAPI functionalities are [`Ontology`][deepont
 
 ### BERTMap
 
-BERTMap [1] is a BERT-based *ontology matching* (OM) system originally developed in [repo](https://github.com/KRR-Oxford/BERTMap) but is now maintained in $\textsf{DeepOnto}$. See how to use BERTMap in this [tutorial](pages/bertmap).
+*BERTMap* [1] is a BERT-based *ontology matching* (OM) system originally developed in [repo](https://github.com/KRR-Oxford/BERTMap) but is now maintained in $\textsf{DeepOnto}$. See how to use BERTMap in this [tutorial](pages/bertmap).
 
 ### OM Evaluation
 
@@ -98,7 +99,7 @@ $\textsf{DeepOnto}$ provides an evaluation workaround for OM systems including *
 
 ### Bio-ML
 
-Bio-ML [2] is an OM resource and has been integrated into the [Bio-ML track of the OAEI](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/). See [instructions](pages/om_resources) of how to use Bio-ML.
+*Bio-ML* [2] is an OM resource and has been integrated into the [Bio-ML track of the OAEI](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/). See [instructions](pages/om_resources) of how to use Bio-ML.
 
 
 ## License
@@ -122,3 +123,11 @@ Bio-ML [2] is an OM resource and has been integrated into the [Bio-ML track of t
 - [1] *Yuan He‚ Jiaoyan Chen‚ Denvar Antonyrajah and Ian Horrocks.* **BERTMap: A BERT−Based Ontology Alignment System**. In Proceedings of 36th AAAI Conference on Artificial Intelligence 2022 (AAAI-2022). /[arxiv](https://arxiv.org/abs/2112.02682)/ /[aaai](https://ojs.aaai.org/index.php/AAAI/article/view/20510)/  <a name="bertmap_paper"></a>
 - [2] *Yuan He‚ Jiaoyan Chen‚ Hang Dong, Ernesto Jiménez-Ruiz, Ali Hadian and Ian Horrocks.* **Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching**. The 21st International Semantic Web Conference (ISWC-2022, **Best Resource Paper Candidate**). /[arxiv](https://arxiv.org/abs/2205.03447)/ /[iswc](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33)/  <a name="bioml_paper"></a>
 - [3] *Jiaoyan Chen, Yuan He, Yuxia Geng, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.* **Contextual Semantic Embeddings for Ontology Subsumption Prediction**. 2022 (Under review). /[arxiv](https://arxiv.org/abs/2202.09791)/  <a name="bertsubs_paper"></a>
+
+
+----------------------------------------------------------------
+
+Please report any bugs or queries by raising a GitHub issue or sending emails to the maintainer (Yuan He) through:
+
+> ![email](/images/email.png)
+
