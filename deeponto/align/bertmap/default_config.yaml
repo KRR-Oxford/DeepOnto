@@ -1,0 +1,55 @@
+# Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# @paper(
+#     "BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)",
+#     "https://ojs.aaai.org/index.php/AAAI/article/view/20510",
+# )
+model: bertmap
+
+output_path: null
+
+annotation_property_iris:
+  - http://www.w3.org/2000/01/rdf-schema#label  # rdfs:label, the basic one
+  - http://www.geneontology.org/formats/oboInOwl#hasSynonym
+  - http://www.geneontology.org/formats/oboInOwl#hasExactSynonym
+  - http://www.w3.org/2004/02/skos/core#exactMatch
+  - http://www.ebi.ac.uk/efo/alternative_term
+  - http://www.orpha.net/ORDO/Orphanet_#symbol
+  - http://purl.org/sig/ont/fma/synonym
+  - http://www.w3.org/2004/02/skos/core#prefLabel
+  - http://www.w3.org/2004/02/skos/core#altLabel
+  - http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#P108
+  - http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#P90
+  
+# additional corpora
+known_mappings: null  # if provided, cross-ontology corpus will be built
+auxiliary_ontos: [] # a list of auxiliary ontology files used for extra synonym data
+
+# bert config
+bert:  
+  pretrained_path: emilyalsentzer/Bio_ClinicalBERT  # pre-trained BERT path
+  max_length_for_input: 128 
+  num_epochs_for_training: 3.0
+  batch_size_for_training: 32
+  batch_size_for_prediction: 128
+  resume_training: null
+
+# global matching config
+global_matching:
+  enabled: true
+  num_raw_candidates: 200 # the number of potential candidates selected for mapping predictions
+  num_best_predictions: 10  # the number of best scored mappings preserved in the raw output mappings
+  mapping_extension_threshold: 0.9  # \kappa
+  mapping_filtered_threshold: 0.9995 # \lambda
