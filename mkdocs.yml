@@ -19,15 +19,17 @@ theme:
 #     - icon: fontawesome/solid/paper-plane
 #       link: mailto:yuan.he@cs.ox.ac.uk
 
+# extra:
+#   version:
+#     provider: mike
+
 
 nav:
     - GET STARTED: 
       - Overview: index.md
-      - Usage:
-        - Ontology Processing & Reasoning: pages/ontology.md  # basic usage of ontologies, ontology pruning, etc.
-        - Tutorial for BERTMap: pages/bertmap.md
-        - Tutorial for OM Evaluation: pages/om_eval.md
-        - Instructions of Bio-ML: pages/om_resources.md
+      - Ontology Processing & Reasoning: pages/ontology.md  # basic usage of ontologies, ontology pruning, etc.
+      - BERTMap: pages/bertmap.md
+      - OM Resources: pages/om_resources.md
     - PACKAGE REFERENCE:
         - Ontology: deeponto/onto/index.md
         - Ontology Alignment:
@@ -39,7 +41,7 @@ nav:
           - Text Utilities: deeponto/utils/text_utils.md
           - File Utilities: deeponto/utils/file_utils.md
           - Logging: deeponto/utils/logging.md
-          - Datastructures: deeponto/utils/data_utils.md
+          - Data Utilities: deeponto/utils/data_utils.md
           - Decorators: deeponto/utils/decorators.md
 
 

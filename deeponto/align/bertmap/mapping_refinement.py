@@ -98,22 +98,21 @@ class MappingRefiner:
     def mapping_extension(self, max_iter: int = 10):
         r"""Iterative mapping extension based on the locality principle.
         
-        !!! note
-            For each class pair $(c, c')$ (scored in the global matching phase) with score 
-            $\geq \kappa$, search for plausible mappings between the parents of $c$ and $c'$,
-            and between the children of $c$ and $c'$. This is an iterative process as the set 
-            newly discovered mappings can act renew the frontier for searching. Terminate if
-            no new mappings with score $\geq \kappa$ can be found or the limit `max_iter` has 
-            been reached. Note that $\kappa$ is set to $0.9$ by default (can be altered
-            in the configuration file). The mapping extension progress bar keeps track of the 
-            total number of extended mappings (including the previously predicted ones).
-            
-            A further filtering will be performed by only preserving mappings with score $\geq \lambda$,
-            in the original BERTMap paper, $\lambda$ is determined by the validation mappings, but
-            in practice $\lambda$ is not a sensitive hyperparameter and validation mappings are often
-            not available. Therefore, we manually set $\lambda$ to $0.9995$ by default (can be altered
-            in the configuration file). The mapping filtering progress bar keeps track of the 
-            total number of filtered mappings (this bar is purely for logging purpose).
+        For each class pair $(c, c')$ (scored in the global matching phase) with score 
+        $\geq \kappa$, search for plausible mappings between the parents of $c$ and $c'$,
+        and between the children of $c$ and $c'$. This is an iterative process as the set 
+        newly discovered mappings can act renew the frontier for searching. Terminate if
+        no new mappings with score $\geq \kappa$ can be found or the limit `max_iter` has 
+        been reached. Note that $\kappa$ is set to $0.9$ by default (can be altered
+        in the configuration file). The mapping extension progress bar keeps track of the 
+        total number of extended mappings (including the previously predicted ones).
+        
+        A further filtering will be performed by only preserving mappings with score $\geq \lambda$,
+        in the original BERTMap paper, $\lambda$ is determined by the validation mappings, but
+        in practice $\lambda$ is not a sensitive hyperparameter and validation mappings are often
+        not available. Therefore, we manually set $\lambda$ to $0.9995$ by default (can be altered
+        in the configuration file). The mapping filtering progress bar keeps track of the 
+        total number of filtered mappings (this bar is purely for logging purpose).
 
         Args:
             max_iter (int, optional): The maximum number of mapping extension iterations. Defaults to `10`.

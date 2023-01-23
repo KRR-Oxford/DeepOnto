@@ -647,7 +647,7 @@ class OntologyReasoner:
         !!! credit "Paper"
         
             The definition of **Assumed Disjointness** comes from the paper:
-            *[Language Model Analysis for Ontology Subsumption Inference](link)*.
+            *[still-under-review](link)*.
         
         !!! note
 
@@ -718,7 +718,7 @@ class OntologyReasoner:
         !!! credit "Paper"
         
             The definition of **Assumed Disjointness** comes from the paper:
-            *[Language Model Analysis for Ontology Subsumption Inference](link)*.
+            *[still-under-review](link)*.
         
         The practical alternative version of [`check_assumed_disjoint`][deeponto.onto.OntologyReasoner.check_assumed_disjoint]
         with following conditions:

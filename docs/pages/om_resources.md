@@ -16,15 +16,23 @@ limitations under the License.
 
 # Ontology Matching Resources
 
-?> Besides model development and implementation, DeepOnto also aims to contribute new Ontology Matching (OM) resources and comprehensive evaluation workaround. In this page, we provide download links to our datasets and instructions for data usage.
+!!! credit "paper"
+
+    The paper for the $\textsf{Bio-ML}$ ontology matching dataset:
+    [*Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)*](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).
+
+This page provides detailed [instructions](#bio-ml) for using $\textsf{Bio-ML}$.
+
+It also gives the tutorial for how to apply the [OM dataset construction approaches](#om-dataset-construction) as proposed in the $\textsf{Bio-ML}$,  which can be applied to other ontologies.
+
 
 ## Bio-ML
 
-The **Bio-ML** dataset provides five ontology pairs for both equivalence and subsumption ontology matching.
+The **Bio-ML** dataset provides **five** ontology pairs for both equivalence and subsumption ontology matching. These OM pairs are constructed using the approaches described in the [OM construction section](#om-dataset-construction).
 
-- **Download link**: *https://doi.org/10.5281/zenodo.6510086* (CC BY 4.0 International).
-- **Resource Paper**: *https://arxiv.org/abs/2205.03447*.
-- **OAEI Track**: *https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/*. 
+- **Download link**: *<https://doi.org/10.5281/zenodo.6510086>* (CC BY 4.0 International).
+- **Resource Paper**: *<https://arxiv.org/abs/2205.03447>*.
+- **OAEI Track**: *<https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/>*. 
 
 ### Data Statistics
 
@@ -77,371 +85,134 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
 
 <br/>
 <p align="center">
-  <img alt="deeponto" src="images/largebiomeddata.svg" height="600" style="width: 100%;">
+  <img alt="deeponto" src="/images/largebiomeddata.svg" height="600" style="width: 100%;">
 </p>
 
 ### Evaluation Framework
 
-There are two evaluation schemes (**local ranking** and **global matching**) and two data split settings (**unsupervised** and **(semi-)supervised**).
+There are two evaluation schemes (**local ranking** and **global matching**) and two data split settings (**unsupervised** and **semi-supervised**).
 
-- For local ranking, an OM model is required to rank candidate mappings (in `test.cands.tsv`) generated from test mappings and evalute using `Hits@K` and `MRR`. 
-  -  **Data Loading**: There are two options for loading the anchored candidate mapping:
 
-  <!-- tabs:start -->
+#### Local Ranking
 
-  #### **AnchoredOntoMappings**
+For **local ranking**, an OM model is required to rank candidate mappings (in `test.cands.tsv`) generated from test mappings and evalute using $Hits@K$ and $MRR$. 
 
-  Load the whole data folder using [`AnchoredOntoMappings`](om_resources?id=anchoredontomappings) implemented in DeepOnto: 
+Load a `test.cands.tsv` file using:
 
-  ```python
-  from deeponto.onto.mapping import AnchoredOntoMappings
-  AnchoredOntoMappings.read_table_mappings("test.cands.tsv")
-  ```
-  ?> [`AnchoredOntoMappings`](om_resources?id=anchoredontomappings) is essentially a dictionary with each reference mapping (in the form of class tuple) as a key (anchor) and its corresponding candidates (100 negative + 1 positive classes from the target ontology).
+```python
+from deeponto.utils import FileUtils
+df = FileUtils.read_table("test.cands.tsv")  # with headings: "SrcEntity", "TgtEntity", "TgtCandidates"
+df.head(3)
+>>> 	SrcEntity	TgtEntity	TgtCandidates
+0	http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus...	http://purl.obolibrary.org/obo/DOID_0050806	('http://purl.obolibrary.org/obo/DOID_0110279'...
+1	http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus...	http://purl.obolibrary.org/obo/DOID_775	('http://purl.obolibrary.org/obo/DOID_1670', '...
+2	http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus...	http://purl.obolibrary.org/obo/DOID_4917	('http://purl.obolibrary.org/obo/DOID_3704', '...
+```
 
-  #### **tsv**
+The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a reference mapping.
+The `"TgtCandidates"` column stores a sequence of target candidate class IRIs (including the correct one) used for ranking, which can be accessed as:
 
-  Load the `test.cands.tsv` directly, where the columns are `"SrcEntity"`, `"TgtEntity"`, and `"TgtCandidates"` standing for the source class iri of a test mapping, the target class iri of this test mapping, and the corresponding target candidate class iris in a sequence, which can be decoded using:
+```python
+eval(df.loc[0]["TgtCandidates"])
+>>> ('http://purl.obolibrary.org/obo/DOID_0110279',
+ 'http://purl.obolibrary.org/obo/DOID_3185',
+ 'http://purl.obolibrary.org/obo/DOID_7008',
+ ...)
+```
+
+An OM model is expected to re-rank the candidates in `"TgtCandidates"` according to the given reference source class in `"SrcEntity"`. The higher rank of `"TgtEntity"` is among the `"TgtCandidates"`, the higher the ranking score will be.
+
+
+The candidate mappings were separately generated w.r.t. the tesing data (`test.tsv`) in each data split.
+
+  - *Unsupervised*: `test.cands.tsv` in `refs/unsupervised` refers to candidate mappings generated from `refs/unsupervised/test.tsv` and `refs/unsupervised/val.tsv` is ensured to be excluded from candidates.
+  - *Semi-supervised*: `test.cands.tsv` in `refs/semi_supervised` referes to candidate mappings generated from `refs/semi_supervised/test.tsv` and `refs/semi_supervised/
   
-  ```python
-  import ast
-  ast.literal_eval(tgt_cands_seq)
-  ```
+#### Global Matching
 
-  <!-- tabs:end -->
+For **global matching**, an OM model is required to output full mappings and compare them with the reference mappings using $Precision$, $Recall$, and $F1$.
 
-  - **Data Split**: the candidate mappings were separately generated w.r.t. the tesing data (`test.tsv`) in each data split.
-    - *Unsupervised*: `test.cands.tsv` in `refs/unsupervised` refers to candidate mappings generated from `refs/unsupervised/test.tsv` and `refs/unsupervised/val.tsv` is ensured to be excluded from candidates.
-    - *Semi-supervised*: `test.cands.tsv` in `refs/semi_supervised` referes to candidate mappings generated from `refs/semi_supervised/test.tsv` and `refs/semi_supervised/train+val.tsv` is ensured to be excluded from candidates.
+For each OM pair, a `refs/full.tsv` file is provided for full reference mapping; the columns of this `.tsv` file are `["SrcEntity", "TgtEntity", "Score"]` standing for the source reference class iri, target class iri, and the score (set to $1.0$ for reference mappings). 
 
-- For global matching, an OM model is required to output full mappings and compare them with the reference mappings using `Precision`, `Recall`, and `F1`.
-  - **Data Loading**: For each OM pair, a `refs/full.tsv` file is provided for full reference mapping; the columns of this `.tsv` file are `["SrcEntity", "TgtEntity", "Score"]` standing for the source reference class iri, target class iri, and the score (set to $1.0$ for reference mappings). 
+Load a mapping file using:
+
+```python
+from deeponto.align.mapping import ReferenceMapping
+refs = ReferenceMapping.read_table_mappings("refs/full.tsv")
+```
+
+ The full reference mappings in `full.tsv` are divided into different splits for training (semi-supervised), validation, and testing purposes.
+
+  -  *Unsupervised*: `val.tsv` and `test.tsv` are provided in `refs/unsupervised` for validation (10%) and testing (90%), respectively.
+  -  *Semi-supervised*: `train.tsv`, `val.tsv`, `train+val.tsv` and `test.tsv` are provided in `refs/semi_supervised` for training (20%), validation (10%), merged training and validation file for evaluation, and testing (70%), respectively.
   
-  <!-- tabs:start -->
 
-  #### **OntoMappings**
+!!! tip
 
-  Using [`OntoMappings`](data_structures?id=ontomappings) to load the mappings:
+    When computing the scores (P, R, F1), mappings that are not in the testing set should be **ignored by substraction from both system output and reference mappings**. 
+      - i.e., when evaluating on `refs/unsupervised/test.tsv`, `refs/unsupervised/val.tsv` should be ignored; when evaluating on `refs/semi_supervised/test.tsv`, `refs/semi_supervised/train+val.tsv` should be ignored. 
+      - This feature is supported in the code [here][deeponto.align.evaluation.AlignmentEvaluator.f1] where the arguement `null_reference_mappings` is for inputting the reference mappings that should be ignored.
 
-  ```python
-  from deeponto.onto.mapping import OntoMappings
-  m = OntoMappings.read_table_mappings("refs/full.tsv")
-  ```
-
-  #### **tsv**
-
-  Standard `read_csv` function with `sep="\t"` can be used for loading the mappings; DeepOnto implements a `read_tables` method which takes care of potential errors of loading strings containing `NULL`:
-
-  ```python
-  from deeponto.utils import read_table
-  m = read_table("refs/full.tsv")
-  ```
-
-  <!-- tabs:end -->
-
-  - **Data Split**: the full reference mappings in `full.tsv` are divided into different splits for training (semi-supervised), validation, and testing purposes.
-    -  *Unsupervised*: `val.tsv` and `test.tsv` are provided in `refs/unsupervised` for validation (10%) and testing (90%), respectively.
-    -  *Semi-supervised*: `train.tsv`, `val.tsv`, `train+val.tsv` and `test.tsv` are provided in `refs/semi_supervised` for training (20%), validation (10%), merged training and validation file for evaluation, and testing (70%), respectively.
-  - **Evaluation Caution**: When computing the scores (P, R, F1), mappings that are not in the testing set should be ignored by substraction from both system output and reference mappings. 
-    - i.e., when evaluating on `refs/unsupervised/test.tsv`, `refs/unsupervised/val.tsv` should be ignored; when evaluating on `refs/semi_supervised/test.tsv`, `refs/semi_supervised/train+val.tsv` should be ignored. 
-    - This feature is supported in [`om_eval.py`](bertmap?id=om-evaluation) script of DeepOnto where the arguement `null_ref_path` is for inputting the reference mappings that should be ignored.
-
-- Since the subsumption mappings are inherently incomplete, we suggest apply only local ranking for evaluating subsumption matching.
+    Since the subsumption mappings are inherently incomplete, we suggest apply **only local ranking for evaluating subsumption matching**.
 
 
-## OM Data Construction
 
-This section introduces essential scripts for processing ontology data and creating OM resources. The pruning, subsumption mapping generation, negative candidate mapping generation algorithms were proposed in our [resource paper](https://arxiv.org/abs/2205.03447).
+
+## OM Dataset Construction
 
 ### Ontology Pruning
 
-The script `onto_prune.py` is used to prune an ontology by preserving classes according to a list of class IRIs while keeping the hierarchy. Specifically, if a class's IRI is not present in the input IRI list, then any axioms it involves will be deleted, and its parents will be asserted to be the parents of its children, so as to preserve the hierarchy. 
+In order to obtain scalable OM pairs, the **ontology pruning** algorithm proposed in the $\textsf{Bio-ML}$ paper can be used to truncate a large-scale ontology according to certain criteria such as the **semantic type**. Once obtaining the list of class IRIs to be truncated, apply the ontology pruning following the code [here](/pages/ontology/#ontology-pruning).
 
-?> This can be seen as the most basic hierarchy preservation; in future, we will exploit logic modules to preserve more hierarchical information.
+### Subsumption Mapping Construction
 
-Parameters of `onto_prune.py`:
+It is often that OM datasets include equivalence matching but **not** subsumption matching. However, it is possible to create a subsumption matching task from each equivalence matching task. Given a list of **equivalence reference mappings** (see [how to load from a local file][deeponto.align.mapping.ReferenceMapping.read_table_mappings]) in the form of $\{(c, c') | c \equiv c' \}$, the reference subsumption mappings can be created by searching for the **subsumers** of $c'$, then yielding $\{(c, c'') | c \equiv c', c' \sqsubseteq c'' \}$. We have implemented a [subsumption mapping generator][deeponto.align.mapping.SubsFromEquivMappingGenerator] for this purpose:
 
-- **saved_path**(*str*): the path to the output directory.
-- **src_onto_path**(*str*): the path to the source ontology that is about to be pruned.
-- **preserved_iris_path**(*str*): the path to the file of class IRIs (one per line) that will be preserved.
+```python
+from deeponto.onto import Ontology
+from deeponto.align.mapping import SubsFromEquivMappingGenerator, ReferenceMapping
 
-Example usage of `onto_prune.py` for ontology pruning:
+ncit = Ontology("ncit.owl")  # load the NCIt ontology
+doid = Ontology("doid.owl")  # load the disease ontology
+ncit2doid_equiv_mappings = ReferenceMapping.read_table_mappings("ncit2doid_equiv_mappings.tsv")  # with headings ["SrcEntity", "TgtEntity", "Score"]
 
-**Step 1**: Run the script with the above arguments specified.
+subs_generator = SubsFromEquivMappingGenerator(
+  ncit, doid, ncit2doid_equiv_mappings, 
+  subs_generation_ratio=1, delete_used_equiv_tgt_class=True
+)
+>>> 3299/4686 are used for creating at least one subsumption mapping.
+3305 subsumption mappings are created in the end.
 
-```bash
-python onto_prune.py \
---saved_path "./pruned_onto" \  
---src_onto_path "./data/src_onto.owl"
---preserved_iris_path "./preserved_class_iris.txt"
-
+subs_generator.subs_from_equivs
+>>> [('http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C9311',
+  'http://purl.obolibrary.org/obo/DOID_120',
+  1.0),
+ ('http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C8410',
+  'http://purl.obolibrary.org/obo/DOID_1612',
+  1.0), ...]
 ```
 
-### Subsumption Mapping Generation
-
-To construct inter-ontology subsumption mappings, we could utilize the **inter-ontology equivalence mappings** as the anchors. Specifically, we fix the source class of the equivalence mapping, and search for the ancestors (or descendants) of the target class, combining them with the source class to form the subsumption mappings. 
-
-Parameters of `scripts/om_subs.py`: 
-
-- **saved_path**(*str*): the path to the output directory.
-- **src_onto**(*str*): the path to the source ontology file.
-- **tgt_onto**(*str*): the path to the target ontology file.
-- **equiv_maps_path**(*str*): the path to the equivalence mappings in `.tsv` with columns of `"SrcEntity"`, `"TgtEntity"`, and `"Score"`.
-- **max_subs_ratio**(*int*): the maximum number of subsumption mappings generated for each input equivalence mapping, default is `1`.
-- **is_delete_equiv_tgt**(*bool*): whether or not to delete the target class of the equivalence mapping used for generating any subsumption mappings. 
-- **max_hop**(*int*): the maximum number of hops for searching the subsumption candidates, default is `1`, referring to the *most specific* subsumers.
-
-Example usage of `om_subs.py` script for inter-ontology subsumption mapping construction:
-
-**Step 1**: Run the script with arguments above specified.
-
-```bash
-python scripts/om_subs.py \
---saved_path "./subs_maps/" \  
---src_onto_path "./data/src_onto.owl" \
---tgt_onto_path "./data/tgt_onto.owl" \
---equiv_maps_path "./data/src2tgt_equiv_maps.tsv" \ 
---max_subs_ratio 1 \ 
---is_delete_equiv_tgt True \
---max_hop 1
-```
-
-If `is_delete_equiv_tgt` is set to be `True`, then it means we are corrupting the equivalence mappings (that are *used* for generating any subsumption mappings) by deleting their target side classes to prevent an OM system from inferring subsumptions directly from the equivalence mappings. In this case, the deleted target classes may intervene the generation of some subsumption candidates because they may occasionally appear in a generated subsumption mapping. Two algorithms (`online` or `static`) were proposed (see details in our [resource paper](https://arxiv.org/abs/2205.03447)) to deal with the class deletion. 
-
-If `is_delete_equiv_tgt` is set to be `False`, choosing either algorithm will generate the same set of subsumption candidates because no classes will be marked for deletion.
-
-**Step 2**: Choose which algorithm to be used and which subsumption relation to be considered. 
-
-```bash
-######################################################################
-###                    Choose a Generation Type                    ###
-######################################################################
-
-[0]: static
-[1]: online
-Enter a number: 0
-
-######################################################################
-###                 Choose a Subsumption Relation                  ###
-######################################################################
-
-[0]: '<' (subClassOf)
-[1]: '>' (superClassOf)
-Enter a number: 0
-```
-
-There are two ways (`static` or `online`) of doing subsumption mapping construction with class deletion considered. By choosing `static`, target classes present in the equivalence mappings will be marked for deletion first unless they have no ancestors (resp. descendants) for `"<"` (resp. for `">"`) that can be used for constructing subsumption mappings; then it starts generating subsumption mappings and exclude those with target classes marked deleted. By choosing `online`, the deletion and construction are operated instantly for each iteration over the traversal of equivalence mappings; target classes of the equivalence mappings will not be omitted from deletion if they have been included in the subsumption mappings generated in the previous iterations.
-
-In principle, `online` will generate more subsumption mappings than `static` because less classes are marked for deletion. However, `online` is less stable than `static` because it can be affected by the order of the equivalence mappings during traversal.
-
-**Step 3**: If `is_delete_equiv_tgt` is set to be `True`, the script will generate target class IRIs that should be preserved. Then, the user need to manually run the `onto_prune.py` script described [above](using_deeponto?id=ontology-pruning) to delete the corresponding classes.
-
+The `subs_generation_ratio` parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The `delete_used_equiv_tgt_class` determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If setting to `True`, then the target side of an (**used**) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes which can be accessed as `subs_generator.used_equiv_tgt_class_iris`.
 
 ### Negative Candidate Mapping Generation
 
-To come up with a meaningful evaluation over the input class pairs in `pair_score` mode, instead of using all the possible negative candidates, selecting representative (hard) ones is essential for evaluation efficiency and a decent approximation of overall performance. Ranking over the selected candidates is referred to as **local ranking** and can be evaluated using [`om_eval.py`](using_deeponto?id=om-evaluation).
-
-Specifically, for each reference mapping $(c, c')$, we can fix the source side and sample negative candidates from the target side ontology, which can then be combined with the $c$ to form negative candidate mappings. As such, each reference mapping can be seen as an `AnchorMapping` that has $N$ `EntityMapping` as candidates (see explanation of mapping data structures [here](data_structures?id=mapping)).
-
-Parameters of `om_cands.py` for generating target negative candidates:
-
-- **saved_path**(*str*): the path to the output directory.
-- **src_onto_path**(*str*): the path to the source ontology file.
-- **tgt_onto_path**(*str*): the path to the target ontology file.
-- **ref_mappings_path**(*str*): the path to the reference mapping file in `.tsv`.
-- **null_ref_mappings_path**(*str*): the path to the null reference mapping file in `.tsv`. Such mappings should be ignored during the genration of candidates.
-- **tokenizer_path**(*str*): the library path to the pre-trained (*hugginface*) tokenizer, default is `"emilyalsentzer/Bio_ClinicalBERT"`.
-- **idf_sample_num**(*int*): the *desired* number of cadidates generated using IDFSample algorithm (see [paper](https://arxiv.org/abs/2205.03447)), default is `50`.
-- **neighbour_sample_num**(*int*): the *desired* number of candidates generated using NeighbourSample algorithm (see [paper](https://arxiv.org/abs/2205.03447)), default is `50`.
-- **max_hops**(*int*): the maximum number of hops for NeighbourSample search, default is `6`.
-- **random_sample_num**(*int*): the number of candidates generated using RandomSample, which is also used to amend the number when IDFSample or NeighbourSample cannot generate the *desired* numbers (see [paper](https://arxiv.org/abs/2205.03447)); default is `0`.
-
-Example usage of `scripts/om_cands.py` for generating negative candidate mappings from test mappings.
-
-```bash
-python scripts/om_cands.py \
---saved_path "./cand_maps" \
---src_onto_path "./data/src_onto.owl" \
---tgt_onto_path "./data/tgt_onto.owl" \
---ref_mappings_path "./data/test.tsv" \
---null_ref_mappings_path "./data/train+val.tsv" \
---tokenizer_path "emilyalsentzer/Bio_ClinicalBERT" \
---idf_sample_num 50 \
---neighbour_sample_num 50 \
---max_hops 6 \
---random_sample_num 0
-```
-
-## Mapping Datastructures
-
-Several python classes for entity (in string) mappings are defined here as main data structrues used for OM system outputs and evaluation.
-
-### EntityMapping
-
->  [:link:](https://krr-oxford.github.io/DeepOnto/_modules/deeponto/onto/mapping.html#EntityMapping)
-*CLASS* &ensp; deeponto.onto.mapping.EntityMapping(<em>src_ent_iri: str, tgt_ent_iri: str, rel: str, score: float</em>)
-
-The basic data structure for representing a mapping between entities.
-
-Parameters for constructing a new `EntityMapping` object:
-- **src_ent_iri**(<em>str</em>): the source entity IRI in string.
-- **tgt_ent_iri**(<em>str</em>): the target entity IRI in string.
-- **rel**(<em>str</em>): the semantic relation between the source and target entities.
-- **score**(<em>float</em>): the score of the mapping ranging from $0.0$ to $1.0$.
-
-Example usage for creating an equivalence entity mapping for `snomed:55940004` and `fma:54970`:
+In order to examine an OM model's ability to distinguish the correct mapping among a set of challenging negative candidates, we can apply the [negative canddiate mapping generation][deeponto.align.mapping.NegativeCandidateMappingGenerator] algorithm as proposed in the paper, which utilises the [`idf_sample`][deeponto.align.mapping.NegativeCandidateMappingGenerator.idf_sample] to generate candidates ambiguious at the textual level (similar naming), and [`neighbour_sample`][deeponto.align.mapping.NegativeCandidateMappingGenerator.neighbour_sample] to generate candidates ambiguious at the structural level (e.g., siblings). The algorithm makes sure that **none** of the reference mappings will be added as a negative candidate, and for the subsumption case, the algorithm also takes care of **excluding the ancestors** because they are correct subsumptions.
 
 ```python
-from deeponto.onto.mapping import EntityMapping
+from deeponto.onto import Ontology
+from deeponto.align.mapping import NegativeCandidateMappingGenerator, ReferenceMapping
 
-src_ent_iri = "http://snomed.info/id/55940004"
-tgt_ent_iri = "http://purl.org/sig/ont/fma/fma54970"
+ncit = Ontology("ncit.owl")  # load the NCIt ontology
+doid = Ontology("doid.owl")  # load the disease ontology
+ncit2doid_equiv_mappings = ReferenceMapping.read_table_mappings("ncit2doid_equiv_mappings.tsv")  # with headings ["SrcEntity", "TgtEntity", "Score"]
 
-src2tgt_map = EntityMapping(
-  src_ent_iri=src_ent_iri, 
-  tgt_ent_iri=tgt_ent_iri, 
-  rel="=",  # semantic relation symbol
-  score=1.0 # score ranges from [0.0, 1.0]; 
-            # 1.0 is usually set for a reference mapping
+cand_generator = NegativeCandidateMappingGenerator(
+  ncit, doid, ncit2doid_equiv_mappings, 
+  annotation_property_iris = [...],  # used for idf sample
+  tokenizer=Tokenizer.from_pretrained(...),  # used for idf sample
+  max_hops=5, # used for neighbour sample
+  for_subsumptions=False,  # set to False because the input mappings in this example are equivalence mappings
 )
 ```
 
-### AnchorMapping
-
->  [:link:](https://krr-oxford.github.io/DeepOnto/_modules/deeponto/onto/mapping.html#AnchorMapping)
-*CLASS* &ensp; deeponto.onto.mapping.AnchorMapping(<em>src_ent_iri: str, tgt_ent_iri: str, rel: str, score: float</em>)
-
-It extends from the basic `EntityMapping` and can incorporate other entity mappings as its candidates.
-
-Parameters for constructing a new `AnchorMapping` object:
-- **src_ent_iri**(<em>str</em>): the source entity IRI in string.
-- **tgt_ent_iri**(<em>str</em>): the target entity IRI in string.
-- **rel**(<em>str</em>): the semantic relation between the source and target entities.
-- **score**(<em>float</em>): the score of the mapping ranging from $0.0$ to $1.0$.
-
-Example usage for constructing a new `AnchorMapping` and adding a `EntityMapping` as a candidate.
-
-```python
-from deeponto.onto.mapping import AnchorMapping
-
-src_ent_iri = "http://snomed.info/id/55940004"
-tgt_ent_iri = "http://purl.org/sig/ont/fma/fma54970"
-
-anchor_map = AnchorMapping(
-  src_ent_iri=src_ent_iri, 
-  tgt_ent_iri=tgt_ent_iri, 
-  rel="=", 
-  score=1.0 # score ranges from [0.0, 1.0]; 
-            # 1.0 is usually set for a reference mapping
-)
-
-cand_map = EntityMapping(...)
-anchor_map.add_candidate(cand_map)
-```
-
-### OntoMappings
-
->  [:link:](https://krr-oxford.github.io/DeepOnto/_modules/deeponto/onto/mapping.html#OntoMappings)
-*CLASS* &ensp; deeponto.onto.mapping.OntoMappings(<em>
-        flag: str, 
-        n_best: Optional[int],
-        rel: str,
-        dup_strategy: str,
-        *ent_mappings: EntityMapping</em>)
-
-The dict-based data structure which stores entity mappings of the same direction (`src2tgt` or `tgt2src`); the `map_dict` attribute stores entity mappings in form of a nested dictionary: 
-
-```python
-# {src_ent: {tgt_ent: score}}
-{
-  "http://snomed.info/id/55940004http://snomed.info/id/55940004": 
-  {
-    "http://purl.org/sig/ont/fma/fma54970": 1.0, 
-    "http://purl.org/sig/ont/fma/fma34913": 0.563
-  }
-}
-```
-
-Parameters for constructing a new `OntoMappings` object:
-- **flag**(<em>str</em>): the direction of the mapping (`src2tgt`, `tgt2src`).
-- **n_best**(<em>int</em>): the number of top ranked mappings stored for each head entity, default is `None` which means there is no limit.
-- **rel**(<em>str</em>): the semantic relation between the source and target entities.
-- **dup_strategy**(<em>str</em>): the strategy used to dealing with new mappings that have duplicated source and target entities (`average`, `kept_old`, `kept_new`).
-- **\*ent_mappings**(<em>EntityMapping</em>): sequence of `EntityMapping` to be added.
-
-Entity mappings that belong to the same `src_ent` are sorted by scores in descending order, if `n_best` is set, only the top `n_best` mappings w.r.t. each `src_ent` will be kept.
-
-Example usage for creating an `OntoMappings` object and feed mappings:
-
-```python
-from deeponto.onto.mapping import OntoMappings
-
-onto_maps = OntoMappings(flag="src2tgt", n_best=10, rel="=")
-
-# add a single mapping
-onto_maps.add(src2tgt_map) # EntityMapping
-
-# add many mappings
-onto_maps.add_many(*list_of_src2tgt_maps) # List[EntityMapping]
-
-# ranked mappings in [dict] with source entities as keys
-onto_maps.map_dict
-
-# return all mappings as tuples
-onto_maps.to_tuples()
-
-# return the top k ranked mappings for a source entity 
-# that exceeds certain mapping score threshold
-onto_maps.topks_for_ent(src_ent_iri, K=3, threshold: float = 0.5)
-
-# save the mappings
-# a .pkl file is saved for the object and a .json/.tsv file is saved for readability
-onto_maps.save_instance("./src2tgt_maps")
-
-# reload the mappings
-onto_maps = OntoMappings.from_saved("./src2tgt_maps")
-
-```
-
-### AnchoredOntoMappings
-
->  [:link:](https://krr-oxford.github.io/DeepOnto/_modules/deeponto/onto/mapping.html#AnchoredOntoMappings)
-*CLASS* &ensp; deeponto.onto.mapping.AnchoredOntoMappings(<em>
-        flag: str, 
-        n_best: Optional[int],
-        rel: str,
-        dup_strategy: str,
-        *anchor_mappings: AnchorMapping</em>)
-
-It is a similar data structure as `OntoMappings` except that its keys are entity pairs (anchors) instead of a single source entity. It is essentially a collection of candidate mappings w.r.t. each 
-anchor mapping (in `AnchorMapping`). For example, to generate negative candidates for each reference mapping (as an anchor) for [local ranking evaluation](using_deeponto?id=om-evaluation), we need to use the reference class pair as a double-key and add candidate mappings as values.
-
-Parameters for constructing a new `AnchoredOntoMappings` object:
-- **flag**(<em>str</em>): the direction of the mapping (`src2tgt`, `tgt2src`).
-- **n_best**(<em>int</em>): the number of top ranked mappings stored for each anchor mapping, default is `None` which means there is no limit.
-- **rel**(<em>str</em>): the semantic relation between the source and target entities.
-- **dup_strategy**(<em>str</em>): the strategy used to dealing with new mappings that have duplicated source and target entities (`average`, `kept_old`, `kept_new`).
-- **\*anchor_mappings**(<em>EntityMapping</em>): sequence of `AnchorMapping` to be added.
-
-Example usage for creating an `AnchoredOntoMappings` object and feed mappings:
-```python
-from deeponto.onto.mapping import AnchoredOntoMappings
-
-anchored_onto_maps = AnchoredOntoMappings(flag="src2tgt", n_best=10, rel="=")
-
-# add an (reference) anchor mapping that has an unscored candidate mapping
-anchor_map = AnchorMapping(ref_src_ent_iri, ref_tgt_ent_iri, "=", 1.0)
-anchor_map.add_candidate(EntityMapping(ref_src_ent_iri, cand_tgt_ent_iri, "=", 0.0))
-anchored_onto_maps.add(anchor_map)  
-
-# flatten AnchoredOntoMappings to OntoMappings with all zero scores for
-# conducting pair scoring prediction without duplicates
-unscored_maps = anchored_onto_maps.unscored_cand_maps() 
-
-# feed the scored OntoMappings back
-# scored_maps <- some scoring method applied to unscored_maps
-anchored_onto_maps.fill_scored_maps(scored_maps)
-
-# saving and reloading are the same as OntoMappings
-```
-
+Sampling using the *idf scores* is originally proposed in the BERTMap paper. The parameter `annotation_property_iris` specifies the list of annotation properties used for extracting the **names** or **aliases** of an ontology class. The parameter `tokenizer` refers to a pre-trained sub-word level tokenizer used to build the inverted annotation index. They have been well-explained in the [BERTMap tutorial](/pages/bertmap).

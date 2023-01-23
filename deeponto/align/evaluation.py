@@ -27,7 +27,7 @@ class AlignmentEvaluator:
     def precision(prediction_mappings: List[EntityMapping], reference_mappings: Iterable[ReferenceMapping]) -> float:
         r"""The percentage of correct predictions.
 
-        $$P = TP / (TP + FP) = \frac{|Preds \cap Refs|}{|Preds|}$$
+        $$P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}$$
         """
         preds = [p.to_tuple() for p in prediction_mappings]
         refs = [r.to_tuple() for r in reference_mappings]
@@ -37,7 +37,7 @@ class AlignmentEvaluator:
     def recall(prediction_mappings: List[EntityMapping], reference_mappings: Iterable[ReferenceMapping]) -> float:
         r"""The percentage of correct retrievals.
 
-        $$R = TP / (TP + FN) = \frac{|Preds \cap Refs|}{|Refs|}$$
+        $$R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}$$
         """
         preds = [p.to_tuple() for p in prediction_mappings]
         refs = [r.to_tuple() for r in reference_mappings]
@@ -51,7 +51,7 @@ class AlignmentEvaluator:
     ):
         r"""Compute the F1 score given the prediction and reference mappings.
 
-        $$F_1 = 2 \cdot P \cdot R / (P + R)$$
+        $$F_1 = \frac{2 P R}{P + R}$$
 
         `null_reference_mappings` is an additional set whose elements
         should be ignored in the calculation, i.e., neither positive nor negative.
@@ -79,7 +79,7 @@ class AlignmentEvaluator:
     def hits_at_K(prediction_and_candidates: List[Tuple[EntityMapping, List[EntityMapping]]], K: int):
         r"""Compute $Hits@K$ for a list of `(prediction_mapping, candidate_mappings)` pair.
 
-        It is computed as the number of a `prediction_mapping` exist in its corresponding `candidate_mappings`,
+        It is computed as the number of a `prediction_mapping` existed in the first $K$ ranked `candidate_mappings`,
         divided by the total number of input pairs.
 
         $$Hits@K = \sum_i^N \mathbb{I}_{rank_i \leq k} / N$$

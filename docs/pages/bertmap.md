@@ -139,7 +139,7 @@ The default configuration file looks like:
 ```yaml
 name: bertmap  # bertmap or bertmaplt
 
-output_path: null  # if no provided, the current path "." is used
+output_path: null  # if not provided, the current path "." is used
 
 annotation_property_iris:
   - http://www.w3.org/2000/01/rdf-schema#label  # rdfs:label

@@ -22,7 +22,7 @@ from typing import List, Set, Tuple, Optional, Union
 
 from deeponto.onto import Ontology
 from deeponto.align.mapping import ReferenceMapping
-from deeponto.utils import FileUtils, uniqify
+from deeponto.utils import FileUtils, DataUtils
 
 
 # @paper(
@@ -32,17 +32,15 @@ from deeponto.utils import FileUtils, uniqify
 class AnnotationThesaurus:
     """A thesaurus class for synonyms and non-synonyms extracted from an ontology.
 
-    !!! note
+    Some related definitions of arguements here:
 
-        Some related definitions of arguements here:
-
-         - A `synonym_group` is a set of annotation phrases that are synonymous to each other;
-         - The `transitivity` of synonyms means if A and B are synonymous and B and C are synonymous,
-         then A and C are synonymous. This is achieved by a connected graph-based algorithm.
-         - A `synonym_pair` is a pair synonymous annotation phrase which can be extracted from
-         the cartesian product of a `synonym_group` and itself. NOTE that **reflexivity** and **symmetry**
-         are preserved meaning that *(i)* every phrase A is a synonym of itself and *(ii)* if (A, B) is
-         a synonym pair then (B, A) is a synonym pair, too.
+    - A `synonym_group` is a set of annotation phrases that are synonymous to each other;
+    - The `transitivity` of synonyms means if A and B are synonymous and B and C are synonymous,
+    then A and C are synonymous. This is achieved by a connected graph-based algorithm.
+    - A `synonym_pair` is a pair synonymous annotation phrase which can be extracted from
+    the cartesian product of a `synonym_group` and itself. NOTE that **reflexivity** and **symmetry**
+    are preserved meaning that *(i)* every phrase A is a synonym of itself and *(ii)* if (A, B) is
+    a synonym pair then (B, A) is a synonym pair, too.
 
     Attributes:
         onto (Ontology): An ontology to construct the annotation thesaurus from.
@@ -107,7 +105,7 @@ class AnnotationThesaurus:
         """
         synonym_pairs = list(itertools.product(synonym_group, synonym_group))
         if remove_duplicates:
-            return uniqify(synonym_pairs)
+            return DataUtils.uniqify(synonym_pairs)
         else:
             return synonym_pairs
 
@@ -135,7 +133,7 @@ class AnnotationThesaurus:
         for synonym_group in synonym_groups:
             # gather synonym pairs from the self-product of a synonym group
             synonym_pairs += AnnotationThesaurus.get_synonym_pairs(synonym_group, remove_duplicates=False)
-        synonym_pairs = uniqify(synonym_pairs)
+        synonym_pairs = DataUtils.uniqify(synonym_pairs)
         merged_grouped_synonyms = AnnotationThesaurus.connected_labels(synonym_pairs)
         return merged_grouped_synonyms
 
@@ -161,10 +159,8 @@ class AnnotationThesaurus:
     def synonym_sampling(self, num_samples: Optional[int] = None):
         r"""Sample synonym pairs from a list of synonym groups extracted from the input ontology.
 
-        !!! note
-
-            According to the $\textsf{BERTMap}$ paper, **synonyms** are defined as label pairs that belong
-            to the same ontology class.
+        According to the $\textsf{BERTMap}$ paper, **synonyms** are defined as label pairs that belong
+        to the same ontology class.
 
         NOTE this has been validated for getting the same results as in the original $\textsf{BERTMap}$ repository.
 
@@ -180,7 +176,7 @@ class AnnotationThesaurus:
             synonym_pairs = self.get_synonym_pairs(synonym_group, remove_duplicates=False)
             synonym_pool += synonym_pairs
         # remove duplicates afer the loop
-        synonym_pool = uniqify(synonym_pool)
+        synonym_pool = DataUtils.uniqify(synonym_pool)
 
         if (not num_samples) or (num_samples >= len(synonym_pool)):
             # print("Return all synonym pairs without downsampling.")
@@ -191,10 +187,8 @@ class AnnotationThesaurus:
     def soft_nonsynonym_sampling(self, num_samples: int, max_iter: int = 5):
         r"""Sample **soft** non-synonyms from a list of synonym groups extracted from the input ontology.
 
-        !!! note
-
-            According to the $\textsf{BERTMap}$ paper, **soft non-synonyms** are defined as label pairs
-            from two *different* synonym groups that are **randomly** selected.
+        According to the $\textsf{BERTMap}$ paper, **soft non-synonyms** are defined as label pairs
+        from two *different* synonym groups that are **randomly** selected.
 
         Args:
             num_samples (int): The (maximum) number of **unique** samples extracted; this is
@@ -214,13 +208,13 @@ class AnnotationThesaurus:
             right_label = random.choice(list(right_synonym_group))
             nonsyonym_pool.append((left_label, right_label))
 
-        # uniqify is too slow so we should avoid operating it too often
-        nonsyonym_pool = uniqify(nonsyonym_pool)
+        # DataUtils.uniqify is too slow so we should avoid operating it too often
+        nonsyonym_pool = DataUtils.uniqify(nonsyonym_pool)
 
         while len(nonsyonym_pool) < num_samples and max_iter > 0:
             max_iter = max_iter - 1  # reduce the iteration to prevent exhausting loop
             nonsyonym_pool += self.soft_nonsynonym_sampling(num_samples - len(nonsyonym_pool), max_iter)
-            nonsyonym_pool = uniqify(nonsyonym_pool)
+            nonsyonym_pool = DataUtils.uniqify(nonsyonym_pool)
 
         return nonsyonym_pool
 
@@ -236,11 +230,9 @@ class AnnotationThesaurus:
     def hard_nonsynonym_sampling(self, num_samples: int, max_iter: int = 5):
         r"""Sample **hard** non-synonyms from sibling classes of the input ontology.
 
-        !!! note
-
-            According to the $\textsf{BERTMap}$ paper, **hard non-synonyms** are defined as label pairs
-            that belong to two **disjoint** ontology classes. For practical reason, the condition
-            is eased to two **sibling** ontology classes.
+        According to the $\textsf{BERTMap}$ paper, **hard non-synonyms** are defined as label pairs
+        that belong to two **disjoint** ontology classes. For practical reason, the condition
+        is eased to two **sibling** ontology classes.
 
         Args:
             num_samples (int): The (maximum) number of **unique** samples extracted; this is
@@ -268,13 +260,13 @@ class AnnotationThesaurus:
             # add the label pair to the pool
             nonsynonym_pool.append((left_label, right_label))
 
-        # uniqify is too slow so we should avoid operating it too often
-        nonsynonym_pool = uniqify(nonsynonym_pool)
+        # DataUtils.uniqify is too slow so we should avoid operating it too often
+        nonsynonym_pool = DataUtils.uniqify(nonsynonym_pool)
 
         while len(nonsynonym_pool) < num_samples and max_iter > 0:
             max_iter = max_iter - 1  # reduce the iteration to prevent exhausting loop
             nonsynonym_pool += self.hard_nonsynonym_sampling(num_samples - len(nonsynonym_pool), max_iter)
-            nonsynonym_pool = uniqify(nonsynonym_pool)
+            nonsynonym_pool = DataUtils.uniqify(nonsynonym_pool)
 
         return nonsynonym_pool
 
@@ -282,10 +274,8 @@ class AnnotationThesaurus:
 class IntraOntologyTextSemanticsCorpus:
     r"""Class for creating the intra-ontology text semantics corpus from an ontology.
 
-    !!! note
-
-        As defined in the $\textsf{BERTMap}$ paper, the **intra-ontology** text semantics corpus consists
-        of synonym and non-synonym pairs extracted from the ontology class annotations.
+    As defined in the $\textsf{BERTMap}$ paper, the **intra-ontology** text semantics corpus consists
+    of synonym and non-synonym pairs extracted from the ontology class annotations.
 
     Attributes:
         onto (Ontology): An ontology to construct the intra-ontology text semantics corpus from.
@@ -345,11 +335,9 @@ class IntraOntologyTextSemanticsCorpus:
 class CrossOntologyTextSemanticsCorpus:
     r"""Class for creating the cross-ontology text semantics corpus from two ontologies and provided mappings between them.
 
-    !!! note
-
-        As defined in the $\textsf{BERTMap}$ paper, the **cross-ontology** text semantics corpus consists
-        of synonym and non-synonym pairs extracted from the annotations/labels of class pairs
-        involved in the provided cross-ontology mappigns.
+    As defined in the $\textsf{BERTMap}$ paper, the **cross-ontology** text semantics corpus consists
+    of synonym and non-synonym pairs extracted from the annotations/labels of class pairs
+    involved in the provided cross-ontology mappigns.
 
     Attributes:
         class_mappings (List[ReferenceMapping]): A list of cross-ontology class mappings.
@@ -411,14 +399,12 @@ class CrossOntologyTextSemanticsCorpus:
         Arguements of this method are all class attributes.
         See [`CrossOntologyTextSemanticsCorpus`][deeponto.align.bertmap.text_semantics.CrossOntologyTextSemanticsCorpus].
 
-        !!! note
-
-            According to the $\textsf{BERTMap}$ paper, **cross-ontology synonyms** are defined as label pairs
-            that belong to two **matched** classes. Suppose the class $C$ from the source ontology
-            and the class $D$ from the target ontology are matched according to one of the `class_mappings`,
-            then the cartesian product of labels of $C$ and labels of $D$ form cross-ontology synonyms.
-            Note that **identity synonyms** in the form of $(a, a)$ are removed because they have been covered
-            in the intra-ontology case.
+        According to the $\textsf{BERTMap}$ paper, **cross-ontology synonyms** are defined as label pairs
+        that belong to two **matched** classes. Suppose the class $C$ from the source ontology
+        and the class $D$ from the target ontology are matched according to one of the `class_mappings`,
+        then the cartesian product of labels of $C$ and labels of $D$ form cross-ontology synonyms.
+        Note that **identity synonyms** in the form of $(a, a)$ are removed because they have been covered
+        in the intra-ontology case.
 
         Returns:
             (List[Tuple[str, str]]): A list of unique synonym pair samples from ontology class mappings.
@@ -435,7 +421,7 @@ class CrossOntologyTextSemanticsCorpus:
             backward_synonym_pairs = [(r, l) for l, r in synonym_pairs]
             synonym_pool += synonym_pairs + backward_synonym_pairs
 
-        synonym_pool = uniqify(synonym_pool)
+        synonym_pool = DataUtils.uniqify(synonym_pool)
         return synonym_pool
 
     def nonsynonym_sampling_from_mappings(self, num_samples: int, max_iter: int = 5):
@@ -444,14 +430,12 @@ class CrossOntologyTextSemanticsCorpus:
         Arguements of this method are all class attributes.
         See [`CrossOntologyTextSemanticsCorpus`][deeponto.align.bertmap.text_semantics.CrossOntologyTextSemanticsCorpus].
 
-        !!! note
-
-            According to the $\textsf{BERTMap}$ paper, **cross-ontology non-synonyms** are defined as label pairs
-            that belong to two **unmatched** classes. Assume that the provided class mappings are self-contained
-            in the sense that they are complete for the classes involved in them, then we can randomly
-            sample two cross-ontology classes that are not matched according to the mappings and take
-            their labels as nonsynonyms. In practice, it is quite unlikely to obtain false negatives since
-            the number of incorrect mappings is much larger than the number of correct ones.
+        According to the $\textsf{BERTMap}$ paper, **cross-ontology non-synonyms** are defined as label pairs
+        that belong to two **unmatched** classes. Assume that the provided class mappings are self-contained
+        in the sense that they are complete for the classes involved in them, then we can randomly
+        sample two cross-ontology classes that are not matched according to the mappings and take
+        their labels as nonsynonyms. In practice, it is quite unlikely to obtain false negatives since
+        the number of incorrect mappings is much larger than the number of correct ones.
 
         Returns:
             (List[Tuple[str, str]]): A list of unique nonsynonym pair samples from ontology class mappings.
@@ -475,25 +459,23 @@ class CrossOntologyTextSemanticsCorpus:
             right_label = random.choice(list(right_class_pair[1]))  # choosing the tgt side by [1]
             nonsynonym_pool.append((left_label, right_label))
 
-        # uniqify is too slow so we should avoid operating it too often
-        nonsynonym_pool = uniqify(nonsynonym_pool)
+        # DataUtils.uniqify is too slow so we should avoid operating it too often
+        nonsynonym_pool = DataUtils.uniqify(nonsynonym_pool)
         while len(nonsynonym_pool) < num_samples and max_iter > 0:
             max_iter = max_iter - 1  # reduce the iteration to prevent exhausting loop
             nonsynonym_pool += self.nonsynonym_sampling_from_mappings(num_samples - len(nonsynonym_pool), max_iter)
-            nonsynonym_pool = uniqify(nonsynonym_pool)
+            nonsynonym_pool = DataUtils.uniqify(nonsynonym_pool)
         return nonsynonym_pool
 
 
 class TextSemanticsCorpora:
     r"""Class for creating the collection text semantics corpora.
 
-    !!! note
-
-        As defined in the $\textsf{BERTMap}$ paper, the collection of text semantics corpora contains
-        **at least two intra-ontology sub-corpora** from the source and target ontologies, respectively.
-        If some class mappings are provided, then a **cross-ontology sub-corpus** will be created.
-        If some additional auxiliary ontologies are provided, the intra-ontology corpora created from them
-        will serve as the **auxiliary sub-corpora**.
+    As defined in the $\textsf{BERTMap}$ paper, the collection of text semantics corpora contains
+    **at least two intra-ontology sub-corpora** from the source and target ontologies, respectively.
+    If some class mappings are provided, then a **cross-ontology sub-corpus** will be created.
+    If some additional auxiliary ontologies are provided, the intra-ontology corpora created from them
+    will serve as the **auxiliary sub-corpora**.
 
     Attributes:
         src_onto (Ontology): The source ontology to be matched or aligned.
@@ -542,9 +524,9 @@ class TextSemanticsCorpora:
         for auxiliary_onto_corpus in self.auxiliary_onto_corpora:
             self.add_samples_from_sub_corpus(auxiliary_onto_corpus)
 
-        # uniqify the samples
-        self.synonyms = uniqify(self.synonyms)
-        self.nonsynonyms = uniqify(self.nonsynonyms)
+        # DataUtils.uniqify the samples
+        self.synonyms = DataUtils.uniqify(self.synonyms)
+        self.nonsynonyms = DataUtils.uniqify(self.nonsynonyms)
         # remove invalid nonsynonyms
         self.nonsynonyms = list(set(self.nonsynonyms) - set(self.synonyms))
 

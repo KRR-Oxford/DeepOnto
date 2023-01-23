@@ -17,17 +17,19 @@ from __future__ import annotations
 from anytree import NodeMixin, RenderTree
 from typing import List, Optional
 
+class DataUtils:
+    
+    @staticmethod
+    def uniqify(ls):
+        """Return a list of unique elements without messing around the order"""
+        non_empty_ls = list(filter(lambda x: x != "", ls))
+        return list(dict.fromkeys(non_empty_ls))
 
-def uniqify(ls):
-    """Return a list of unique elements without messing around the order"""
-    non_empty_ls = list(filter(lambda x: x != "", ls))
-    return list(dict.fromkeys(non_empty_ls))
-
-
-def sort_dict_by_values(dic: dict, desc: bool = True, k: Optional[int] = None):
-    """Return a sorted dict by values with first k reserved if provided."""
-    sorted_items = list(sorted(dic.items(), key=lambda item: item[1], reverse=desc))
-    return dict(sorted_items[:k])
+    @staticmethod
+    def sort_dict_by_values(dic: dict, desc: bool = True, k: Optional[int] = None):
+        """Return a sorted dict by values with first k reserved if provided."""
+        sorted_items = list(sorted(dic.items(), key=lambda item: item[1], reverse=desc))
+        return dict(sorted_items[:k])
 
 
 class RangeNode(NodeMixin):
@@ -81,8 +83,9 @@ class RangeNode(NodeMixin):
         return list(dict(sorted(temp.items(), key=lambda item: item[1])).keys())
 
     def insert_child(self, node: RangeNode):
-        """Child nodes have a smaller (inclusive) range
-        e.g., `[2, 5]` is a child of `[1, 6]`.
+        r"""Inserting a child `RangeNode`.
+        
+        Child nodes have a smaller (inclusive) range, e.g., `[2, 5]` is a child of `[1, 6]`.
         """
         if node > self:
             raise RuntimeError("invalid child node")
@@ -118,4 +121,5 @@ class RangeNode(NodeMixin):
         return printed
 
     def print_tree(self):
+        """Pretty printing in the tree structure."""
         print(RenderTree(self))
