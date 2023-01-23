@@ -214,3 +214,37 @@ As mentioned in [usage](#usage), users can disable automatic global matching by 
 `config.global_matching.mapping_extension_threshold` corresponds to the score threshold of mappings used in the iterative mapping extension process. Higher value shortens the time but reduces the recall. 
 
 `config.global_matching.mapping_filtered_threshold` corresponds to the score threshold of mappings preserved for final mapping refinement. 
+
+
+## Output Format
+
+Running $\textsf{BERTMap}$ will create a directory named `bertmap` or `bertmaplt` in the specified output path.
+The file structure of this directory is as follows:
+
+```
+bertmap
+├── data
+│   ├── fine-tune.data.json
+│   └── text-semantics.corpora.json
+├── bertmap.log
+├── bert
+│   ├── tensorboard
+│   ├── checkpoint-{some_number}
+│   └── checkpoint-{some_number}
+├── match
+│   ├── logmap-repair
+│   ├── raw_mappings.json
+│   ├── repaired_mappings.tsv 
+│   ├── raw_mappings.tsv
+│   ├── extended_mappings.tsv
+│   └── filtered_mappings.tsv
+└── config.yaml
+```
+
+It is worth mentioning that the `match` sub-directory contains all the global matching files:
+
+-  `raw_mappings.tsv` refers to the raw mapping predictions before mapping refinement. The `.json` one is used internally to prevent accidental interruption.
+- `extended_mappings.tsv` refers to the output mappings after applying mapping extension. 
+- `filtered_mappings.tsv` refers to the output mappings after mapping extension and threshold filtering. 
+- `logmap-repair` is a folder containing intermediate files needed for applying LogMap's debugger.
+- `repaired_mappings.tsv` refers to the **final** output mappings after mapping repair.
