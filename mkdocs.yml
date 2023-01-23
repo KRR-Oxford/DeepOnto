@@ -27,9 +27,9 @@ theme:
 nav:
     - GET STARTED: 
       - Overview: index.md
-      - Ontology Processing & Reasoning: pages/ontology.md  # basic usage of ontologies, ontology pruning, etc.
-      - BERTMap: pages/bertmap.md
-      - OM Resources: pages/om_resources.md
+      - Ontology Processing & Reasoning: ontology.md  # basic usage of ontologies, ontology pruning, etc.
+      - BERTMap: bertmap.md
+      - OM Resources: om_resources.md
     - PACKAGE REFERENCE:
         - Ontology: deeponto/onto/index.md
         - Ontology Alignment:
