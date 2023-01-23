@@ -85,7 +85,7 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
 
 <br/>
 <p align="center">
-  <img alt="deeponto" src="/images/largebiomeddata.svg" height="600" style="width: 100%;">
+  <img alt="deeponto" src="images/largebiomeddata.svg" height="600" style="width: 100%;">
 </p>
 
 ### Evaluation Framework
