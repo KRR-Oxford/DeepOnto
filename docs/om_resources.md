@@ -162,7 +162,7 @@ refs = ReferenceMapping.read_table_mappings("refs/full.tsv")
 
 ### Ontology Pruning
 
-In order to obtain scalable OM pairs, the **ontology pruning** algorithm proposed in the $\textsf{Bio-ML}$ paper can be used to truncate a large-scale ontology according to certain criteria such as the **semantic type**. Once obtaining the list of class IRIs to be truncated, apply the ontology pruning following the code [here](/pages/ontology/#ontology-pruning).
+In order to obtain scalable OM pairs, the **ontology pruning** algorithm proposed in the $\textsf{Bio-ML}$ paper can be used to truncate a large-scale ontology according to certain criteria such as the **semantic type**. Once obtaining the list of class IRIs to be truncated, apply the ontology pruning following the code [here](/ontology/#ontology-pruning).
 
 ### Subsumption Mapping Construction
 
@@ -215,4 +215,4 @@ cand_generator = NegativeCandidateMappingGenerator(
 )
 ```
 
-Sampling using the *idf scores* is originally proposed in the BERTMap paper. The parameter `annotation_property_iris` specifies the list of annotation properties used for extracting the **names** or **aliases** of an ontology class. The parameter `tokenizer` refers to a pre-trained sub-word level tokenizer used to build the inverted annotation index. They have been well-explained in the [BERTMap tutorial](/pages/bertmap).
+Sampling using the *idf scores* is originally proposed in the BERTMap paper. The parameter `annotation_property_iris` specifies the list of annotation properties used for extracting the **names** or **aliases** of an ontology class. The parameter `tokenizer` refers to a pre-trained sub-word level tokenizer used to build the inverted annotation index. They have been well-explained in the [BERTMap tutorial](/bertmap).
