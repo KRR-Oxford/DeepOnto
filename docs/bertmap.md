@@ -10,7 +10,7 @@ This page gives the tutorial for $\textsf{BERTMap}$ family including the summary
 ## Overview
 
 <p align="center">
-    <img alt="deeponto" src="images/bertmap.svg">
+    <img alt="deeponto" src="../images/bertmap.svg">
     <p align="center">Figure 1. Pipeline illustration of BERTMap.</p>
 </p>
 
