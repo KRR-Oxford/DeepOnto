@@ -104,3 +104,6 @@ run.mondo.sh
 run.umls.sh
 
 print_reqs.py
+
+# mkdocs site
+site/
