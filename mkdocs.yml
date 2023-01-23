@@ -1,0 +1,80 @@
+site_name: DeepOnto
+# sit_url: https://krr-oxford.github.io/DeepOnto/
+repo_url: https://github.com/KRR-Oxford/DeepOnto
+
+copyright: Copyright &copy; 2021 Yuan He (KRR-Oxford)
+
+# theme: readthedocs
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - toc.integrate
+    - navigation.top
+    - header.autohide
+    - toc.follow
+
+# extra:
+#   social:
+#     - icon: fontawesome/solid/paper-plane
+#       link: mailto:yuan.he@cs.ox.ac.uk
+
+# extra:
+#   version:
+#     provider: mike
+
+
+nav:
+    - GET STARTED: 
+      - Overview: index.md
+      - Ontology Processing & Reasoning: pages/ontology.md  # basic usage of ontologies, ontology pruning, etc.
+      - BERTMap: pages/bertmap.md
+      - OM Resources: pages/om_resources.md
+    - PACKAGE REFERENCE:
+        - Ontology: deeponto/onto/index.md
+        - Ontology Alignment:
+          - Mapping: deeponto/align/mapping.md
+          - BERTMap: deeponto/align/bertmap/index.md
+          - LogMap: deeponto/align/logmap/index.md
+          - Evaluation: deeponto/align/evaluation.md
+        - Utilities: 
+          - Text Utilities: deeponto/utils/text_utils.md
+          - File Utilities: deeponto/utils/file_utils.md
+          - Logging: deeponto/utils/logging.md
+          - Data Utilities: deeponto/utils/data_utils.md
+          - Decorators: deeponto/utils/decorators.md
+
+
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences 
+  - pymdownx.inlinehilite
+  - admonition
+  - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+
+plugins:
+  - include-markdown
+  - search
+  - autorefs
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            show_root_toc_entry: false
+            members_order: source
+
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
