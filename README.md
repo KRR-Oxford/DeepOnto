@@ -42,7 +42,7 @@ for various ontology engineering purposes.
 
 - **Documentation**: *<https://krr-oxford.github.io/DeepOnto/>*.
 - **Github Repository**: *<https://github.com/KRR-Oxford/DeepOnto>*. 
-- **PyPI**: *<https://pypi.org/project/deeponto/>* (will be updated after major update). 
+- **PyPI**: *<https://pypi.org/project/deeponto/>*. 
 
 ## Installation
 
