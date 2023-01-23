@@ -243,12 +243,10 @@ class BERTMapPipeline:
     def load_finetune_data(self):
         r"""Load or construct fine-tuning data from text semantics corpora.
 
-        !!! note
+        Steps of constructing fine-tuning data from text semantics:
 
-            Steps of constructing fine-tuning data from text semantics:
-
-            1. Mix synonym and nonsynonym data.
-            2. Randomly sample 90% as training samples and 10% as validation.
+        1. Mix synonym and nonsynonym data.
+        2. Randomly sample 90% as training samples and 10% as validation.
         """
         data_name = "fine-tuning data"
 

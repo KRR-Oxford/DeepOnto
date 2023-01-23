@@ -135,20 +135,18 @@ class MappingPredictor:
         r"""Predict $N$ best scored mappings for a source ontology class, where
         $N$ is specified in `self.num_best_predictions`.
 
-        !!! note
+        1. Apply the **string matching** module to compute "easy" mappings.
+        2. Return the mappings if found any, or if there is no BERT synonym classifier
+        as in $\textsf{BERTMapLt}$.
+        3. If using the BERT synonym classifier module:
 
-            1. Apply the **string matching** module to compute "easy" mappings.
-            2. Return the mappings if found any, or if there is no BERT synonym classifier
-            as in $\textsf{BERTMapLt}$.
-            3. If using the BERT synonym classifier module:
-
-                - Generate batches for class annotation pairs. Each batch contains the combinations of the
-                source class annotations and $M$ target candidate classes' annotations. $M$ is determined
-                by `batch_size_for_prediction`, i.e., stop adding annotations of a target class candidate into
-                the current batch if this operation will cause the size of current batch to exceed the limit.
-                - Compute the synonym scores for each batch and aggregate them into mapping scores; preserve
-                $N$ best scored candidates and update them in the next batch. By this dynamic process, we eventually
-                get $N$ best scored mappings for a source ontology class.
+            - Generate batches for class annotation pairs. Each batch contains the combinations of the
+            source class annotations and $M$ target candidate classes' annotations. $M$ is determined
+            by `batch_size_for_prediction`, i.e., stop adding annotations of a target class candidate into
+            the current batch if this operation will cause the size of current batch to exceed the limit.
+            - Compute the synonym scores for each batch and aggregate them into mapping scores; preserve
+            $N$ best scored candidates and update them in the next batch. By this dynamic process, we eventually
+            get $N$ best scored mappings for a source ontology class.
         """
 
         src_class_annotations = self.src_annotation_index[src_class_iri]
