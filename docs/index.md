@@ -6,6 +6,4 @@
   }
 </style>
 
-{%
-   include-markdown "../README.md"
-%}
+{% include-markdown "../README.md" %}
