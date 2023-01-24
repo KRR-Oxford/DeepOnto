@@ -886,7 +886,7 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
 <p>Each OM pair in <span class="arithmatex">\(\textsf{Bio-ML}\)</span> consists of an equivalence matching track and a subsumption matching track. Each track considers two perspectives for evaluation, <strong>global matching</strong> and <strong>local ranking</strong>, each under two data split settings, <strong>unsupervised</strong> and <strong>semi-supervised</strong>.</p>
 <h4 id="local-ranking">Local Ranking</h4>
 <p>Local ranking aims to examine an OM model's ability to distinguish a correct mapping out of several challenging negatives. The model should assign a high score (thus a high ranking) to the correct mapping. The overall results are evaluated using <span class="arithmatex">\(Hits@K\)</span> and <span class="arithmatex">\(MRR\)</span>.</p>
-<p>In <span class="arithmatex">\(\textsf{Bio-ML}\)</span>, candidate mappings are generated for each reference mapping in the test set. As shown in the <a href="#file-structure">file structure</a>, each task folder contains a <code>test.cands.tsv</code> file with each entry a reference mapping and its corresponding target class candidates -- which can be combined with the source reference class to form the candidate mappings. </p>
+<p>In <span class="arithmatex">\(\textsf{Bio-ML}\)</span>, candidate mappings are generated for each reference mapping in the test set. As shown in the <a href="#file-structure">file structure</a>, each task setting contains a <code>test.cands.tsv</code> file with each entry a reference mapping and its corresponding target class candidates -- which can be combined with the source reference class to form the candidate mappings. </p>
 <blockquote>
 <p>Download a <a href="../assets/example_candidate_mappings.tsv" download>small fragment</a>.</p>
 </blockquote>
@@ -905,10 +905,12 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
 </code></pre></div>
 <p>An OM model is expected to compute a score (or a relative ranking) for each candidate class in <code>"TgtCandidates"</code> -- to decide how likely it can be matched with the source reference class. In the ideal case, the reference target class (as in <code>"TgtEntity"</code>) should be ranked first.</p>
 <p>The candidate mappings were separately generated w.r.t. the tesing data (<code>test.tsv</code>) in each data split.</p>
-<ul>
-<li><em>Unsupervised</em>: <code>test.cands.tsv</code> in <code>refs/unsupervised</code> refers to candidate mappings generated from <code>refs/unsupervised/test.tsv</code> and <code>refs/unsupervised/val.tsv</code> is ensured to be excluded from candidates.</li>
-<li><em>Semi-supervised</em>: <code>test.cands.tsv</code> in <code>refs/semi_supervised</code> referes to candidate mappings generated from <code>refs/semi_supervised/test.tsv</code> and `refs/semi_supervised/</li>
-</ul>
+<dl>
+<dt><code>unsupervised</code></dt>
+<dd><code>test.cands.tsv</code> in <code>refs/unsupervised</code> refers to candidate mappings generated from <code>refs/unsupervised/  test.tsv</code> and <code>refs/unsupervised/val.tsv</code> is ensured to be excluded from candidates.</dd>
+<dt><code>semi_supervised</code></dt>
+<dd><code>test.cands.tsv</code> in <code>refs/semi_supervised</code> referes to candidate mappings generated from <code>refs/semi_supervised/test.tsv</code> and <code>refs/semi_supervised/train+val.tsv</code> is ensured to be excluded from candidate mappings generated from candidates.</dd>
+</dl>
 <h4 id="global-matching">Global Matching</h4>
 <p>Global matching aims to examine the overall OM performance by comparing the output mappings with the reference mappings using <span class="arithmatex">\(Precision\)</span>, <span class="arithmatex">\(Recall\)</span>, and <span class="arithmatex">\(F1\)</span>.</p>
 <p>For each OM pair, a <code>refs/full.tsv</code> file is provided for the full set of reference mappings; the columns of this <code>.tsv</code> file have the headings <code>"SrcEntity"</code>, <code>"TgtEntity"</code>, <code>"Score"</code> standing for the source reference class, target reference class, and the score (automatically set to <span class="arithmatex">\(1.0\)</span> for reference mappings). </p>
@@ -920,14 +922,16 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
 <span class="n">refs</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="s2">&quot;refs/full.tsv&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Reference mappings in <code>full.tsv</code> are further divided into different splits for training (semi-supervised), validation, and testing.</p>
-<ul>
-<li><em>Unsupervised</em>: <code>val.tsv</code> and <code>test.tsv</code> are provided in <code>refs/unsupervised</code> for validation (<span class="arithmatex">\(10\%\)</span>) and testing (<span class="arithmatex">\(90\%\)</span>), respectively.</li>
-<li><em>Semi-supervised</em>: <code>train.tsv</code>, <code>val.tsv</code>, <code>train+val.tsv</code> and <code>test.tsv</code> are provided in <code>refs/semi_supervised</code> for training (<span class="arithmatex">\(20\%\)</span>), validation (<span class="arithmatex">\(10\%\)</span>), merged training and validation file for evaluation, and testing (<span class="arithmatex">\(70\%\)</span>), respectively.</li>
-</ul>
+<dl>
+<dt><code>unsupervised</code></dt>
+<dd><code>val.tsv</code> and <code>test.tsv</code> are provided in <code>refs/unsupervised</code> for validation (<span class="arithmatex">\(10\%\)</span>) and testing (<span class="arithmatex">\(90\%\)</span>), respectively.</dd>
+<dt><code>semi-supervised</code></dt>
+<dd><code>train.tsv</code>, <code>val.tsv</code>, <code>train+val.tsv</code> and <code>test.tsv</code> are provided in <code>refs/semi_supervised</code> for training (<span class="arithmatex">\(20\%\)</span>), validation (<span class="arithmatex">\(10\%\)</span>), merged training and validation file for evaluation, and testing (<span class="arithmatex">\(70\%\)</span>), respectively.</dd>
+</dl>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
 <p>When computing the scores (P, R, F1), mappings that are not in the testing set should be <strong>ignored by substraction from both system output and reference mappings</strong>. 
-  - i.e., when evaluating on <code>refs/unsupervised/test.tsv</code>, <code>refs/unsupervised/val.tsv</code> should be ignored; when evaluating on <code>refs/semi_supervised/test.tsv</code>, <code>refs/semi_supervised/train+val.tsv</code> should be ignored. 
+  - i.e., when evaluating on <code>unsupervised/test.tsv</code>, <code>unsupervised/val.tsv</code> should be ignored; when evaluating on <code>semi_supervised/test.tsv</code>, <code>semi_supervised/train+val.tsv</code> should be ignored. 
   - This feature is supported in the code <a class="autorefs autorefs-internal" href="../deeponto/align/evaluation/#deeponto.align.evaluation.AlignmentEvaluator.f1">here</a> where the arguement <code>null_reference_mappings</code> is for inputting the reference mappings that should be ignored.</p>
 <p>Since the subsumption mappings are inherently incomplete, we suggest apply <strong>only local ranking for evaluating subsumption matching</strong>.</p>
 </div>

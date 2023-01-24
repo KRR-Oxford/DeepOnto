@@ -782,7 +782,9 @@
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
-<span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">AlignmentEvaluator</span><span class="p">:</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">AlignmentEvaluator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Class that provides evaluation metrics for alignment.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -819,7 +821,9 @@
 <span class="sd">        $$F_1 = \frac{2 P R}{P + R}$$</span>
 
 <span class="sd">        `null_reference_mappings` is an additional set whose elements</span>
-<span class="sd">        should be ignored in the calculation, i.e., neither positive nor negative.</span>
+<span class="sd">        should be **ignored** in the calculation, i.e., **neither positive nor negative**.</span>
+<span class="sd">        Specifically, both $\mathcal{M}_{pred}$ and $\mathcal{M}_{ref}$ will **substract**</span>
+<span class="sd">        $\mathcal{M}_{null}$ from them.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">preds</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prediction_mappings</span><span class="p">]</span>
         <span class="n">refs</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">reference_mappings</span><span class="p">]</span>
@@ -993,7 +997,9 @@
       <p>Compute the F1 score given the prediction and reference mappings.</p>
 <div class="arithmatex">\[F_1 = \frac{2 P R}{P + R}\]</div>
 <p><code>null_reference_mappings</code> is an additional set whose elements
-should be ignored in the calculation, i.e., neither positive nor negative.</p>
+should be <strong>ignored</strong> in the calculation, i.e., <strong>neither positive nor negative</strong>.
+Specifically, both <span class="arithmatex">\(\mathcal{M}_{pred}\)</span> and <span class="arithmatex">\(\mathcal{M}_{ref}\)</span> will <strong>substract</strong>
+<span class="arithmatex">\(\mathcal{M}_{null}\)</span> from them.</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/align/evaluation.py</code></summary>
@@ -1021,7 +1027,9 @@ should be ignored in the calculation, i.e., neither positive nor negative.</p>
 <span class="normal">67</span>
 <span class="normal">68</span>
 <span class="normal">69</span>
-<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">f1</span><span class="p">(</span>
     <span class="n">prediction_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span>
     <span class="n">reference_mappings</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">],</span>
@@ -1032,7 +1040,9 @@ should be ignored in the calculation, i.e., neither positive nor negative.</p>
 <span class="sd">    $$F_1 = \frac{2 P R}{P + R}$$</span>
 
 <span class="sd">    `null_reference_mappings` is an additional set whose elements</span>
-<span class="sd">    should be ignored in the calculation, i.e., neither positive nor negative.</span>
+<span class="sd">    should be **ignored** in the calculation, i.e., **neither positive nor negative**.</span>
+<span class="sd">    Specifically, both $\mathcal{M}_{pred}$ and $\mathcal{M}_{ref}$ will **substract**</span>
+<span class="sd">    $\mathcal{M}_{null}$ from them.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">preds</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prediction_mappings</span><span class="p">]</span>
     <span class="n">refs</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">reference_mappings</span><span class="p">]</span>
@@ -1075,9 +1085,7 @@ divided by the total number of input pairs.</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/align/evaluation.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">80</span>
 <span class="normal">81</span>
 <span class="normal">82</span>
 <span class="normal">83</span>
@@ -1089,7 +1097,9 @@ divided by the total number of input pairs.</p>
 <span class="normal">89</span>
 <span class="normal">90</span>
 <span class="normal">91</span>
-<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">hits_at_K</span><span class="p">(</span><span class="n">prediction_and_candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">]]],</span> <span class="n">K</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute $Hits@K$ for a list of `(prediction_mapping, candidate_mappings)` pair.</span>
 
@@ -1131,9 +1141,7 @@ divided by the total number of input pairs.</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/align/evaluation.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 96</span>
 <span class="normal"> 97</span>
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
@@ -1145,7 +1153,9 @@ divided by the total number of input pairs.</p>
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
-<span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">mean_reciprocal_rank</span><span class="p">(</span><span class="n">prediction_and_candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">]]]):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute $MRR$ for a list of `(prediction_mapping, candidate_mappings)` pair.</span>
 
