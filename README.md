@@ -30,10 +30,11 @@ limitations under the License.
   A package for ontology engineering with deep learning. 
 </p>
 
-**News** :newspaper:
+**Changelog** :newspaper:
 
-- **[2023 Jan]** Deploy $\textsf{DeepOnto}$ **v0.5.0** into PyPI.
-- **[2023 Jan]** Rebuild $\textsf{DeepOnto}$ based on the OWLAPI and remove owlready2 from the essential dependencies.
+- [ ]  **[2023 Feb]** Add ontology verbalisation module.
+- [X] **[2023 Jan]** Deploy $\textsf{DeepOnto}$ **v0.5.0** into PyPI.
+- [X] **[2023 Jan]**  Rebuild $\textsf{DeepOnto}$ based on the OWLAPI and remove owlready2 from the essential dependencies.
 
 
 ## About
@@ -107,7 +108,7 @@ The base classes that extend the OWLAPI functionalities are [`Ontology`][deepont
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at *http://www.apache.org/licenses/LICENSE-2.0*
+    You may obtain a copy of the License at *<http://www.apache.org/licenses/LICENSE-2.0>*
 
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
