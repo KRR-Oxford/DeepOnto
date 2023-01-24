@@ -21,7 +21,7 @@
     
     
       
-        <title>OM Resources - DeepOnto</title>
+        <title>Bio-ML Specifications - DeepOnto</title>
       
     
     
@@ -73,7 +73,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ontology-matching-resources" class="md-skip">
+        <a href="#bio-ml-specifications" class="md-skip">
           Skip to content
         </a>
       
@@ -106,7 +106,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              OM Resources
+              Bio-ML Specifications
             
           </span>
         </div>
@@ -264,7 +264,7 @@
   
     <li class="md-nav__item">
       <a href="../ontology/" class="md-nav__link">
-        Ontology Processing & Reasoning
+        Using Ontology
       </a>
     </li>
   
@@ -278,7 +278,7 @@
   
     <li class="md-nav__item">
       <a href="../bertmap/" class="md-nav__link">
-        BERTMap
+        Using BERTMap and BERTMapLt
       </a>
     </li>
   
@@ -301,12 +301,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          OM Resources
+          Bio-ML Specifications
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        OM Resources
+        Bio-ML Specifications
       </a>
       
         
@@ -727,7 +727,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<h1 id="ontology-matching-resources">Ontology Matching Resources</h1>
+<h1 id="bio-ml-specifications">Bio-ML Specifications</h1>
 <div class="admonition credit">
 <p class="admonition-title">paper</p>
 <p>The paper for the <span class="arithmatex">\(\textsf{Bio-ML}\)</span> ontology matching dataset:
@@ -876,43 +876,46 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
 </p>
 
 <h3 id="evaluation-framework">Evaluation Framework</h3>
-<p>There are two evaluation schemes (<strong>local ranking</strong> and <strong>global matching</strong>) and two data split settings (<strong>unsupervised</strong> and <strong>semi-supervised</strong>).</p>
+<p>Each OM pair in <span class="arithmatex">\(\textsf{Bio-ML}\)</span> consists of an equivalence matching track and a subsumption matching track. Each track considers two perspectives for evaluation, <strong>global matching</strong> and <strong>local ranking</strong>, each under two data split settings, <strong>unsupervised</strong> and <strong>semi-supervised</strong>.</p>
 <h4 id="local-ranking">Local Ranking</h4>
-<p>For <strong>local ranking</strong>, an OM model is required to rank candidate mappings (in <code>test.cands.tsv</code>) generated from test mappings and evalute using <span class="arithmatex">\(Hits@K\)</span> and <span class="arithmatex">\(MRR\)</span>. </p>
-<p>Load a <code>test.cands.tsv</code> file using:</p>
+<p>Local ranking aims to examine an OM model's ability to distinguish a correct mapping out of several challenging negatives. The model should assign a high score (thus a high ranking) to the correct mapping. The overall results are evaluated using <span class="arithmatex">\(Hits@K\)</span> and <span class="arithmatex">\(MRR\)</span>.</p>
+<p>In <span class="arithmatex">\(\textsf{Bio-ML}\)</span>, candidate mappings are generated for each reference mapping in the test set. As shown in the <a href="#file-structure">file structure</a>, each task folder contains a <code>test.cands.tsv</code> file with each entry a reference mapping and its corresponding target class candidates -- which can be combined with the source reference class to form the candidate mappings. </p>
+<blockquote>
+<p>Download a <a href="../assets/example_candidate_mappings.tsv" download>small fragment</a>.</p>
+</blockquote>
+<p>A <code>test.cands.tsv</code> can be loaded with the following code:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">FileUtils</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">FileUtils</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;test.cands.tsv&quot;</span><span class="p">)</span>  <span class="c1"># with headings: &quot;SrcEntity&quot;, &quot;TgtEntity&quot;, &quot;TgtCandidates&quot;</span>
-<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span>     <span class="n">SrcEntity</span>   <span class="n">TgtEntity</span>   <span class="n">TgtCandidates</span>
-<span class="mi">0</span>   <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">ncicb</span><span class="o">.</span><span class="n">nci</span><span class="o">.</span><span class="n">nih</span><span class="o">.</span><span class="n">gov</span><span class="o">/</span><span class="n">xml</span><span class="o">/</span><span class="n">owl</span><span class="o">/</span><span class="n">EVS</span><span class="o">/</span><span class="n">Thesaurus</span><span class="o">...</span>   <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">purl</span><span class="o">.</span><span class="n">obolibrary</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">obo</span><span class="o">/</span><span class="n">DOID_0050806</span> <span class="p">(</span><span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_0110279&#39;</span><span class="o">...</span>
-<span class="mi">1</span>   <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">ncicb</span><span class="o">.</span><span class="n">nci</span><span class="o">.</span><span class="n">nih</span><span class="o">.</span><span class="n">gov</span><span class="o">/</span><span class="n">xml</span><span class="o">/</span><span class="n">owl</span><span class="o">/</span><span class="n">EVS</span><span class="o">/</span><span class="n">Thesaurus</span><span class="o">...</span>   <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">purl</span><span class="o">.</span><span class="n">obolibrary</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">obo</span><span class="o">/</span><span class="n">DOID_775</span> <span class="p">(</span><span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_1670&#39;</span><span class="p">,</span> <span class="s1">&#39;...</span>
-<span class="mi">2</span>   <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">ncicb</span><span class="o">.</span><span class="n">nci</span><span class="o">.</span><span class="n">nih</span><span class="o">.</span><span class="n">gov</span><span class="o">/</span><span class="n">xml</span><span class="o">/</span><span class="n">owl</span><span class="o">/</span><span class="n">EVS</span><span class="o">/</span><span class="n">Thesaurus</span><span class="o">...</span>   <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">purl</span><span class="o">.</span><span class="n">obolibrary</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">obo</span><span class="o">/</span><span class="n">DOID_4917</span>    <span class="p">(</span><span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_3704&#39;</span><span class="p">,</span> <span class="s1">&#39;...</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">FileUtils</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;test.cands.tsv&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>The <code>"SrcEntity"</code> and <code>"TgtEntity"</code> columns refer to the source class IRI and the target class IRI involved in a reference mapping.
-The <code>"TgtCandidates"</code> column stores a sequence of target candidate class IRIs (including the correct one) used for ranking, which can be accessed as:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">eval</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;TgtCandidates&quot;</span><span class="p">])</span>
+<p>The <code>"SrcEntity"</code> and <code>"TgtEntity"</code> columns refer to the source class IRI and the target class IRI involved in a reference mapping. The <code>"TgtCandidates"</code> column stores a sequence of target candidate class IRIs (<strong>including the correct one</strong>) used for ranking, which can be accessed by the built-in <code>eval</code> function as:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># get the first sample&#39;s candidates</span>
+<span class="nb">eval</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;TgtCandidates&quot;</span><span class="p">])</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_0110279&#39;</span><span class="p">,</span>
- <span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_3185&#39;</span><span class="p">,</span>
- <span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_7008&#39;</span><span class="p">,</span>
- <span class="o">...</span><span class="p">)</span>
+<span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_3185&#39;</span><span class="p">,</span>
+<span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_7008&#39;</span><span class="p">,</span>
+<span class="o">...</span>
+<span class="p">)</span>
 </code></pre></div>
-<p>An OM model is expected to re-rank the candidates in <code>"TgtCandidates"</code> according to the given reference source class in <code>"SrcEntity"</code>. The higher rank of <code>"TgtEntity"</code> is among the <code>"TgtCandidates"</code>, the higher the ranking score will be.</p>
+<p>An OM model is expected to compute a score (or a relative ranking) for each candidate class in <code>"TgtCandidates"</code> -- to decide how likely it can be matched with the source reference class. In the ideal case, the reference target class (as in <code>"TgtEntity"</code>) should be ranked first.</p>
 <p>The candidate mappings were separately generated w.r.t. the tesing data (<code>test.tsv</code>) in each data split.</p>
 <ul>
 <li><em>Unsupervised</em>: <code>test.cands.tsv</code> in <code>refs/unsupervised</code> refers to candidate mappings generated from <code>refs/unsupervised/test.tsv</code> and <code>refs/unsupervised/val.tsv</code> is ensured to be excluded from candidates.</li>
 <li><em>Semi-supervised</em>: <code>test.cands.tsv</code> in <code>refs/semi_supervised</code> referes to candidate mappings generated from <code>refs/semi_supervised/test.tsv</code> and `refs/semi_supervised/</li>
 </ul>
 <h4 id="global-matching">Global Matching</h4>
-<p>For <strong>global matching</strong>, an OM model is required to output full mappings and compare them with the reference mappings using <span class="arithmatex">\(Precision\)</span>, <span class="arithmatex">\(Recall\)</span>, and <span class="arithmatex">\(F1\)</span>.</p>
-<p>For each OM pair, a <code>refs/full.tsv</code> file is provided for full reference mapping; the columns of this <code>.tsv</code> file are <code>["SrcEntity", "TgtEntity", "Score"]</code> standing for the source reference class iri, target class iri, and the score (set to <span class="arithmatex">\(1.0\)</span> for reference mappings). </p>
-<p>Load a mapping file using:</p>
+<p>Global matching aims to examine the overall OM performance by comparing the output mappings with the reference mappings using <span class="arithmatex">\(Precision\)</span>, <span class="arithmatex">\(Recall\)</span>, and <span class="arithmatex">\(F1\)</span>.</p>
+<p>For each OM pair, a <code>refs/full.tsv</code> file is provided for the full set of reference mappings; the columns of this <code>.tsv</code> file have the headings <code>"SrcEntity"</code>, <code>"TgtEntity"</code>, <code>"Score"</code> standing for the source reference class, target reference class, and the score (automatically set to <span class="arithmatex">\(1.0\)</span> for reference mappings). </p>
+<blockquote>
+<p>Download a <a href="../assets/example_reference_mappings.tsv" download>small fragment</a>.</p>
+</blockquote>
+<p>A reference mapping file such as <code>refs/full.tsv</code> can be loaded using:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.align.mapping</span> <span class="kn">import</span> <span class="n">ReferenceMapping</span>
 <span class="n">refs</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="s2">&quot;refs/full.tsv&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>The full reference mappings in <code>full.tsv</code> are divided into different splits for training (semi-supervised), validation, and testing purposes.</p>
+<p>Reference mappings in <code>full.tsv</code> are further divided into different splits for training (semi-supervised), validation, and testing.</p>
 <ul>
-<li><em>Unsupervised</em>: <code>val.tsv</code> and <code>test.tsv</code> are provided in <code>refs/unsupervised</code> for validation (10%) and testing (90%), respectively.</li>
-<li><em>Semi-supervised</em>: <code>train.tsv</code>, <code>val.tsv</code>, <code>train+val.tsv</code> and <code>test.tsv</code> are provided in <code>refs/semi_supervised</code> for training (20%), validation (10%), merged training and validation file for evaluation, and testing (70%), respectively.</li>
+<li><em>Unsupervised</em>: <code>val.tsv</code> and <code>test.tsv</code> are provided in <code>refs/unsupervised</code> for validation (<span class="arithmatex">\(10\%\)</span>) and testing (<span class="arithmatex">\(90\%\)</span>), respectively.</li>
+<li><em>Semi-supervised</em>: <code>train.tsv</code>, <code>val.tsv</code>, <code>train+val.tsv</code> and <code>test.tsv</code> are provided in <code>refs/semi_supervised</code> for training (<span class="arithmatex">\(20\%\)</span>), validation (<span class="arithmatex">\(10\%\)</span>), merged training and validation file for evaluation, and testing (<span class="arithmatex">\(70\%\)</span>), respectively.</li>
 </ul>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
@@ -1013,7 +1016,7 @@ The <code>"TgtCandidates"</code> column stores a sequence of target candidate cl
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.sections", "toc.integrate", "navigation.top", "header.autohide", "toc.follow"], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.sections", "toc.integrate", "navigation.top", "header.autohide", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
       <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
