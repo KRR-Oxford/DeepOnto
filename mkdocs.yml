@@ -13,7 +13,7 @@ theme:
     - navigation.top
     - header.autohide
     - toc.follow
-
+    - content.code.copy
 # extra:
 #   social:
 #     - icon: fontawesome/solid/paper-plane
@@ -27,9 +27,9 @@ theme:
 nav:
     - GET STARTED: 
       - Overview: index.md
-      - Ontology Processing & Reasoning: ontology.md  # basic usage of ontologies, ontology pruning, etc.
-      - BERTMap: bertmap.md
-      - OM Resources: om_resources.md
+      - Using Ontology: ontology.md  # basic usage of ontologies, ontology pruning, etc.
+      - Using BERTMap and BERTMapLt: bertmap.md
+      - Bio-ML Specifications: om_resources.md
     - PACKAGE REFERENCE:
         - Ontology: deeponto/onto/index.md
         - Ontology Alignment:
@@ -65,6 +65,8 @@ plugins:
   - include-markdown
   - search
   - autorefs
+  - mkdocs-versioning:
+      version: 0.5.0
   - mkdocstrings:
       default_handler: python
       handlers:

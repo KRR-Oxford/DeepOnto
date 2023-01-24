@@ -1,0 +1,4 @@
+SrcEntity	TgtEntity	Score
+http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C27377	http://purl.obolibrary.org/obo/DOID_6494	1.0
+http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C3079	http://purl.obolibrary.org/obo/DOID_114	1.0
+http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C6346	http://purl.obolibrary.org/obo/DOID_4867	1.0

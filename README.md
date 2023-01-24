@@ -87,19 +87,15 @@ pip install -r requirements.txt
 ### Extending the OWLAPI
 
 $\textsf{DeepOnto}$ extends the OWLAPI library for ontology processing and reasoning, and also for better integration with deep learning modules. 
-The base classes that extend the OWLAPI functionalities are [`Ontology`][deeponto.onto.Ontology] and [`OntologyReasoner`][deeponto.onto.OntologyReasoner]. Examples of how to use them can be found [here](pages/ontology).
+The base classes that extend the OWLAPI functionalities are [`Ontology`][deeponto.onto.Ontology] and [`OntologyReasoner`][deeponto.onto.OntologyReasoner]. Examples of how to use them can be found [here](DeepOnto/ontology).
 
 ### BERTMap
 
-*BERTMap* [1] is a BERT-based *ontology matching* (OM) system originally developed in [repo](https://github.com/KRR-Oxford/BERTMap) but is now maintained in $\textsf{DeepOnto}$. See how to use BERTMap in this [tutorial](pages/bertmap).
-
-### OM Evaluation
-
-$\textsf{DeepOnto}$ provides an evaluation workaround for OM systems including *global matching* and *local ranking* as proposed in [here](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33) [2]. See how to use this evaluation framework in this [tutorial](pages/om_eval).
+*BERTMap* [1] is a BERT-based *ontology matching* (OM) system originally developed in [repo](https://github.com/KRR-Oxford/BERTMap) but is now maintained in $\textsf{DeepOnto}$. See how to use BERTMap in this [tutorial](DeepOnto/bertmap).
 
 ### Bio-ML
 
-*Bio-ML* [2] is an OM resource and has been integrated into the [Bio-ML track of the OAEI](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/). See [instructions](pages/om_resources) of how to use Bio-ML.
+*Bio-ML* [2] is an OM resource and has been integrated into the [Bio-ML track of the OAEI](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/). See [instructions](DeepOnto/om_resources) of how to use Bio-ML.
 
 
 ## License

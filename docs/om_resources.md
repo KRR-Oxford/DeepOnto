@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-# Ontology Matching Resources
+# Bio-ML Specifications
 
 !!! credit "paper"
 
@@ -90,38 +90,36 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
 
 ### Evaluation Framework
 
-There are two evaluation schemes (**local ranking** and **global matching**) and two data split settings (**unsupervised** and **semi-supervised**).
-
+Each OM pair in $\textsf{Bio-ML}$ consists of an equivalence matching track and a subsumption matching track. Each track considers two perspectives for evaluation, **global matching** and **local ranking**, each under two data split settings, **unsupervised** and **semi-supervised**.
 
 #### Local Ranking
 
-For **local ranking**, an OM model is required to rank candidate mappings (in `test.cands.tsv`) generated from test mappings and evalute using $Hits@K$ and $MRR$. 
+Local ranking aims to examine an OM model's ability to distinguish a correct mapping out of several challenging negatives. The model should assign a high score (thus a high ranking) to the correct mapping. The overall results are evaluated using $Hits@K$ and $MRR$.
 
-Load a `test.cands.tsv` file using:
+In $\textsf{Bio-ML}$, candidate mappings are generated for each reference mapping in the test set. As shown in the [file structure](#file-structure), each task folder contains a `test.cands.tsv` file with each entry a reference mapping and its corresponding target class candidates -- which can be combined with the source reference class to form the candidate mappings. 
+
+> Download a <a href="../assets/example_candidate_mappings.tsv" download>small fragment</a>.
+
+A `test.cands.tsv` can be loaded with the following code:
 
 ```python
 from deeponto.utils import FileUtils
-df = FileUtils.read_table("test.cands.tsv")  # with headings: "SrcEntity", "TgtEntity", "TgtCandidates"
-df.head(3)
->>> 	SrcEntity	TgtEntity	TgtCandidates
-0	http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus...	http://purl.obolibrary.org/obo/DOID_0050806	('http://purl.obolibrary.org/obo/DOID_0110279'...
-1	http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus...	http://purl.obolibrary.org/obo/DOID_775	('http://purl.obolibrary.org/obo/DOID_1670', '...
-2	http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus...	http://purl.obolibrary.org/obo/DOID_4917	('http://purl.obolibrary.org/obo/DOID_3704', '...
+df = FileUtils.read_table("test.cands.tsv")
 ```
 
-The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a reference mapping.
-The `"TgtCandidates"` column stores a sequence of target candidate class IRIs (including the correct one) used for ranking, which can be accessed as:
+The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a reference mapping. The `"TgtCandidates"` column stores a sequence of target candidate class IRIs (**including the correct one**) used for ranking, which can be accessed by the built-in `eval` function as:
 
 ```python
+# get the first sample's candidates
 eval(df.loc[0]["TgtCandidates"])
 >>> ('http://purl.obolibrary.org/obo/DOID_0110279',
- 'http://purl.obolibrary.org/obo/DOID_3185',
- 'http://purl.obolibrary.org/obo/DOID_7008',
- ...)
+'http://purl.obolibrary.org/obo/DOID_3185',
+'http://purl.obolibrary.org/obo/DOID_7008',
+...
+)
 ```
 
-An OM model is expected to re-rank the candidates in `"TgtCandidates"` according to the given reference source class in `"SrcEntity"`. The higher rank of `"TgtEntity"` is among the `"TgtCandidates"`, the higher the ranking score will be.
-
+An OM model is expected to compute a score (or a relative ranking) for each candidate class in `"TgtCandidates"` -- to decide how likely it can be matched with the source reference class. In the ideal case, the reference target class (as in `"TgtEntity"`) should be ranked first.
 
 The candidate mappings were separately generated w.r.t. the tesing data (`test.tsv`) in each data split.
 
@@ -130,21 +128,24 @@ The candidate mappings were separately generated w.r.t. the tesing data (`test.t
   
 #### Global Matching
 
-For **global matching**, an OM model is required to output full mappings and compare them with the reference mappings using $Precision$, $Recall$, and $F1$.
+Global matching aims to examine the overall OM performance by comparing the output mappings with the reference mappings using $Precision$, $Recall$, and $F1$.
 
-For each OM pair, a `refs/full.tsv` file is provided for full reference mapping; the columns of this `.tsv` file are `["SrcEntity", "TgtEntity", "Score"]` standing for the source reference class iri, target class iri, and the score (set to $1.0$ for reference mappings). 
+For each OM pair, a `refs/full.tsv` file is provided for the full set of reference mappings; the columns of this `.tsv` file have the headings `"SrcEntity"`, `"TgtEntity"`, `"Score"` standing for the source reference class, target reference class, and the score (automatically set to $1.0$ for reference mappings). 
 
-Load a mapping file using:
+> Download a <a href="../assets/example_reference_mappings.tsv" download>small fragment</a>.
+
+
+A reference mapping file such as `refs/full.tsv` can be loaded using:
 
 ```python
 from deeponto.align.mapping import ReferenceMapping
 refs = ReferenceMapping.read_table_mappings("refs/full.tsv")
 ```
 
- The full reference mappings in `full.tsv` are divided into different splits for training (semi-supervised), validation, and testing purposes.
+Reference mappings in `full.tsv` are further divided into different splits for training (semi-supervised), validation, and testing.
 
-  -  *Unsupervised*: `val.tsv` and `test.tsv` are provided in `refs/unsupervised` for validation (10%) and testing (90%), respectively.
-  -  *Semi-supervised*: `train.tsv`, `val.tsv`, `train+val.tsv` and `test.tsv` are provided in `refs/semi_supervised` for training (20%), validation (10%), merged training and validation file for evaluation, and testing (70%), respectively.
+-  *Unsupervised*: `val.tsv` and `test.tsv` are provided in `refs/unsupervised` for validation ($10\%$) and testing ($90\%$), respectively.
+-  *Semi-supervised*: `train.tsv`, `val.tsv`, `train+val.tsv` and `test.tsv` are provided in `refs/semi_supervised` for training ($20\%$), validation ($10\%$), merged training and validation file for evaluation, and testing ($70\%$), respectively.
   
 
 !!! tip
@@ -159,6 +160,8 @@ refs = ReferenceMapping.read_table_mappings("refs/full.tsv")
 
 
 ## OM Dataset Construction
+
+
 
 ### Ontology Pruning
 
@@ -215,4 +218,4 @@ cand_generator = NegativeCandidateMappingGenerator(
 )
 ```
 
-Sampling using the *idf scores* is originally proposed in the BERTMap paper. The parameter `annotation_property_iris` specifies the list of annotation properties used for extracting the **names** or **aliases** of an ontology class. The parameter `tokenizer` refers to a pre-trained sub-word level tokenizer used to build the inverted annotation index. They have been well-explained in the [BERTMap tutorial](/bertmap).
+Sampling using the *idf scores* is originally proposed in the BERTMap paper. The parameter `annotation_property_iris` specifies the list of annotation properties used for extracting the **names** or **aliases** of an ontology class. The parameter `tokenizer` refers to a pre-trained sub-word level tokenizer used to build the inverted annotation index. They have been well-explained in the [BERTMap tutorial](../bertmap).
