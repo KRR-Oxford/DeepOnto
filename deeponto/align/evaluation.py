@@ -54,7 +54,9 @@ class AlignmentEvaluator:
         $$F_1 = \frac{2 P R}{P + R}$$
 
         `null_reference_mappings` is an additional set whose elements
-        should be ignored in the calculation, i.e., neither positive nor negative.
+        should be **ignored** in the calculation, i.e., **neither positive nor negative**.
+        Specifically, both $\mathcal{M}_{pred}$ and $\mathcal{M}_{ref}$ will **substract**
+        $\mathcal{M}_{null}$ from them.
         """
         preds = [p.to_tuple() for p in prediction_mappings]
         refs = [r.to_tuple() for r in reference_mappings]

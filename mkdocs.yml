@@ -65,6 +65,9 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - admonition
   - pymdownx.details
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - def_list
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.emoji:

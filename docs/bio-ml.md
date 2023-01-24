@@ -96,7 +96,7 @@ Each OM pair in $\textsf{Bio-ML}$ consists of an equivalence matching track and 
 
 Local ranking aims to examine an OM model's ability to distinguish a correct mapping out of several challenging negatives. The model should assign a high score (thus a high ranking) to the correct mapping. The overall results are evaluated using $Hits@K$ and $MRR$.
 
-In $\textsf{Bio-ML}$, candidate mappings are generated for each reference mapping in the test set. As shown in the [file structure](#file-structure), each task folder contains a `test.cands.tsv` file with each entry a reference mapping and its corresponding target class candidates -- which can be combined with the source reference class to form the candidate mappings. 
+In $\textsf{Bio-ML}$, candidate mappings are generated for each reference mapping in the test set. As shown in the [file structure](#file-structure), each task setting contains a `test.cands.tsv` file with each entry a reference mapping and its corresponding target class candidates -- which can be combined with the source reference class to form the candidate mappings. 
 
 > Download a <a href="../assets/example_candidate_mappings.tsv" download>small fragment</a>.
 
@@ -123,8 +123,11 @@ An OM model is expected to compute a score (or a relative ranking) for each cand
 
 The candidate mappings were separately generated w.r.t. the tesing data (`test.tsv`) in each data split.
 
-  - *Unsupervised*: `test.cands.tsv` in `refs/unsupervised` refers to candidate mappings generated from `refs/unsupervised/test.tsv` and `refs/unsupervised/val.tsv` is ensured to be excluded from candidates.
-  - *Semi-supervised*: `test.cands.tsv` in `refs/semi_supervised` referes to candidate mappings generated from `refs/semi_supervised/test.tsv` and `refs/semi_supervised/
+`unsupervised`
+:   `test.cands.tsv` in `refs/unsupervised` refers to candidate mappings generated from `refs/unsupervised/  test.tsv` and `refs/unsupervised/val.tsv` is ensured to be excluded from candidates.
+
+`semi_supervised`
+:  `test.cands.tsv` in `refs/semi_supervised` referes to candidate mappings generated from `refs/semi_supervised/test.tsv` and `refs/semi_supervised/train+val.tsv` is ensured to be excluded from candidate mappings generated from candidates.
   
 #### Global Matching
 
@@ -144,14 +147,17 @@ refs = ReferenceMapping.read_table_mappings("refs/full.tsv")
 
 Reference mappings in `full.tsv` are further divided into different splits for training (semi-supervised), validation, and testing.
 
--  *Unsupervised*: `val.tsv` and `test.tsv` are provided in `refs/unsupervised` for validation ($10\%$) and testing ($90\%$), respectively.
--  *Semi-supervised*: `train.tsv`, `val.tsv`, `train+val.tsv` and `test.tsv` are provided in `refs/semi_supervised` for training ($20\%$), validation ($10\%$), merged training and validation file for evaluation, and testing ($70\%$), respectively.
+`unsupervised`
+:  `val.tsv` and `test.tsv` are provided in `refs/unsupervised` for validation ($10\%$) and testing ($90\%$), respectively.
+
+`semi-supervised`
+:  `train.tsv`, `val.tsv`, `train+val.tsv` and `test.tsv` are provided in `refs/semi_supervised` for training ($20\%$), validation ($10\%$), merged training and validation file for evaluation, and testing ($70\%$), respectively.
   
 
 !!! tip
 
     When computing the scores (P, R, F1), mappings that are not in the testing set should be **ignored by substraction from both system output and reference mappings**. 
-      - i.e., when evaluating on `refs/unsupervised/test.tsv`, `refs/unsupervised/val.tsv` should be ignored; when evaluating on `refs/semi_supervised/test.tsv`, `refs/semi_supervised/train+val.tsv` should be ignored. 
+      - i.e., when evaluating on `unsupervised/test.tsv`, `unsupervised/val.tsv` should be ignored; when evaluating on `semi_supervised/test.tsv`, `semi_supervised/train+val.tsv` should be ignored. 
       - This feature is supported in the code [here][deeponto.align.evaluation.AlignmentEvaluator.f1] where the arguement `null_reference_mappings` is for inputting the reference mappings that should be ignored.
 
     Since the subsumption mappings are inherently incomplete, we suggest apply **only local ranking for evaluating subsumption matching**.
