@@ -30,8 +30,9 @@ limitations under the License.
   A package for ontology engineering with deep learning. 
 </p>
 
-## News :newspaper:
+**News** :newspaper:
 
+- **[2023 Jan]** Deploy $\textsf{DeepOnto}$ **v0.5.0** into PyPI.
 - **[2023 Jan]** Rebuild $\textsf{DeepOnto}$ based on the OWLAPI and remove owlready2 from the essential dependencies.
 
 
