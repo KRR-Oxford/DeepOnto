@@ -1,7 +1,7 @@
 !!! credit "Paper"
 
     $\textsf{BERTMap}$ is proposed in the paper:
-    *[BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)](https://ojs.aaai.org/index.php/AAAI/article/view/20510)*.
+    [BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)](https://ojs.aaai.org/index.php/AAAI/article/view/20510).
 
 $\textsf{BERTMap}$ is a BERT-based ontology matching (OM) system consisting of following components:
 

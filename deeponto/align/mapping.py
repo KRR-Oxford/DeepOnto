@@ -230,7 +230,7 @@ class SubsFromEquivMappingGenerator:
     !!! credit "paper"
 
         The online subsumption mapping construction algorithm is proposed in the paper:
-        [*Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)*](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).
+        [Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).
 
     This generator has an attribute `delete_used_equiv_tgt_class` for determining whether or not to sabotage the equivalence
     mappings used to create $\geq 1$ subsumption mappings. The reason is that, if the equivalence mapping is broken, then the
@@ -342,7 +342,7 @@ class NegativeCandidateMappingGenerator:
     !!! credit "paper"
 
         The candidate mapping generation algorithm is proposed in the paper:
-        [*Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)*](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).
+        [Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).
     """
 
     def __init__(

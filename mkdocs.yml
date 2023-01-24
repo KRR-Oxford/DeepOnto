@@ -10,6 +10,10 @@ copyright: Copyright &copy; 2021 Yuan He (KRR-Oxford)
 theme:
   name: material
   custom_dir: docs/overrides
+  logo: images/favicon_package/safari-pinned-tab.svg
+  palette:
+    primary: teal
+  favicon: images/favicon_package/favicon.ico
   features:
     - navigation.sections
     - toc.integrate
@@ -31,12 +35,14 @@ extra:
       link: https://github.com/Lawhy
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/YuanHe97
+  status:
+    - new: recently added
 
 
 
 nav:
     - GET STARTED: 
-      - Overview: index.md
+      - Introduction: index.md
       - Using Ontology: ontology.md  # basic usage of ontologies, ontology pruning, etc.
       - Using BERTMap and BERTMapLt: bertmap.md
       - Bio-ML Specifications: bio-ml.md

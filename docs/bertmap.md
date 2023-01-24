@@ -2,12 +2,10 @@
 
 !!! credit "Paper"
 
-    $\textsf{BERTMap}$ is proposed in the paper:
-    *[BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)](https://ojs.aaai.org/index.php/AAAI/article/view/20510)*.
+    Paper for BERTMap: [BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)](https://ojs.aaai.org/index.php/AAAI/article/view/20510).
+
 
 This page gives the tutorial for $\textsf{BERTMap}$ family including the summary of the models and how to use them.
-
-## Overview
 
 <p align="center">
     <img alt="deeponto" src="../images/bertmap.svg">
