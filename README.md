@@ -126,4 +126,3 @@ The base classes that extend the OWLAPI functionalities are [`Ontology`][deepont
 Please report any bugs or queries by raising a GitHub issue or sending emails to the maintainer (Yuan He) through:
 
 > first_name.last_name@cs.ox.ac.uk
-
