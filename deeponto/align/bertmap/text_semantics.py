@@ -124,7 +124,7 @@ class AnnotationThesaurus:
             overall number of annotations is not large enough then this could be a good option.
 
         Args:
-            *synonym_groups (List[Set[str]]): A sequence of synonym groups to be merged.
+            synonym_groups (List[Set[str]]): A sequence of synonym groups to be merged.
 
         Returns:
             (List[Set[str]]): A list of merged synonym groups.
