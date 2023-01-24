@@ -1,5 +1,3 @@
-## Overview
-
 Python classes in this page are strongly dependent on the OWLAPI library. 
 The base class [`Ontology`][deeponto.onto.Ontology] extends several features
 including convenient access to specially defined entities (e.g., `owl:Thing` and `owl:Nothing`),
