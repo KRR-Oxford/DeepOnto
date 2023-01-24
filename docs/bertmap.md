@@ -226,7 +226,6 @@ bertmap
 ├── data
 │   ├── fine-tune.data.json
 │   └── text-semantics.corpora.json
-├── bertmap.log
 ├── bert
 │   ├── tensorboard
 │   ├── checkpoint-{some_number}
@@ -238,6 +237,7 @@ bertmap
 │   ├── raw_mappings.tsv
 │   ├── extended_mappings.tsv
 │   └── filtered_mappings.tsv
+├── bertmap.log
 └── config.yaml
 ```
 
