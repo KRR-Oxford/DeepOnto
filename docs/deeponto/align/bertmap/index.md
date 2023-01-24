@@ -1,5 +1,3 @@
-## Overview
-
 !!! credit "Paper"
 
     $\textsf{BERTMap}$ is proposed in the paper:
