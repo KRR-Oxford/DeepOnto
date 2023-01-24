@@ -1,4 +1,4 @@
-# Ontology Processing & Reasoning
+# Using Ontology
 
 $\textsf{DeepOnto}$ extends from the OWLAPI and implements many useful methods for ontology processing and reasoning, integrated in the base class
 [`Ontology`][deeponto.onto.Ontology].

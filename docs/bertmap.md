@@ -1,4 +1,4 @@
-# BERTMap
+# Using BERTMap and BERTMapLt
 
 !!! credit "Paper"
 
@@ -243,7 +243,7 @@ bertmap
 
 It is worth mentioning that the `match` sub-directory contains all the global matching files:
 
--  `raw_mappings.tsv` refers to the raw mapping predictions before mapping refinement. The `.json` one is used internally to prevent accidental interruption.
+-  `raw_mappings.tsv` refers to the raw mapping predictions before mapping refinement. The `.json` one is used internally to prevent accidental interruption. Note that `bertmaplt` only produces raw mapping predictions (no mapping refinement).
 - `extended_mappings.tsv` refers to the output mappings after applying mapping extension. 
 - `filtered_mappings.tsv` refers to the output mappings after mapping extension and threshold filtering. 
 - `logmap-repair` is a folder containing intermediate files needed for applying LogMap's debugger.
