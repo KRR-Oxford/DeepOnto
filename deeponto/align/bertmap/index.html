@@ -2993,7 +2993,7 @@ a synonym pair then (B, A) is a synonym pair, too.</li>
 <span class="sd">            overall number of annotations is not large enough then this could be a good option.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">            *synonym_groups (List[Set[str]]): A sequence of synonym groups to be merged.</span>
+<span class="sd">            synonym_groups (List[Set[str]]): A sequence of synonym groups to be merged.</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            (List[Set[str]]): A list of merged synonym groups.</span>
@@ -3428,7 +3428,7 @@ overall number of annotations is not large enough then this could be a good opti
     </thead>
     <tbody>
         <tr>
-          <td><code>*synonym_groups</code></td>
+          <td><code>synonym_groups</code></td>
           <td>
                 <code><span title="typing.List">List</span>[<span title="typing.Set">Set</span>[str]]</code>
           </td>
@@ -3501,7 +3501,7 @@ overall number of annotations is not large enough then this could be a good opti
 <span class="sd">        overall number of annotations is not large enough then this could be a good option.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        *synonym_groups (List[Set[str]]): A sequence of synonym groups to be merged.</span>
+<span class="sd">        synonym_groups (List[Set[str]]): A sequence of synonym groups to be merged.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        (List[Set[str]]): A list of merged synonym groups.</span>
@@ -8056,7 +8056,7 @@ All the attributes of this class are supposed to be passed from <code>BERTMapPip
 <span class="sd">        Search for plausible mappings between the parents of $c$ and $c&#39;$,</span>
 <span class="sd">        and between the children of $c$ and $c&#39;$. Mappings that are not</span>
 <span class="sd">        already computed (recorded in `self.mapping_score_dict`) and have</span>
-<span class="sd">        a score $\geq `self.mapping_extension_threshold` will be returned as</span>
+<span class="sd">        a score $\geq$ `self.mapping_extension_threshold` will be returned as</span>
 <span class="sd">        **new** mappings.</span>
 
 <span class="sd">        Args:</span>
@@ -8488,7 +8488,7 @@ searching from one-hop neighbors.</p>
 <p>Search for plausible mappings between the parents of <span class="arithmatex">\(c\)</span> and <span class="arithmatex">\(c'\)</span>,
 and between the children of <span class="arithmatex">\(c\)</span> and <span class="arithmatex">\(c'\)</span>. Mappings that are not
 already computed (recorded in <code>self.mapping_score_dict</code>) and have
-a score $\geq <code>self.mapping_extension_threshold</code> will be returned as
+a score <span class="arithmatex">\(\geq\)</span> <code>self.mapping_extension_threshold</code> will be returned as
 <strong>new</strong> mappings.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -8621,7 +8621,7 @@ a score $\geq <code>self.mapping_extension_threshold</code> will be returned as
 <span class="sd">    Search for plausible mappings between the parents of $c$ and $c&#39;$,</span>
 <span class="sd">    and between the children of $c$ and $c&#39;$. Mappings that are not</span>
 <span class="sd">    already computed (recorded in `self.mapping_score_dict`) and have</span>
-<span class="sd">    a score $\geq `self.mapping_extension_threshold` will be returned as</span>
+<span class="sd">    a score $\geq$ `self.mapping_extension_threshold` will be returned as</span>
 <span class="sd">    **new** mappings.</span>
 
 <span class="sd">    Args:</span>
