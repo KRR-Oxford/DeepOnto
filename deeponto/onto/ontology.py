@@ -405,7 +405,7 @@ class Ontology:
         !!! credit "paper"
     
             This refers to the ontology pruning algorithm introduced in the paper: 
-            [Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).
+            [*Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)*](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).
 
         For each class $c$ to be pruned, subsumption axioms will be created between $c$'s parents and children so as to preserve the
         relevant hierarchy.
