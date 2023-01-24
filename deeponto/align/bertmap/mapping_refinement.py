@@ -209,7 +209,7 @@ class MappingRefiner:
         Search for plausible mappings between the parents of $c$ and $c'$,
         and between the children of $c$ and $c'$. Mappings that are not
         already computed (recorded in `self.mapping_score_dict`) and have
-        a score $\geq `self.mapping_extension_threshold` will be returned as
+        a score $\geq$ `self.mapping_extension_threshold` will be returned as
         **new** mappings.
 
         Args:
