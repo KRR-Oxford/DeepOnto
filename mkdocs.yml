@@ -38,7 +38,7 @@ nav:
       - Overview: index.md
       - Using Ontology: ontology.md  # basic usage of ontologies, ontology pruning, etc.
       - Using BERTMap and BERTMapLt: bertmap.md
-      - Bio-ML Specifications: om_resources.md
+      - Bio-ML Specifications: bio-ml.md
     - PACKAGE REFERENCE:
         - Ontology: deeponto/onto/index.md
         - Ontology Alignment:
