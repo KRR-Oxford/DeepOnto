@@ -18,7 +18,7 @@
       
         <link rel="next" href="../decorators/">
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../../images/favicon_package/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.5">
     
     
@@ -65,7 +65,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="" data-md-color-accent="">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="">
   
     
     
@@ -95,8 +95,7 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../../.." title="DeepOnto" class="md-header__button md-logo" aria-label="DeepOnto" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+  <img src="../../../images/favicon_package/safari-pinned-tab.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -188,19 +187,56 @@
                   <div class="md-sidebar__inner">
                     
 
+<!--
+  Copyright (c) 2016-2023 Martin Donath <martin.donath@squidfunk.com>
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Determine class according to configuration -->
+
+
 
   
 
-<nav class="md-nav md-nav--primary md-nav--integrated" aria-label="Navigation" data-md-level="0">
+
+<!-- Main navigation -->
+<nav
+  class="md-nav md-nav--primary md-nav--integrated"
+  aria-label="Navigation"
+  data-md-level="0"
+>
+
+  <!-- Site title -->
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="DeepOnto" class="md-nav__button md-logo" aria-label="DeepOnto" data-md-component="logo">
+    <a
+      href="../../.."
+      title="DeepOnto"
+      class="md-nav__button md-logo"
+      aria-label="DeepOnto"
+      data-md-component="logo"
+    >
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+  <img src="../../../images/favicon_package/safari-pinned-tab.svg" alt="logo">
 
     </a>
-    DeepOnto
+    <!-- DeepOnto -->
   </label>
+
+  <!-- Repository information -->
   
     <div class="md-nav__source">
       <a href="https://github.com/KRR-Oxford/DeepOnto" title="Go to repository" class="md-source" data-md-component="source">
@@ -214,6 +250,8 @@
 </a>
     </div>
   
+
+  <!-- Render item list -->
   <ul class="md-nav__list" data-md-scrollfix>
     
       
@@ -254,7 +292,7 @@
   
     <li class="md-nav__item">
       <a href="../../.." class="md-nav__link">
-        Overview
+        Introduction
       </a>
     </li>
   
@@ -579,47 +617,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#deeponto.utils.data_utils.RangeNode" class="md-nav__link">
-    RangeNode
-  </a>
-  
-    <nav class="md-nav" aria-label="RangeNode">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#deeponto.utils.data_utils.RangeNode.__gt__" class="md-nav__link">
-    __gt__()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deeponto.utils.data_utils.RangeNode.sort_by_start" class="md-nav__link">
-    sort_by_start()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deeponto.utils.data_utils.RangeNode.insert_child" class="md-nav__link">
-    insert_child()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deeponto.utils.data_utils.RangeNode.print_tree" class="md-nav__link">
-    print_tree()
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -712,7 +709,8 @@
 
         <details class="quote">
           <summary>Source code in <code>deeponto/utils/data_utils.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">19</span>
+<span class="normal">20</span>
 <span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
@@ -723,8 +721,7 @@
 <span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">DataUtils</span><span class="p">:</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">DataUtils</span><span class="p">:</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">uniqify</span><span class="p">(</span><span class="n">ls</span><span class="p">):</span>
@@ -772,11 +769,11 @@
 
       <details class="quote">
         <summary>Source code in <code>deeponto/utils/data_utils.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">22</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
+<span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">uniqify</span><span class="p">(</span><span class="n">ls</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a list of unique elements without messing around the order&quot;&quot;&quot;</span>
     <span class="n">non_empty_ls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="p">))</span>
@@ -807,465 +804,15 @@
 
       <details class="quote">
         <summary>Source code in <code>deeponto/utils/data_utils.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
+<span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">sort_dict_by_values</span><span class="p">(</span><span class="n">dic</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a sorted dict by values with first k reserved if provided.&quot;&quot;&quot;</span>
     <span class="n">sorted_items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dic</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="n">desc</span><span class="p">))</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">sorted_items</span><span class="p">[:</span><span class="n">k</span><span class="p">])</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-
-
-  </div>
-
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="deeponto.utils.data_utils.RangeNode" class="doc doc-heading">
-        <code>RangeNode</code>
-
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-      <p class="doc doc-class-bases">
-        Bases: <code><span title="anytree.NodeMixin">NodeMixin</span></code></p>
-
-  
-      <p>A tree implementation for ranges (without partial overlap).</p>
-<ul>
-<li>parent node's range fully covers child node's range, e.g., <code>[1, 10]</code> is a parent of <code>[2, 5]</code>.</li>
-<li>partial overlap between ranges not allowed, e.g., <code>[2, 4]</code> and <code>[3, 5]</code> cannot appear in the same <code>RangeNodeTree</code>.</li>
-<li>non-overlap ranges are on different branches.</li>
-<li>child nodes are ordered according to their relative positions.</li>
-</ul>
-
-
-        <details class="quote">
-          <summary>Source code in <code>deeponto/utils/data_utils.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 35</span>
-<span class="normal"> 36</span>
-<span class="normal"> 37</span>
-<span class="normal"> 38</span>
-<span class="normal"> 39</span>
-<span class="normal"> 40</span>
-<span class="normal"> 41</span>
-<span class="normal"> 42</span>
-<span class="normal"> 43</span>
-<span class="normal"> 44</span>
-<span class="normal"> 45</span>
-<span class="normal"> 46</span>
-<span class="normal"> 47</span>
-<span class="normal"> 48</span>
-<span class="normal"> 49</span>
-<span class="normal"> 50</span>
-<span class="normal"> 51</span>
-<span class="normal"> 52</span>
-<span class="normal"> 53</span>
-<span class="normal"> 54</span>
-<span class="normal"> 55</span>
-<span class="normal"> 56</span>
-<span class="normal"> 57</span>
-<span class="normal"> 58</span>
-<span class="normal"> 59</span>
-<span class="normal"> 60</span>
-<span class="normal"> 61</span>
-<span class="normal"> 62</span>
-<span class="normal"> 63</span>
-<span class="normal"> 64</span>
-<span class="normal"> 65</span>
-<span class="normal"> 66</span>
-<span class="normal"> 67</span>
-<span class="normal"> 68</span>
-<span class="normal"> 69</span>
-<span class="normal"> 70</span>
-<span class="normal"> 71</span>
-<span class="normal"> 72</span>
-<span class="normal"> 73</span>
-<span class="normal"> 74</span>
-<span class="normal"> 75</span>
-<span class="normal"> 76</span>
-<span class="normal"> 77</span>
-<span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">RangeNode</span><span class="p">(</span><span class="n">NodeMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A tree implementation for ranges (without partial overlap).</span>
-
-<span class="sd">        - parent node&#39;s range fully covers child node&#39;s range, e.g., `[1, 10]` is a parent of `[2, 5]`.</span>
-<span class="sd">        - partial overlap between ranges not allowed, e.g., `[2, 4]` and `[3, 5]` cannot appear in the same `RangeNodeTree`.</span>
-<span class="sd">        - non-overlap ranges are on different branches.</span>
-<span class="sd">        - child nodes are ordered according to their relative positions.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;=</span> <span class="n">end</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;invalid start and end positions ...&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-
-    <span class="c1"># def __eq__(self, other: RangeNode):</span>
-    <span class="c1">#     return self.start == other.start and self.end == other.end</span>
-
-    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Modified compare function for a range.</span>
-
-<span class="sd">        !!! note</span>
-
-<span class="sd">            There are three kinds of comparisons:</span>
-
-<span class="sd">            - $R_1 \leq R_2$: if range $R_1$ is completely contained in range $R_2$.</span>
-<span class="sd">            - $R_1 \gt R_2$: if range $R_2$ is completely contained in range $R_1$.</span>
-<span class="sd">            - `&quot;irrelevant&quot;`: if range $R_1$ and range $R_2$ have no overlap.</span>
-
-<span class="sd">        NOTE that partial overlap is not allowed.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">elif</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
-            <span class="c1"># print(&quot;compared ranges are irrelevant ...&quot;)</span>
-            <span class="k">return</span> <span class="s2">&quot;irrelevant&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;compared ranges have partial overlap ...&quot;</span><span class="p">)</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">sort_by_start</span><span class="p">(</span><span class="n">nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RangeNode</span><span class="p">]):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A sorting function that sorts the nodes by their starting positions.&quot;&quot;&quot;</span>
-        <span class="n">temp</span> <span class="o">=</span> <span class="p">{</span><span class="n">sib</span><span class="p">:</span> <span class="n">sib</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">sib</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">}</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">temp</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-
-    <span class="k">def</span> <span class="nf">insert_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inserting a child `RangeNode`.</span>
-
-<span class="sd">        Child nodes have a smaller (inclusive) range, e.g., `[2, 5]` is a child of `[1, 6]`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">node</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;invalid child node&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">end</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
-            <span class="c1"># duplicated node</span>
-            <span class="k">return</span>
-        <span class="c1"># print(self.children)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-            <span class="n">inserted</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">node</span> <span class="o">&lt;</span> <span class="n">ch</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                    <span class="c1"># print(&quot;further down&quot;)</span>
-                    <span class="n">ch</span><span class="o">.</span><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-                    <span class="n">inserted</span> <span class="o">=</span> <span class="kc">True</span>
-                    <span class="k">break</span>
-                <span class="k">elif</span> <span class="p">(</span><span class="n">node</span> <span class="o">&gt;</span> <span class="n">ch</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                    <span class="c1"># print(&quot;insert in between&quot;)</span>
-                    <span class="n">ch</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">node</span>
-                    <span class="c1"># NOTE: should not break here as it could be parent of multiple children !</span>
-                    <span class="c1"># break</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">inserted</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sort_by_start</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">node</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># only present downwards (down, left, right)</span>
-        <span class="n">printed</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="si">}</span><span class="s2">]&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-            <span class="n">printed</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">))[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="si">}</span><span class="s2">]&quot;</span>
-        <span class="k">return</span> <span class="n">printed</span>
-
-    <span class="k">def</span> <span class="nf">print_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pretty printing in the tree structure.&quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">RenderTree</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
-</code></pre></div></td></tr></table></div>
-        </details>
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.utils.data_utils.RangeNode.__gt__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__gt__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Modified compare function for a range.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>There are three kinds of comparisons:</p>
-<ul>
-<li><span class="arithmatex">\(R_1 \leq R_2\)</span>: if range <span class="arithmatex">\(R_1\)</span> is completely contained in range <span class="arithmatex">\(R_2\)</span>.</li>
-<li><span class="arithmatex">\(R_1 \gt R_2\)</span>: if range <span class="arithmatex">\(R_2\)</span> is completely contained in range <span class="arithmatex">\(R_1\)</span>.</li>
-<li><code>"irrelevant"</code>: if range <span class="arithmatex">\(R_1\)</span> and range <span class="arithmatex">\(R_2\)</span> have no overlap.</li>
-</ul>
-</div>
-<p>NOTE that partial overlap is not allowed.</p>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/utils/data_utils.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Modified compare function for a range.</span>
-
-<span class="sd">    !!! note</span>
-
-<span class="sd">        There are three kinds of comparisons:</span>
-
-<span class="sd">        - $R_1 \leq R_2$: if range $R_1$ is completely contained in range $R_2$.</span>
-<span class="sd">        - $R_1 \gt R_2$: if range $R_2$ is completely contained in range $R_1$.</span>
-<span class="sd">        - `&quot;irrelevant&quot;`: if range $R_1$ and range $R_2$ have no overlap.</span>
-
-<span class="sd">    NOTE that partial overlap is not allowed.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
-    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">elif</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
-        <span class="c1"># print(&quot;compared ranges are irrelevant ...&quot;)</span>
-        <span class="k">return</span> <span class="s2">&quot;irrelevant&quot;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;compared ranges have partial overlap ...&quot;</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.utils.data_utils.RangeNode.sort_by_start" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">sort_by_start</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
-  </span>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>A sorting function that sorts the nodes by their starting positions.</p>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/utils/data_utils.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">sort_by_start</span><span class="p">(</span><span class="n">nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RangeNode</span><span class="p">]):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A sorting function that sorts the nodes by their starting positions.&quot;&quot;&quot;</span>
-    <span class="n">temp</span> <span class="o">=</span> <span class="p">{</span><span class="n">sib</span><span class="p">:</span> <span class="n">sib</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">sib</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">}</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">temp</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.utils.data_utils.RangeNode.insert_child" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Inserting a child <code>RangeNode</code>.</p>
-<p>Child nodes have a smaller (inclusive) range, e.g., <code>[2, 5]</code> is a child of <code>[1, 6]</code>.</p>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/utils/data_utils.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">insert_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inserting a child `RangeNode`.</span>
-
-<span class="sd">    Child nodes have a smaller (inclusive) range, e.g., `[2, 5]` is a child of `[1, 6]`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">node</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;invalid child node&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">start</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">node</span><span class="o">.</span><span class="n">end</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
-        <span class="c1"># duplicated node</span>
-        <span class="k">return</span>
-    <span class="c1"># print(self.children)</span>
-    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-        <span class="n">inserted</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-            <span class="k">if</span> <span class="p">(</span><span class="n">node</span> <span class="o">&lt;</span> <span class="n">ch</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="c1"># print(&quot;further down&quot;)</span>
-                <span class="n">ch</span><span class="o">.</span><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-                <span class="n">inserted</span> <span class="o">=</span> <span class="kc">True</span>
-                <span class="k">break</span>
-            <span class="k">elif</span> <span class="p">(</span><span class="n">node</span> <span class="o">&gt;</span> <span class="n">ch</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
-                <span class="c1"># print(&quot;insert in between&quot;)</span>
-                <span class="n">ch</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">node</span>
-                <span class="c1"># NOTE: should not break here as it could be parent of multiple children !</span>
-                <span class="c1"># break</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">inserted</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sort_by_start</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">node</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.utils.data_utils.RangeNode.print_tree" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">print_tree</span><span class="p">()</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Pretty printing in the tree structure.</p>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/utils/data_utils.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">print_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pretty printing in the tree structure.&quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">RenderTree</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
