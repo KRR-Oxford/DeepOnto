@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {{ super() }}
+
+  {% if git_page_authors %}
+    <div class="md-source-date">
+      <small>
+        <span class="twemoji">
+            {% include ".icons/fontawesome/brands/github.svg" %} 
+        </span>
+        GitHub: <span class='git-page-authors'><a href='https://github.com/Lawhy'>@Lawhy</a>
+      </small>
+    </div>
+  {% endif %}
+{% endblock %}
