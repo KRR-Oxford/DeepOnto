@@ -919,12 +919,16 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
 <p>The <code>"SrcEntity"</code> and <code>"TgtEntity"</code> columns refer to the source class IRI and the target class IRI involved in a reference mapping. The <code>"TgtCandidates"</code> column stores a sequence of target candidate class IRIs (<strong>including the correct one</strong>) used for ranking, which can be accessed by the built-in <code>eval</code> function as:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># get the first sample&#39;s candidates</span>
 <span class="nb">eval</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;TgtCandidates&quot;</span><span class="p">])</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_0110279&#39;</span><span class="p">,</span>
-<span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_3185&#39;</span><span class="p">,</span>
-<span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_7008&#39;</span><span class="p">,</span>
-<span class="o">...</span>
-<span class="p">)</span>
 </code></pre></div>
+<dl>
+<dt><code class="highlight"><span class="go">Output:</span></code></dt>
+<dd>&#32;
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_0110279&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_3185&#39;</span><span class="p">,</span>
+ <span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_7008&#39;</span><span class="p">,</span>
+ <span class="o">...</span><span class="p">)</span>
+</code></pre></div></dd>
+</dl>
 <p>An OM model is expected to compute a score (or a relative ranking) for each candidate class in <code>"TgtCandidates"</code> -- to decide how likely it can be matched with the source reference class. In the ideal case, the reference target class (as in <code>"TgtEntity"</code>) should be ranked first.</p>
 <p>The candidate mappings were separately generated w.r.t. the tesing data (<code>test.tsv</code>) in each data split.</p>
 <dl>
@@ -973,18 +977,29 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
   <span class="n">ncit</span><span class="p">,</span> <span class="n">doid</span><span class="p">,</span> <span class="n">ncit2doid_equiv_mappings</span><span class="p">,</span> 
   <span class="n">subs_generation_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">delete_used_equiv_tgt_class</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="mi">3299</span><span class="o">/</span><span class="mi">4686</span> <span class="n">are</span> <span class="n">used</span> <span class="k">for</span> <span class="n">creating</span> <span class="n">at</span> <span class="n">least</span> <span class="n">one</span> <span class="n">subsumption</span> <span class="n">mapping</span><span class="o">.</span>
+</code></pre></div>
+<dl>
+<dt><code class="highlight"><span class="go">Output:</span></code></dt>
+<dd>&#32;
+<div class="highlight"><pre><span></span><code><span class="mi">3299</span><span class="o">/</span><span class="mi">4686</span> <span class="n">are</span> <span class="n">used</span> <span class="k">for</span> <span class="n">creating</span> <span class="n">at</span> <span class="n">least</span> <span class="n">one</span> <span class="n">subsumption</span> <span class="n">mapping</span><span class="o">.</span>
 <span class="mi">3305</span> <span class="n">subsumption</span> <span class="n">mappings</span> <span class="n">are</span> <span class="n">created</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">end</span><span class="o">.</span>
-
-<span class="n">subs_generator</span><span class="o">.</span><span class="n">subs_from_equivs</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="p">[(</span><span class="s1">&#39;http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C9311&#39;</span><span class="p">,</span>
+</code></pre></div></dd>
+</dl>
+<p>Get the generated subsumption mappings by:</p>
+<div class="highlight"><pre><span></span><code><span class="n">subs_generator</span><span class="o">.</span><span class="n">subs_from_equivs</span>
+</code></pre></div>
+<dl>
+<dt><code class="highlight"><span class="go">Output:</span></code></dt>
+<dd>&#32;
+<div class="highlight"><pre><span></span><code><span class="p">[(</span><span class="s1">&#39;http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C9311&#39;</span><span class="p">,</span>
   <span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_120&#39;</span><span class="p">,</span>
   <span class="mf">1.0</span><span class="p">),</span>
  <span class="p">(</span><span class="s1">&#39;http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C8410&#39;</span><span class="p">,</span>
   <span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_1612&#39;</span><span class="p">,</span>
   <span class="mf">1.0</span><span class="p">),</span> <span class="o">...</span><span class="p">]</span>
-</code></pre></div>
-<p>The <code>subs_generation_ratio</code> parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The <code>delete_used_equiv_tgt_class</code> determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If setting to <code>True</code>, then the target side of an (<strong>used</strong>) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes which can be accessed as <code>subs_generator.used_equiv_tgt_class_iris</code>.</p>
+</code></pre></div></dd>
+</dl>
+<p>The <code>subs_generation_ratio</code> parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The <code>delete_used_equiv_tgt_class</code> determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If setting to <code class="highlight"><span class="kc">True</span></code>, then the target side of an (<strong>used</strong>) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes which can be accessed as <code>subs_generator.used_equiv_tgt_class_iris</code>.</p>
 <h3 id="negative-candidate-mapping-generation">Negative Candidate Mapping Generation</h3>
 <p>In order to examine an OM model's ability to distinguish the correct mapping among a set of challenging negative candidates, we can apply the <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator">negative canddiate mapping generation</a> algorithm as proposed in the paper, which utilises the <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator.idf_sample"><code>idf_sample</code></a> to generate candidates ambiguious at the textual level (similar naming), and <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator.neighbour_sample"><code>neighbour_sample</code></a> to generate candidates ambiguious at the structural level (e.g., siblings). The algorithm makes sure that <strong>none</strong> of the reference mappings will be added as a negative candidate, and for the subsumption case, the algorithm also takes care of <strong>excluding the ancestors</strong> because they are correct subsumptions.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
@@ -1009,7 +1024,7 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 24, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 25, 2023</span>
       
         <br>
         Created:
