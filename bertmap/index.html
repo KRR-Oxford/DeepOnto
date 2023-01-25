@@ -726,7 +726,7 @@ The ontology matching (OM) pipeline of <span class="arithmatex">\(\textsf{BERTMa
 <ol>
 <li>Load the source and target ontologies and build <strong>annotation indices</strong> from them based on selected annotation properties.</li>
 <li>Construct the <strong>text semantics corpora</strong> including <strong>intra-ontology</strong> (from input ontologies), <strong>cross-ontology</strong> (optional, from input mappings), and <strong>auxiliary</strong> (optional, from auxiliary ontologies) sub-corpora. </li>
-<li>Split samples in the form of <code>(src_annotation, tgt_annotation, synonym_label)</code> into training and validation splits.</li>
+<li>Split samples in the form of <code>(src_annotation, tgt_annotation, synonym_label)</code> into training and validation sets.</li>
 <li>Fine-tune a <strong>BERT synonym classifier</strong> on the samples and obtain the best checkpoint on the validation split.</li>
 <li>
 <p>Predict mappings for each class <span class="arithmatex">\(c\)</span> of the source ontology <span class="arithmatex">\(\mathcal{O}\)</span> by:</p>
@@ -754,7 +754,7 @@ new mapping with score <span class="arithmatex">\(\geq \kappa\)</span> found or 
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>The <span class="arithmatex">\(\textsf{BERTMap}\)</span> family rely on sufficient class annotations for constructing training corpora
-of the BERT synonym classifier, especially under the <strong>unsupervised</strong> setting where the are no input mappings and/or external resources. It is very important to specify correct <a href="#annotation-properties"><strong>annotation properties</strong></a> in the configuration file.</p>
+of the BERT synonym classifier, especially under the <strong>unsupervised</strong> setting where there are no input mappings and/or external resources. It is very important to specify correct <a href="#annotation-properties"><strong>annotation properties</strong></a> in the configuration file.</p>
 </div>
 <h2 id="usage">Usage</h2>
 <p>To use <span class="arithmatex">\(\textsf{BERTMap}\)</span>, import the configuration file and two input ontologies to be matched.</p>
