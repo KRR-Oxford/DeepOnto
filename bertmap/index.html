@@ -829,7 +829,7 @@ and the users can choose which direction to match.</p>
 </div>
 <h2 id="configuration">Configuration</h2>
 <p>The default configuration file looks like:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bertmap</span><span class="w">  </span><span class="c1"># bertmap or bertmaplt</span>
+<div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bertmap</span><span class="w">  </span><span class="c1"># bertmap or bertmaplt</span>
 
 <span class="nt">output_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span><span class="w">  </span><span class="c1"># if not provided, the current path &quot;.&quot; is used</span>
 
@@ -868,26 +868,54 @@ and the users can choose which direction to match.</p>
 <span class="w">  </span><span class="nt">mapping_filtered_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9995</span><span class="w"> </span>
 </code></pre></div>
 <h3 id="bertmap-or-bertmaplt">BERTMap or BERTMapLt</h3>
-<p>By changing the <code>config.model</code> parameter to <code>bertmap</code> or <code>bertmaplt</code>, users can switch between 
+<dl>
+<dt><code>config.model</code></dt>
+<dd>By changing this parameter to <code>bertmap</code> or <code>bertmaplt</code>, users can switch between 
 <span class="arithmatex">\(\textsf{BERTMap}\)</span> and <span class="arithmatex">\(\textsf{BERTMapLt}\)</span>. Note that <span class="arithmatex">\(\textsf{BERTMapLt}\)</span> does not use any
-training and mapping refinement parameters.</p>
+training and mapping refinement parameters.</dd>
+</dl>
 <h3 id="annotation-properties">Annotation Properties <img alt="⚠" class="twemoji" src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/26a0.svg" title=":warning:" /></h3>
-<p>The IRIs stored in <code>config.annotation_property_iris</code> refer to annotation properties with literal values
-that define the <strong>synonyms</strong> of an ontology class. Many ontology matching systems rely on synonyms for good performance, including the <span class="arithmatex">\(\textsf{BERTMap}\)</span> family. The default <code>config.annotation_property_iris</code> are in line with the <strong>Bio-ML</strong> dataset, which will be constantly updated. Users can append or delete IRIs for specific input ontologies.</p>
+<dl>
+<dt><code>config.annotation_property_iris</code></dt>
+<dd>The IRIs stored in this parameter refer to annotation properties with literal values
+that define the <strong>synonyms</strong> of an ontology class. Many ontology matching systems rely on synonyms for good performance, including the <span class="arithmatex">\(\textsf{BERTMap}\)</span> family. The default <code>config.annotation_property_iris</code> are in line with the <strong>Bio-ML</strong> dataset, which will be constantly updated. Users can append or delete IRIs for specific input ontologies.</dd>
+</dl>
 <p>Note that it is safe to specify all possible annotation properties regardless of input ontologies because the ones that are not used will be ignored.</p>
 <h3 id="additional-training-data">Additional Training Data</h3>
 <p>The <strong>text semantics corpora</strong> by default (unsupervised setting) will consist of two <strong>intra-ontology sub-corpora</strong> built from two input ontologies (based on the specified annotation properties). To add more training data, users can opt to feed input mappings (<strong>cross-ontology sub-corpus</strong>) and/or a list of auxiliary ontologies (<strong>auxiliary sub-corpora</strong>). </p>
-<p>Specify the path to input mapping file in <code>config.known_mappings</code>; the input mapping file should be a <code>.tsv</code> or <code>.csv</code> file with three columns with headings: <code>["SrcEntity", "TgtEntity", "Score"]</code>. Each row corresponds to a triple <span class="arithmatex">\((c, c', s(c, c'))\)</span> where <span class="arithmatex">\(c\)</span> is a source ontology class, <span class="arithmatex">\(c'\)</span> is a target ontology class, and <span class="arithmatex">\(s(c, c')\)</span> is the matching score. Note that in the BERTMap context, input mapppings are assumed to be gold standard (reference) mappings with scores equal to <span class="arithmatex">\(1.0\)</span>. Regardless of scores specified in the mapping file, the scores of the input mapppings will be adjusted to <span class="arithmatex">\(1.0\)</span> automatically.</p>
-<p>Specify a list of paths to auxiliary ontology files in <code>config.auxiliary_ontos</code>. For each auxiliary ontology, a corresponding intra-ontology corpus will be created and thus produce more synonym and non-synonym samples.</p>
+<dl>
+<dt><code>config.known_mappings</code></dt>
+<dd>Specify the path to input mapping file here; the input mapping file should be a <code>.tsv</code> or <code>.csv</code> file with three columns with headings: <code>["SrcEntity", "TgtEntity", "Score"]</code>. Each row corresponds to a triple <span class="arithmatex">\((c, c', s(c, c'))\)</span> where <span class="arithmatex">\(c\)</span> is a source ontology class, <span class="arithmatex">\(c'\)</span> is a target ontology class, and <span class="arithmatex">\(s(c, c')\)</span> is the matching score. Note that in the BERTMap context, input mapppings are assumed to be gold standard (reference) mappings with scores equal to <span class="arithmatex">\(1.0\)</span>. Regardless of scores specified in the mapping file, the scores of the input mapppings will be adjusted to <span class="arithmatex">\(1.0\)</span> automatically.</dd>
+<dt><code>config.auxiliary_ontos</code></dt>
+<dd>Specify a list of paths to auxiliary ontology files here. For each auxiliary ontology, a corresponding intra-ontology corpus will be created and thus produce more synonym and non-synonym samples.</dd>
+</dl>
 <h3 id="bert-settings">BERT Settings</h3>
-<p><span class="arithmatex">\(\textsf{BERTMap}\)</span> uses the pre-trained <strong>Bio-Clincal BERT</strong> as specified in <code>config.bert.pretrained_path</code> because it was originally applied on biomedical ontologies. For general purpose ontology matching, users can use pre-trained variants such as <code>bert-base-uncased</code>.</p>
-<p>Adjust <code>config.bert.batch_size_for_training</code> and <code>config.bert.batch_size_for_prediction</code> if users found an inappropriate GPU memory fit. Set <code>config.bert.resume_training</code> to <code>true</code> if the BERT training process is somehow interrupted and users wish to continue training.</p>
+<dl>
+<dt><code>config.bert.pretrained_path</code></dt>
+<dd><span class="arithmatex">\(\textsf{BERTMap}\)</span> uses the pre-trained <strong>Bio-Clincal BERT</strong> as specified in this parameter because it was originally applied on biomedical ontologies. For general purpose ontology matching, users can use pre-trained variants such as <code>bert-base-uncased</code>.</dd>
+<dt><code>config.bert.batch_size_for_training</code></dt>
+<dd>Batch size for BERT fine-tuning.</dd>
+<dt><code>config.bert.batch_size_for_prediction</code></dt>
+<dd>Batch size for BERT validation and mapping prediction.</dd>
+</dl>
+<p>Adjust these two parameters if users found an inappropriate GPU memory fit. </p>
+<dl>
+<dt><code>config.bert.resume_training</code></dt>
+<dd>Set to <code>true</code> if the BERT training process is somehow interrupted and users wish to continue training.</dd>
+</dl>
 <h3 id="global-matching-settings">Global Matching Settings</h3>
-<p>As mentioned in <a href="#usage">usage</a>, users can disable automatic global matching by setting <code>config.global_matching.enabled</code> to <code>false</code> if they wish to use the mapping scoring module only. </p>
-<p><code>config.global_matching.num_raw_candidates</code> corresponds to the number of raw candidates selected in the mapping prediction phase. </p>
-<p><code>config.global_matching.num_best_predictions</code> corresponds to the number of best scored mappings preserved in the mapping prediction phase. The default value <code>10</code> is often more than enough.</p>
-<p><code>config.global_matching.mapping_extension_threshold</code> corresponds to the score threshold of mappings used in the iterative mapping extension process. Higher value shortens the time but reduces the recall. </p>
-<p><code>config.global_matching.mapping_filtered_threshold</code> corresponds to the score threshold of mappings preserved for final mapping refinement. </p>
+<dl>
+<dt><code>config.global_matching.enabled</code></dt>
+<dd>As mentioned in <a href="#usage">usage</a>, users can disable automatic global matching by setting this parameter to <code>false</code> if they wish to use the mapping scoring module only. </dd>
+<dt><code>config.global_matching.num_raw_candidates</code></dt>
+<dd>Set the number of raw candidates selected in the mapping prediction phase. </dd>
+<dt><code>config.global_matching.num_best_predictions</code></dt>
+<dd>Set the number of best scored mappings preserved in the mapping prediction phase. The default value <code>10</code> is often more than enough.</dd>
+<dt><code>config.global_matching.mapping_extension_threshold</code></dt>
+<dd>Set the score threshold of mappings used in the iterative mapping extension process. Higher value shortens the time but reduces the recall. </dd>
+<dt><code>config.global_matching.mapping_filtered_threshold</code></dt>
+<dd>The score threshold of mappings preserved for final mapping refinement. </dd>
+</dl>
 <h2 id="output-format">Output Format</h2>
 <p>Running <span class="arithmatex">\(\textsf{BERTMap}\)</span> will create a directory named <code>bertmap</code> or <code>bertmaplt</code> in the specified output path.
 The file structure of this directory is as follows:</p>
@@ -910,20 +938,25 @@ The file structure of this directory is as follows:</p>
 └── config.yaml
 </code></pre></div>
 <p>It is worth mentioning that the <code>match</code> sub-directory contains all the global matching files:</p>
-<ul>
-<li><code>raw_mappings.tsv</code> refers to the raw mapping predictions before mapping refinement. The <code>.json</code> one is used internally to prevent accidental interruption. Note that <code>bertmaplt</code> only produces raw mapping predictions (no mapping refinement).</li>
-<li><code>extended_mappings.tsv</code> refers to the output mappings after applying mapping extension. </li>
-<li><code>filtered_mappings.tsv</code> refers to the output mappings after mapping extension and threshold filtering. </li>
-<li><code>logmap-repair</code> is a folder containing intermediate files needed for applying LogMap's debugger.</li>
-<li><code>repaired_mappings.tsv</code> refers to the <strong>final</strong> output mappings after mapping repair.</li>
-</ul>
+<dl>
+<dt><code>raw_mappings.tsv</code></dt>
+<dd>The raw mapping predictions before mapping refinement. The <code>.json</code> one is used internally to prevent accidental interruption. Note that <code>bertmaplt</code> only produces raw mapping predictions (no mapping refinement).</dd>
+<dt><code>extended_mappings.tsv</code></dt>
+<dd>The output mappings after applying mapping extension. </dd>
+<dt><code>filtered_mappings.tsv</code></dt>
+<dd>The output mappings after mapping extension and threshold filtering. </dd>
+<dt><code>logmap-repair</code></dt>
+<dd>A folder containing intermediate files needed for applying LogMap's debugger.</dd>
+<dt><code>repaired_mappings.tsv</code></dt>
+<dd>The <strong>final</strong> output mappings after mapping repair.</dd>
+</dl>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 24, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 25, 2023</span>
       
         <br>
         Created:
