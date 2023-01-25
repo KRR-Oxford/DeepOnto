@@ -296,9 +296,7 @@ class Ontology:
 
     @property
     def equivalence_axioms(self):
-        """Return all the equivalence axioms in the `OWLOntology`.
-        
-            NOTE: (checked with protege)
+        """Return all the equivalence class axioms asserted in this `OWLOntology`.
         """
         if not self._equiv_axioms:
             self._equiv_axioms = []
