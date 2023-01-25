@@ -17,7 +17,7 @@ The ontology matching (OM) pipeline of $\textsf{BERTMap}$ consists of following 
 
 1. Load the source and target ontologies and build **annotation indices** from them based on selected annotation properties.
 2. Construct the **text semantics corpora** including **intra-ontology** (from input ontologies), **cross-ontology** (optional, from input mappings), and **auxiliary** (optional, from auxiliary ontologies) sub-corpora. 
-3. Split samples in the form of `(src_annotation, tgt_annotation, synonym_label)` into training and validation splits.
+3. Split samples in the form of `(src_annotation, tgt_annotation, synonym_label)` into training and validation sets.
 4. Fine-tune a **BERT synonym classifier** on the samples and obtain the best checkpoint on the validation split.
 5. Predict mappings for each class $c$ of the source ontology $\mathcal{O}$ by:
     
@@ -41,7 +41,7 @@ In addition to the traditional OM procedure, the scoring modules of $\textsf{BER
 !!! warning
 
     The $\textsf{BERTMap}$ family rely on sufficient class annotations for constructing training corpora
-    of the BERT synonym classifier, especially under the **unsupervised** setting where the are no input mappings and/or external resources. It is very important to specify correct [**annotation properties**](#annotation-properties) in the configuration file.
+    of the BERT synonym classifier, especially under the **unsupervised** setting where there are no input mappings and/or external resources. It is very important to specify correct [**annotation properties**](#annotation-properties) in the configuration file.
 
 
 ## Usage
