@@ -135,7 +135,7 @@ for src_class_iri, tgt_class_iri in class_pairs_to_be_scored:
 The default configuration file looks like:
 
 ```yaml
-name: bertmap  # bertmap or bertmaplt
+model: bertmap  # bertmap or bertmaplt
 
 output_path: null  # if not provided, the current path "." is used
 
@@ -176,13 +176,15 @@ global_matching:
 
 ### BERTMap or BERTMapLt
 
-By changing the `config.model` parameter to `bertmap` or `bertmaplt`, users can switch between 
+`config.model`
+:   By changing this parameter to `bertmap` or `bertmaplt`, users can switch between 
 $\textsf{BERTMap}$ and $\textsf{BERTMapLt}$. Note that $\textsf{BERTMapLt}$ does not use any
 training and mapping refinement parameters.
 
 ### Annotation Properties :warning:
 
-The IRIs stored in `config.annotation_property_iris` refer to annotation properties with literal values
+`config.annotation_property_iris`
+:   The IRIs stored in this parameter refer to annotation properties with literal values
 that define the **synonyms** of an ontology class. Many ontology matching systems rely on synonyms for good performance, including the $\textsf{BERTMap}$ family. The default `config.annotation_property_iris` are in line with the **Bio-ML** dataset, which will be constantly updated. Users can append or delete IRIs for specific input ontologies.
 
 Note that it is safe to specify all possible annotation properties regardless of input ontologies because the ones that are not used will be ignored.
@@ -191,27 +193,44 @@ Note that it is safe to specify all possible annotation properties regardless of
 
 The **text semantics corpora** by default (unsupervised setting) will consist of two **intra-ontology sub-corpora** built from two input ontologies (based on the specified annotation properties). To add more training data, users can opt to feed input mappings (**cross-ontology sub-corpus**) and/or a list of auxiliary ontologies (**auxiliary sub-corpora**). 
 
-Specify the path to input mapping file in `config.known_mappings`; the input mapping file should be a `.tsv` or `.csv` file with three columns with headings: `["SrcEntity", "TgtEntity", "Score"]`. Each row corresponds to a triple $(c, c', s(c, c'))$ where $c$ is a source ontology class, $c'$ is a target ontology class, and $s(c, c')$ is the matching score. Note that in the BERTMap context, input mapppings are assumed to be gold standard (reference) mappings with scores equal to $1.0$. Regardless of scores specified in the mapping file, the scores of the input mapppings will be adjusted to $1.0$ automatically.
+`config.known_mappings`
+:   Specify the path to input mapping file here; the input mapping file should be a `.tsv` or `.csv` file with three columns with headings: `["SrcEntity", "TgtEntity", "Score"]`. Each row corresponds to a triple $(c, c', s(c, c'))$ where $c$ is a source ontology class, $c'$ is a target ontology class, and $s(c, c')$ is the matching score. Note that in the BERTMap context, input mapppings are assumed to be gold standard (reference) mappings with scores equal to $1.0$. Regardless of scores specified in the mapping file, the scores of the input mapppings will be adjusted to $1.0$ automatically.
 
-Specify a list of paths to auxiliary ontology files in `config.auxiliary_ontos`. For each auxiliary ontology, a corresponding intra-ontology corpus will be created and thus produce more synonym and non-synonym samples.
+`config.auxiliary_ontos`
+:   Specify a list of paths to auxiliary ontology files here. For each auxiliary ontology, a corresponding intra-ontology corpus will be created and thus produce more synonym and non-synonym samples.
 
 ### BERT Settings
 
-$\textsf{BERTMap}$ uses the pre-trained **Bio-Clincal BERT** as specified in `config.bert.pretrained_path` because it was originally applied on biomedical ontologies. For general purpose ontology matching, users can use pre-trained variants such as `bert-base-uncased`.
+`config.bert.pretrained_path`
+:   $\textsf{BERTMap}$ uses the pre-trained **Bio-Clincal BERT** as specified in this parameter because it was originally applied on biomedical ontologies. For general purpose ontology matching, users can use pre-trained variants such as `bert-base-uncased`.
 
-Adjust `config.bert.batch_size_for_training` and `config.bert.batch_size_for_prediction` if users found an inappropriate GPU memory fit. Set `config.bert.resume_training` to `true` if the BERT training process is somehow interrupted and users wish to continue training.
+`config.bert.batch_size_for_training`
+: Batch size for BERT fine-tuning.
+
+`config.bert.batch_size_for_prediction`
+: Batch size for BERT validation and mapping prediction.
+
+Adjust these two parameters if users found an inappropriate GPU memory fit. 
+
+`config.bert.resume_training`
+:   Set to `true` if the BERT training process is somehow interrupted and users wish to continue training.
 
 ### Global Matching Settings
 
-As mentioned in [usage](#usage), users can disable automatic global matching by setting `config.global_matching.enabled` to `false` if they wish to use the mapping scoring module only. 
+`config.global_matching.enabled`
+:   As mentioned in [usage](#usage), users can disable automatic global matching by setting this parameter to `false` if they wish to use the mapping scoring module only. 
 
-`config.global_matching.num_raw_candidates` corresponds to the number of raw candidates selected in the mapping prediction phase. 
+`config.global_matching.num_raw_candidates`
+: Set the number of raw candidates selected in the mapping prediction phase. 
 
-`config.global_matching.num_best_predictions` corresponds to the number of best scored mappings preserved in the mapping prediction phase. The default value `10` is often more than enough.
+`config.global_matching.num_best_predictions`
+:   Set the number of best scored mappings preserved in the mapping prediction phase. The default value `10` is often more than enough.
 
-`config.global_matching.mapping_extension_threshold` corresponds to the score threshold of mappings used in the iterative mapping extension process. Higher value shortens the time but reduces the recall. 
+`config.global_matching.mapping_extension_threshold`
+:   Set the score threshold of mappings used in the iterative mapping extension process. Higher value shortens the time but reduces the recall. 
 
-`config.global_matching.mapping_filtered_threshold` corresponds to the score threshold of mappings preserved for final mapping refinement. 
+`config.global_matching.mapping_filtered_threshold`
+:   The score threshold of mappings preserved for final mapping refinement. 
 
 
 ## Output Format
@@ -241,8 +260,17 @@ bertmap
 
 It is worth mentioning that the `match` sub-directory contains all the global matching files:
 
--  `raw_mappings.tsv` refers to the raw mapping predictions before mapping refinement. The `.json` one is used internally to prevent accidental interruption. Note that `bertmaplt` only produces raw mapping predictions (no mapping refinement).
-- `extended_mappings.tsv` refers to the output mappings after applying mapping extension. 
-- `filtered_mappings.tsv` refers to the output mappings after mapping extension and threshold filtering. 
-- `logmap-repair` is a folder containing intermediate files needed for applying LogMap's debugger.
-- `repaired_mappings.tsv` refers to the **final** output mappings after mapping repair.
+`raw_mappings.tsv`
+: The raw mapping predictions before mapping refinement. The `.json` one is used internally to prevent accidental interruption. Note that `bertmaplt` only produces raw mapping predictions (no mapping refinement).
+
+`extended_mappings.tsv`
+:   The output mappings after applying mapping extension. 
+
+`filtered_mappings.tsv`
+: The output mappings after mapping extension and threshold filtering. 
+
+`logmap-repair`
+: A folder containing intermediate files needed for applying LogMap's debugger.
+
+`repaired_mappings.tsv`
+: The **final** output mappings after mapping repair.
