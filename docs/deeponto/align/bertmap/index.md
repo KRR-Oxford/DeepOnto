@@ -15,7 +15,7 @@ and then apply BERT matching.
 
 $\textsf{BERTMapLt}$ is a light-weight version of $\textsf{BERTMap}$ *without* the BERT module and mapping refiner.
 
-See the tutorial for $\textsf{BERTMap}$ [here](/pages/bertmap).
+See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap).
  
 
 ::: deeponto.align.bertmap.pipeline
