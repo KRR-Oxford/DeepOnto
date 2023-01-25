@@ -97,12 +97,16 @@ The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and th
 ```python
 # get the first sample's candidates
 eval(df.loc[0]["TgtCandidates"])
->>> ('http://purl.obolibrary.org/obo/DOID_0110279',
-'http://purl.obolibrary.org/obo/DOID_3185',
-'http://purl.obolibrary.org/obo/DOID_7008',
-...
-)
 ```
+
+`#!console Output:`
+:   &#32;
+    ```python
+    ('http://purl.obolibrary.org/obo/DOID_0110279',
+     'http://purl.obolibrary.org/obo/DOID_3185',
+     'http://purl.obolibrary.org/obo/DOID_7008',
+     ...)
+    ```
 
 An OM model is expected to compute a score (or a relative ranking) for each candidate class in `"TgtCandidates"` -- to decide how likely it can be matched with the source reference class. In the ideal case, the reference target class (as in `"TgtEntity"`) should be ranked first.
 
@@ -174,19 +178,33 @@ subs_generator = SubsFromEquivMappingGenerator(
   ncit, doid, ncit2doid_equiv_mappings, 
   subs_generation_ratio=1, delete_used_equiv_tgt_class=True
 )
->>> 3299/4686 are used for creating at least one subsumption mapping.
-3305 subsumption mappings are created in the end.
-
-subs_generator.subs_from_equivs
->>> [('http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C9311',
-  'http://purl.obolibrary.org/obo/DOID_120',
-  1.0),
- ('http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C8410',
-  'http://purl.obolibrary.org/obo/DOID_1612',
-  1.0), ...]
 ```
 
-The `subs_generation_ratio` parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The `delete_used_equiv_tgt_class` determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If setting to `True`, then the target side of an (**used**) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes which can be accessed as `subs_generator.used_equiv_tgt_class_iris`.
+`#!console Output:`
+:   &#32;
+    ```python
+    3299/4686 are used for creating at least one subsumption mapping.
+    3305 subsumption mappings are created in the end.
+    ```
+
+Get the generated subsumption mappings by:
+
+```python
+subs_generator.subs_from_equivs
+```
+
+`#!console Output:`
+:   &#32;
+    ```python
+    [('http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C9311',
+      'http://purl.obolibrary.org/obo/DOID_120',
+      1.0),
+     ('http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C8410',
+      'http://purl.obolibrary.org/obo/DOID_1612',
+      1.0), ...]
+    ```
+
+The `subs_generation_ratio` parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The `delete_used_equiv_tgt_class` determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If setting to `#!python True`, then the target side of an (**used**) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes which can be accessed as `subs_generator.used_equiv_tgt_class_iris`.
 
 ### Negative Candidate Mapping Generation
 
