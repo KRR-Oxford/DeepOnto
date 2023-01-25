@@ -28,25 +28,23 @@ doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969")
 To obtain the literal values (as `Set[str]`) of an annotation property (such as *rdfs:label*) for an entity:
 
 ```python
-...
 # note that annotations with no language tags are deemed as in English ("en")
-doid.get_owl_object_annotations(
-    doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969"),
-    annotation_property_iri='http://www.w3.org/2000/01/rdf-schema#label',
-    annotation_language_tag=None,
-    apply_lowercasing=False
-)
->>> {'carotenemia'}
+>>> doid.get_owl_object_annotations(
+... doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969"),
+... annotation_property_iri='http://www.w3.org/2000/01/rdf-schema#label',
+... annotation_language_tag=None,
+... apply_lowercasing=False
+... )
+{'carotenemia'}
 ```
 
 To get the special entities related to $\top$ and $\bot$:
 
 ```python
-...
-doid.OWLThing
->>> <java object 'uk.ac.manchester.cs.owl.owlapi.OWLClassImpl'>
-doid.OWLBottomDataProperty
->>> <java object 'uk.ac.manchester.cs.owl.owlapi.OWLDataPropertyImpl'>
+>>> doid.OWLThing
+<java object 'uk.ac.manchester.cs.owl.owlapi.OWLClassImpl'>
+>>> doid.OWLBottomDataProperty
+<java object 'uk.ac.manchester.cs.owl.owlapi.OWLDataPropertyImpl'>
 ```
 
 ## Ontology Reasoning
@@ -56,10 +54,9 @@ doid.OWLBottomDataProperty
 To get the **super-classes** (or **super-properties**) of an entity, use the following:
 
 ```python
-...
-doid_class = doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969")
-doid.reasoner.super_entities_of(doid_class, direct=False) 
->>> ['http://purl.obolibrary.org/obo/DOID_0014667',
+>>> doid_class = doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969")
+>>> doid.reasoner.super_entities_of(doid_class, direct=False) 
+['http://purl.obolibrary.org/obo/DOID_0014667',
  'http://purl.obolibrary.org/obo/DOID_0060158',
  'http://purl.obolibrary.org/obo/DOID_4']
 ```
@@ -72,14 +69,12 @@ To get the **sub-entities** (**children** or **descendants**), simply replace th
 To retrieve the entailed **instances** of a class:
 
 ```python
-...
 doid.reasoner.instances_of(doid_class)
 ```
 
 The implemented reasoner also supports several **logical checks** for subsumption, disjointness, and so on. For example:
 
 ```python
-...
 doid.reasoner.check_subsumption(doid_potential_sub_entity, doid_potential_super_entity)
 ```
 
