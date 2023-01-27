@@ -71,7 +71,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#deeponto.onto.verbaliser.OntologyAxiomParser" class="md-skip">
+        <a href="#deeponto.onto.verbalisation.OntologyVerbaliser" class="md-skip">
           Skip to content
         </a>
       
@@ -380,7 +380,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../ontology/" class="md-nav__link">
         Ontology
       </a>
     </li>
@@ -634,8 +634,8 @@
 
 
 
-<h2 id="deeponto.onto.verbaliser.OntologyAxiomParser" class="doc doc-heading">
-        <code>OntologyAxiomParser</code>
+<h2 id="deeponto.onto.verbalisation.OntologyVerbaliser" class="doc doc-heading">
+        <code>OntologyVerbaliser</code>
 
 
 </h2>
@@ -644,63 +644,50 @@
   <div class="doc doc-contents ">
 
   
-      <p>A parser for the OWL axioms (from <a href="http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html"><code>org.semanticweb.owlapi.model.OWLAxiom</code></a>).</p>
-<p>To keep the Java import in the main <a class="autorefs autorefs-internal" href="../#deeponto.onto.ontology.Ontology"><code>Ontology</code></a> class, 
-this parser does not deal with <code>OWLAxiom</code> directly but instead its <strong>string representation</strong>.</p>
-<p>Due to the OWLAPI axiom syntax, this parser relies on two components:</p>
-<ol>
-<li>Parentheses matching;</li>
-<li>Tenary tree search (<a class="autorefs autorefs-internal" href="#deeponto.onto.verbaliser.RangeNode"><code>RangeNode</code></a>).</li>
-</ol>
-<p>As a result, it will return a <code>RangeNode</code> that specifies the sub-formula in a tree structure.</p>
+      <p>A rule-based natural language verbaliser for the OWL logical expressions, e.g., <a href="http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html"><code>OWLAxiom</code></a>
+and <a href="https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/model/OWLClassExpression.html"><code>OWLClassExpression</code></a>.</p>
+<p>This is <strong>not</strong> a full-fledged ontology verbaliser and supports a limited set of patterns regarding
+class expressions.</p>
 
-<p><strong>Examples:</strong></p>
-    <p>Suppose the input <code>OWLAxiom</code> has the string representation: </p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="nb">str</span><span class="p">(</span><span class="n">owl_axiom</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;EquivalentClasses(&lt;http://purl.obolibrary.org/obo/FOODON_00001083&gt; ObjectIntersectionOf(&lt;http://purl.obolibrary.org/obo/FOODON_00001133&gt; ObjectSomeValuesFrom(&lt;http://purl.obolibrary.org/obo/RO_0001000&gt; &lt;http://purl.obolibrary.org/obo/FOODON_03411012&gt;)) )&#39;</span>
-</code></pre></div>
-<p>After apply the parser, a <code>RangeNode</code> will be returned which can be printed as:</p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">axiom_parser</span> <span class="o">=</span> <span class="n">OntologyAxiomParser</span><span class="p">()</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">axiom_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">owl_axiom</span><span class="p">))</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">54</span><span class="p">],</span> <span class="p">[</span><span class="mi">55</span><span class="p">,</span> <span class="p">[</span><span class="mi">61</span><span class="p">,</span> <span class="mi">109</span><span class="p">],</span> <span class="p">[</span><span class="mi">110</span><span class="p">,</span> <span class="p">[</span><span class="mi">116</span><span class="p">,</span> <span class="mi">159</span><span class="p">],</span> <span class="p">[</span><span class="mi">160</span><span class="p">,</span> <span class="mi">208</span><span class="p">],</span> <span class="mi">209</span><span class="p">],</span> <span class="mi">210</span><span class="p">],</span> <span class="mi">212</span><span class="p">],</span> <span class="mi">213</span><span class="p">]</span>
-</code></pre></div>
-<p>These numbers indicate the index ranges in the <strong>abbreviated</strong> (see <code>abbr_axiom_text</code>) axiom text 
-that correspond to a sub-formula. For example, the range <code>[6, 54]</code> corresponds to the IRI statement
-<code>&lt;http://purl.obolibrary.org/obo/FOODON_00001083&gt;</code>.</p>
-<p>To access this entity IRI, do:</p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">axiom_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">owl_axiom</span><span class="p">))</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;&lt;http://purl.obolibrary.org/obo/FOODON_00001083&gt;&#39;</span>
-</code></pre></div>
-<p>Note that the whole sentence is accessed by the first <code>.children[0]</code> which corresponds to the range
-<code>[0, 212]</code> (the root node the outermost range <code>[0, 213]</code>). Then, the first child <code>[0, 212]</code> is <code>[6, 54]</code>,
-whose text can be accessed by a subsequent <code>.children[0].text</code>. You can also see the type of any node
-by <code>node.type</code>. For this example, it will return <code>'IRI'</code>.</p>
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>onto</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="deeponto.onto.ontology.Ontology" href="../ontology/#deeponto.onto.ontology.Ontology">Ontology</a></code>
+          </td>
+          <td><p>An ontology whose entities are to be verbalised.</p></td>
+        </tr>
+        <tr>
+          <td><code>parser</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="deeponto.onto.verbalisation.OntologySyntaxParser" href="#deeponto.onto.verbalisation.OntologySyntaxParser">OntologySyntaxParser</a></code>
+          </td>
+          <td><p>A syntax parser for the string representation of an <code>OWLObject</code>.</p></td>
+        </tr>
+        <tr>
+          <td><code>vocab</code></td>
+          <td>
+                <code><span title="typing.Dict">Dict</span>[str, <span title="typing.List">List</span>[str]]</code>
+          </td>
+          <td><p>A dictionary with <code>(entity_iri, entity_name)</code> pairs, by default
+the names are retrieved from <span class="arithmatex">\(\texttt{rdfs:label}\)</span>.</p></td>
+        </tr>
+    </tbody>
+  </table>
 
 
         <details class="quote">
-          <summary>Source code in <code>deeponto/onto/verbaliser.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 32</span>
-<span class="normal"> 33</span>
-<span class="normal"> 34</span>
-<span class="normal"> 35</span>
-<span class="normal"> 36</span>
-<span class="normal"> 37</span>
-<span class="normal"> 38</span>
-<span class="normal"> 39</span>
-<span class="normal"> 40</span>
-<span class="normal"> 41</span>
-<span class="normal"> 42</span>
-<span class="normal"> 43</span>
-<span class="normal"> 44</span>
-<span class="normal"> 45</span>
-<span class="normal"> 46</span>
-<span class="normal"> 47</span>
-<span class="normal"> 48</span>
-<span class="normal"> 49</span>
-<span class="normal"> 50</span>
-<span class="normal"> 51</span>
-<span class="normal"> 52</span>
-<span class="normal"> 53</span>
+          <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 53</span>
 <span class="normal"> 54</span>
 <span class="normal"> 55</span>
 <span class="normal"> 56</span>
@@ -781,219 +768,88 @@ by <code>node.type</code>. For this example, it will return <code>'IRI'</code>.<
 <span class="normal">131</span>
 <span class="normal">132</span>
 <span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">OntologyAxiomParser</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;A parser for the OWL axioms (from [`org.semanticweb.owlapi.model.OWLAxiom`](http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html)).</span>
+<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">OntologyVerbaliser</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;A rule-based natural language verbaliser for the OWL logical expressions, e.g., [`OWLAxiom`](http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html)</span>
+<span class="sd">    and [`OWLClassExpression`](https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/model/OWLClassExpression.html).</span>
 
-<span class="sd">    To keep the Java import in the main [`Ontology`][deeponto.onto.Ontology] class, </span>
-<span class="sd">    this parser does not deal with `OWLAxiom` directly but instead its **string representation**.</span>
+<span class="sd">    This is **not** a full-fledged ontology verbaliser and supports a limited set of patterns regarding</span>
+<span class="sd">    class expressions.</span>
 
-<span class="sd">    Due to the OWLAPI axiom syntax, this parser relies on two components:</span>
-
-<span class="sd">    1. Parentheses matching;</span>
-<span class="sd">    2. Tenary tree search ([`RangeNode`][deeponto.onto.verbaliser.RangeNode]).</span>
-
-<span class="sd">    As a result, it will return a `RangeNode` that specifies the sub-formula in a tree structure.</span>
-
-<span class="sd">    Examples:</span>
-
-<span class="sd">        Suppose the input `OWLAxiom` has the string representation: </span>
-
-<span class="sd">        ```python</span>
-<span class="sd">        &gt;&gt;&gt; str(owl_axiom)</span>
-<span class="sd">        &gt;&gt;&gt; &#39;EquivalentClasses(&lt;http://purl.obolibrary.org/obo/FOODON_00001083&gt; ObjectIntersectionOf(&lt;http://purl.obolibrary.org/obo/FOODON_00001133&gt; ObjectSomeValuesFrom(&lt;http://purl.obolibrary.org/obo/RO_0001000&gt; &lt;http://purl.obolibrary.org/obo/FOODON_03411012&gt;)) )&#39;</span>
-<span class="sd">        ```</span>
-
-<span class="sd">        After apply the parser, a `RangeNode` will be returned which can be printed as:</span>
-
-<span class="sd">        ```python</span>
-<span class="sd">        &gt;&gt;&gt; axiom_parser = OntologyAxiomParser()</span>
-<span class="sd">        &gt;&gt;&gt; axiom_parser.parse(str(owl_axiom))</span>
-<span class="sd">        &gt;&gt;&gt; [0, [0, [6, 54], [55, [61, 109], [110, [116, 159], [160, 208], 209], 210], 212], 213]</span>
-<span class="sd">        ```</span>
-
-<span class="sd">        These numbers indicate the index ranges in the **abbreviated** (see `abbr_axiom_text`) axiom text </span>
-<span class="sd">        that correspond to a sub-formula. For example, the range `[6, 54]` corresponds to the IRI statement</span>
-<span class="sd">        `&lt;http://purl.obolibrary.org/obo/FOODON_00001083&gt;`.</span>
-
-<span class="sd">        To access this entity IRI, do:</span>
-
-<span class="sd">        ```python</span>
-<span class="sd">        &gt;&gt;&gt; axiom_parser.parse(str(owl_axiom)).children[0].children[0].text</span>
-<span class="sd">        &gt;&gt;&gt; &#39;&lt;http://purl.obolibrary.org/obo/FOODON_00001083&gt;&#39;</span>
-<span class="sd">        ```</span>
-
-<span class="sd">        Note that the whole sentence is accessed by the first `.children[0]` which corresponds to the range</span>
-<span class="sd">        `[0, 212]` (the root node the outermost range `[0, 213]`). Then, the first child `[0, 212]` is `[6, 54]`,</span>
-<span class="sd">        whose text can be accessed by a subsequent `.children[0].text`. You can also see the type of any node</span>
-<span class="sd">        by `node.type`. For this example, it will return `&#39;IRI&#39;`.</span>
+<span class="sd">    Attributes:</span>
+<span class="sd">        onto (Ontology): An ontology whose entities are to be verbalised.</span>
+<span class="sd">        parser (OntologySyntaxParser): A syntax parser for the string representation of an `OWLObject`.</span>
+<span class="sd">        vocab (Dict[str, List[str]]): A dictionary with `(entity_iri, entity_name)` pairs, by default</span>
+<span class="sd">            the names are retrieved from $\texttt{rdfs:label}$.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">onto</span> <span class="o">=</span> <span class="n">onto</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">OntologySyntaxParser</span><span class="p">()</span>
+
+        <span class="c1"># build the default vocabulary for entities</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">entity_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Classes&quot;</span><span class="p">,</span> <span class="s2">&quot;ObjectProperties&quot;</span><span class="p">,</span> <span class="s2">&quot;DataProperties&quot;</span><span class="p">]:</span>
+            <span class="n">entity_annotations</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">build_annotation_index</span><span class="p">(</span><span class="n">entity_type</span><span class="o">=</span><span class="n">entity_type</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">entity_annotations</span><span class="p">)</span>
+        <span class="n">literal_or_iri</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">v</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">v</span> <span class="k">else</span> <span class="n">k</span>  <span class="c1"># set vocab to IRI if no string available</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">literal_or_iri</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>  <span class="c1"># only set one name for each entity</span>
+
+    <span class="k">def</span> <span class="nf">update_entity_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update the entity name dictionary.</span>
+
+<span class="sd">        If you want to change the name of a specific entity, you should call this</span>
+<span class="sd">        function before verbalisation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">entity_iri</span><span class="p">]</span> <span class="o">=</span> <span class="n">entity_name</span>
+
+    <span class="k">def</span> <span class="nf">verbalise_class_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">RangeNode</span><span class="p">]):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">class_expression</span><span class="p">,</span> <span class="n">RangeNode</span><span class="p">):</span>
+            <span class="n">parsed_class_expression</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">class_expression</span><span class="p">)</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># skip the root node</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parsed_class_expression</span> <span class="o">=</span> <span class="n">class_expression</span>
+
+        <span class="k">if</span> <span class="n">parsed_class_expression</span><span class="o">.</span><span class="n">is_iri</span><span class="p">:</span>
+            <span class="n">iri</span> <span class="o">=</span> <span class="n">parsed_class_expression</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">CfgNode</span><span class="p">({</span><span class="s2">&quot;verbal&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">iri</span><span class="p">],</span> <span class="s2">&quot;iri&quot;</span><span class="p">:</span> <span class="n">iri</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;IRI&quot;</span><span class="p">})</span>
+
+        <span class="k">if</span> <span class="n">parsed_class_expression</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;EX.&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbalise_existential_restriction</span><span class="p">(</span><span class="n">ex_node</span><span class="o">=</span><span class="n">parsed_class_expression</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">parsed_class_expression</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;AND&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbalise_conjunction</span><span class="p">(</span><span class="n">and_node</span><span class="o">=</span><span class="n">parsed_class_expression</span><span class="p">)</span>
+
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Input class expression is not in one of the supported types.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_verbalise_existential_restriction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ex_node</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verbalise a (parsed) class expression in the form of existential restriction.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">ex_node</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;EX.&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ex_node</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+
+        <span class="n">object_property</span> <span class="o">=</span> <span class="n">ex_node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">object_property</span><span class="o">.</span><span class="n">is_iri</span>
+        <span class="n">object_property</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">object_property</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">)]</span>  <span class="c1"># change into recursion</span>
+
+        <span class="n">class_expression</span> <span class="o">=</span> <span class="n">ex_node</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">class_expression</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbalise_class_expression</span><span class="p">(</span><span class="n">class_expression</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">CfgNode</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;verbal&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;something that </span><span class="si">{</span><span class="n">object_property</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">class_expression</span><span class="o">.</span><span class="n">verbal</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;property&quot;</span><span class="p">:</span> <span class="n">object_property</span><span class="p">,</span>
+                <span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="n">class_expression</span><span class="p">,</span>
+                <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;EX.&quot;</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_verbalise_conjunction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">and_node</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
         <span class="k">pass</span>
 
-    <span class="k">def</span> <span class="nf">abbr_axiom_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axiom_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Abbreviate the string representations of logical operators to a </span>
-<span class="sd">        fixed length (easier for parsing).</span>
+    <span class="k">def</span> <span class="nf">verbalise_equivalence_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">equivalence_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">):</span>
+        <span class="k">pass</span>
 
-<span class="sd">        The abbreviations are as follows:</span>
-
-<span class="sd">        ```python</span>
-<span class="sd">        {</span>
-<span class="sd">            &quot;ObjectComplementOf&quot;: &quot;[NEG]&quot;,  # negation</span>
-<span class="sd">            &quot;ObjectSomeValuesFrom&quot;: &quot;[EXT]&quot;,  # existential restriction</span>
-<span class="sd">            &quot;ObjectAllValuesFrom&quot;: &quot;[ALL]&quot;,  # universal restriction</span>
-<span class="sd">            &quot;ObjectUnionOf&quot;: &quot;[ORR]&quot;,  # disjunction</span>
-<span class="sd">            &quot;ObjectIntersectionOf&quot;: &quot;[AND]&quot;,  # conjunction</span>
-<span class="sd">            &quot;EquivalentClasses&quot;: &quot;[EQU]&quot;,  # equivalence</span>
-<span class="sd">            &quot;SubClassOf&quot;: &quot;[SUB]&quot;,  # subsumed by</span>
-<span class="sd">            &quot;SuperClassOf&quot;: &quot;[SUP]&quot;,  # subsumes</span>
-<span class="sd">        }</span>
-<span class="sd">        ```</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            axiom_text (str): The string representation of an OWLAPI axiom.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            (str): The modified string representation of an OWLAPI axiom where the logical operators are abbreviated.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ABBREVIATION_DICT</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">axiom_text</span> <span class="o">=</span> <span class="n">axiom_text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">axiom_text</span>
-
-    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axiom_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` into a `RangeNode`. </span>
-
-<span class="sd">        This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.verbaliser.OntologyAxiomParser.parse_by_parentheses]</span>
-<span class="sd">        method below.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            axiom_text (str): The string representation of an OWLAPI axiom.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            (RangeNode): A parsed syntactic tree given what parentheses to be matched. </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">axiom_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">abbr_axiom_text</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">)</span>
-        <span class="c1"># print(&quot;To parse the following (transformed) axiom text:\n&quot;, axiom_text)</span>
-        <span class="c1"># parse complex patterns first</span>
-        <span class="n">cur_parsed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_by_parentheses</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">)</span>
-        <span class="c1"># parse the IRI patterns latter</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_by_parentheses</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">,</span> <span class="n">cur_parsed</span><span class="p">,</span> <span class="n">for_iri</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">parse_by_parentheses</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">axiom_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">already_parsed</span><span class="p">:</span> <span class="n">RangeNode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">for_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` based on parentheses matching into a `RangeNode`. </span>
-
-<span class="sd">        This function needs to be applied twice to get a fully parsed `RangeNode` because IRIs have</span>
-<span class="sd">        a different parenthesis pattern.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            axiom_text (str): The string representation of an OWLAPI axiom.</span>
-<span class="sd">            already_parsed (RangeNode, optional): A partially parsed `RangeNode` to continue with. Defaults to `None`.</span>
-<span class="sd">            for_iri (bool, optional): Parentheses are by default `()` but will be changed to `&lt;&gt;` for IRIs. Defaults to `False`.</span>
-
-<span class="sd">        Raises:</span>
-<span class="sd">            RuntimeError: Raised when the input axiom text is nor properly formatted.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            (RangeNode): A parsed syntactic tree given what parentheses to be matched. </span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">already_parsed</span><span class="p">:</span>
-            <span class="c1"># a root node that covers the entire sentence</span>
-            <span class="n">parsed</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Root&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">axiom_text</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">parsed</span> <span class="o">=</span> <span class="n">already_parsed</span>
-        <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">left_par</span> <span class="o">=</span> <span class="s2">&quot;(&quot;</span>
-        <span class="n">right_par</span> <span class="o">=</span> <span class="s2">&quot;)&quot;</span>
-        <span class="k">if</span> <span class="n">for_iri</span><span class="p">:</span>
-            <span class="n">left_par</span> <span class="o">=</span> <span class="s2">&quot;&lt;&quot;</span>
-            <span class="n">right_par</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span>
-
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">left_par</span><span class="p">:</span>
-                <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">right_par</span><span class="p">:</span>
-                <span class="k">try</span><span class="p">:</span>
-                    <span class="n">start</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-                    <span class="n">end</span> <span class="o">=</span> <span class="n">i</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="n">for_iri</span><span class="p">:</span>
-                        <span class="c1"># the first five characters refer to the complex pattern type</span>
-                        <span class="n">node</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span>
-                            <span class="n">start</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span>
-                            <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                            <span class="nb">type</span><span class="o">=</span><span class="n">axiom_text</span><span class="p">[</span><span class="n">start</span> <span class="o">-</span> <span class="mi">5</span> <span class="p">:</span> <span class="n">start</span><span class="p">],</span>
-                            <span class="n">text</span><span class="o">=</span><span class="n">axiom_text</span><span class="p">[</span><span class="n">start</span> <span class="o">-</span> <span class="mi">5</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
-                        <span class="p">)</span>
-                        <span class="n">parsed</span><span class="o">.</span><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="c1"># no preceding characters for just atomic class (IRI)</span>
-                        <span class="n">node</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span>
-                            <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;IRI&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">axiom_text</span><span class="p">[</span><span class="n">start</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-                        <span class="p">)</span>
-                        <span class="n">parsed</span><span class="o">.</span><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Too many closing parentheses&quot;</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">stack</span><span class="p">:</span>  <span class="c1"># check if stack is empty afterwards</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Too many opening parentheses&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">parsed</span>
+    <span class="k">def</span> <span class="nf">verbalise_subsumption_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subclassof_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">):</span>
+        <span class="k">pass</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -1013,346 +869,131 @@ by <code>node.type</code>. For this example, it will return <code>'IRI'</code>.<
 
 
 
-<h3 id="deeponto.onto.verbaliser.OntologyAxiomParser.abbr_axiom_text" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">abbr_axiom_text</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">)</span></code>
+<h3 id="deeponto.onto.verbalisation.OntologyVerbaliser.update_entity_name" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">update_entity_name</span><span class="p">(</span><span class="n">entity_iri</span><span class="p">,</span> <span class="n">entity_name</span><span class="p">)</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Abbreviate the string representations of logical operators to a 
-fixed length (easier for parsing).</p>
-<p>The abbreviations are as follows:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-    <span class="s2">&quot;ObjectComplementOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[NEG]&quot;</span><span class="p">,</span>  <span class="c1"># negation</span>
-    <span class="s2">&quot;ObjectSomeValuesFrom&quot;</span><span class="p">:</span> <span class="s2">&quot;[EXT]&quot;</span><span class="p">,</span>  <span class="c1"># existential restriction</span>
-    <span class="s2">&quot;ObjectAllValuesFrom&quot;</span><span class="p">:</span> <span class="s2">&quot;[ALL]&quot;</span><span class="p">,</span>  <span class="c1"># universal restriction</span>
-    <span class="s2">&quot;ObjectUnionOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[ORR]&quot;</span><span class="p">,</span>  <span class="c1"># disjunction</span>
-    <span class="s2">&quot;ObjectIntersectionOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[AND]&quot;</span><span class="p">,</span>  <span class="c1"># conjunction</span>
-    <span class="s2">&quot;EquivalentClasses&quot;</span><span class="p">:</span> <span class="s2">&quot;[EQU]&quot;</span><span class="p">,</span>  <span class="c1"># equivalence</span>
-    <span class="s2">&quot;SubClassOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[SUB]&quot;</span><span class="p">,</span>  <span class="c1"># subsumed by</span>
-    <span class="s2">&quot;SuperClassOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[SUP]&quot;</span><span class="p">,</span>  <span class="c1"># subsumes</span>
-<span class="p">}</span>
+      <p>Update the entity name dictionary.</p>
+<p>If you want to change the name of a specific entity, you should call this
+function before verbalisation.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">update_entity_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the entity name dictionary.</span>
+
+<span class="sd">    If you want to change the name of a specific entity, you should call this</span>
+<span class="sd">    function before verbalisation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">vocab</span><span class="p">[</span><span class="n">entity_iri</span><span class="p">]</span> <span class="o">=</span> <span class="n">entity_name</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="deeponto.onto.verbalisation.OntologySyntaxParser" class="doc doc-heading">
+        <code>OntologySyntaxParser</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>A syntax parser for the OWL logical expressions, e.g., <a href="http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html"><code>OWLAxiom</code></a>
+and <a href="https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/model/OWLClassExpression.html"><code>OWLClassExpression</code></a>.</p>
+<p>It makes use of the string representation (based on Manchester Syntax) defined in the OWLAPI. In Python,
+such string can be accessed by simply using <code class="highlight"><span class="nb">str</span><span class="p">(</span><span class="n">some_owl_object</span><span class="p">)</span></code>.</p>
+<p>To keep the Java import in the main <a class="autorefs autorefs-internal" href="../ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a> class,
+this parser does not deal with <code>OWLAxiom</code> directly but instead its <strong>string representation</strong>.</p>
+<p>Due to the <code>OWLObject</code> syntax, this parser relies on two components:</p>
+<ol>
+<li>Parentheses matching;</li>
+<li>Tree construction ([<code>RangeNode</code>][deeponto.onto.parser.RangeNode]).</li>
+</ol>
+<p>As a result, it will return a [<code>RangeNode</code>][deeponto.onto.parser.RangeNode] that
+specifies the sub-formulas (and their respective <strong>positions in the string representation</strong>)
+in a tree structure.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The parser currently supports a limited set of [patterns][deeponto.onto.parser.OntologyAxiomParser.abbreviate_owl_expression]
+due to the limitations of the ontology verbalisation module. Kindly ask the repository maintainer to add more patterns if needed.</p>
+</div>
+
+<p><strong>Examples:</strong></p>
+    <p>Suppose the input is an <code>OWLAxiom</code> that has the string representation:</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="nb">str</span><span class="p">(</span><span class="n">owl_axiom</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;EquivalentClasses(&lt;http://purl.obolibrary.org/obo/FOODON_00001707&gt; ObjectIntersectionOf(&lt;http://purl.obolibrary.org/obo/FOODON_00002044&gt; ObjectSomeValuesFrom(&lt;http://purl.obolibrary.org/obo/RO_0001000&gt; &lt;http://purl.obolibrary.org/obo/FOODON_03412116&gt;)) )&#39;</span>
 </code></pre></div>
+<p>After apply the parser, a [<code>RangeNode</code>][deeponto.onto.parser.RangeNode] will be returned which can be rentered as:</p>
+<div class="highlight"><pre><span></span><code><span class="n">axiom_parser</span> <span class="o">=</span> <span class="n">OntologyAxiomParser</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">axiom_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">owl_axiom</span><span class="p">))</span><span class="o">.</span><span class="n">render_tree</span><span class="p">())</span>
+</code></pre></div>
+<dl>
+<dt><code class="highlight"><span class="go">Output:</span></code></dt>
+<dd>&#32;
+<div class="highlight"><pre><span></span><code><span class="n">Root</span><span class="o">@</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">inf</span><span class="p">]</span>
+<span class="err">└──</span> <span class="n">EQV</span><span class="o">@</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">212</span><span class="p">]</span>
+    <span class="err">├──</span> <span class="n">FOODON_00001707</span><span class="o">@</span><span class="p">[</span><span class="mi">6</span><span class="p">:</span><span class="mi">54</span><span class="p">]</span>
+    <span class="err">└──</span> <span class="n">AND</span><span class="o">@</span><span class="p">[</span><span class="mi">55</span><span class="p">:</span><span class="mi">210</span><span class="p">]</span>
+        <span class="err">├──</span> <span class="n">FOODON_00002044</span><span class="o">@</span><span class="p">[</span><span class="mi">61</span><span class="p">:</span><span class="mi">109</span><span class="p">]</span>
+        <span class="err">└──</span> <span class="n">EX</span><span class="o">.@</span><span class="p">[</span><span class="mi">110</span><span class="p">:</span><span class="mi">209</span><span class="p">]</span>
+            <span class="err">├──</span> <span class="n">RO_0001000</span><span class="o">@</span><span class="p">[</span><span class="mi">116</span><span class="p">:</span><span class="mi">159</span><span class="p">]</span>
+            <span class="err">└──</span> <span class="n">FOODON_03412116</span><span class="o">@</span><span class="p">[</span><span class="mi">160</span><span class="p">:</span><span class="mi">208</span><span class="p">]</span>
+</code></pre></div></dd>
+</dl>
+<p>Or, if <code>graphviz</code> (installed by e.g., <code>sudo apt install graphviz</code>) is available,
+you can visualise the tree as an image by:</p>
+<div class="highlight"><pre><span></span><code><span class="n">axiom_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">owl_axiom</span><span class="p">))</span><span class="o">.</span><span class="n">render_image</span><span class="p">()</span>
+</code></pre></div>
+<p><code class="highlight"><span class="go">Output:</span></code></p>
+<p align="center">
+    <img alt="range_node" src="../../../assets/example_range_node.png" style="padding: 30px 50px">
+</p>
 
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>axiom_text</code></td>
-          <td>
-                <code>str</code>
-          </td>
-          <td><p>The string representation of an OWLAPI axiom.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-  <p><strong>Returns:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td>
-                <code>str</code>
-          </td>
-          <td><p>The modified string representation of an OWLAPI axiom where the logical operators are abbreviated.</p></td>
-        </tr>
-    </tbody>
-  </table>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/onto/verbaliser.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">abbr_axiom_text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axiom_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Abbreviate the string representations of logical operators to a </span>
-<span class="sd">    fixed length (easier for parsing).</span>
-
-<span class="sd">    The abbreviations are as follows:</span>
-
-<span class="sd">    ```python</span>
-<span class="sd">    {</span>
-<span class="sd">        &quot;ObjectComplementOf&quot;: &quot;[NEG]&quot;,  # negation</span>
-<span class="sd">        &quot;ObjectSomeValuesFrom&quot;: &quot;[EXT]&quot;,  # existential restriction</span>
-<span class="sd">        &quot;ObjectAllValuesFrom&quot;: &quot;[ALL]&quot;,  # universal restriction</span>
-<span class="sd">        &quot;ObjectUnionOf&quot;: &quot;[ORR]&quot;,  # disjunction</span>
-<span class="sd">        &quot;ObjectIntersectionOf&quot;: &quot;[AND]&quot;,  # conjunction</span>
-<span class="sd">        &quot;EquivalentClasses&quot;: &quot;[EQU]&quot;,  # equivalence</span>
-<span class="sd">        &quot;SubClassOf&quot;: &quot;[SUB]&quot;,  # subsumed by</span>
-<span class="sd">        &quot;SuperClassOf&quot;: &quot;[SUP]&quot;,  # subsumes</span>
-<span class="sd">    }</span>
-<span class="sd">    ```</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        axiom_text (str): The string representation of an OWLAPI axiom.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        (str): The modified string representation of an OWLAPI axiom where the logical operators are abbreviated.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ABBREVIATION_DICT</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">axiom_text</span> <span class="o">=</span> <span class="n">axiom_text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">axiom_text</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
+<p>The name for each node has the form <code>{node_type}@[{start}:{end}]</code>, which means a node of the type <code>{node_type}</code> is
+located at the range <code>[{start}:{end}]</code> in the <strong>abbreviated</strong> expression  (see [<code>abbreviate_owl_expression</code>][deeponto.onto.parser.OntologyAxiomParser.abbreviate_owl_expression]
+below).</p>
+<p>The leaf nodes are IRIs and they are represented by the last segment (split by <code>"/"</code>) of the whole IRI.</p>
+<p>Child nodes can be accessed by <code>.children</code>, the string representation of the sub-formula in this node can be
+accessed by <code>.text</code>. For example:</p>
+<div class="highlight"><pre><span></span><code><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">owl_axiom</span><span class="p">))</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span>
+</code></pre></div>
+<dl>
+<dt><code class="highlight"><span class="go">Output:</span></code></dt>
+<dd>&#32;
+<div class="highlight"><pre><span></span><code><span class="s1">&#39;[AND](&lt;http://purl.obolibrary.org/obo/FOODON_00002044&gt; [EX.](&lt;http://purl.obolibrary.org/obo/RO_0001000&gt; &lt;http://purl.obolibrary.org/obo/FOODON_03412116&gt;))&#39;</span>
+</code></pre></div></dd>
+</dl>
 
 
-
-<h3 id="deeponto.onto.verbaliser.OntologyAxiomParser.parse" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">parse</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Parse an <code>OWLAxiom</code> into a <code>RangeNode</code>. </p>
-<p>This is the main entry for using the parser, which relies on the <a class="autorefs autorefs-internal" href="#deeponto.onto.verbaliser.OntologyAxiomParser.parse_by_parentheses"><code>parse_by_parentheses</code></a>
-method below.</p>
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>axiom_text</code></td>
-          <td>
-                <code>str</code>
-          </td>
-          <td><p>The string representation of an OWLAPI axiom.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-  <p><strong>Returns:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td>
-                <code><a class="autorefs autorefs-internal" title="deeponto.onto.verbaliser.RangeNode" href="#deeponto.onto.verbaliser.RangeNode">RangeNode</a></code>
-          </td>
-          <td><p>A parsed syntactic tree given what parentheses to be matched.</p></td>
-        </tr>
-    </tbody>
-  </table>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/onto/verbaliser.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axiom_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` into a `RangeNode`. </span>
-
-<span class="sd">    This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.verbaliser.OntologyAxiomParser.parse_by_parentheses]</span>
-<span class="sd">    method below.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        axiom_text (str): The string representation of an OWLAPI axiom.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        (RangeNode): A parsed syntactic tree given what parentheses to be matched. </span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">axiom_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">abbr_axiom_text</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">)</span>
-    <span class="c1"># print(&quot;To parse the following (transformed) axiom text:\n&quot;, axiom_text)</span>
-    <span class="c1"># parse complex patterns first</span>
-    <span class="n">cur_parsed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_by_parentheses</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">)</span>
-    <span class="c1"># parse the IRI patterns latter</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_by_parentheses</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">,</span> <span class="n">cur_parsed</span><span class="p">,</span> <span class="n">for_iri</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.onto.verbaliser.OntologyAxiomParser.parse_by_parentheses" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">parse_by_parentheses</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">,</span> <span class="n">already_parsed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">for_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
-  </span>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Parse an <code>OWLAxiom</code> based on parentheses matching into a <code>RangeNode</code>. </p>
-<p>This function needs to be applied twice to get a fully parsed <code>RangeNode</code> because IRIs have
-a different parenthesis pattern.</p>
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>axiom_text</code></td>
-          <td>
-                <code>str</code>
-          </td>
-          <td><p>The string representation of an OWLAPI axiom.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr>
-          <td><code>already_parsed</code></td>
-          <td>
-                <code><a class="autorefs autorefs-internal" title="deeponto.onto.verbaliser.RangeNode" href="#deeponto.onto.verbaliser.RangeNode">RangeNode</a></code>
-          </td>
-          <td><p>A partially parsed <code>RangeNode</code> to continue with. Defaults to <code>None</code>.</p></td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-        <tr>
-          <td><code>for_iri</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td><p>Parentheses are by default <code>()</code> but will be changed to <code>&lt;&gt;</code> for IRIs. Defaults to <code>False</code>.</p></td>
-          <td>
-                <code>False</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-  <p><strong>Raises:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td>
-                <code>RuntimeError</code>
-          </td>
-          <td><p>Raised when the input axiom text is nor properly formatted.</p></td>
-        </tr>
-    </tbody>
-  </table>
-
-  <p><strong>Returns:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td>
-                <code><a class="autorefs autorefs-internal" title="deeponto.onto.verbaliser.RangeNode" href="#deeponto.onto.verbaliser.RangeNode">RangeNode</a></code>
-          </td>
-          <td><p>A parsed syntactic tree given what parentheses to be matched.</p></td>
-        </tr>
-    </tbody>
-  </table>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/onto/verbaliser.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
+        <details class="quote">
+          <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
@@ -1404,109 +1045,10 @@ a different parenthesis pattern.</p>
 <span class="normal">186</span>
 <span class="normal">187</span>
 <span class="normal">188</span>
-<span class="normal">189</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
-<span class="k">def</span> <span class="nf">parse_by_parentheses</span><span class="p">(</span>
-    <span class="bp">cls</span><span class="p">,</span> <span class="n">axiom_text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">already_parsed</span><span class="p">:</span> <span class="n">RangeNode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">for_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` based on parentheses matching into a `RangeNode`. </span>
-
-<span class="sd">    This function needs to be applied twice to get a fully parsed `RangeNode` because IRIs have</span>
-<span class="sd">    a different parenthesis pattern.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        axiom_text (str): The string representation of an OWLAPI axiom.</span>
-<span class="sd">        already_parsed (RangeNode, optional): A partially parsed `RangeNode` to continue with. Defaults to `None`.</span>
-<span class="sd">        for_iri (bool, optional): Parentheses are by default `()` but will be changed to `&lt;&gt;` for IRIs. Defaults to `False`.</span>
-
-<span class="sd">    Raises:</span>
-<span class="sd">        RuntimeError: Raised when the input axiom text is nor properly formatted.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        (RangeNode): A parsed syntactic tree given what parentheses to be matched. </span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">already_parsed</span><span class="p">:</span>
-        <span class="c1"># a root node that covers the entire sentence</span>
-        <span class="n">parsed</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;Root&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">axiom_text</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">parsed</span> <span class="o">=</span> <span class="n">already_parsed</span>
-    <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">left_par</span> <span class="o">=</span> <span class="s2">&quot;(&quot;</span>
-    <span class="n">right_par</span> <span class="o">=</span> <span class="s2">&quot;)&quot;</span>
-    <span class="k">if</span> <span class="n">for_iri</span><span class="p">:</span>
-        <span class="n">left_par</span> <span class="o">=</span> <span class="s2">&quot;&lt;&quot;</span>
-        <span class="n">right_par</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span>
-
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axiom_text</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">left_par</span><span class="p">:</span>
-            <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">right_par</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">start</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
-                <span class="n">end</span> <span class="o">=</span> <span class="n">i</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">for_iri</span><span class="p">:</span>
-                    <span class="c1"># the first five characters refer to the complex pattern type</span>
-                    <span class="n">node</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span>
-                        <span class="n">start</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span>
-                        <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-                        <span class="nb">type</span><span class="o">=</span><span class="n">axiom_text</span><span class="p">[</span><span class="n">start</span> <span class="o">-</span> <span class="mi">5</span> <span class="p">:</span> <span class="n">start</span><span class="p">],</span>
-                        <span class="n">text</span><span class="o">=</span><span class="n">axiom_text</span><span class="p">[</span><span class="n">start</span> <span class="o">-</span> <span class="mi">5</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
-                    <span class="p">)</span>
-                    <span class="n">parsed</span><span class="o">.</span><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="c1"># no preceding characters for just atomic class (IRI)</span>
-                    <span class="n">node</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span>
-                        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;IRI&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">axiom_text</span><span class="p">[</span><span class="n">start</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
-                    <span class="p">)</span>
-                    <span class="n">parsed</span><span class="o">.</span><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
-            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Too many closing parentheses&quot;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">stack</span><span class="p">:</span>  <span class="c1"># check if stack is empty afterwards</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Too many opening parentheses&quot;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">parsed</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-
-
-  </div>
-
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="deeponto.onto.verbaliser.RangeNode" class="doc doc-heading">
-        <code>RangeNode</code>
-
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-      <p class="doc doc-class-bases">
-        Bases: <code><span title="anytree.NodeMixin">NodeMixin</span></code></p>
-
-  
-      <p>A tree implementation for ranges (without partial overlap).</p>
-<ul>
-<li>parent node's range fully covers child node's range, e.g., <code>[1, 10]</code> is a parent of <code>[2, 5]</code>.</li>
-<li>partial overlap between ranges not allowed, e.g., <code>[2, 4]</code> and <code>[3, 5]</code> cannot appear in the same <code>RangeNodeTree</code>.</li>
-<li>non-overlap ranges are on different branches.</li>
-<li>child nodes are ordered according to their relative positions.</li>
-</ul>
-
-
-        <details class="quote">
-          <summary>Source code in <code>deeponto/onto/verbaliser.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">192</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
 <span class="normal">193</span>
 <span class="normal">194</span>
 <span class="normal">195</span>
@@ -1596,49 +1138,949 @@ a different parenthesis pattern.</p>
 <span class="normal">279</span>
 <span class="normal">280</span>
 <span class="normal">281</span>
-<span class="normal">282</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">RangeNode</span><span class="p">(</span><span class="n">NodeMixin</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A tree implementation for ranges (without partial overlap).</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">OntologySyntaxParser</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;A syntax parser for the OWL logical expressions, e.g., [`OWLAxiom`](http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html)</span>
+<span class="sd">    and [`OWLClassExpression`](https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/model/OWLClassExpression.html).</span>
 
-<span class="sd">        - parent node&#39;s range fully covers child node&#39;s range, e.g., `[1, 10]` is a parent of `[2, 5]`.</span>
-<span class="sd">        - partial overlap between ranges not allowed, e.g., `[2, 4]` and `[3, 5]` cannot appear in the same `RangeNodeTree`.</span>
-<span class="sd">        - non-overlap ranges are on different branches.</span>
-<span class="sd">        - child nodes are ordered according to their relative positions.</span>
+<span class="sd">    It makes use of the string representation (based on Manchester Syntax) defined in the OWLAPI. In Python,</span>
+<span class="sd">    such string can be accessed by simply using `#!python str(some_owl_object)`.</span>
+
+<span class="sd">    To keep the Java import in the main [`Ontology`][deeponto.onto.Ontology] class,</span>
+<span class="sd">    this parser does not deal with `OWLAxiom` directly but instead its **string representation**.</span>
+
+<span class="sd">    Due to the `OWLObject` syntax, this parser relies on two components:</span>
+
+<span class="sd">    1. Parentheses matching;</span>
+<span class="sd">    2. Tree construction ([`RangeNode`][deeponto.onto.parser.RangeNode]).</span>
+
+<span class="sd">    As a result, it will return a [`RangeNode`][deeponto.onto.parser.RangeNode] that</span>
+<span class="sd">    specifies the sub-formulas (and their respective **positions in the string representation**)</span>
+<span class="sd">    in a tree structure.</span>
+
+<span class="sd">    !!! warning</span>
+
+<span class="sd">        The parser currently supports a limited set of [patterns][deeponto.onto.parser.OntologyAxiomParser.abbreviate_owl_expression]</span>
+<span class="sd">        due to the limitations of the ontology verbalisation module. Kindly ask the repository maintainer to add more patterns if needed.</span>
+
+<span class="sd">    Examples:</span>
+
+<span class="sd">        Suppose the input is an `OWLAxiom` that has the string representation:</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">        &gt;&gt;&gt; str(owl_axiom)</span>
+<span class="sd">        &gt;&gt;&gt; &#39;EquivalentClasses(&lt;http://purl.obolibrary.org/obo/FOODON_00001707&gt; ObjectIntersectionOf(&lt;http://purl.obolibrary.org/obo/FOODON_00002044&gt; ObjectSomeValuesFrom(&lt;http://purl.obolibrary.org/obo/RO_0001000&gt; &lt;http://purl.obolibrary.org/obo/FOODON_03412116&gt;)) )&#39;</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        After apply the parser, a [`RangeNode`][deeponto.onto.parser.RangeNode] will be returned which can be rentered as:</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">        axiom_parser = OntologyAxiomParser()</span>
+<span class="sd">        print(axiom_parser.parse(str(owl_axiom)).render_tree())</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        `#!console Output:`</span>
+<span class="sd">        :   &amp;#32;</span>
+<span class="sd">            ```python</span>
+<span class="sd">            Root@[0:inf]</span>
+<span class="sd">            └── EQV@[0:212]</span>
+<span class="sd">                ├── FOODON_00001707@[6:54]</span>
+<span class="sd">                └── AND@[55:210]</span>
+<span class="sd">                    ├── FOODON_00002044@[61:109]</span>
+<span class="sd">                    └── EX.@[110:209]</span>
+<span class="sd">                        ├── RO_0001000@[116:159]</span>
+<span class="sd">                        └── FOODON_03412116@[160:208]</span>
+<span class="sd">            ```</span>
+
+<span class="sd">        Or, if `graphviz` (installed by e.g., `sudo apt install graphviz`) is available,</span>
+<span class="sd">        you can visualise the tree as an image by:</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">        axiom_parser.parse(str(owl_axiom)).render_image()</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        `#!console Output:`</span>
+
+<span class="sd">        &lt;p align=&quot;center&quot;&gt;</span>
+<span class="sd">            &lt;img alt=&quot;range_node&quot; src=&quot;../../../assets/example_range_node.png&quot; style=&quot;padding: 30px 50px&quot;&gt;</span>
+<span class="sd">        &lt;/p&gt;</span>
+
+
+<span class="sd">        The name for each node has the form `{node_type}@[{start}:{end}]`, which means a node of the type `{node_type}` is</span>
+<span class="sd">        located at the range `[{start}:{end}]` in the **abbreviated** expression  (see [`abbreviate_owl_expression`][deeponto.onto.parser.OntologyAxiomParser.abbreviate_owl_expression]</span>
+<span class="sd">        below).</span>
+
+<span class="sd">        The leaf nodes are IRIs and they are represented by the last segment (split by `&quot;/&quot;`) of the whole IRI.</span>
+
+<span class="sd">        Child nodes can be accessed by `.children`, the string representation of the sub-formula in this node can be</span>
+<span class="sd">        accessed by `.text`. For example:</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">        parser.parse(str(owl_axiom)).children[0].children[1].text</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        `#!console Output:`</span>
+<span class="sd">        :   &amp;#32;</span>
+<span class="sd">            ```python</span>
+<span class="sd">            &#39;[AND](&lt;http://purl.obolibrary.org/obo/FOODON_00002044&gt; [EX.](&lt;http://purl.obolibrary.org/obo/RO_0001000&gt; &lt;http://purl.obolibrary.org/obo/FOODON_03412116&gt;))&#39;</span>
+<span class="sd">            ```</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">abbreviate_owl_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Abbreviate the string representations of logical operators to a</span>
+<span class="sd">        fixed length (easier for parsing).</span>
+
+<span class="sd">        The abbreviations are as follows:</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">        {</span>
+<span class="sd">            &quot;ObjectComplementOf&quot;: &quot;[NEG]&quot;,  # negation</span>
+<span class="sd">            &quot;ObjectSomeValuesFrom&quot;: &quot;[EX.]&quot;,  # existential restriction</span>
+<span class="sd">            &quot;ObjectAllValuesFrom&quot;: &quot;[ALL]&quot;,  # universal restriction</span>
+<span class="sd">            &quot;ObjectUnionOf&quot;: &quot;[OR.]&quot;,  # disjunction</span>
+<span class="sd">            &quot;ObjectIntersectionOf&quot;: &quot;[AND]&quot;,  # conjunction</span>
+<span class="sd">            &quot;EquivalentClasses&quot;: &quot;[EQV]&quot;,  # equivalence</span>
+<span class="sd">            &quot;SubClassOf&quot;: &quot;[SUB]&quot;,  # subsumed by</span>
+<span class="sd">            &quot;SuperClassOf&quot;: &quot;[SUP]&quot;,  # subsumes</span>
+<span class="sd">        }</span>
+<span class="sd">        ```</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            owl_expression (str): The string representation of an `OWLObject`.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (str): The modified string representation of this `OWLObject` where the logical operators are abbreviated.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ABBREVIATION_DICT</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">owl_expression</span> <span class="o">=</span> <span class="n">owl_expression</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">owl_expression</span>
+
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OWLObject</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.parser.RangeNode].</span>
+
+<span class="sd">        This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.parser.OntologyAxiomParser.parse_by_parentheses]</span>
+<span class="sd">        method below.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            owl_expression (Union[str, OWLObject]): The string representation of an `OWLObject` or the `OWLObject` itself.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (RangeNode): A parsed syntactic tree given what parentheses to be matched.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">owl_expression</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">)</span>
+        <span class="n">owl_expression</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">abbreviate_owl_expression</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">)</span>
+        <span class="c1"># print(&quot;To parse the following (transformed) axiom text:\n&quot;, owl_expression)</span>
+        <span class="c1"># parse complex patterns first</span>
+        <span class="n">cur_parsed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_by_parentheses</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">)</span>
+        <span class="c1"># parse the IRI patterns latter</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_by_parentheses</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">,</span> <span class="n">cur_parsed</span><span class="p">,</span> <span class="n">for_iri</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">parse_by_parentheses</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">already_parsed</span><span class="p">:</span> <span class="n">RangeNode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">for_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` based on parentheses matching into a [`RangeNode`][deeponto.onto.parser.RangeNode].</span>
+
+<span class="sd">        This function needs to be applied twice to get a fully parsed [`RangeNode`][deeponto.onto.parser.RangeNode] because IRIs have</span>
+<span class="sd">        a different parenthesis pattern.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            owl_expression (str): The string representation of an `OWLObject`.</span>
+<span class="sd">            already_parsed (RangeNode, optional): A partially parsed [`RangeNode`][deeponto.onto.parser.RangeNode] to continue with. Defaults to `None`.</span>
+<span class="sd">            for_iri (bool, optional): Parentheses are by default `()` but will be changed to `&lt;&gt;` for IRIs. Defaults to `False`.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            RuntimeError: Raised when the input axiom text is nor properly formatted.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            (RangeNode): A parsed syntactic tree given what parentheses to be matched.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">already_parsed</span><span class="p">:</span>
+            <span class="c1"># a root node that covers the entire sentence</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Root&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">owl_expression</span><span class="p">,</span> <span class="n">is_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parsed</span> <span class="o">=</span> <span class="n">already_parsed</span>
+        <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">left_par</span> <span class="o">=</span> <span class="s2">&quot;(&quot;</span>
+        <span class="n">right_par</span> <span class="o">=</span> <span class="s2">&quot;)&quot;</span>
+        <span class="k">if</span> <span class="n">for_iri</span><span class="p">:</span>
+            <span class="n">left_par</span> <span class="o">=</span> <span class="s2">&quot;&lt;&quot;</span>
+            <span class="n">right_par</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">left_par</span><span class="p">:</span>
+                <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">right_par</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">start</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                    <span class="n">end</span> <span class="o">=</span> <span class="n">i</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">for_iri</span><span class="p">:</span>
+                        <span class="c1"># the first character is actually &quot;[&quot;</span>
+                        <span class="n">real_start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="mi">5</span>
+                        <span class="n">axiom_type</span> <span class="o">=</span> <span class="n">owl_expression</span><span class="p">[</span><span class="n">real_start</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">start</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                        <span class="n">node</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span>
+                            <span class="n">real_start</span><span class="p">,</span>
+                            <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">axiom_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="n">text</span><span class="o">=</span><span class="n">owl_expression</span><span class="p">[</span><span class="n">real_start</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
+                            <span class="n">is_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="n">parsed</span><span class="o">.</span><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># no preceding characters for just atomic class (IRI)</span>
+                        <span class="n">abbr_iri</span> <span class="o">=</span> <span class="n">owl_expression</span><span class="p">[</span><span class="n">start</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">)</span>
+                        <span class="n">node</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span>
+                            <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">abbr_iri</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">owl_expression</span><span class="p">[</span><span class="n">start</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">is_iri</span><span class="o">=</span><span class="kc">True</span>
+                        <span class="p">)</span>
+                        <span class="n">parsed</span><span class="o">.</span><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Too many closing parentheses&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">stack</span><span class="p">:</span>  <span class="c1"># check if stack is empty afterwards</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Too many opening parentheses&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">parsed</span>
+</code></pre></div></td></tr></table></div>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.verbalisation.OntologySyntaxParser.abbreviate_owl_expression" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">abbreviate_owl_expression</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Abbreviate the string representations of logical operators to a
+fixed length (easier for parsing).</p>
+<p>The abbreviations are as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="s2">&quot;ObjectComplementOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[NEG]&quot;</span><span class="p">,</span>  <span class="c1"># negation</span>
+    <span class="s2">&quot;ObjectSomeValuesFrom&quot;</span><span class="p">:</span> <span class="s2">&quot;[EX.]&quot;</span><span class="p">,</span>  <span class="c1"># existential restriction</span>
+    <span class="s2">&quot;ObjectAllValuesFrom&quot;</span><span class="p">:</span> <span class="s2">&quot;[ALL]&quot;</span><span class="p">,</span>  <span class="c1"># universal restriction</span>
+    <span class="s2">&quot;ObjectUnionOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[OR.]&quot;</span><span class="p">,</span>  <span class="c1"># disjunction</span>
+    <span class="s2">&quot;ObjectIntersectionOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[AND]&quot;</span><span class="p">,</span>  <span class="c1"># conjunction</span>
+    <span class="s2">&quot;EquivalentClasses&quot;</span><span class="p">:</span> <span class="s2">&quot;[EQV]&quot;</span><span class="p">,</span>  <span class="c1"># equivalence</span>
+    <span class="s2">&quot;SubClassOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[SUB]&quot;</span><span class="p">,</span>  <span class="c1"># subsumed by</span>
+    <span class="s2">&quot;SuperClassOf&quot;</span><span class="p">:</span> <span class="s2">&quot;[SUP]&quot;</span><span class="p">,</span>  <span class="c1"># subsumes</span>
+<span class="p">}</span>
+</code></pre></div>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>owl_expression</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The string representation of an <code>OWLObject</code>.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The modified string representation of this <code>OWLObject</code> where the logical operators are abbreviated.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span>
+<span class="normal">232</span>
+<span class="normal">233</span>
+<span class="normal">234</span>
+<span class="normal">235</span>
+<span class="normal">236</span>
+<span class="normal">237</span>
+<span class="normal">238</span>
+<span class="normal">239</span>
+<span class="normal">240</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">abbreviate_owl_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Abbreviate the string representations of logical operators to a</span>
+<span class="sd">    fixed length (easier for parsing).</span>
+
+<span class="sd">    The abbreviations are as follows:</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    {</span>
+<span class="sd">        &quot;ObjectComplementOf&quot;: &quot;[NEG]&quot;,  # negation</span>
+<span class="sd">        &quot;ObjectSomeValuesFrom&quot;: &quot;[EX.]&quot;,  # existential restriction</span>
+<span class="sd">        &quot;ObjectAllValuesFrom&quot;: &quot;[ALL]&quot;,  # universal restriction</span>
+<span class="sd">        &quot;ObjectUnionOf&quot;: &quot;[OR.]&quot;,  # disjunction</span>
+<span class="sd">        &quot;ObjectIntersectionOf&quot;: &quot;[AND]&quot;,  # conjunction</span>
+<span class="sd">        &quot;EquivalentClasses&quot;: &quot;[EQV]&quot;,  # equivalence</span>
+<span class="sd">        &quot;SubClassOf&quot;: &quot;[SUB]&quot;,  # subsumed by</span>
+<span class="sd">        &quot;SuperClassOf&quot;: &quot;[SUP]&quot;,  # subsumes</span>
+<span class="sd">    }</span>
+<span class="sd">    ```</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        owl_expression (str): The string representation of an `OWLObject`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (str): The modified string representation of this `OWLObject` where the logical operators are abbreviated.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ABBREVIATION_DICT</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">owl_expression</span> <span class="o">=</span> <span class="n">owl_expression</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">owl_expression</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.verbalisation.OntologySyntaxParser.parse" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">parse</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Parse an <code>OWLAxiom</code> into a [<code>RangeNode</code>][deeponto.onto.parser.RangeNode].</p>
+<p>This is the main entry for using the parser, which relies on the [<code>parse_by_parentheses</code>][deeponto.onto.parser.OntologyAxiomParser.parse_by_parentheses]
+method below.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>owl_expression</code></td>
+          <td>
+                <code><span title="typing.Union">Union</span>[str, <span title="org.semanticweb.owlapi.model.OWLObject">OWLObject</span>]</code>
+          </td>
+          <td><p>The string representation of an <code>OWLObject</code> or the <code>OWLObject</code> itself.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="deeponto.onto.verbalisation.RangeNode" href="#deeponto.onto.verbalisation.RangeNode">RangeNode</a></code>
+          </td>
+          <td><p>A parsed syntactic tree given what parentheses to be matched.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span>
+<span class="normal">261</span>
+<span class="normal">262</span>
+<span class="normal">263</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OWLObject</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.parser.RangeNode].</span>
+
+<span class="sd">    This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.parser.OntologyAxiomParser.parse_by_parentheses]</span>
+<span class="sd">    method below.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        owl_expression (Union[str, OWLObject]): The string representation of an `OWLObject` or the `OWLObject` itself.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (RangeNode): A parsed syntactic tree given what parentheses to be matched.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">owl_expression</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">)</span>
+    <span class="n">owl_expression</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">abbreviate_owl_expression</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">)</span>
+    <span class="c1"># print(&quot;To parse the following (transformed) axiom text:\n&quot;, owl_expression)</span>
+    <span class="c1"># parse complex patterns first</span>
+    <span class="n">cur_parsed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_by_parentheses</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">)</span>
+    <span class="c1"># parse the IRI patterns latter</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_by_parentheses</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">,</span> <span class="n">cur_parsed</span><span class="p">,</span> <span class="n">for_iri</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.verbalisation.OntologySyntaxParser.parse_by_parentheses" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">parse_by_parentheses</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">,</span> <span class="n">already_parsed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">for_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Parse an <code>OWLAxiom</code> based on parentheses matching into a [<code>RangeNode</code>][deeponto.onto.parser.RangeNode].</p>
+<p>This function needs to be applied twice to get a fully parsed [<code>RangeNode</code>][deeponto.onto.parser.RangeNode] because IRIs have
+a different parenthesis pattern.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>owl_expression</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>The string representation of an <code>OWLObject</code>.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>already_parsed</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="deeponto.onto.verbalisation.RangeNode" href="#deeponto.onto.verbalisation.RangeNode">RangeNode</a></code>
+          </td>
+          <td><p>A partially parsed [<code>RangeNode</code>][deeponto.onto.parser.RangeNode] to continue with. Defaults to <code>None</code>.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>for_iri</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>Parentheses are by default <code>()</code> but will be changed to <code>&lt;&gt;</code> for IRIs. Defaults to <code>False</code>.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Raises:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>RuntimeError</code>
+          </td>
+          <td><p>Raised when the input axiom text is nor properly formatted.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="deeponto.onto.verbalisation.RangeNode" href="#deeponto.onto.verbalisation.RangeNode">RangeNode</a></code>
+          </td>
+          <td><p>A parsed syntactic tree given what parentheses to be matched.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span>
+<span class="normal">292</span>
+<span class="normal">293</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span>
+<span class="normal">310</span>
+<span class="normal">311</span>
+<span class="normal">312</span>
+<span class="normal">313</span>
+<span class="normal">314</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span>
+<span class="normal">333</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">parse_by_parentheses</span><span class="p">(</span>
+    <span class="bp">cls</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">already_parsed</span><span class="p">:</span> <span class="n">RangeNode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">for_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` based on parentheses matching into a [`RangeNode`][deeponto.onto.parser.RangeNode].</span>
+
+<span class="sd">    This function needs to be applied twice to get a fully parsed [`RangeNode`][deeponto.onto.parser.RangeNode] because IRIs have</span>
+<span class="sd">    a different parenthesis pattern.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        owl_expression (str): The string representation of an `OWLObject`.</span>
+<span class="sd">        already_parsed (RangeNode, optional): A partially parsed [`RangeNode`][deeponto.onto.parser.RangeNode] to continue with. Defaults to `None`.</span>
+<span class="sd">        for_iri (bool, optional): Parentheses are by default `()` but will be changed to `&lt;&gt;` for IRIs. Defaults to `False`.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        RuntimeError: Raised when the input axiom text is nor properly formatted.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (RangeNode): A parsed syntactic tree given what parentheses to be matched.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">already_parsed</span><span class="p">:</span>
+        <span class="c1"># a root node that covers the entire sentence</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Root&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">owl_expression</span><span class="p">,</span> <span class="n">is_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">already_parsed</span>
+    <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">left_par</span> <span class="o">=</span> <span class="s2">&quot;(&quot;</span>
+    <span class="n">right_par</span> <span class="o">=</span> <span class="s2">&quot;)&quot;</span>
+    <span class="k">if</span> <span class="n">for_iri</span><span class="p">:</span>
+        <span class="n">left_par</span> <span class="o">=</span> <span class="s2">&quot;&lt;&quot;</span>
+        <span class="n">right_par</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">owl_expression</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">left_par</span><span class="p">:</span>
+            <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="n">right_par</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="n">i</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">for_iri</span><span class="p">:</span>
+                    <span class="c1"># the first character is actually &quot;[&quot;</span>
+                    <span class="n">real_start</span> <span class="o">=</span> <span class="n">start</span> <span class="o">-</span> <span class="mi">5</span>
+                    <span class="n">axiom_type</span> <span class="o">=</span> <span class="n">owl_expression</span><span class="p">[</span><span class="n">real_start</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:</span> <span class="n">start</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="n">node</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span>
+                        <span class="n">real_start</span><span class="p">,</span>
+                        <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">axiom_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                        <span class="n">text</span><span class="o">=</span><span class="n">owl_expression</span><span class="p">[</span><span class="n">real_start</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span>
+                        <span class="n">is_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">parsed</span><span class="o">.</span><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># no preceding characters for just atomic class (IRI)</span>
+                    <span class="n">abbr_iri</span> <span class="o">=</span> <span class="n">owl_expression</span><span class="p">[</span><span class="n">start</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;&gt;&quot;</span><span class="p">)</span>
+                    <span class="n">node</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span>
+                        <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">abbr_iri</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">owl_expression</span><span class="p">[</span><span class="n">start</span> <span class="p">:</span> <span class="n">end</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">is_iri</span><span class="o">=</span><span class="kc">True</span>
+                    <span class="p">)</span>
+                    <span class="n">parsed</span><span class="o">.</span><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Too many closing parentheses&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">stack</span><span class="p">:</span>  <span class="c1"># check if stack is empty afterwards</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Too many opening parentheses&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parsed</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="deeponto.onto.verbalisation.RangeNode" class="doc doc-heading">
+        <code>RangeNode</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="anytree.NodeMixin">NodeMixin</span></code></p>
+
+  
+      <p>A tree implementation for ranges (without partial overlap).</p>
+<ul>
+<li>Parent node's range fully covers child node's range, e.g., <code>[1, 10]</code> is a parent of <code>[2, 5]</code>.</li>
+<li>Partial overlap between ranges are not allowed, e.g., <code>[2, 4]</code> and <code>[3, 5]</code> cannot appear in the same <code>RangeNodeTree</code>.</li>
+<li>Non-overlap ranges are on different branches (irrelevant).</li>
+<li>Child nodes are ordered according to their relative positions.</li>
+</ul>
+
+
+        <details class="quote">
+          <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">345</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span>
+<span class="normal">352</span>
+<span class="normal">353</span>
+<span class="normal">354</span>
+<span class="normal">355</span>
+<span class="normal">356</span>
+<span class="normal">357</span>
+<span class="normal">358</span>
+<span class="normal">359</span>
+<span class="normal">360</span>
+<span class="normal">361</span>
+<span class="normal">362</span>
+<span class="normal">363</span>
+<span class="normal">364</span>
+<span class="normal">365</span>
+<span class="normal">366</span>
+<span class="normal">367</span>
+<span class="normal">368</span>
+<span class="normal">369</span>
+<span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span>
+<span class="normal">393</span>
+<span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span>
+<span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">RangeNode</span><span class="p">(</span><span class="n">NodeMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;A tree implementation for ranges (without partial overlap).</span>
+
+<span class="sd">    - Parent node&#39;s range fully covers child node&#39;s range, e.g., `[1, 10]` is a parent of `[2, 5]`.</span>
+<span class="sd">    - Partial overlap between ranges are not allowed, e.g., `[2, 4]` and `[3, 5]` cannot appear in the same `RangeNodeTree`.</span>
+<span class="sd">    - Non-overlap ranges are on different branches (irrelevant).</span>
+<span class="sd">    - Child nodes are ordered according to their relative positions.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;=</span> <span class="n">end</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;invalid start and end positions ...&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">end</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Root&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span> <span class="k">else</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">@[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="si">}</span><span class="s2">]&quot;</span>  <span class="c1"># add start and ent to the name</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
 
     <span class="c1"># def __eq__(self, other: RangeNode):</span>
+    <span class="c1">#     &quot;&quot;&quot;Two ranges are equal if they have the same `start` and `end`.</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
     <span class="c1">#     return self.start == other.start and self.end == other.end</span>
 
     <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Modified compare function for a range.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compare two ranges if they have a different `start` and/or a different `end`.</span>
 
-<span class="sd">        !!! note</span>
+<span class="sd">        - $R_1 \lt R_2$: if range $R_1$ is completely contained in range $R_2$, and $R_1 \neq R_2$.</span>
+<span class="sd">        - $R_1 \gt R_2$: if range $R_2$ is completely contained in range $R_1$,  and $R_1 \neq R_2$.</span>
+<span class="sd">        - `&quot;irrelevant&quot;`: if range $R_1$ and range $R_2$ have no overlap.</span>
 
-<span class="sd">            There are three kinds of comparisons:</span>
+<span class="sd">        !!! warning</span>
 
-<span class="sd">            - $R_1 \leq R_2$: if range $R_1$ is completely contained in range $R_2$.</span>
-<span class="sd">            - $R_1 \gt R_2$: if range $R_2$ is completely contained in range $R_1$.</span>
-<span class="sd">            - `&quot;irrelevant&quot;`: if range $R_1$ and range $R_2$ have no overlap.</span>
-
-<span class="sd">        NOTE that partial overlap is not allowed.</span>
+<span class="sd">            Partial overlap is not allowed.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># ranges inside</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+
+        <span class="c1"># ranges outside</span>
         <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">True</span>
-        <span class="k">elif</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
-            <span class="c1"># print(&quot;compared ranges are irrelevant ...&quot;)</span>
+
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;irrelevant&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;compared ranges have partial overlap ...&quot;</span><span class="p">)</span>
+
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Compared ranges have a partial overlap.&quot;</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">sort_by_start</span><span class="p">(</span><span class="n">nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RangeNode</span><span class="p">]):</span>
@@ -1647,7 +2089,7 @@ a different parenthesis pattern.</p>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">temp</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">insert_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inserting a child `RangeNode`.</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inserting a child [`RangeNode`][deeponto.onto.parser.RangeNode].</span>
 
 <span class="sd">        Child nodes have a smaller (inclusive) range, e.g., `[2, 5]` is a child of `[1, 6]`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1670,6 +2112,7 @@ a different parenthesis pattern.</p>
                     <span class="n">ch</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">node</span>
                     <span class="c1"># NOTE: should not break here as it could be parent of multiple children !</span>
                     <span class="c1"># break</span>
+                <span class="c1"># NOTE: the equal case is when two nodes are exactly the same, no operation needed</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">inserted</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sort_by_start</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
@@ -1678,15 +2121,24 @@ a different parenthesis pattern.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># only present downwards (down, left, right)</span>
-        <span class="n">printed</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="si">}</span><span class="s2">]&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
-            <span class="n">printed</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">))[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="si">}</span><span class="s2">]&quot;</span>
-        <span class="k">return</span> <span class="n">printed</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
 
-    <span class="k">def</span> <span class="nf">print_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pretty printing in the tree structure.&quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">RenderTree</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+    <span class="k">def</span> <span class="nf">render_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render the whole tree.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">RenderTree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">render_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calling this function will generate a temporary `range_node.png` file</span>
+<span class="sd">        which will be displayed.</span>
+
+<span class="sd">        To make this visualisation work, you need to install `graphviz` by, e.g.,</span>
+
+<span class="sd">        ```bash</span>
+<span class="sd">        sudo apt install graphviz</span>
+<span class="sd">        ```</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">RenderTreeGraph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_picture</span><span class="p">(</span><span class="s2">&quot;range_node.png&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Image</span><span class="p">(</span><span class="s2">&quot;range_node.png&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -1706,7 +2158,7 @@ a different parenthesis pattern.</p>
 
 
 
-<h3 id="deeponto.onto.verbaliser.RangeNode.__gt__" class="doc doc-heading">
+<h3 id="deeponto.onto.verbalisation.RangeNode.__gt__" class="doc doc-heading">
 <code class="highlight language-python"><span class="fm">__gt__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></code>
 
 </h3>
@@ -1714,63 +2166,64 @@ a different parenthesis pattern.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Modified compare function for a range.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>There are three kinds of comparisons:</p>
+      <p>Compare two ranges if they have a different <code>start</code> and/or a different <code>end</code>.</p>
 <ul>
-<li><span class="arithmatex">\(R_1 \leq R_2\)</span>: if range <span class="arithmatex">\(R_1\)</span> is completely contained in range <span class="arithmatex">\(R_2\)</span>.</li>
-<li><span class="arithmatex">\(R_1 \gt R_2\)</span>: if range <span class="arithmatex">\(R_2\)</span> is completely contained in range <span class="arithmatex">\(R_1\)</span>.</li>
+<li><span class="arithmatex">\(R_1 \lt R_2\)</span>: if range <span class="arithmatex">\(R_1\)</span> is completely contained in range <span class="arithmatex">\(R_2\)</span>, and <span class="arithmatex">\(R_1 \neq R_2\)</span>.</li>
+<li><span class="arithmatex">\(R_1 \gt R_2\)</span>: if range <span class="arithmatex">\(R_2\)</span> is completely contained in range <span class="arithmatex">\(R_1\)</span>,  and <span class="arithmatex">\(R_1 \neq R_2\)</span>.</li>
 <li><code>"irrelevant"</code>: if range <span class="arithmatex">\(R_1\)</span> and range <span class="arithmatex">\(R_2\)</span> have no overlap.</li>
 </ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Partial overlap is not allowed.</p>
 </div>
-<p>NOTE that partial overlap is not allowed.</p>
 
       <details class="quote">
-        <summary>Source code in <code>deeponto/onto/verbaliser.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span>
-<span class="normal">217</span>
-<span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span>
-<span class="normal">221</span>
-<span class="normal">222</span>
-<span class="normal">223</span>
-<span class="normal">224</span>
-<span class="normal">225</span>
-<span class="normal">226</span>
-<span class="normal">227</span>
-<span class="normal">228</span>
-<span class="normal">229</span>
-<span class="normal">230</span>
-<span class="normal">231</span>
-<span class="normal">232</span>
-<span class="normal">233</span>
-<span class="normal">234</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Modified compare function for a range.</span>
+        <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">370</span>
+<span class="normal">371</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span>
+<span class="normal">377</span>
+<span class="normal">378</span>
+<span class="normal">379</span>
+<span class="normal">380</span>
+<span class="normal">381</span>
+<span class="normal">382</span>
+<span class="normal">383</span>
+<span class="normal">384</span>
+<span class="normal">385</span>
+<span class="normal">386</span>
+<span class="normal">387</span>
+<span class="normal">388</span>
+<span class="normal">389</span>
+<span class="normal">390</span>
+<span class="normal">391</span>
+<span class="normal">392</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compare two ranges if they have a different `start` and/or a different `end`.</span>
 
-<span class="sd">    !!! note</span>
+<span class="sd">    - $R_1 \lt R_2$: if range $R_1$ is completely contained in range $R_2$, and $R_1 \neq R_2$.</span>
+<span class="sd">    - $R_1 \gt R_2$: if range $R_2$ is completely contained in range $R_1$,  and $R_1 \neq R_2$.</span>
+<span class="sd">    - `&quot;irrelevant&quot;`: if range $R_1$ and range $R_2$ have no overlap.</span>
 
-<span class="sd">        There are three kinds of comparisons:</span>
+<span class="sd">    !!! warning</span>
 
-<span class="sd">        - $R_1 \leq R_2$: if range $R_1$ is completely contained in range $R_2$.</span>
-<span class="sd">        - $R_1 \gt R_2$: if range $R_2$ is completely contained in range $R_1$.</span>
-<span class="sd">        - `&quot;irrelevant&quot;`: if range $R_1$ and range $R_2$ have no overlap.</span>
-
-<span class="sd">    NOTE that partial overlap is not allowed.</span>
+<span class="sd">        Partial overlap is not allowed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># ranges inside</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+    <span class="c1"># ranges outside</span>
     <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
-    <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">True</span>
-    <span class="k">elif</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
-        <span class="c1"># print(&quot;compared ranges are irrelevant ...&quot;)</span>
+
+    <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">end</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">start</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;irrelevant&quot;</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;compared ranges have partial overlap ...&quot;</span><span class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Compared ranges have a partial overlap.&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -1781,7 +2234,7 @@ a different parenthesis pattern.</p>
 
 
 
-<h3 id="deeponto.onto.verbaliser.RangeNode.sort_by_start" class="doc doc-heading">
+<h3 id="deeponto.onto.verbalisation.RangeNode.sort_by_start" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">sort_by_start</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span></code>
   
   <span class="doc doc-labels">
@@ -1796,12 +2249,12 @@ a different parenthesis pattern.</p>
       <p>A sorting function that sorts the nodes by their starting positions.</p>
 
       <details class="quote">
-        <summary>Source code in <code>deeponto/onto/verbaliser.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">236</span>
-<span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+        <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">394</span>
+<span class="normal">395</span>
+<span class="normal">396</span>
+<span class="normal">397</span>
+<span class="normal">398</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">sort_by_start</span><span class="p">(</span><span class="n">nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RangeNode</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A sorting function that sorts the nodes by their starting positions.&quot;&quot;&quot;</span>
     <span class="n">temp</span> <span class="o">=</span> <span class="p">{</span><span class="n">sib</span><span class="p">:</span> <span class="n">sib</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">sib</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">}</span>
@@ -1816,7 +2269,7 @@ a different parenthesis pattern.</p>
 
 
 
-<h3 id="deeponto.onto.verbaliser.RangeNode.insert_child" class="doc doc-heading">
+<h3 id="deeponto.onto.verbalisation.RangeNode.insert_child" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">insert_child</span><span class="p">(</span><span class="n">node</span><span class="p">)</span></code>
 
 </h3>
@@ -1824,42 +2277,43 @@ a different parenthesis pattern.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Inserting a child <code>RangeNode</code>.</p>
+      <p>Inserting a child [<code>RangeNode</code>][deeponto.onto.parser.RangeNode].</p>
 <p>Child nodes have a smaller (inclusive) range, e.g., <code>[2, 5]</code> is a child of <code>[1, 6]</code>.</p>
 
       <details class="quote">
-        <summary>Source code in <code>deeponto/onto/verbaliser.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
-<span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span>
-<span class="normal">252</span>
-<span class="normal">253</span>
-<span class="normal">254</span>
-<span class="normal">255</span>
-<span class="normal">256</span>
-<span class="normal">257</span>
-<span class="normal">258</span>
-<span class="normal">259</span>
-<span class="normal">260</span>
-<span class="normal">261</span>
-<span class="normal">262</span>
-<span class="normal">263</span>
-<span class="normal">264</span>
-<span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
-<span class="normal">270</span>
-<span class="normal">271</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">insert_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inserting a child `RangeNode`.</span>
+        <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">400</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span>
+<span class="normal">414</span>
+<span class="normal">415</span>
+<span class="normal">416</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">insert_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inserting a child [`RangeNode`][deeponto.onto.parser.RangeNode].</span>
 
 <span class="sd">    Child nodes have a smaller (inclusive) range, e.g., `[2, 5]` is a child of `[1, 6]`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1882,6 +2336,7 @@ a different parenthesis pattern.</p>
                 <span class="n">ch</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">node</span>
                 <span class="c1"># NOTE: should not break here as it could be parent of multiple children !</span>
                 <span class="c1"># break</span>
+            <span class="c1"># NOTE: the equal case is when two nodes are exactly the same, no operation needed</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">inserted</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">node</span><span class="p">]</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sort_by_start</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
@@ -1898,23 +2353,72 @@ a different parenthesis pattern.</p>
 
 
 
-<h3 id="deeponto.onto.verbaliser.RangeNode.print_tree" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">print_tree</span><span class="p">()</span></code>
+<h3 id="deeponto.onto.verbalisation.RangeNode.render_tree" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">render_tree</span><span class="p">()</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Pretty printing in the tree structure.</p>
+      <p>Render the whole tree.</p>
 
       <details class="quote">
-        <summary>Source code in <code>deeponto/onto/verbaliser.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">print_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pretty printing in the tree structure.&quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">RenderTree</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+        <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">435</span>
+<span class="normal">436</span>
+<span class="normal">437</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">render_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render the whole tree.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">RenderTree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.verbalisation.RangeNode.render_image" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">render_image</span><span class="p">()</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Calling this function will generate a temporary <code>range_node.png</code> file
+which will be displayed.</p>
+<p>To make this visualisation work, you need to install <code>graphviz</code> by, e.g.,</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>graphviz
+</code></pre></div>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">439</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span>
+<span class="normal">446</span>
+<span class="normal">447</span>
+<span class="normal">448</span>
+<span class="normal">449</span>
+<span class="normal">450</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">render_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calling this function will generate a temporary `range_node.png` file</span>
+<span class="sd">    which will be displayed.</span>
+
+<span class="sd">    To make this visualisation work, you need to install `graphviz` by, e.g.,</span>
+
+<span class="sd">    ```bash</span>
+<span class="sd">    sudo apt install graphviz</span>
+<span class="sd">    ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">RenderTreeGraph</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">to_picture</span><span class="p">(</span><span class="s2">&quot;range_node.png&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Image</span><span class="p">(</span><span class="s2">&quot;range_node.png&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -1943,7 +2447,7 @@ a different parenthesis pattern.</p>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 24, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 27, 2023</span>
       
         <br>
         Created:
