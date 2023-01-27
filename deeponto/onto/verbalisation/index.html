@@ -933,9 +933,9 @@ this parser does not deal with <code>OWLAxiom</code> directly but instead its <s
 <p>Due to the <code>OWLObject</code> syntax, this parser relies on two components:</p>
 <ol>
 <li>Parentheses matching;</li>
-<li>Tree construction ([<code>RangeNode</code>][deeponto.onto.parser.RangeNode]).</li>
+<li>Tree construction (<a class="autorefs autorefs-internal" href="#deeponto.onto.verbalisation.RangeNode"><code>RangeNode</code></a>).</li>
 </ol>
-<p>As a result, it will return a [<code>RangeNode</code>][deeponto.onto.parser.RangeNode] that
+<p>As a result, it will return a <a class="autorefs autorefs-internal" href="#deeponto.onto.verbalisation.RangeNode"><code>RangeNode</code></a> that
 specifies the sub-formulas (and their respective <strong>positions in the string representation</strong>)
 in a tree structure.</p>
 <div class="admonition warning">
@@ -949,7 +949,7 @@ due to the limitations of the ontology verbalisation module. Kindly ask the repo
 <div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="nb">str</span><span class="p">(</span><span class="n">owl_axiom</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;EquivalentClasses(&lt;http://purl.obolibrary.org/obo/FOODON_00001707&gt; ObjectIntersectionOf(&lt;http://purl.obolibrary.org/obo/FOODON_00002044&gt; ObjectSomeValuesFrom(&lt;http://purl.obolibrary.org/obo/RO_0001000&gt; &lt;http://purl.obolibrary.org/obo/FOODON_03412116&gt;)) )&#39;</span>
 </code></pre></div>
-<p>After apply the parser, a [<code>RangeNode</code>][deeponto.onto.parser.RangeNode] will be returned which can be rentered as:</p>
+<p>After apply the parser, a <a class="autorefs autorefs-internal" href="#deeponto.onto.verbalisation.RangeNode"><code>RangeNode</code></a> will be returned which can be rentered as:</p>
 <div class="highlight"><pre><span></span><code><span class="n">axiom_parser</span> <span class="o">=</span> <span class="n">OntologyAxiomParser</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">axiom_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">owl_axiom</span><span class="p">))</span><span class="o">.</span><span class="n">render_tree</span><span class="p">())</span>
 </code></pre></div>
@@ -1211,9 +1211,9 @@ accessed by <code>.text</code>. For example:</p>
 <span class="sd">    Due to the `OWLObject` syntax, this parser relies on two components:</span>
 
 <span class="sd">    1. Parentheses matching;</span>
-<span class="sd">    2. Tree construction ([`RangeNode`][deeponto.onto.parser.RangeNode]).</span>
+<span class="sd">    2. Tree construction ([`RangeNode`][deeponto.onto.verbalisation.RangeNode]).</span>
 
-<span class="sd">    As a result, it will return a [`RangeNode`][deeponto.onto.parser.RangeNode] that</span>
+<span class="sd">    As a result, it will return a [`RangeNode`][deeponto.onto.verbalisation.RangeNode] that</span>
 <span class="sd">    specifies the sub-formulas (and their respective **positions in the string representation**)</span>
 <span class="sd">    in a tree structure.</span>
 
@@ -1231,7 +1231,7 @@ accessed by <code>.text</code>. For example:</p>
 <span class="sd">        &gt;&gt;&gt; &#39;EquivalentClasses(&lt;http://purl.obolibrary.org/obo/FOODON_00001707&gt; ObjectIntersectionOf(&lt;http://purl.obolibrary.org/obo/FOODON_00002044&gt; ObjectSomeValuesFrom(&lt;http://purl.obolibrary.org/obo/RO_0001000&gt; &lt;http://purl.obolibrary.org/obo/FOODON_03412116&gt;)) )&#39;</span>
 <span class="sd">        ```</span>
 
-<span class="sd">        After apply the parser, a [`RangeNode`][deeponto.onto.parser.RangeNode] will be returned which can be rentered as:</span>
+<span class="sd">        After apply the parser, a [`RangeNode`][deeponto.onto.verbalisation.RangeNode] will be returned which can be rentered as:</span>
 
 <span class="sd">        ```python</span>
 <span class="sd">        axiom_parser = OntologyAxiomParser()</span>
@@ -1319,7 +1319,7 @@ accessed by <code>.text</code>. For example:</p>
         <span class="k">return</span> <span class="n">owl_expression</span>
 
     <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OWLObject</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.parser.RangeNode].</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.verbalisation.RangeNode].</span>
 
 <span class="sd">        This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.parser.OntologyAxiomParser.parse_by_parentheses]</span>
 <span class="sd">        method below.</span>
@@ -1343,14 +1343,14 @@ accessed by <code>.text</code>. For example:</p>
     <span class="k">def</span> <span class="nf">parse_by_parentheses</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">already_parsed</span><span class="p">:</span> <span class="n">RangeNode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">for_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` based on parentheses matching into a [`RangeNode`][deeponto.onto.parser.RangeNode].</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` based on parentheses matching into a [`RangeNode`][deeponto.onto.verbalisation.RangeNode].</span>
 
-<span class="sd">        This function needs to be applied twice to get a fully parsed [`RangeNode`][deeponto.onto.parser.RangeNode] because IRIs have</span>
+<span class="sd">        This function needs to be applied twice to get a fully parsed [`RangeNode`][deeponto.onto.verbalisation.RangeNode] because IRIs have</span>
 <span class="sd">        a different parenthesis pattern.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            owl_expression (str): The string representation of an `OWLObject`.</span>
-<span class="sd">            already_parsed (RangeNode, optional): A partially parsed [`RangeNode`][deeponto.onto.parser.RangeNode] to continue with. Defaults to `None`.</span>
+<span class="sd">            already_parsed (RangeNode, optional): A partially parsed [`RangeNode`][deeponto.onto.verbalisation.RangeNode] to continue with. Defaults to `None`.</span>
 <span class="sd">            for_iri (bool, optional): Parentheses are by default `()` but will be changed to `&lt;&gt;` for IRIs. Defaults to `False`.</span>
 
 <span class="sd">        Raises:</span>
@@ -1563,7 +1563,7 @@ fixed length (easier for parsing).</p>
 
   <div class="doc doc-contents ">
   
-      <p>Parse an <code>OWLAxiom</code> into a [<code>RangeNode</code>][deeponto.onto.parser.RangeNode].</p>
+      <p>Parse an <code>OWLAxiom</code> into a <a class="autorefs autorefs-internal" href="#deeponto.onto.verbalisation.RangeNode"><code>RangeNode</code></a>.</p>
 <p>This is the main entry for using the parser, which relies on the [<code>parse_by_parentheses</code>][deeponto.onto.parser.OntologyAxiomParser.parse_by_parentheses]
 method below.</p>
 
@@ -1631,7 +1631,7 @@ method below.</p>
 <span class="normal">274</span>
 <span class="normal">275</span>
 <span class="normal">276</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OWLObject</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.parser.RangeNode].</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.verbalisation.RangeNode].</span>
 
 <span class="sd">    This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.parser.OntologyAxiomParser.parse_by_parentheses]</span>
 <span class="sd">    method below.</span>
@@ -1672,8 +1672,8 @@ method below.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Parse an <code>OWLAxiom</code> based on parentheses matching into a [<code>RangeNode</code>][deeponto.onto.parser.RangeNode].</p>
-<p>This function needs to be applied twice to get a fully parsed [<code>RangeNode</code>][deeponto.onto.parser.RangeNode] because IRIs have
+      <p>Parse an <code>OWLAxiom</code> based on parentheses matching into a <a class="autorefs autorefs-internal" href="#deeponto.onto.verbalisation.RangeNode"><code>RangeNode</code></a>.</p>
+<p>This function needs to be applied twice to get a fully parsed <a class="autorefs autorefs-internal" href="#deeponto.onto.verbalisation.RangeNode"><code>RangeNode</code></a> because IRIs have
 a different parenthesis pattern.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -1702,7 +1702,7 @@ a different parenthesis pattern.</p>
           <td>
                 <code><a class="autorefs autorefs-internal" title="deeponto.onto.verbalisation.RangeNode" href="#deeponto.onto.verbalisation.RangeNode">RangeNode</a></code>
           </td>
-          <td><p>A partially parsed [<code>RangeNode</code>][deeponto.onto.parser.RangeNode] to continue with. Defaults to <code>None</code>.</p></td>
+          <td><p>A partially parsed <a class="autorefs autorefs-internal" href="#deeponto.onto.verbalisation.RangeNode"><code>RangeNode</code></a> to continue with. Defaults to <code>None</code>.</p></td>
           <td>
                 <code>None</code>
           </td>
@@ -1826,14 +1826,14 @@ a different parenthesis pattern.</p>
 <span class="k">def</span> <span class="nf">parse_by_parentheses</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">already_parsed</span><span class="p">:</span> <span class="n">RangeNode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">for_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` based on parentheses matching into a [`RangeNode`][deeponto.onto.parser.RangeNode].</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` based on parentheses matching into a [`RangeNode`][deeponto.onto.verbalisation.RangeNode].</span>
 
-<span class="sd">    This function needs to be applied twice to get a fully parsed [`RangeNode`][deeponto.onto.parser.RangeNode] because IRIs have</span>
+<span class="sd">    This function needs to be applied twice to get a fully parsed [`RangeNode`][deeponto.onto.verbalisation.RangeNode] because IRIs have</span>
 <span class="sd">    a different parenthesis pattern.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        owl_expression (str): The string representation of an `OWLObject`.</span>
-<span class="sd">        already_parsed (RangeNode, optional): A partially parsed [`RangeNode`][deeponto.onto.parser.RangeNode] to continue with. Defaults to `None`.</span>
+<span class="sd">        already_parsed (RangeNode, optional): A partially parsed [`RangeNode`][deeponto.onto.verbalisation.RangeNode] to continue with. Defaults to `None`.</span>
 <span class="sd">        for_iri (bool, optional): Parentheses are by default `()` but will be changed to `&lt;&gt;` for IRIs. Defaults to `False`.</span>
 
 <span class="sd">    Raises:</span>
@@ -2089,7 +2089,7 @@ a different parenthesis pattern.</p>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">temp</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
     <span class="k">def</span> <span class="nf">insert_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inserting a child [`RangeNode`][deeponto.onto.parser.RangeNode].</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inserting a child [`RangeNode`][deeponto.onto.verbalisation.RangeNode].</span>
 
 <span class="sd">        Child nodes have a smaller (inclusive) range, e.g., `[2, 5]` is a child of `[1, 6]`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2277,7 +2277,7 @@ a different parenthesis pattern.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Inserting a child [<code>RangeNode</code>][deeponto.onto.parser.RangeNode].</p>
+      <p>Inserting a child <a class="autorefs autorefs-internal" href="#deeponto.onto.verbalisation.RangeNode"><code>RangeNode</code></a>.</p>
 <p>Child nodes have a smaller (inclusive) range, e.g., <code>[2, 5]</code> is a child of <code>[1, 6]</code>.</p>
 
       <details class="quote">
@@ -2313,7 +2313,7 @@ a different parenthesis pattern.</p>
 <span class="normal">428</span>
 <span class="normal">429</span>
 <span class="normal">430</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">insert_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inserting a child [`RangeNode`][deeponto.onto.parser.RangeNode].</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inserting a child [`RangeNode`][deeponto.onto.verbalisation.RangeNode].</span>
 
 <span class="sd">    Child nodes have a smaller (inclusive) range, e.g., `[2, 5]` is a child of `[1, 6]`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
