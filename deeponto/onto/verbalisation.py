@@ -155,7 +155,7 @@ class OntologySyntaxParser:
 
     !!! warning
 
-        The parser currently supports a limited set of [patterns][deeponto.onto.parser.OntologyAxiomParser.abbreviate_owl_expression]
+        The parser currently supports a limited set of [patterns][deeponto.onto.verbalisation.OntologyAxiomParser.abbreviate_owl_expression]
         due to the limitations of the ontology verbalisation module. Kindly ask the repository maintainer to add more patterns if needed.
 
     Examples:
@@ -202,7 +202,7 @@ class OntologySyntaxParser:
 
 
         The name for each node has the form `{node_type}@[{start}:{end}]`, which means a node of the type `{node_type}` is
-        located at the range `[{start}:{end}]` in the **abbreviated** expression  (see [`abbreviate_owl_expression`][deeponto.onto.parser.OntologyAxiomParser.abbreviate_owl_expression]
+        located at the range `[{start}:{end}]` in the **abbreviated** expression  (see [`abbreviate_owl_expression`][deeponto.onto.verbalisation.OntologyAxiomParser.abbreviate_owl_expression]
         below).
 
         The leaf nodes are IRIs and they are represented by the last segment (split by `"/"`) of the whole IRI.
@@ -257,7 +257,7 @@ class OntologySyntaxParser:
     def parse(self, owl_expression: Union[str, OWLObject]) -> RangeNode:
         r"""Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.verbalisation.RangeNode].
 
-        This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.parser.OntologyAxiomParser.parse_by_parentheses]
+        This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.verbalisation.OntologyAxiomParser.parse_by_parentheses]
         method below.
 
         Args:
