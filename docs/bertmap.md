@@ -4,6 +4,18 @@
 
     Paper for BERTMap: [BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)](https://ojs.aaai.org/index.php/AAAI/article/view/20510).
 
+    ```
+    @inproceedings{he2022bertmap,
+      title={BERTMap: a BERT-based ontology alignment system},
+      author={He, Yuan and Chen, Jiaoyan and Antonyrajah, Denvar and Horrocks, Ian},
+      booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+      volume={36},
+      number={5},
+      pages={5684--5691},
+      year={2022}
+    }
+    ```
+
 
 This page gives the tutorial for $\textsf{BERTMap}$ family including the summary of the models and how to use them.
 
