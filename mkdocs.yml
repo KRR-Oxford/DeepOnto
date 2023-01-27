@@ -47,13 +47,13 @@ nav:
       - Using BERTMap and BERTMapLt: bertmap.md
       - Bio-ML Specifications: bio-ml.md
     - PACKAGE REFERENCE:
-        - Ontology: deeponto/onto/index.md
+        - Ontology: deeponto/onto/ontology.md
         - Ontology Alignment:
           - Mapping: deeponto/align/mapping.md
           - BERTMap: deeponto/align/bertmap/index.md
           - LogMap: deeponto/align/logmap/index.md
           - Evaluation: deeponto/align/evaluation.md
-        - Ontology Verbalisation: deeponto/onto/verbalisation.md
+        # - Ontology Verbalisation: deeponto/onto/verbalisation.md
         - Utilities: 
           - Text Utilities: deeponto/utils/text_utils.md
           - File Utilities: deeponto/utils/file_utils.md

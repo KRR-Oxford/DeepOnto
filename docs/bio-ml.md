@@ -5,6 +5,17 @@
     Paper for Bio-ML:
     [Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).
 
+    ```
+    @inproceedings{he2022machine,
+      title={Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching},
+      author={He, Yuan and Chen, Jiaoyan and Dong, Hang and Jim{\'e}nez-Ruiz, Ernesto and Hadian, Ali and Horrocks, Ian},
+      booktitle={The Semantic Web--ISWC 2022: 21st International Semantic Web Conference, Virtual Event, October 23--27, 2022, Proceedings},
+      pages={575--591},
+      year={2022},
+      organization={Springer}
+    }
+    ```
+
 
 This page provides detailed [instructions](#bio-ml) for using $\textsf{Bio-ML}$.
 
