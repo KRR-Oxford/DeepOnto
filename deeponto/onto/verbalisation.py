@@ -166,6 +166,12 @@ class OntologySyntaxParser:
         >>> str(owl_axiom)
         >>> 'EquivalentClasses(<http://purl.obolibrary.org/obo/FOODON_00001707> ObjectIntersectionOf(<http://purl.obolibrary.org/obo/FOODON_00002044> ObjectSomeValuesFrom(<http://purl.obolibrary.org/obo/RO_0001000> <http://purl.obolibrary.org/obo/FOODON_03412116>)) )'
         ```
+        
+        This corresponds to the following logical expression:
+        
+        $$
+        CephalopodFoodProduct \equiv MolluskFoodProduct \sqcap \exists derivesFrom.Cephalopod
+        $$
 
         After apply the parser, a [`RangeNode`][deeponto.onto.verbalisation.RangeNode] will be returned which can be rentered as:
 
