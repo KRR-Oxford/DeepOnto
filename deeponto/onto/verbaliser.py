@@ -15,22 +15,24 @@ from __future__ import annotations
 
 from typing import List, Optional
 from anytree import NodeMixin, RenderTree
+from IPython.display import Image
+from anytree.dotexport import RenderTreeGraph
+import math
 
 
 ABBREVIATION_DICT = {
     "ObjectComplementOf": "[NEG]",  # negation
-    "ObjectSomeValuesFrom": "[EXT]",  # existential restriction
+    "ObjectSomeValuesFrom": "[EX.]",  # existential restriction
     "ObjectAllValuesFrom": "[ALL]",  # universal restriction
-    "ObjectUnionOf": "[ORR]",  # disjunction
+    "ObjectUnionOf": "[OR.]",  # disjunction
     "ObjectIntersectionOf": "[AND]",  # conjunction
-    "EquivalentClasses": "[EQU]",  # equivalence
+    "EquivalentClasses": "[EQV]",  # equivalence
     "SubClassOf": "[SUB]",  # subsumed by
     "SuperClassOf": "[SUP]",  # subsumes
 }
 
-
 class OntologyAxiomParser:
-    r"""A parser for the OWL axioms (from [`org.semanticweb.owlapi.model.OWLAxiom`](http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html)).
+    r"""A syntactic parser for the OWL axioms (from [`org.semanticweb.owlapi.model.OWLAxiom`](http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html)).
     
     To keep the Java import in the main [`Ontology`][deeponto.onto.Ontology] class, 
     this parser does not deal with `OWLAxiom` directly but instead its **string representation**.
@@ -38,9 +40,11 @@ class OntologyAxiomParser:
     Due to the OWLAPI axiom syntax, this parser relies on two components:
     
     1. Parentheses matching;
-    2. Tenary tree search ([`RangeNode`][deeponto.onto.verbaliser.RangeNode]).
+    2. Tree construction ([`RangeNode`][deeponto.onto.verbaliser.RangeNode]).
     
-    As a result, it will return a `RangeNode` that specifies the sub-formula in a tree structure.
+    As a result, it will return a [`RangeNode`][deeponto.onto.verbaliser.RangeNode] that
+    specifies the sub-formulas (and their respective **positions in the string representation**) 
+    in a tree structure.
     
     Examples:
 
@@ -48,32 +52,62 @@ class OntologyAxiomParser:
         
         ```python
         >>> str(owl_axiom)
-        >>> 'EquivalentClasses(<http://purl.obolibrary.org/obo/FOODON_00001083> ObjectIntersectionOf(<http://purl.obolibrary.org/obo/FOODON_00001133> ObjectSomeValuesFrom(<http://purl.obolibrary.org/obo/RO_0001000> <http://purl.obolibrary.org/obo/FOODON_03411012>)) )'
+        >>> 'EquivalentClasses(<http://purl.obolibrary.org/obo/FOODON_00001707> ObjectIntersectionOf(<http://purl.obolibrary.org/obo/FOODON_00002044> ObjectSomeValuesFrom(<http://purl.obolibrary.org/obo/RO_0001000> <http://purl.obolibrary.org/obo/FOODON_03412116>)) )'
         ```
         
-        After apply the parser, a `RangeNode` will be returned which can be printed as:
+        After apply the parser, a [`RangeNode`][deeponto.onto.verbaliser.RangeNode] will be returned which can be rentered as:
         
         ```python
-        >>> axiom_parser = OntologyAxiomParser()
-        >>> axiom_parser.parse(str(owl_axiom))
-        >>> [0, [0, [6, 54], [55, [61, 109], [110, [116, 159], [160, 208], 209], 210], 212], 213]
+        axiom_parser = OntologyAxiomParser()
+        axiom_parser.parse(str(owl_axiom)).render_tree()
         ```
         
-        These numbers indicate the index ranges in the **abbreviated** (see `abbr_axiom_text`) axiom text 
-        that correspond to a sub-formula. For example, the range `[6, 54]` corresponds to the IRI statement
-        `<http://purl.obolibrary.org/obo/FOODON_00001083>`.
+        `#!console Output:`
+        :   &#32;
+            ```python
+            Root@[0:inf]
+            └── EQV@[0:212]
+                ├── FOODON_00001707@[6:54]
+                └── AND@[55:210]
+                    ├── FOODON_00002044@[61:109]
+                    └── EX.@[110:209]
+                        ├── RO_0001000@[116:159]
+                        └── FOODON_03412116@[160:208]
+            ```
         
-        To access this entity IRI, do:
+        Or, if `graphviz` (installed by e.g., `sudo apt install graphviz`) is available, 
+        you can visualise the tree as an image by:
         
         ```python
-        >>> axiom_parser.parse(str(owl_axiom)).children[0].children[0].text
-        >>> '<http://purl.obolibrary.org/obo/FOODON_00001083>'
+        axiom_parser.parse(str(owl_axiom)).render_image()
         ```
         
-        Note that the whole sentence is accessed by the first `.children[0]` which corresponds to the range
-        `[0, 212]` (the root node the outermost range `[0, 213]`). Then, the first child `[0, 212]` is `[6, 54]`,
-        whose text can be accessed by a subsequent `.children[0].text`. You can also see the type of any node
-        by `node.type`. For this example, it will return `'IRI'`.
+        `#!console Output:`
+        
+        <p align="center">
+            <img alt="range_node" src="../../../assets/example_range_node.png" style="padding: 30px 50px">
+        </p>
+
+        
+        The name for each node has the form `{node_type}@[{start}:{end}]`, which means a node of the type `{node_type}` is
+        located at the range `[{start}:{end}]` in the **abbreviated** axiom string  (see [`abbr_axiom_text`][deeponto.onto.verbaliser.OntologyAxiomParser.abbr_axiom_text] 
+        below). 
+        
+        The leaf nodes are IRIs and they are represented by the last segment (split by `"/"`) of the whole IRI.
+        
+        Child nodes can be accessed by `.children`, the string representation of the sub-formula in this node can be 
+        accessed by `.text`. For example:
+        
+        ```python
+        parser.parse(str(owl_axiom)).children[0].children[1].text
+        ```
+        
+        `#!console Output:`
+        :   &#32;
+            ```python
+            '[AND](<http://purl.obolibrary.org/obo/FOODON_00002044> [EX.](<http://purl.obolibrary.org/obo/RO_0001000> <http://purl.obolibrary.org/obo/FOODON_03412116>))'
+            ```
+        
     """
     def __init__(self):
         pass
@@ -87,11 +121,11 @@ class OntologyAxiomParser:
         ```python
         {
             "ObjectComplementOf": "[NEG]",  # negation
-            "ObjectSomeValuesFrom": "[EXT]",  # existential restriction
+            "ObjectSomeValuesFrom": "[EX.]",  # existential restriction
             "ObjectAllValuesFrom": "[ALL]",  # universal restriction
-            "ObjectUnionOf": "[ORR]",  # disjunction
+            "ObjectUnionOf": "[OR.]",  # disjunction
             "ObjectIntersectionOf": "[AND]",  # conjunction
-            "EquivalentClasses": "[EQU]",  # equivalence
+            "EquivalentClasses": "[EQV]",  # equivalence
             "SubClassOf": "[SUB]",  # subsumed by
             "SuperClassOf": "[SUP]",  # subsumes
         }
@@ -108,7 +142,7 @@ class OntologyAxiomParser:
         return axiom_text
 
     def parse(self, axiom_text: str) -> RangeNode:
-        r"""Parse an `OWLAxiom` into a `RangeNode`. 
+        r"""Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.verbaliser.RangeNode]. 
         
         This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.verbaliser.OntologyAxiomParser.parse_by_parentheses]
         method below.
@@ -130,14 +164,14 @@ class OntologyAxiomParser:
     def parse_by_parentheses(
         cls, axiom_text: str, already_parsed: RangeNode = None, for_iri: bool = False
     ) -> RangeNode:
-        """Parse an `OWLAxiom` based on parentheses matching into a `RangeNode`. 
+        r"""Parse an `OWLAxiom` based on parentheses matching into a [`RangeNode`][deeponto.onto.verbaliser.RangeNode]. 
         
-        This function needs to be applied twice to get a fully parsed `RangeNode` because IRIs have
+        This function needs to be applied twice to get a fully parsed [`RangeNode`][deeponto.onto.verbaliser.RangeNode] because IRIs have
         a different parenthesis pattern.
 
         Args:
             axiom_text (str): The string representation of an OWLAPI axiom.
-            already_parsed (RangeNode, optional): A partially parsed `RangeNode` to continue with. Defaults to `None`.
+            already_parsed (RangeNode, optional): A partially parsed [`RangeNode`][deeponto.onto.verbaliser.RangeNode] to continue with. Defaults to `None`.
             for_iri (bool, optional): Parentheses are by default `()` but will be changed to `<>` for IRIs. Defaults to `False`.
 
         Raises:
@@ -148,7 +182,7 @@ class OntologyAxiomParser:
         """
         if not already_parsed:
             # a root node that covers the entire sentence
-            parsed = RangeNode(0, len(axiom_text) + 1, type="Root", text=axiom_text)
+            parsed = RangeNode(0, math.inf, name=f"Root", text=axiom_text)
         else:
             parsed = already_parsed
         stack = []
@@ -166,18 +200,21 @@ class OntologyAxiomParser:
                     start = stack.pop()
                     end = i
                     if not for_iri:
-                        # the first five characters refer to the complex pattern type
+                        # the first character is actually "["
+                        real_start = start - 5
+                        axiom_type = axiom_text[real_start + 1: start - 1]
                         node = RangeNode(
-                            start - 5,
+                            real_start,
                             end + 1,
-                            type=axiom_text[start - 5 : start],
-                            text=axiom_text[start - 5 : end + 1],
+                            name=f"{axiom_type}",
+                            text=axiom_text[real_start : end + 1],
                         )
                         parsed.insert_child(node)
                     else:
                         # no preceding characters for just atomic class (IRI)
+                        abbr_iri = axiom_text[start : end + 1].split("/")[-1].rstrip(">")
                         node = RangeNode(
-                            start, end + 1, type="IRI", text=axiom_text[start : end + 1]
+                            start, end + 1, name=abbr_iri, text=axiom_text[start : end + 1]
                         )
                         parsed.insert_child(node)
                 except IndexError:
@@ -190,48 +227,53 @@ class OntologyAxiomParser:
 
 
 class RangeNode(NodeMixin):
-    """A tree implementation for ranges (without partial overlap).
+    r"""A tree implementation for ranges (without partial overlap).
 
-        - parent node's range fully covers child node's range, e.g., `[1, 10]` is a parent of `[2, 5]`.
-        - partial overlap between ranges not allowed, e.g., `[2, 4]` and `[3, 5]` cannot appear in the same `RangeNodeTree`.
-        - non-overlap ranges are on different branches.
-        - child nodes are ordered according to their relative positions.
+        - Parent node's range fully covers child node's range, e.g., `[1, 10]` is a parent of `[2, 5]`.
+        - Partial overlap between ranges are not allowed, e.g., `[2, 4]` and `[3, 5]` cannot appear in the same `RangeNodeTree`.
+        - Non-overlap ranges are on different branches (irrelevant).
+        - Child nodes are ordered according to their relative positions.
     """
 
-    def __init__(self, start, end, **kwargs):
+    def __init__(self, start, end, name=None, **kwargs):
         if start >= end:
             raise RuntimeError("invalid start and end positions ...")
         self.start = start
         self.end = end
+        self.name = "Root" if not name else name
+        self.name = f"{self.name}@[{self.start}:{self.end}]"  # add start and ent to the name
         for k, v in kwargs.items():
             setattr(self, k, v)
         super().__init__()
 
     # def __eq__(self, other: RangeNode):
+    #     """Two ranges are equal if they have the same `start` and `end`.
+    #     """
     #     return self.start == other.start and self.end == other.end
 
     def __gt__(self, other: RangeNode):
-        r"""Modified compare function for a range.
-
-        !!! note
+        r"""Compare two ranges if they have a different `start` and/or a different `end`.
         
-            There are three kinds of comparisons:
-
-            - $R_1 \leq R_2$: if range $R_1$ is completely contained in range $R_2$.
-            - $R_1 \gt R_2$: if range $R_2$ is completely contained in range $R_1$.
-            - `"irrelevant"`: if range $R_1$ and range $R_2$ have no overlap.
-
-        NOTE that partial overlap is not allowed.
+        - $R_1 \lt R_2$: if range $R_1$ is completely contained in range $R_2$, and $R_1 \neq R_2$. 
+        - $R_1 \gt R_2$: if range $R_2$ is completely contained in range $R_1$,  and $R_1 \neq R_2$.
+        - `"irrelevant"`: if range $R_1$ and range $R_2$ have no overlap.
+        
+        !!! warning
+        
+            Partial overlap is not allowed.
         """
+        # ranges inside
+        if self.start <= other.start and other.end <= self.end:
+            return True
+        
+        # ranges outside
         if other.start <= self.start and self.end <= other.end:
             return False
-        elif self.start <= other.start and other.end <= self.end:
-            return True
-        elif other.end < self.start or self.end < other.start:
-            # print("compared ranges are irrelevant ...")
+        
+        if other.end < self.start or self.end < other.start:
             return "irrelevant"
-        else:
-            raise RuntimeError("compared ranges have partial overlap ...")
+
+        raise RuntimeError("Compared ranges have a partial overlap.")
 
     @staticmethod
     def sort_by_start(nodes: List[RangeNode]):
@@ -240,7 +282,7 @@ class RangeNode(NodeMixin):
         return list(dict(sorted(temp.items(), key=lambda item: item[1])).keys())
 
     def insert_child(self, node: RangeNode):
-        r"""Inserting a child `RangeNode`.
+        r"""Inserting a child [`RangeNode`][deeponto.onto.verbaliser.RangeNode].
         
         Child nodes have a smaller (inclusive) range, e.g., `[2, 5]` is a child of `[1, 6]`.
         """
@@ -253,7 +295,7 @@ class RangeNode(NodeMixin):
         if self.children:
             inserted = False
             for ch in self.children:
-                if (node < ch) is True:
+                if (node < ch) is True:  
                     # print("further down")
                     ch.insert_child(node)
                     inserted = True
@@ -263,20 +305,31 @@ class RangeNode(NodeMixin):
                     ch.parent = node
                     # NOTE: should not break here as it could be parent of multiple children !
                     # break
+                # NOTE: the equal case is when two nodes are exactly the same, no operation needed
             if not inserted:
                 self.children = list(self.children) + [node]
                 self.children = self.sort_by_start(self.children)
         else:
             node.parent = self
             self.children = [node]
-
+    
     def __repr__(self):
-        # only present downwards (down, left, right)
-        printed = f"[{self.start}, {self.end}]"
-        if self.children:
-            printed = f"[{self.start}, {str(list(self.children))[1:-1]}, {self.end}]"
-        return printed
+        return f"{self.name}"
 
-    def print_tree(self):
-        """Pretty printing in the tree structure."""
-        print(RenderTree(self))
+    def render_tree(self):
+        """Render the whole tree.
+        """
+        return RenderTree(self)
+        
+    def render_image(self):
+        """Calling this function will generate a temporary `range_node.png` file
+        which will be displayed.
+        
+        To make this visualisation work, you need to install `graphviz` by, e.g.,
+        
+        ```bash
+        sudo apt install graphviz
+        ```
+        """
+        RenderTreeGraph(self).to_picture("range_node.png")
+        return Image("range_node.png")
