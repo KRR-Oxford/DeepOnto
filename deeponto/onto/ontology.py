@@ -649,13 +649,13 @@ class OntologyReasoner:
         
         !!! note
 
-            Two class expressions C and D are assumed to be disjoint if they meet the followings:
+            Two class expressions $C$ and $D$ are assumed to be disjoint if they meet the followings:
             
-            1. By adding the disjointness axiom of them into the ontology, C and D are **still satisfiable**.
-            2. C and D **do not have a common descendant** (otherwise C and D can be satisfiable but their
+            1. By adding the disjointness axiom of them into the ontology, $C$ and $D$ are **still satisfiable**.
+            2. $C$ and $D$ **do not have a common descendant** (otherwise $C$ and $D$ can be satisfiable but their
             common descendants become the bottom $\bot$.) 
         
-        Note that the special case where C and D are already disjoint is covered by the first check.
+        Note that the special case where $C$ and $D$ are already disjoint is covered by the first check.
         The paper also proposed a practical alternative to decide Assumed Disjointness. 
         See [`check_assumed_disjoint_alternative`][deeponto.onto.OntologyReasoner.check_assumed_disjoint_alternative].
         
@@ -724,7 +724,7 @@ class OntologyReasoner:
         
         !!! note
         
-            Two class expressions C and D are assumed to be disjoint if they
+            Two class expressions $C$ and $D$ are assumed to be disjoint if they
             
             1. **do not** have a **subsumption relationship** between them, 
             2. **do not** have a **common descendant** (in TBox), 
