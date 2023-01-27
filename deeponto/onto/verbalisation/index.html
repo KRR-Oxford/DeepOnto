@@ -940,7 +940,7 @@ specifies the sub-formulas (and their respective <strong>positions in the string
 in a tree structure.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>The parser currently supports a limited set of [patterns][deeponto.onto.verbalisation.OntologyAxiomParser.abbreviate_owl_expression]
+<p>The parser currently supports a limited set of <a class="autorefs autorefs-internal" href="#deeponto.onto.verbalisation.OntologySyntaxParser.abbreviate_owl_expression">patterns</a>
 due to the limitations of the ontology verbalisation module. Kindly ask the repository maintainer to add more patterns if needed.</p>
 </div>
 
@@ -950,7 +950,7 @@ due to the limitations of the ontology verbalisation module. Kindly ask the repo
 <span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;EquivalentClasses(&lt;http://purl.obolibrary.org/obo/FOODON_00001707&gt; ObjectIntersectionOf(&lt;http://purl.obolibrary.org/obo/FOODON_00002044&gt; ObjectSomeValuesFrom(&lt;http://purl.obolibrary.org/obo/RO_0001000&gt; &lt;http://purl.obolibrary.org/obo/FOODON_03412116&gt;)) )&#39;</span>
 </code></pre></div>
 <p>After apply the parser, a <a class="autorefs autorefs-internal" href="#deeponto.onto.verbalisation.RangeNode"><code>RangeNode</code></a> will be returned which can be rentered as:</p>
-<div class="highlight"><pre><span></span><code><span class="n">axiom_parser</span> <span class="o">=</span> <span class="n">OntologyAxiomParser</span><span class="p">()</span>
+<div class="highlight"><pre><span></span><code><span class="n">axiom_parser</span> <span class="o">=</span> <span class="n">OntologySyntaxParser</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">axiom_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">owl_axiom</span><span class="p">))</span><span class="o">.</span><span class="n">render_tree</span><span class="p">())</span>
 </code></pre></div>
 <dl>
@@ -976,7 +976,7 @@ you can visualise the tree as an image by:</p>
 </p>
 
 <p>The name for each node has the form <code>{node_type}@[{start}:{end}]</code>, which means a node of the type <code>{node_type}</code> is
-located at the range <code>[{start}:{end}]</code> in the <strong>abbreviated</strong> expression  (see [<code>abbreviate_owl_expression</code>][deeponto.onto.verbalisation.OntologyAxiomParser.abbreviate_owl_expression]
+located at the range <code>[{start}:{end}]</code> in the <strong>abbreviated</strong> expression  (see <a class="autorefs autorefs-internal" href="#deeponto.onto.verbalisation.OntologySyntaxParser.abbreviate_owl_expression"><code>abbreviate_owl_expression</code></a>
 below).</p>
 <p>The leaf nodes are IRIs and they are represented by the last segment (split by <code>"/"</code>) of the whole IRI.</p>
 <p>Child nodes can be accessed by <code>.children</code>, the string representation of the sub-formula in this node can be
@@ -1219,7 +1219,7 @@ accessed by <code>.text</code>. For example:</p>
 
 <span class="sd">    !!! warning</span>
 
-<span class="sd">        The parser currently supports a limited set of [patterns][deeponto.onto.verbalisation.OntologyAxiomParser.abbreviate_owl_expression]</span>
+<span class="sd">        The parser currently supports a limited set of [patterns][deeponto.onto.verbalisation.OntologySyntaxParser.abbreviate_owl_expression]</span>
 <span class="sd">        due to the limitations of the ontology verbalisation module. Kindly ask the repository maintainer to add more patterns if needed.</span>
 
 <span class="sd">    Examples:</span>
@@ -1234,7 +1234,7 @@ accessed by <code>.text</code>. For example:</p>
 <span class="sd">        After apply the parser, a [`RangeNode`][deeponto.onto.verbalisation.RangeNode] will be returned which can be rentered as:</span>
 
 <span class="sd">        ```python</span>
-<span class="sd">        axiom_parser = OntologyAxiomParser()</span>
+<span class="sd">        axiom_parser = OntologySyntaxParser()</span>
 <span class="sd">        print(axiom_parser.parse(str(owl_axiom)).render_tree())</span>
 <span class="sd">        ```</span>
 
@@ -1266,7 +1266,7 @@ accessed by <code>.text</code>. For example:</p>
 
 
 <span class="sd">        The name for each node has the form `{node_type}@[{start}:{end}]`, which means a node of the type `{node_type}` is</span>
-<span class="sd">        located at the range `[{start}:{end}]` in the **abbreviated** expression  (see [`abbreviate_owl_expression`][deeponto.onto.verbalisation.OntologyAxiomParser.abbreviate_owl_expression]</span>
+<span class="sd">        located at the range `[{start}:{end}]` in the **abbreviated** expression  (see [`abbreviate_owl_expression`][deeponto.onto.verbalisation.OntologySyntaxParser.abbreviate_owl_expression]</span>
 <span class="sd">        below).</span>
 
 <span class="sd">        The leaf nodes are IRIs and they are represented by the last segment (split by `&quot;/&quot;`) of the whole IRI.</span>
@@ -1321,7 +1321,7 @@ accessed by <code>.text</code>. For example:</p>
     <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OWLObject</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
 <span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.verbalisation.RangeNode].</span>
 
-<span class="sd">        This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.verbalisation.OntologyAxiomParser.parse_by_parentheses]</span>
+<span class="sd">        This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.verbalisation.OntologySyntaxParser.parse_by_parentheses]</span>
 <span class="sd">        method below.</span>
 
 <span class="sd">        Args:</span>
@@ -1564,7 +1564,7 @@ fixed length (easier for parsing).</p>
   <div class="doc doc-contents ">
   
       <p>Parse an <code>OWLAxiom</code> into a <a class="autorefs autorefs-internal" href="#deeponto.onto.verbalisation.RangeNode"><code>RangeNode</code></a>.</p>
-<p>This is the main entry for using the parser, which relies on the [<code>parse_by_parentheses</code>][deeponto.onto.verbalisation.OntologyAxiomParser.parse_by_parentheses]
+<p>This is the main entry for using the parser, which relies on the <a class="autorefs autorefs-internal" href="#deeponto.onto.verbalisation.OntologySyntaxParser.parse_by_parentheses"><code>parse_by_parentheses</code></a>
 method below.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -1633,7 +1633,7 @@ method below.</p>
 <span class="normal">276</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OWLObject</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.verbalisation.RangeNode].</span>
 
-<span class="sd">    This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.verbalisation.OntologyAxiomParser.parse_by_parentheses]</span>
+<span class="sd">    This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.verbalisation.OntologySyntaxParser.parse_by_parentheses]</span>
 <span class="sd">    method below.</span>
 
 <span class="sd">    Args:</span>
