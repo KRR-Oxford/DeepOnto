@@ -147,9 +147,9 @@ class OntologySyntaxParser:
     Due to the `OWLObject` syntax, this parser relies on two components:
 
     1. Parentheses matching;
-    2. Tree construction ([`RangeNode`][deeponto.onto.parser.RangeNode]).
+    2. Tree construction ([`RangeNode`][deeponto.onto.verbalisation.RangeNode]).
 
-    As a result, it will return a [`RangeNode`][deeponto.onto.parser.RangeNode] that
+    As a result, it will return a [`RangeNode`][deeponto.onto.verbalisation.RangeNode] that
     specifies the sub-formulas (and their respective **positions in the string representation**)
     in a tree structure.
 
@@ -167,7 +167,7 @@ class OntologySyntaxParser:
         >>> 'EquivalentClasses(<http://purl.obolibrary.org/obo/FOODON_00001707> ObjectIntersectionOf(<http://purl.obolibrary.org/obo/FOODON_00002044> ObjectSomeValuesFrom(<http://purl.obolibrary.org/obo/RO_0001000> <http://purl.obolibrary.org/obo/FOODON_03412116>)) )'
         ```
 
-        After apply the parser, a [`RangeNode`][deeponto.onto.parser.RangeNode] will be returned which can be rentered as:
+        After apply the parser, a [`RangeNode`][deeponto.onto.verbalisation.RangeNode] will be returned which can be rentered as:
 
         ```python
         axiom_parser = OntologyAxiomParser()
@@ -255,7 +255,7 @@ class OntologySyntaxParser:
         return owl_expression
 
     def parse(self, owl_expression: Union[str, OWLObject]) -> RangeNode:
-        r"""Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.parser.RangeNode].
+        r"""Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.verbalisation.RangeNode].
 
         This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.parser.OntologyAxiomParser.parse_by_parentheses]
         method below.
@@ -279,14 +279,14 @@ class OntologySyntaxParser:
     def parse_by_parentheses(
         cls, owl_expression: str, already_parsed: RangeNode = None, for_iri: bool = False
     ) -> RangeNode:
-        r"""Parse an `OWLAxiom` based on parentheses matching into a [`RangeNode`][deeponto.onto.parser.RangeNode].
+        r"""Parse an `OWLAxiom` based on parentheses matching into a [`RangeNode`][deeponto.onto.verbalisation.RangeNode].
 
-        This function needs to be applied twice to get a fully parsed [`RangeNode`][deeponto.onto.parser.RangeNode] because IRIs have
+        This function needs to be applied twice to get a fully parsed [`RangeNode`][deeponto.onto.verbalisation.RangeNode] because IRIs have
         a different parenthesis pattern.
 
         Args:
             owl_expression (str): The string representation of an `OWLObject`.
-            already_parsed (RangeNode, optional): A partially parsed [`RangeNode`][deeponto.onto.parser.RangeNode] to continue with. Defaults to `None`.
+            already_parsed (RangeNode, optional): A partially parsed [`RangeNode`][deeponto.onto.verbalisation.RangeNode] to continue with. Defaults to `None`.
             for_iri (bool, optional): Parentheses are by default `()` but will be changed to `<>` for IRIs. Defaults to `False`.
 
         Raises:
@@ -398,7 +398,7 @@ class RangeNode(NodeMixin):
         return list(dict(sorted(temp.items(), key=lambda item: item[1])).keys())
 
     def insert_child(self, node: RangeNode):
-        r"""Inserting a child [`RangeNode`][deeponto.onto.parser.RangeNode].
+        r"""Inserting a child [`RangeNode`][deeponto.onto.verbalisation.RangeNode].
 
         Child nodes have a smaller (inclusive) range, e.g., `[2, 5]` is a child of `[1, 6]`.
         """
