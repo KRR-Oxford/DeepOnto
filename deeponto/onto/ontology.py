@@ -211,9 +211,9 @@ class Ontology:
 
         Args:
             owl_object (Union[OWLObject, str]): An `OWLObject` or its IRI.
-            annotation_property_iri (Optional[str], optional): 
+            annotation_property_iri (str, optional): 
                 Any particular annotation property IRI of interest. Defaults to `None`.
-            annotation_language_tag (Optional[str], optional): 
+            annotation_language_tag (str, optional): 
                 Any particular annotation language tag of interest; NOTE that not every 
                 annotation has a language tag, in this case assume it is in English.
                 Defaults to `None`. Options are `"en"`, `"ge"` etc.
