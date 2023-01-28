@@ -53,8 +53,7 @@ class OntologyVerbaliser:
     r"""A rule-based natural language verbaliser for the OWL logical expressions, e.g., [`OWLAxiom`](http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html)
     and [`OWLClassExpression`](https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/model/OWLClassExpression.html).
 
-    This is **not** a full-fledged ontology verbaliser and supports a limited set of patterns regarding
-    class expressions.
+    This is not a full-fledged ontology verbaliser but can already deal with most kinds of class expressions.
 
     Attributes:
         onto (Ontology): An ontology whose entities are to be verbalised.
