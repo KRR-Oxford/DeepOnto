@@ -10,25 +10,27 @@
         <meta name="author" content="Yuan He (KRR-Oxford)">
       
       
-        <link rel="canonical" href="https://krr-oxford.github.io/DeepOnto/deeponto/utils/decorators/">
+        <link rel="canonical" href="https://krr-oxford.github.io/DeepOnto/verbaliser/">
       
       
-        <link rel="prev" href="../data_utils/">
+        <link rel="prev" href="../bio-ml/">
       
       
-      <link rel="icon" href="../../../images/favicon_package/favicon.ico">
+        <link rel="next" href="../deeponto/onto/ontology/">
+      
+      <link rel="icon" href="../images/favicon_package/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.5">
     
     
       
-        <title>Decorators - DeepOnto</title>
+        <title>Using Ontology Verbaliser - DeepOnto</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.558e4712.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.558e4712.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.2505c338.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
       
       
 
@@ -44,11 +46,11 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -73,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#deeponto.utils.decorators.timer" class="md-skip">
+        <a href="#using-ontology-verbaliser" class="md-skip">
           Skip to content
         </a>
       
@@ -91,9 +93,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="DeepOnto" class="md-header__button md-logo" aria-label="DeepOnto" data-md-component="logo">
+    <a href=".." title="DeepOnto" class="md-header__button md-logo" aria-label="DeepOnto" data-md-component="logo">
       
-  <img src="../../../images/favicon_package/safari-pinned-tab.svg" alt="logo">
+  <img src="../images/favicon_package/safari-pinned-tab.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -109,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Decorators
+              Using Ontology Verbaliser
             
           </span>
         </div>
@@ -221,14 +223,14 @@
   <!-- Site title -->
   <label class="md-nav__title" for="__drawer">
     <a
-      href="../../.."
+      href=".."
       title="DeepOnto"
       class="md-nav__button md-logo"
       aria-label="DeepOnto"
       data-md-component="logo"
     >
       
-  <img src="../../../images/favicon_package/safari-pinned-tab.svg" alt="logo">
+  <img src="../images/favicon_package/safari-pinned-tab.svg" alt="logo">
 
     </a>
     <!-- DeepOnto -->
@@ -258,20 +260,22 @@
 
   
   
+    
+  
   
     
       
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_1" type="checkbox" id="__nav_1" checked>
       
       
       
-        <label class="md-nav__link" for="__nav_1" tabindex="0" aria-expanded="false">
+        <label class="md-nav__link" for="__nav_1" tabindex="0" aria-expanded="true">
           GET STARTED
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -289,7 +293,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -303,7 +307,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ontology/" class="md-nav__link">
+      <a href="../ontology/" class="md-nav__link">
         Using Ontology
       </a>
     </li>
@@ -317,7 +321,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../bertmap/" class="md-nav__link">
+      <a href="../bertmap/" class="md-nav__link">
         Using BERTMap and BERTMapLt
       </a>
     </li>
@@ -331,7 +335,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../bio-ml/" class="md-nav__link">
+      <a href="../bio-ml/" class="md-nav__link">
         Bio-ML Specifications
       </a>
     </li>
@@ -343,11 +347,21 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../../verbaliser/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Using Ontology Verbaliser
       </a>
+      
     </li>
   
 
@@ -365,22 +379,20 @@
 
   
   
-    
-  
   
     
       
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
       
       
       
-        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="true">
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="false">
           PACKAGE REFERENCE
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -398,7 +410,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../onto/ontology/" class="md-nav__link">
+      <a href="../deeponto/onto/ontology/" class="md-nav__link">
         Ontology
       </a>
     </li>
@@ -439,7 +451,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/mapping/" class="md-nav__link">
+      <a href="../deeponto/align/mapping/" class="md-nav__link">
         Mapping
       </a>
     </li>
@@ -453,7 +465,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/bertmap/" class="md-nav__link">
+      <a href="../deeponto/align/bertmap/" class="md-nav__link">
         BERTMap
       </a>
     </li>
@@ -467,7 +479,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/logmap/" class="md-nav__link">
+      <a href="../deeponto/align/logmap/" class="md-nav__link">
         LogMap
       </a>
     </li>
@@ -481,7 +493,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/evaluation/" class="md-nav__link">
+      <a href="../deeponto/align/evaluation/" class="md-nav__link">
         Evaluation
       </a>
     </li>
@@ -502,7 +514,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../onto/verbalisation/" class="md-nav__link">
+      <a href="../deeponto/onto/verbalisation/" class="md-nav__link">
         Ontology Verbalisation
       </a>
     </li>
@@ -514,20 +526,18 @@
               
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2_4" type="checkbox" id="__nav_2_4" checked>
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2_4" type="checkbox" id="__nav_2_4" >
       
       
       
-        <label class="md-nav__link" for="__nav_2_4" tabindex="0" aria-expanded="true">
+        <label class="md-nav__link" for="__nav_2_4" tabindex="0" aria-expanded="false">
           Utilities
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -545,7 +555,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../text_utils/" class="md-nav__link">
+      <a href="../deeponto/utils/text_utils/" class="md-nav__link">
         Text Utilities
       </a>
     </li>
@@ -559,7 +569,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../file_utils/" class="md-nav__link">
+      <a href="../deeponto/utils/file_utils/" class="md-nav__link">
         File Utilities
       </a>
     </li>
@@ -573,7 +583,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../logging/" class="md-nav__link">
+      <a href="../deeponto/utils/logging/" class="md-nav__link">
         Logging
       </a>
     </li>
@@ -587,7 +597,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../data_utils/" class="md-nav__link">
+      <a href="../deeponto/utils/data_utils/" class="md-nav__link">
         Data Utilities
       </a>
     </li>
@@ -599,62 +609,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Decorators
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../deeponto/utils/decorators/" class="md-nav__link">
         Decorators
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#deeponto.utils.decorators.timer" class="md-nav__link">
-    timer()
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deeponto.utils.decorators.debug" class="md-nav__link">
-    debug()
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deeponto.utils.decorators.paper" class="md-nav__link">
-    paper()
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -693,195 +652,19 @@
 
 
 
-  <h1>Decorators</h1>
-
-<div class="doc doc-object doc-module">
-
-
-
-  <div class="doc doc-contents first">
-  
-      <p>Utility functions for general purposes.</p>
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h2 id="deeponto.utils.decorators.timer" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">timer</span><span class="p">(</span><span class="n">function</span><span class="p">)</span></code>
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Print the runtime of the decorated function.</p>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/utils/decorators.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">timer</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the runtime of the decorated function.&quot;&quot;&quot;</span>
-
-    <span class="nd">@wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">wrapper_timer</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>  <span class="c1"># 1</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>  <span class="c1"># 2</span>
-        <span class="n">run_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>  <span class="c1"># 3</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Finished </span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2"> in </span><span class="si">{</span><span class="n">run_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> secs.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">value</span>
-
-    <span class="k">return</span> <span class="n">wrapper_timer</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-
-<h2 id="deeponto.utils.decorators.debug" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">debug</span><span class="p">(</span><span class="n">function</span><span class="p">)</span></code>
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Print the function signature and return value.</p>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/utils/decorators.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the function signature and return value.&quot;&quot;&quot;</span>
-
-    <span class="nd">@wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">wrapper_debug</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">args_repr</span> <span class="o">=</span> <span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
-        <span class="n">kwargs_repr</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">!r}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
-        <span class="n">signature</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args_repr</span> <span class="o">+</span> <span class="n">kwargs_repr</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calling </span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">signature</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2"> returned </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">value</span>
-
-    <span class="k">return</span> <span class="n">wrapper_debug</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-
-<h2 id="deeponto.utils.decorators.paper" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">paper</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span></code>
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Add paper tagger for methods.</p>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/utils/decorators.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">paper</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">link</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add paper tagger for methods.&quot;&quot;&quot;</span>
-    <span class="c1"># Define a new decorator, named &quot;decorator&quot;, to return</span>
-    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="c1"># Ensure the decorated function keeps its metadata</span>
-        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="c1"># Call the function being decorated and return the result</span>
-            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-        <span class="n">wrapper</span><span class="o">.</span><span class="n">paper_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;This method is associated with tha paper of title: &quot;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">&quot;.&#39;</span>
-        <span class="n">wrapper</span><span class="o">.</span><span class="n">paper_link</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;This method is associated with the paper with link: </span><span class="si">{</span><span class="n">link</span><span class="si">}</span><span class="s2">.&quot;</span>
-        <span class="k">return</span> <span class="n">wrapper</span>
-
-    <span class="c1"># Return the new decorator</span>
-    <span class="k">return</span> <span class="n">decorator</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-
-
-  </div>
-
-  </div>
-
-</div>
+<h1 id="using-ontology-verbaliser">Using Ontology Verbaliser</h1>
+<p>To be updated soon...</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 14, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 28, 2023</span>
       
         <br>
         Created:
-        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 14, 2023</span>
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 28, 2023</span>
       
     
   </small>
@@ -980,12 +763,12 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.sections", "toc.integrate", "navigation.top", "header.autohide", "toc.follow", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "0.5.0"}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.sections", "toc.integrate", "navigation.top", "header.autohide", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": "0.5.0"}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.51d95adb.min.js"></script>
+      <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
       
-        <script src="../../../javascripts/mathjax.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
       
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       
