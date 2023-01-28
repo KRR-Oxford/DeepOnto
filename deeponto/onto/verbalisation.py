@@ -76,10 +76,10 @@ class OntologyVerbaliser:
         self.vocab = {k: literal_or_iri(k, v) for k, v in self.vocab.items()}  # only set one name for each entity
 
     def update_entity_name(self, entity_iri: str, entity_name: str):
-        """Update the entity name dictionary.
+        """Update the name of an entity in `self.vocab`.
 
         If you want to change the name of a specific entity, you should call this
-        function before verbalisation.
+        function before applying verbalisation.
         """
         self.vocab[entity_iri] = entity_name
 
