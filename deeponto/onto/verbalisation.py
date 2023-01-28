@@ -89,10 +89,10 @@ class OntologyVerbaliser:
         
         Currently supported types of class expressions are:
         
-        - **atomic** classes;
-        
-        - **existential** ($\exists r.C$) and **universal** ($\forall r.C$) restrictions;
-        - **conjunction** ($C \sqcap D \sqcap ...$) and **disjunction** ($C \sqcup D \sqcup ...$) statements.
+        - **Atomic** (named) classes, which have IRIs;
+        - **Negation** (by simply adding a **"not"**);
+        - **Existential** ($\exists r.C$) and **Universal** ($\forall r.C$) restrictions;
+        - **Conjunction** ($C \sqcap D \sqcap ...$) and **Disjunction** ($C \sqcup D \sqcup ...$) statements.
         
         Note that the supported types can be **nested to any level** (i.e., $C$ and $D$ can be complex class expressions). 
         
