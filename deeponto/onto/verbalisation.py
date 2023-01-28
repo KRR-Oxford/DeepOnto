@@ -13,7 +13,10 @@
 # limitations under the License.
 from __future__ import annotations
 
-from typing import List, Union, Dict
+import os
+import spacy
+from typing import List, Union
+from collections import defaultdict
 from anytree import NodeMixin, RenderTree
 from IPython.display import Image
 from anytree.dotexport import RenderTreeGraph
@@ -35,19 +38,15 @@ ABBREVIATION_DICT = {
     "SuperClassOf": "[SUP]",  # subsumes
 }
 
-ENTITY_OPERATORS = ["NEG", "EX.", "ALL", "OR.", "AND"]
-AXIOM_OPERATORS = ["EQV", "SUB", "SUP"]
-
-IRI = "<https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)>"
-AND_ATOMS = r"\[AND\]\((?:{IRI}| )+?\)".format(IRI=IRI)
-EXIST_ATOM = r"\[EXT\]\({IRI} {IRI}\)".format(IRI=IRI)
-EXT_AND_ATOMS = r"\[EXT\]\({IRI} {AND_ATOMS}\)".format(IRI=IRI, AND_ATOMS=AND_ATOMS)
-AND_MIXED = r"\[AND\]\((?:{IRI}|{EXT_ATOM}|{EXT_AND_ATOMS}| )*?\)".format(
-    IRI=IRI, EXT_ATOM=EXIST_ATOM, EXT_AND_ATOMS=EXT_AND_ATOMS
-)
-ALL_PATTERNS = [AND_ATOMS, EXIST_ATOM, EXT_AND_ATOMS, AND_MIXED]
-
 RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
+
+
+# download en_core_web_sm for object property 
+try:
+    spacy.load("en_core_web_sm")
+except:
+    print("Download `en_core_web_sm` for pos tagger.")
+    os.system("python -m spacy download en_core_web_sm")
 
 
 class OntologyVerbaliser:
@@ -67,6 +66,7 @@ class OntologyVerbaliser:
     def __init__(self, onto: Ontology):
         self.onto = onto
         self.parser = OntologySyntaxParser()
+        self.nlp = spacy.load("en_core_web_sm")
 
         # build the default vocabulary for entities
         self.vocab = dict()
@@ -85,52 +85,172 @@ class OntologyVerbaliser:
         self.vocab[entity_iri] = entity_name
 
     def verbalise_class_expression(self, class_expression: Union[OWLClassExpression, RangeNode]):
+        r"""Verbalise a class expression (`OWLClassExpression`) or its parsed form (in `RangeNode`).
+        
+        Currently supported types of class expressions are:
+        
+        - **atomic** classes;
+        
+        - **existential** ($\exists r.C$) and **universal** ($\forall r.C$) restrictions;
+        - **conjunction** ($C \sqcap D \sqcap ...$) and **disjunction** ($C \sqcup D \sqcup ...$) statements.
+        
+        Note that the supported types can be **nested to any level** (i.e., $C$ and $D$ can be complex class expressions). 
+        
+        Extra cares are imposed for more natural verbalisation and less redundancy:
+        
+        - merging restriction statements that have the **same object property**;
+        - if **object property** that starts with an **adjective** or a **noun**, add **"it"** to the head;
+        - the keyword **"only"** is inserted between the object property and the class expression for an **universal restriction** statement;
+        - the keyword **"some"** is inserted between the object property and the class expression for an *existential restriction** statement;
+        - in a conjunction or disjunction statement, if there is **no atomic class**, then the keyword for the 
+        anonymous class **"something"** is appended to the head.
+
+        Args:
+            class_expression (Union[OWLClassExpression, RangeNode]): A class expression to be verbalised.
+
+        Raises:
+            RuntimeError: Occurs when the class expression is not in one of the supported types.
+
+        Returns:
+            (CfgNode): A nested dictionary that presents the details of verbalisation. The verbalised string
+                can be accessed with the key `["verbal"]`.
+        """
 
         if not isinstance(class_expression, RangeNode):
             parsed_class_expression = self.parser.parse(class_expression).children[0]  # skip the root node
         else:
             parsed_class_expression = class_expression
 
+        # for a singleton IRI
         if parsed_class_expression.is_iri:
             iri = parsed_class_expression.text.lstrip("<").rstrip(">")
             return CfgNode({"verbal": self.vocab[iri], "iri": iri, "type": "IRI"})
+        
+        if parsed_class_expression.name.startswith("NEG"):
+            # negation only has one child
+            cl = self.verbalise_class_expression(parsed_class_expression.children[0])
+            return CfgNode({"verbal": "not " + cl.verbal, "class": cl, "type": "NEG"})
 
-        if parsed_class_expression.name == "EX.":
-            return self._verbalise_existential_restriction(ex_node=parsed_class_expression)
+        # for existential and universal restrictions
+        if parsed_class_expression.name.startswith("EX.") or parsed_class_expression.name.startswith("ALL"):
+            return self._verbalise_restriction(parsed_class_expression)
 
-        if parsed_class_expression.name == "AND":
-            return self._verbalise_conjunction(and_node=parsed_class_expression)
+        # for conjunction and disjunction
+        if parsed_class_expression.name.startswith("AND") or parsed_class_expression.name.startswith("OR"):
+            return self._verbalise_junction(parsed_class_expression)
 
         raise RuntimeError("Input class expression is not in one of the supported types.")
 
-    def _verbalise_existential_restriction(self, ex_node: RangeNode):
-        """Verbalise a (parsed) class expression in the form of existential restriction."""
-        assert ex_node.name.startswith("EX.")
-        assert len(ex_node.children) == 2
+    def _verbalise_restriction(self, restriction_node: RangeNode, add_something: bool = True):
+        """Verbalise a (parsed) class expression in the form of existential or universal restriction."""
 
-        object_property = ex_node.children[0]
+        try:
+            assert restriction_node.name.startswith("EX.") or restriction_node.name.startswith("ALL")
+            assert len(restriction_node.children) == 2
+        except:
+            raise RuntimeError("Input range node is not related to a existential or universal restriction statement.")
+            
+        quantifier_word = "some" if restriction_node.name.startswith("EX.") else "only"
+
+        object_property = restriction_node.children[0]
         assert object_property.is_iri
-        object_property = self.vocab[object_property.text.lstrip("<").rstrip(">")]  # change into recursion
+        object_property = self.verbalise_class_expression(object_property)
+        
+        
+        # NOTE modify the object property's verbalisation with rules
+        doc = self.nlp(object_property.verbal)
+        # Rule 1. Add "is" if the object property starts with a noun
+        if doc[0].pos_ == 'NOUN' or doc[0].pos_ == 'ADJ':
+            object_property.verbal = "is " + object_property.verbal  
+        
+        
 
-        class_expression = ex_node.children[1]
+        class_expression = restriction_node.children[1]
         class_expression = self.verbalise_class_expression(class_expression.text)
+
+        verbal = f"{object_property.verbal} {quantifier_word} {class_expression.verbal}"
+            
+        verbal = verbal.lstrip()
+        if add_something:
+            verbal = f"something that " + verbal
 
         return CfgNode(
             {
-                "verbal": f"something that {object_property} {class_expression.verbal}",
+                "verbal": verbal,
                 "property": object_property,
                 "class": class_expression,
-                "type": "EX.",
+                "type": restriction_node.name[:3],
             }
         )
 
-    def _verbalise_conjunction(self, and_node: RangeNode):
-        pass
+    def _verbalise_junction(self, junction_node: RangeNode):
+        """Verbalise a (parsed) class expression in the form of conjunction or disjunction."""
+
+        try:
+            assert junction_node.name.startswith("AND") or junction_node.name.startswith("OR.")
+        except:
+            raise RuntimeError("Input range node is not related to a conjunction or disjunction statement.")
+            
+        junction_word = "and" if junction_node.name.startswith("AND") else "or"
+
+        # collect restriction nodes for merging
+        existential_restriction_children = defaultdict(list)
+        universal_restriction_children = defaultdict(list)
+        other_children = []
+        for child in junction_node.children:
+            if child.name.startswith("EX."):
+                child = self._verbalise_restriction(child, add_something=False)
+                existential_restriction_children[child.property.verbal].append(child)
+            elif child.name.startswith("ALL"):
+                child = self._verbalise_restriction(child, add_something=False)
+                universal_restriction_children[child.property.verbal].append(child)
+            else:
+                other_children.append(self.verbalise_class_expression(child))
+
+        merged_children = []
+        for v in list(existential_restriction_children.values()) + list(universal_restriction_children.values()):
+            # restriction = v[0].type
+            if len(v) > 1:
+                merged_child = dict()
+                merged_child.update(v[0])  # initialised with the first one
+                merged_child["class"] = CfgNode(
+                    {"verbal": v[0]["class"].verbal, "classes": [v[0]["class"]], "type": junction_node[:3]}
+                )
+
+                for i in range(1, len(v)):
+                    merged_child["class"].verbal += f" {junction_word} " + merged_child["class"].verbal
+                    merged_child["class"].classes.append(v[i]["class"])
+                merged_children.append(merged_child)
+
+            merged_children.append(v[0])
+
+        results = CfgNode(
+            {
+                "verbal": "",
+                "classes": other_children + merged_children,
+                "type": junction_node.name[:3],
+            }
+        )
+
+        # add the preceeding "something that" if there are only restrictions
+        if not other_children:
+            results.verbal += " something that " + f" {junction_word} ".join(
+                c.verbal for c in merged_children
+            )
+            results.verbal.lstrip()
+        else:
+            results.verbal += f" {junction_word} ".join(c.verbal for c in other_children)
+            if merged_children:
+                results.verbal += " that " + f" {junction_word} ".join(c.verbal for c in merged_children)
+
+        return results
 
     def verbalise_equivalence_axiom(self, equivalence_axiom: OWLAxiom):
+        #TODO
         pass
 
     def verbalise_subsumption_axiom(self, subclassof_axiom: OWLAxiom):
+        #TODO
         pass
 
 
@@ -153,11 +273,6 @@ class OntologySyntaxParser:
     specifies the sub-formulas (and their respective **positions in the string representation**)
     in a tree structure.
 
-    !!! warning
-
-        The parser currently supports a limited set of [patterns][deeponto.onto.verbalisation.OntologySyntaxParser.abbreviate_owl_expression]
-        due to the limitations of the ontology verbalisation module. Kindly ask the repository maintainer to add more patterns if needed.
-
     Examples:
 
         Suppose the input is an `OWLAxiom` that has the string representation:
@@ -166,9 +281,9 @@ class OntologySyntaxParser:
         >>> str(owl_axiom)
         >>> 'EquivalentClasses(<http://purl.obolibrary.org/obo/FOODON_00001707> ObjectIntersectionOf(<http://purl.obolibrary.org/obo/FOODON_00002044> ObjectSomeValuesFrom(<http://purl.obolibrary.org/obo/RO_0001000> <http://purl.obolibrary.org/obo/FOODON_03412116>)) )'
         ```
-        
+
         This corresponds to the following logical expression:
-        
+
         $$
         CephalopodFoodProduct \equiv MolluskFoodProduct \sqcap \exists derivesFrom.Cephalopod
         $$
