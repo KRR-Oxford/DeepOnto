@@ -100,7 +100,7 @@ class OntologyVerbaliser:
         - merging restriction statements that have the **same object property**;
         - if **object property** that starts with an **adjective** or a **noun**, add **"it"** to the head;
         - the keyword **"only"** is inserted between the object property and the class expression for an **universal restriction** statement;
-        - the keyword **"some"** is inserted between the object property and the class expression for an *existential restriction** statement;
+        - the keyword **"some"** is inserted between the object property and the class expression for an **existential restriction** statement;
         - in a conjunction or disjunction statement, if there is **no atomic class**, then the keyword for the 
         anonymous class **"something"** is appended to the head.
 
