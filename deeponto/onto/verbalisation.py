@@ -158,8 +158,8 @@ class OntologyVerbaliser:
         
         # NOTE modify the object property's verbalisation with rules
         doc = self.nlp(object_property.verbal)
-        # Rule 1. Add "is" if the object property starts with a noun
-        if doc[0].pos_ == 'NOUN' or doc[0].pos_ == 'ADJ':
+        # Rule 1. Add "is" if the object property starts with a NOUN, ADJ, or passive VERB
+        if doc[0].pos_ == 'NOUN' or doc[0].pos_ == 'ADJ' or (doc[0].pos_ == 'VERB' and doc[0].text.endswith("ed")):
             object_property.verbal = "is " + object_property.verbal  
         
         
