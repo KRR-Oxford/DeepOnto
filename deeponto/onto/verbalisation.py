@@ -210,18 +210,21 @@ class OntologyVerbaliser:
         for v in list(existential_restriction_children.values()) + list(universal_restriction_children.values()):
             # restriction = v[0].type
             if len(v) > 1:
-                merged_child = dict()
+                merged_child = CfgNode(dict())
                 merged_child.update(v[0])  # initialised with the first one
                 merged_child["class"] = CfgNode(
-                    {"verbal": v[0]["class"].verbal, "classes": [v[0]["class"]], "type": junction_node[:3]}
+                    {"verbal": v[0]["class"].verbal, "classes": [v[0]["class"]], "type": junction_node.name[:3]}
                 )
 
                 for i in range(1, len(v)):
-                    merged_child["class"].verbal += f" {junction_word} " + merged_child["class"].verbal
+                    # v 0.5.2 fix for len(v) > 1 case
+                    merged_child.verbal += f" {junction_word} " + v[i]["class"].verbal  # update grouped concepts with property
+                    merged_child["class"].verbal += f" {junction_word} " + v[i]["class"].verbal  # update grouped concepts
                     merged_child["class"].classes.append(v[i]["class"])
                 merged_children.append(merged_child)
-
-            merged_children.append(v[0])
+                # print(merged_children)
+            else:
+                merged_children.append(v[0])
 
         results = CfgNode(
             {
@@ -240,7 +243,12 @@ class OntologyVerbaliser:
         else:
             results.verbal += f" {junction_word} ".join(c.verbal for c in other_children)
             if merged_children:
-                results.verbal += " that " + f" {junction_word} ".join(c.verbal for c in merged_children)
+                if junction_word == "and":
+                    # sea food and non-vergetarian product that derives from shark and goldfish
+                    results.verbal += " that " + f" {junction_word} ".join(c.verbal for c in merged_children)
+                elif junction_word == "or":
+                    # sea food or non-vergetarian product or something that derives from shark or goldfish
+                    results.verbal += " or something that " + f" {junction_word} ".join(c.verbal for c in merged_children)
 
         return results
 
