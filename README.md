@@ -57,8 +57,10 @@ $\textsf{DeepOnto}$ relies on [OWLAPI](http://owlapi.sourceforge.net/) version 4
 
 We use what has been implemented in [mOWL](https://mowl.readthedocs.io/en/latest/index.html) that uses [JPype](https://jpype.readthedocs.io/en/latest/) to bridge Python and Java Virtual Machine (JVM). 
 
-!!! warning 
-    According to [mOWL](https://mowl.readthedocs.io/en/latest/index.html), the current integration with OWLAPI has not been made compatible with the **Windows** system.
+
+!!! Warning
+  
+    According to [mOWL](https://mowl.readthedocs.io/en/latest/index.html), the current integration with OWLAPI can **work on Linux or Mac OS** but **not Windows**.
 
 ### Pytorch
 
