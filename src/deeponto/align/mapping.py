@@ -122,7 +122,7 @@ class EntityMapping:
     ) -> List[EntityMapping]:
         r"""Read entity mappings from `.csv` or `.tsv` files.
         
-        !!! note
+        !!! note "Mapping Table Format"
         
             The columns of the mapping table must have the headings: `"SrcEntity"`, `"TgtEntity"`, and `"Score"`.
 
@@ -209,7 +209,7 @@ class ReferenceMapping(EntityMapping):
     def read_table_mappings(table_of_mappings_file: str, relation: str = DEFAULT_REL):
         r"""Read reference mappings from `.csv` or `.tsv` files.
         
-        !!! note
+        !!! note "Mapping Table Format"
         
             The columns of the mapping table must have the headings: `"SrcEntity"`, `"TgtEntity"`, and `"Score"`.
 
