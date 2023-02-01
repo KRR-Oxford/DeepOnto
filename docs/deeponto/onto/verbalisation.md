@@ -2,5 +2,4 @@ Verbalising an ontology into natural language texts is a challenging task. $\tex
 
 
 ::: deeponto.onto.verbalisation
-    handler: python
     heading_level: 2
