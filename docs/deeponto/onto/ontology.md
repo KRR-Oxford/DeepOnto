@@ -9,5 +9,4 @@ should feel relatively easy to extend the Python classes here.
 
 
 ::: deeponto.onto.ontology
-    handler: python
     heading_level: 2

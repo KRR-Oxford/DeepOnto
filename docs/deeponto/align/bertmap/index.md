@@ -19,23 +19,18 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap).
  
 
 ::: deeponto.align.bertmap.pipeline
-    handler: python
     heading_level: 2
 
 
 ::: deeponto.align.bertmap.text_semantics
-    handler: python
     heading_level: 2
 
 
 ::: deeponto.align.bertmap.bert_classifier
-    handler: python
     heading_level: 2
 
 ::: deeponto.align.bertmap.mapping_prediction
-    handler: python
     heading_level: 2
 
 ::: deeponto.align.bertmap.mapping_refinement
-    handler: python
     heading_level: 2
