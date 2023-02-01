@@ -481,13 +481,6 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#deeponto.align.mapping.EntityMapping.__init__" class="md-nav__link">
-    __init__()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#deeponto.align.mapping.EntityMapping.from_owl_objects" class="md-nav__link">
     from_owl_objects()
   </a>
@@ -534,13 +527,6 @@
   
     <nav class="md-nav" aria-label="ReferenceMapping">
       <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#deeponto.align.mapping.ReferenceMapping.__init__" class="md-nav__link">
-    __init__()
-  </a>
-  
-</li>
         
           <li class="md-nav__item">
   <a href="#deeponto.align.mapping.ReferenceMapping.add_candidate" class="md-nav__link">
@@ -855,8 +841,7 @@
 
 
 <h2 id="deeponto.align.mapping.EntityMapping" class="doc doc-heading">
-        <code>EntityMapping</code>
-
+<code class="highlight language-python"><span class="n">EntityMapping</span><span class="p">(</span><span class="n">src_entity_iri</span><span class="p">,</span> <span class="n">tgt_entity_iri</span><span class="p">,</span> <span class="n">relation</span><span class="o">=</span><span class="n">DEFAULT_REL</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></code>
 
 </h2>
 
@@ -909,262 +894,7 @@ Suggested inputs are <code>"&lt;EquivalentTo&gt;"</code> and <code>"&lt;Subsumed
     </tbody>
   </table>
 
-
-        <details class="quote">
-          <summary>Source code in <code>deeponto/align/mapping.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 39</span>
-<span class="normal"> 40</span>
-<span class="normal"> 41</span>
-<span class="normal"> 42</span>
-<span class="normal"> 43</span>
-<span class="normal"> 44</span>
-<span class="normal"> 45</span>
-<span class="normal"> 46</span>
-<span class="normal"> 47</span>
-<span class="normal"> 48</span>
-<span class="normal"> 49</span>
-<span class="normal"> 50</span>
-<span class="normal"> 51</span>
-<span class="normal"> 52</span>
-<span class="normal"> 53</span>
-<span class="normal"> 54</span>
-<span class="normal"> 55</span>
-<span class="normal"> 56</span>
-<span class="normal"> 57</span>
-<span class="normal"> 58</span>
-<span class="normal"> 59</span>
-<span class="normal"> 60</span>
-<span class="normal"> 61</span>
-<span class="normal"> 62</span>
-<span class="normal"> 63</span>
-<span class="normal"> 64</span>
-<span class="normal"> 65</span>
-<span class="normal"> 66</span>
-<span class="normal"> 67</span>
-<span class="normal"> 68</span>
-<span class="normal"> 69</span>
-<span class="normal"> 70</span>
-<span class="normal"> 71</span>
-<span class="normal"> 72</span>
-<span class="normal"> 73</span>
-<span class="normal"> 74</span>
-<span class="normal"> 75</span>
-<span class="normal"> 76</span>
-<span class="normal"> 77</span>
-<span class="normal"> 78</span>
-<span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
-<span class="normal"> 83</span>
-<span class="normal"> 84</span>
-<span class="normal"> 85</span>
-<span class="normal"> 86</span>
-<span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">EntityMapping</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;A datastructure for entity mapping.</span>
-
-<span class="sd">    Such entities should be named and have an IRI.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        src_entity_iri (str): The IRI of the source entity, usually its IRI if available.</span>
-<span class="sd">        tgt_entity_iri (str): The IRI of the target entity, usually its IRI if available.</span>
-<span class="sd">        relation (str, optional): A symbol that represents what semantic relation this mapping stands for. Defaults to `&lt;?rel&gt;` which means unspecified.</span>
-<span class="sd">            Suggested inputs are `&quot;&lt;EquivalentTo&gt;&quot;` and `&quot;&lt;SubsumedBy&gt;&quot;`.</span>
-<span class="sd">        score (float, optional): The score that indicates the confidence of this mapping. Defaults to `0.0`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_entity_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tgt_entity_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_REL</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Intialise an entity mapping.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            src_entity_iri (str): The IRI of the source entity, usually its IRI if available.</span>
-<span class="sd">            tgt_entity_iri (str): The IRI of the target entity, usually its IRI if available.</span>
-<span class="sd">            relation (str, optional): A symbol that represents what semantic relation this mapping stands for. Defaults to `&lt;?rel&gt;` which means unspecified.</span>
-<span class="sd">                Suggested inputs are `&quot;&lt;EquivalentTo&gt;&quot;` and `&quot;&lt;SubsumedBy&gt;&quot;`.</span>
-<span class="sd">            score (float, optional): The score that indicates the confidence of this mapping. Defaults to `0.0`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">src_entity_iri</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tail</span> <span class="o">=</span> <span class="n">tgt_entity_iri</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">relation</span> <span class="o">=</span> <span class="n">relation</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_owl_objects</span><span class="p">(</span>
-        <span class="bp">cls</span><span class="p">,</span> <span class="n">src_entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">tgt_entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_REL</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an entity mapping from two `OWLObject` entities which have an IRI.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            src_entity (OWLObject): The source entity in `OWLObject`.</span>
-<span class="sd">            tgt_entity (OWLObject): The target entity in `OWLObject`.</span>
-<span class="sd">            relation (str, optional): A symbol that represents what semantic relation this mapping stands for. Defaults to `&lt;?rel&gt;` which means unspecified.</span>
-<span class="sd">                Suggested inputs are `&quot;&lt;EquivalentTo&gt;&quot;` and `&quot;&lt;SubsumedBy&gt;&quot;`.</span>
-<span class="sd">            score (float, optional): The score that indicates the confidence of this mapping. Defaults to `0.0`.</span>
-<span class="sd">        Returns:</span>
-<span class="sd">            (EntityMapping): The entity mapping created from the source and target entities.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">src_entity</span><span class="o">.</span><span class="n">getIRI</span><span class="p">()),</span> <span class="nb">str</span><span class="p">(</span><span class="n">tgt_entity</span><span class="o">.</span><span class="n">getIRI</span><span class="p">()),</span> <span class="n">relation</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">to_tuple</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">with_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform an entity mapping (`self`) to a tuple representation</span>
-
-<span class="sd">        Note that `relation` is discarded and `score` is optionally preserved).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">with_score</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="p">)</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">as_tuples</span><span class="p">(</span><span class="n">entity_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span> <span class="n">with_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform a list of entity mappings to their tuple representations.</span>
-
-<span class="sd">        Note that `relation` is discarded and `score` is optionally preserved).</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">(</span><span class="n">with_score</span><span class="o">=</span><span class="n">with_score</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">entity_mappings</span><span class="p">]</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">sort_entity_mappings_by_score</span><span class="p">(</span><span class="n">entity_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Sort the entity mappings in a list by their scores in descending order.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            entity_mappings (List[EntityMapping]): A list entity mappings to sort.</span>
-<span class="sd">            k (int, optional): The number of top $k$ scored entities preserved if specified. Defaults to `None` which</span>
-<span class="sd">                means to return **all** entity mappings.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            (List[EntityMapping]): A list of sorted entity mappings.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">entity_mappings</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">score</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">))[:</span><span class="n">k</span><span class="p">]</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">read_table_mappings</span><span class="p">(</span>
-        <span class="n">table_of_mappings_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
-        <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_REL</span><span class="p">,</span>
-        <span class="n">is_reference</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">]:</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Read entity mappings from `.csv` or `.tsv` files.</span>
-
-<span class="sd">        !!! note</span>
-
-<span class="sd">            The columns of the mapping table must have the headings: `&quot;SrcEntity&quot;`, `&quot;TgtEntity&quot;`, and `&quot;Score&quot;`.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            table_of_mappings_file (str): The path to the table (`.csv` or `.tsv`) of mappings.</span>
-<span class="sd">            threshold (Optional[float], optional): Mappings with scores less than `threshold` will not be loaded. Defaults to 0.0.</span>
-<span class="sd">            relation (str, optional): A symbol that represents what semantic relation this mapping stands for. Defaults to `&lt;?rel&gt;` which means unspecified.</span>
-<span class="sd">                Suggested inputs are `&quot;&lt;EquivalentTo&gt;&quot;` and `&quot;&lt;SubsumedBy&gt;&quot;`.</span>
-<span class="sd">            is_reference (bool): Whether the loaded mappings are reference mappigns; if so, `threshold` is disabled and mapping scores</span>
-<span class="sd">                are all set to $1.0$. Defaults to `False`.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            (List[EntityMapping]): A list of entity mappings loaded from the table file.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">FileUtils</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">table_of_mappings_file</span><span class="p">)</span>
-        <span class="n">entity_mappings</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">dp</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="k">if</span> <span class="n">is_reference</span><span class="p">:</span>
-                <span class="n">entity_mappings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ReferenceMapping</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="s2">&quot;SrcEntity&quot;</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="s2">&quot;TgtEntity&quot;</span><span class="p">],</span> <span class="n">relation</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">dp</span><span class="p">[</span><span class="s2">&quot;Score&quot;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">:</span>
-                    <span class="n">entity_mappings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">EntityMapping</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="s2">&quot;SrcEntity&quot;</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="s2">&quot;TgtEntity&quot;</span><span class="p">],</span> <span class="n">relation</span><span class="p">,</span> <span class="n">dp</span><span class="p">[</span><span class="s2">&quot;Score&quot;</span><span class="p">]))</span>
-        <span class="k">return</span> <span class="n">entity_mappings</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;EntityMapping(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">relation</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">score</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span>
-</code></pre></div></td></tr></table></div>
-        </details>
-
   
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.align.mapping.EntityMapping.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">src_entity_iri</span><span class="p">,</span> <span class="n">tgt_entity_iri</span><span class="p">,</span> <span class="n">relation</span><span class="o">=</span><span class="n">DEFAULT_REL</span><span class="p">,</span> <span class="n">score</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Intialise an entity mapping.</p>
 
   <p><strong>Parameters:</strong></p>
   <table>
@@ -1221,9 +951,9 @@ Suggested inputs are <code>"&lt;EquivalentTo&gt;"</code> and <code>"&lt;Subsumed
     </tbody>
   </table>
 
-      <details class="quote">
-        <summary>Source code in <code>deeponto/align/mapping.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
+          <details class="quote">
+            <summary>Source code in <code>deeponto/align/mapping.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
@@ -1251,10 +981,19 @@ Suggested inputs are <code>"&lt;EquivalentTo&gt;"</code> and <code>"&lt;Subsumed
     <span class="bp">self</span><span class="o">.</span><span class="n">relation</span> <span class="o">=</span> <span class="n">relation</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">score</span> <span class="o">=</span> <span class="n">score</span>
 </code></pre></div></td></tr></table></div>
-      </details>
-  </div>
+          </details>
 
-</div>
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
 
 <div class="doc doc-object doc-function">
 
@@ -1588,7 +1327,7 @@ means to return <strong>all</strong> entity mappings.</p></td>
   
       <p>Read entity mappings from <code>.csv</code> or <code>.tsv</code> files.</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
+<p class="admonition-title">Mapping Table Format</p>
 <p>The columns of the mapping table must have the headings: <code>"SrcEntity"</code>, <code>"TgtEntity"</code>, and <code>"Score"</code>.</p>
 </div>
 
@@ -1709,7 +1448,7 @@ are all set to <span class="arithmatex">\(1.0\)</span>. Defaults to <code>False<
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Read entity mappings from `.csv` or `.tsv` files.</span>
 
-<span class="sd">    !!! note</span>
+<span class="sd">    !!! note &quot;Mapping Table Format&quot;</span>
 
 <span class="sd">        The columns of the mapping table must have the headings: `&quot;SrcEntity&quot;`, `&quot;TgtEntity&quot;`, and `&quot;Score&quot;`.</span>
 
@@ -1752,8 +1491,7 @@ are all set to <span class="arithmatex">\(1.0\)</span>. Defaults to <code>False<
 
 
 <h2 id="deeponto.align.mapping.ReferenceMapping" class="doc doc-heading">
-        <code>ReferenceMapping</code>
-
+<code class="highlight language-python"><span class="n">ReferenceMapping</span><span class="p">(</span><span class="n">src_entity_iri</span><span class="p">,</span> <span class="n">tgt_entity_iri</span><span class="p">,</span> <span class="n">relation</span><span class="o">=</span><span class="n">DEFAULT_REL</span><span class="p">,</span> <span class="n">candidate_mappings</span><span class="o">=</span><span class="p">[])</span></code>
 
 </h2>
 
@@ -1803,178 +1541,7 @@ Suggested inputs are <code>"&lt;EquivalentTo&gt;"</code> and <code>"&lt;Subsumed
     </tbody>
   </table>
 
-
-        <details class="quote">
-          <summary>Source code in <code>deeponto/align/mapping.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span>
-<span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span>
-<span class="normal">178</span>
-<span class="normal">179</span>
-<span class="normal">180</span>
-<span class="normal">181</span>
-<span class="normal">182</span>
-<span class="normal">183</span>
-<span class="normal">184</span>
-<span class="normal">185</span>
-<span class="normal">186</span>
-<span class="normal">187</span>
-<span class="normal">188</span>
-<span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span>
-<span class="normal">192</span>
-<span class="normal">193</span>
-<span class="normal">194</span>
-<span class="normal">195</span>
-<span class="normal">196</span>
-<span class="normal">197</span>
-<span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span>
-<span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span>
-<span class="normal">217</span>
-<span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span>
-<span class="normal">221</span>
-<span class="normal">222</span>
-<span class="normal">223</span>
-<span class="normal">224</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ReferenceMapping</span><span class="p">(</span><span class="n">EntityMapping</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;A datastructure for entity mapping that acts as a reference mapping.</span>
-
-<span class="sd">    A reference mapppings is a ground truth entity mapping (with $score = 1.0$) and can</span>
-<span class="sd">    have several entity mappings as candidates. These candidate mappings should have the</span>
-<span class="sd">    same `head` (i.e., source entity) as the reference mapping.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        src_entity_iri (str): The IRI of the source entity, usually its IRI if available.</span>
-<span class="sd">        tgt_entity_iri (str): The IRI of the target entity, usually its IRI if available.</span>
-<span class="sd">        relation (str, optional): A symbol that represents what semantic relation this mapping stands for. Defaults to `&lt;?rel&gt;` which means unspecified.</span>
-<span class="sd">            Suggested inputs are `&quot;&lt;EquivalentTo&gt;&quot;` and `&quot;&lt;SubsumedBy&gt;&quot;`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">src_entity_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">tgt_entity_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_REL</span><span class="p">,</span>
-        <span class="n">candidate_mappings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[],</span>
-    <span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Intialise a reference mapping.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            src_entity_iri (str): The IRI of the source entity, usually its IRI if available.</span>
-<span class="sd">            tgt_entity_iri (str): The IRI of the target entity, usually its IRI if available.</span>
-<span class="sd">            relation (str, optional): A symbol that represents what semantic relation this mapping stands for. Defaults to `&lt;?rel&gt;` which means unspecified.</span>
-<span class="sd">                Suggested inputs are `&quot;&lt;EquivalentTo&gt;&quot;` and `&quot;&lt;SubsumedBy&gt;&quot;`.</span>
-<span class="sd">            candidate_mappings (List[EntityMapping], optional): A list of entity mappings that are candidates for this reference mapping. Defaults to `[]`.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">src_entity_iri</span><span class="p">,</span> <span class="n">tgt_entity_iri</span><span class="p">,</span> <span class="n">relation</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">candidate_mappings</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_candidate</span><span class="p">(</span><span class="n">candidate</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">reference_mapping_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;ReferenceMapping(</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">relation</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">tail</span><span class="si">}</span><span class="s2">, 1.0)&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">candidates</span><span class="p">:</span>
-            <span class="n">candidate_mapping_str</span> <span class="o">=</span> <span class="n">pprintpp</span><span class="o">.</span><span class="n">pformat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">candidates</span><span class="p">)</span>
-            <span class="n">reference_mapping_str</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; with candidates:</span><span class="se">\n</span><span class="si">{</span><span class="n">candidate_mapping_str</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="k">return</span> <span class="n">reference_mapping_str</span>
-
-    <span class="k">def</span> <span class="nf">add_candidate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">candidate_mapping</span><span class="p">:</span> <span class="n">EntityMapping</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a candidate mapping whose relation and head entity are the</span>
-<span class="sd">        same as the reference mapping&#39;s.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">relation</span> <span class="o">!=</span> <span class="n">candidate_mapping</span><span class="o">.</span><span class="n">relation</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Expect relation of candidate mapping to be </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">relation</span><span class="si">}</span><span class="s2"> but got </span><span class="si">{</span><span class="n">candidate_mapping</span><span class="o">.</span><span class="n">relation</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">!=</span> <span class="n">candidate_mapping</span><span class="o">.</span><span class="n">head</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Candidate mapping does not have the same head entity as the anchor mapping.&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">candidates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">candidate_mapping</span><span class="p">)</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">read_table_mappings</span><span class="p">(</span><span class="n">table_of_mappings_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_REL</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Read reference mappings from `.csv` or `.tsv` files.</span>
-
-<span class="sd">        !!! note</span>
-
-<span class="sd">            The columns of the mapping table must have the headings: `&quot;SrcEntity&quot;`, `&quot;TgtEntity&quot;`, and `&quot;Score&quot;`.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            table_of_mappings_file (str): The path to the table (`.csv` or `.tsv`) of mappings.</span>
-<span class="sd">            relation (str, optional): A symbol that represents what semantic relation this mapping stands for. Defaults to `&lt;?rel&gt;` which means unspecified.</span>
-<span class="sd">                Suggested inputs are `&quot;&lt;EquivalentTo&gt;&quot;` and `&quot;&lt;SubsumedBy&gt;&quot;`.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            (List[ReferenceMapping]): A list of reference mappings loaded from the table file.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">EntityMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">table_of_mappings_file</span><span class="p">,</span> <span class="n">relation</span><span class="o">=</span><span class="n">relation</span><span class="p">,</span> <span class="n">is_reference</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-        </details>
-
   
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.align.mapping.ReferenceMapping.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">src_entity_iri</span><span class="p">,</span> <span class="n">tgt_entity_iri</span><span class="p">,</span> <span class="n">relation</span><span class="o">=</span><span class="n">DEFAULT_REL</span><span class="p">,</span> <span class="n">candidate_mappings</span><span class="o">=</span><span class="p">[])</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Intialise a reference mapping.</p>
 
   <p><strong>Parameters:</strong></p>
   <table>
@@ -2031,9 +1598,9 @@ Suggested inputs are <code>"&lt;EquivalentTo&gt;"</code> and <code>"&lt;Subsumed
     </tbody>
   </table>
 
-      <details class="quote">
-        <summary>Source code in <code>deeponto/align/mapping.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">168</span>
+          <details class="quote">
+            <summary>Source code in <code>deeponto/align/mapping.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">168</span>
 <span class="normal">169</span>
 <span class="normal">170</span>
 <span class="normal">171</span>
@@ -2073,10 +1640,19 @@ Suggested inputs are <code>"&lt;EquivalentTo&gt;"</code> and <code>"&lt;Subsumed
     <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">candidate_mappings</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_candidate</span><span class="p">(</span><span class="n">candidate</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-      </details>
-  </div>
+          </details>
 
-</div>
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
 
 <div class="doc doc-object doc-function">
 
@@ -2140,7 +1716,7 @@ same as the reference mapping's.</p>
   
       <p>Read reference mappings from <code>.csv</code> or <code>.tsv</code> files.</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
+<p class="admonition-title">Mapping Table Format</p>
 <p>The columns of the mapping table must have the headings: <code>"SrcEntity"</code>, <code>"TgtEntity"</code>, and <code>"Score"</code>.</p>
 </div>
 
@@ -2219,7 +1795,7 @@ Suggested inputs are <code>"&lt;EquivalentTo&gt;"</code> and <code>"&lt;Subsumed
 <span class="k">def</span> <span class="nf">read_table_mappings</span><span class="p">(</span><span class="n">table_of_mappings_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">relation</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_REL</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Read reference mappings from `.csv` or `.tsv` files.</span>
 
-<span class="sd">    !!! note</span>
+<span class="sd">    !!! note &quot;Mapping Table Format&quot;</span>
 
 <span class="sd">        The columns of the mapping table must have the headings: `&quot;SrcEntity&quot;`, `&quot;TgtEntity&quot;`, and `&quot;Score&quot;`.</span>
 
@@ -2251,8 +1827,7 @@ Suggested inputs are <code>"&lt;EquivalentTo&gt;"</code> and <code>"&lt;Subsumed
 
 
 <h2 id="deeponto.align.mapping.SubsFromEquivMappingGenerator" class="doc doc-heading">
-        <code>SubsFromEquivMappingGenerator</code>
-
+<code class="highlight language-python"><span class="n">SubsFromEquivMappingGenerator</span><span class="p">(</span><span class="n">src_onto</span><span class="p">,</span> <span class="n">tgt_onto</span><span class="p">,</span> <span class="n">equiv_mappings</span><span class="p">,</span> <span class="n">subs_generation_ratio</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">delete_used_equiv_tgt_class</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2322,32 +1897,9 @@ at least one subsumption mappings as "deleted". Defaults to <code>True</code>.</
   </table>
 
 
-        <details class="quote">
-          <summary>Source code in <code>deeponto/align/mapping.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">227</span>
-<span class="normal">228</span>
-<span class="normal">229</span>
-<span class="normal">230</span>
-<span class="normal">231</span>
-<span class="normal">232</span>
-<span class="normal">233</span>
-<span class="normal">234</span>
-<span class="normal">235</span>
-<span class="normal">236</span>
-<span class="normal">237</span>
-<span class="normal">238</span>
-<span class="normal">239</span>
-<span class="normal">240</span>
-<span class="normal">241</span>
-<span class="normal">242</span>
-<span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
-<span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
+          <details class="quote">
+            <summary>Source code in <code>deeponto/align/mapping.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">250</span>
 <span class="normal">251</span>
 <span class="normal">252</span>
 <span class="normal">253</span>
@@ -2363,176 +1915,25 @@ at least one subsumption mappings as "deleted". Defaults to <code>True</code>.</
 <span class="normal">263</span>
 <span class="normal">264</span>
 <span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
-<span class="normal">270</span>
-<span class="normal">271</span>
-<span class="normal">272</span>
-<span class="normal">273</span>
-<span class="normal">274</span>
-<span class="normal">275</span>
-<span class="normal">276</span>
-<span class="normal">277</span>
-<span class="normal">278</span>
-<span class="normal">279</span>
-<span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
-<span class="normal">283</span>
-<span class="normal">284</span>
-<span class="normal">285</span>
-<span class="normal">286</span>
-<span class="normal">287</span>
-<span class="normal">288</span>
-<span class="normal">289</span>
-<span class="normal">290</span>
-<span class="normal">291</span>
-<span class="normal">292</span>
-<span class="normal">293</span>
-<span class="normal">294</span>
-<span class="normal">295</span>
-<span class="normal">296</span>
-<span class="normal">297</span>
-<span class="normal">298</span>
-<span class="normal">299</span>
-<span class="normal">300</span>
-<span class="normal">301</span>
-<span class="normal">302</span>
-<span class="normal">303</span>
-<span class="normal">304</span>
-<span class="normal">305</span>
-<span class="normal">306</span>
-<span class="normal">307</span>
-<span class="normal">308</span>
-<span class="normal">309</span>
-<span class="normal">310</span>
-<span class="normal">311</span>
-<span class="normal">312</span>
-<span class="normal">313</span>
-<span class="normal">314</span>
-<span class="normal">315</span>
-<span class="normal">316</span>
-<span class="normal">317</span>
-<span class="normal">318</span>
-<span class="normal">319</span>
-<span class="normal">320</span>
-<span class="normal">321</span>
-<span class="normal">322</span>
-<span class="normal">323</span>
-<span class="normal">324</span>
-<span class="normal">325</span>
-<span class="normal">326</span>
-<span class="normal">327</span>
-<span class="normal">328</span>
-<span class="normal">329</span>
-<span class="normal">330</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SubsFromEquivMappingGenerator</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generating subsumption mappings from gold standard equivalence mappings.</span>
+<span class="normal">266</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+    <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+    <span class="n">equiv_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">],</span>
+    <span class="n">subs_generation_ratio</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">delete_used_equiv_tgt_class</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span> <span class="o">=</span> <span class="n">src_onto</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span> <span class="o">=</span> <span class="n">tgt_onto</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">equiv_class_pairs</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">equiv_mappings</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">subs_generation_ratio</span> <span class="o">=</span> <span class="n">subs_generation_ratio</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">delete_used_equiv_tgt_class</span> <span class="o">=</span> <span class="n">delete_used_equiv_tgt_class</span>
 
-<span class="sd">    !!! credit &quot;paper&quot;</span>
-
-<span class="sd">        The online subsumption mapping construction algorithm is proposed in the paper:</span>
-<span class="sd">        [Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).</span>
-
-<span class="sd">    This generator has an attribute `delete_used_equiv_tgt_class` for determining whether or not to sabotage the equivalence</span>
-<span class="sd">    mappings used to create $\geq 1$ subsumption mappings. The reason is that, if the equivalence mapping is broken, then the</span>
-<span class="sd">    OM tool is expected to predict subsumption mappings directly without relying on the equivalence mappings as an intermediate.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        src_onto (Ontology): The source ontology.</span>
-<span class="sd">        tgt_onto (Ontology): The target ontology.</span>
-<span class="sd">        equiv_class_pairs (List[Tuple[str, str]]): A list of class pairs (in IRIs) that are **equivalent** according to the input</span>
-<span class="sd">            equivalence mappings.</span>
-<span class="sd">        subs_generation_ratio (int, optional): The maximum number of subsumption mappings generated from each equivalence</span>
-<span class="sd">            mapping. Defaults to `None` which means there is no limit on the number of subsumption mappings.</span>
-<span class="sd">        delete_used_equiv_tgt_class (bool): Whether to mark the target side of an equivalence mapping **used** for creating</span>
-<span class="sd">            at least one subsumption mappings as &quot;deleted&quot;. Defaults to `True`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
-        <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
-        <span class="n">equiv_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">],</span>
-        <span class="n">subs_generation_ratio</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">delete_used_equiv_tgt_class</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span> <span class="o">=</span> <span class="n">src_onto</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span> <span class="o">=</span> <span class="n">tgt_onto</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">equiv_class_pairs</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">equiv_mappings</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subs_generation_ratio</span> <span class="o">=</span> <span class="n">subs_generation_ratio</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">delete_used_equiv_tgt_class</span> <span class="o">=</span> <span class="n">delete_used_equiv_tgt_class</span>
-
-        <span class="n">subs_from_equivs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">used_equiv_tgt_class_iris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">online_construction</span><span class="p">()</span>
-        <span class="c1"># turn into triples with scores 1.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">subs_from_equivs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">c</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">subs_from_equivs</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">online_construction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;An **online** algorithm for constructing subsumption mappings from gold standard equivalence mappings.</span>
-
-<span class="sd">        Let $t$ denote the boolean value that indicates if the target class involved in an equivalence mapping</span>
-<span class="sd">        will be deleted. If $t$ is true, then for each equivalent class pair $(c, c&#39;)$, do the following:</span>
-
-<span class="sd">        1. If $c&#39;$ has been inolved in a subsumption mapping, skip this pair as otherwise $c&#39;$ will need to be deleted.</span>
-<span class="sd">        2. For each parent class of $c&#39;$, skip it if it has been marked deleted (i.e., involved in an equivalence mapping that has been used to create a subsumption mapping).</span>
-<span class="sd">        3. If any subsumption mapping has been created from $(c, c&#39;)$, mark $c&#39;$ as deleted.</span>
-
-<span class="sd">        Steps 1 and 2 ensure that target classes that have been **involved in a subsumption mapping** have **no conflicts** with</span>
-<span class="sd">        target classes that have been **used to create a subsumption mapping**.</span>
-
-<span class="sd">        This algorithm is *online* because the construction and deletion depend on the order of the input equivalent class pairs.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">subs_class_pairs</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">in_subs</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># in a subsumption mapping</span>
-        <span class="n">used_equivs</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">False</span><span class="p">)</span>  <span class="c1"># in a used equivalence mapping</span>
-
-        <span class="k">for</span> <span class="n">src_class_iri</span><span class="p">,</span> <span class="n">tgt_class_iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equiv_class_pairs</span><span class="p">:</span>
-
-            <span class="n">cur_subs_pairs</span> <span class="o">=</span> <span class="p">[]</span>
-
-            <span class="c1"># NOTE (1) an equiv pair is skipped if the target side is marked constructed</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_used_equiv_tgt_class</span> <span class="ow">and</span> <span class="n">in_subs</span><span class="p">[</span><span class="n">tgt_class_iri</span><span class="p">]:</span>
-                <span class="k">continue</span>
-
-            <span class="c1"># construct subsumption pairs by matching the source class and the target class&#39;s parents</span>
-            <span class="n">tgt_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">tgt_class_iri</span><span class="p">)</span>
-            <span class="n">tgt_class_parent_iris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">super_entities_of</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">parent_iri</span> <span class="ow">in</span> <span class="n">tgt_class_parent_iris</span><span class="p">:</span>
-                <span class="c1"># skip this parent if it is marked as &quot;used&quot;</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_used_equiv_tgt_class</span> <span class="ow">and</span> <span class="n">used_equivs</span><span class="p">[</span><span class="n">parent_iri</span><span class="p">]:</span>
-                    <span class="k">continue</span>
-                <span class="n">cur_subs_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">src_class_iri</span><span class="p">,</span> <span class="n">parent_iri</span><span class="p">))</span>
-                <span class="c1"># if successfully created, mark this parent as &quot;in&quot;</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_used_equiv_tgt_class</span><span class="p">:</span>
-                    <span class="n">in_subs</span><span class="p">[</span><span class="n">parent_iri</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-
-            <span class="c1"># mark the target class as &quot;used&quot; because it has been used for creating a subsumption mapping</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_used_equiv_tgt_class</span> <span class="ow">and</span> <span class="n">cur_subs_pairs</span><span class="p">:</span>
-                <span class="n">used_equivs</span><span class="p">[</span><span class="n">tgt_class_iri</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
-
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">subs_generation_ratio</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cur_subs_pairs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">subs_generation_ratio</span><span class="p">:</span>
-                <span class="n">cur_subs_pairs</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">cur_subs_pairs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">subs_generation_ratio</span><span class="p">)</span>
-            <span class="n">subs_class_pairs</span> <span class="o">+=</span> <span class="n">cur_subs_pairs</span>
-
-        <span class="n">used_equiv_tgt_class_iris</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_used_equiv_tgt_class</span><span class="p">:</span>
-            <span class="n">used_equiv_tgt_class_iris</span> <span class="o">=</span> <span class="p">[</span><span class="n">iri</span> <span class="k">for</span> <span class="n">iri</span><span class="p">,</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">used_equivs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">used</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">]</span>
-            <span class="nb">print</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">used_equiv_tgt_class_iris</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">equiv_class_pairs</span><span class="p">)</span><span class="si">}</span><span class="s2"> are used for creating at least one subsumption mapping.&quot;</span>
-            <span class="p">)</span>
-
-        <span class="n">subs_class_pairs</span> <span class="o">=</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="n">subs_class_pairs</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">subs_class_pairs</span><span class="p">)</span><span class="si">}</span><span class="s2"> subsumption mappings are created in the end.&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">subs_class_pairs</span><span class="p">,</span> <span class="n">used_equiv_tgt_class_iris</span>
-
-    <span class="k">def</span> <span class="nf">save_subs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the constructed subsumption mappings (in tuples) to a local `.tsv` file.&quot;&quot;&quot;</span>
-        <span class="n">subs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subs_from_equivs</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SrcEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;TgtEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;Score&quot;</span><span class="p">])</span>
-        <span class="n">subs_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">subs_from_equivs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">used_equiv_tgt_class_iris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">online_construction</span><span class="p">()</span>
+    <span class="c1"># turn into triples with scores 1.0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">subs_from_equivs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">c</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">subs_from_equivs</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
-        </details>
+          </details>
 
   
 
@@ -2735,8 +2136,7 @@ target classes that have been <strong>used to create a subsumption mapping</stro
 
 
 <h2 id="deeponto.align.mapping.NegativeCandidateMappingGenerator" class="doc doc-heading">
-        <code>NegativeCandidateMappingGenerator</code>
-
+<code class="highlight language-python"><span class="n">NegativeCandidateMappingGenerator</span><span class="p">(</span><span class="n">src_onto</span><span class="p">,</span> <span class="n">tgt_onto</span><span class="p">,</span> <span class="n">reference_class_mappings</span><span class="p">,</span> <span class="n">annotation_property_iris</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">max_hops</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">for_subsumption</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -2754,21 +2154,9 @@ according to the target side.</p>
 </div>
 
 
-        <details class="quote">
-          <summary>Source code in <code>deeponto/align/mapping.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">336</span>
-<span class="normal">337</span>
-<span class="normal">338</span>
-<span class="normal">339</span>
-<span class="normal">340</span>
-<span class="normal">341</span>
-<span class="normal">342</span>
-<span class="normal">343</span>
-<span class="normal">344</span>
-<span class="normal">345</span>
-<span class="normal">346</span>
-<span class="normal">347</span>
-<span class="normal">348</span>
+          <details class="quote">
+            <summary>Source code in <code>deeponto/align/mapping.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">348</span>
 <span class="normal">349</span>
 <span class="normal">350</span>
 <span class="normal">351</span>
@@ -2808,363 +2196,49 @@ according to the target side.</p>
 <span class="normal">385</span>
 <span class="normal">386</span>
 <span class="normal">387</span>
-<span class="normal">388</span>
-<span class="normal">389</span>
-<span class="normal">390</span>
-<span class="normal">391</span>
-<span class="normal">392</span>
-<span class="normal">393</span>
-<span class="normal">394</span>
-<span class="normal">395</span>
-<span class="normal">396</span>
-<span class="normal">397</span>
-<span class="normal">398</span>
-<span class="normal">399</span>
-<span class="normal">400</span>
-<span class="normal">401</span>
-<span class="normal">402</span>
-<span class="normal">403</span>
-<span class="normal">404</span>
-<span class="normal">405</span>
-<span class="normal">406</span>
-<span class="normal">407</span>
-<span class="normal">408</span>
-<span class="normal">409</span>
-<span class="normal">410</span>
-<span class="normal">411</span>
-<span class="normal">412</span>
-<span class="normal">413</span>
-<span class="normal">414</span>
-<span class="normal">415</span>
-<span class="normal">416</span>
-<span class="normal">417</span>
-<span class="normal">418</span>
-<span class="normal">419</span>
-<span class="normal">420</span>
-<span class="normal">421</span>
-<span class="normal">422</span>
-<span class="normal">423</span>
-<span class="normal">424</span>
-<span class="normal">425</span>
-<span class="normal">426</span>
-<span class="normal">427</span>
-<span class="normal">428</span>
-<span class="normal">429</span>
-<span class="normal">430</span>
-<span class="normal">431</span>
-<span class="normal">432</span>
-<span class="normal">433</span>
-<span class="normal">434</span>
-<span class="normal">435</span>
-<span class="normal">436</span>
-<span class="normal">437</span>
-<span class="normal">438</span>
-<span class="normal">439</span>
-<span class="normal">440</span>
-<span class="normal">441</span>
-<span class="normal">442</span>
-<span class="normal">443</span>
-<span class="normal">444</span>
-<span class="normal">445</span>
-<span class="normal">446</span>
-<span class="normal">447</span>
-<span class="normal">448</span>
-<span class="normal">449</span>
-<span class="normal">450</span>
-<span class="normal">451</span>
-<span class="normal">452</span>
-<span class="normal">453</span>
-<span class="normal">454</span>
-<span class="normal">455</span>
-<span class="normal">456</span>
-<span class="normal">457</span>
-<span class="normal">458</span>
-<span class="normal">459</span>
-<span class="normal">460</span>
-<span class="normal">461</span>
-<span class="normal">462</span>
-<span class="normal">463</span>
-<span class="normal">464</span>
-<span class="normal">465</span>
-<span class="normal">466</span>
-<span class="normal">467</span>
-<span class="normal">468</span>
-<span class="normal">469</span>
-<span class="normal">470</span>
-<span class="normal">471</span>
-<span class="normal">472</span>
-<span class="normal">473</span>
-<span class="normal">474</span>
-<span class="normal">475</span>
-<span class="normal">476</span>
-<span class="normal">477</span>
-<span class="normal">478</span>
-<span class="normal">479</span>
-<span class="normal">480</span>
-<span class="normal">481</span>
-<span class="normal">482</span>
-<span class="normal">483</span>
-<span class="normal">484</span>
-<span class="normal">485</span>
-<span class="normal">486</span>
-<span class="normal">487</span>
-<span class="normal">488</span>
-<span class="normal">489</span>
-<span class="normal">490</span>
-<span class="normal">491</span>
-<span class="normal">492</span>
-<span class="normal">493</span>
-<span class="normal">494</span>
-<span class="normal">495</span>
-<span class="normal">496</span>
-<span class="normal">497</span>
-<span class="normal">498</span>
-<span class="normal">499</span>
-<span class="normal">500</span>
-<span class="normal">501</span>
-<span class="normal">502</span>
-<span class="normal">503</span>
-<span class="normal">504</span>
-<span class="normal">505</span>
-<span class="normal">506</span>
-<span class="normal">507</span>
-<span class="normal">508</span>
-<span class="normal">509</span>
-<span class="normal">510</span>
-<span class="normal">511</span>
-<span class="normal">512</span>
-<span class="normal">513</span>
-<span class="normal">514</span>
-<span class="normal">515</span>
-<span class="normal">516</span>
-<span class="normal">517</span>
-<span class="normal">518</span>
-<span class="normal">519</span>
-<span class="normal">520</span>
-<span class="normal">521</span>
-<span class="normal">522</span>
-<span class="normal">523</span>
-<span class="normal">524</span>
-<span class="normal">525</span>
-<span class="normal">526</span>
-<span class="normal">527</span>
-<span class="normal">528</span>
-<span class="normal">529</span>
-<span class="normal">530</span>
-<span class="normal">531</span>
-<span class="normal">532</span>
-<span class="normal">533</span>
-<span class="normal">534</span>
-<span class="normal">535</span>
-<span class="normal">536</span>
-<span class="normal">537</span>
-<span class="normal">538</span>
-<span class="normal">539</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">NegativeCandidateMappingGenerator</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Generating **negative** candidate mappings for each gold standard mapping.</span>
+<span class="normal">388</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span>
+    <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+    <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
+    <span class="n">reference_class_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">],</span>  <span class="c1"># equivalence or subsumption</span>
+    <span class="n">annotation_property_iris</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># for text-based candidates</span>
+    <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Tokenizer</span><span class="p">,</span>  <span class="c1"># for text-based candidates</span>
+    <span class="n">max_hops</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>  <span class="c1"># for graph-based candidates</span>
+    <span class="n">for_subsumption</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># if for subsumption, avoid adding ancestors as candidates</span>
+<span class="p">):</span>
 
-<span class="sd">    Note that the source side of the golden standard mapping is fixed, i.e., candidate mappings are generated</span>
-<span class="sd">    according to the target side.</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span> <span class="o">=</span> <span class="n">src_onto</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span> <span class="o">=</span> <span class="n">tgt_onto</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reference_class_mappings</span> <span class="o">=</span> <span class="n">reference_class_mappings</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reference_class_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># to prevent wrongly adding negative candidates</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_class_mappings</span><span class="p">:</span>
+        <span class="n">src_class_iri</span><span class="p">,</span> <span class="n">tgt_class_iri</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_class_dict</span><span class="p">[</span><span class="n">src_class_iri</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tgt_class_iri</span><span class="p">)</span>
 
-<span class="sd">    !!! credit &quot;paper&quot;</span>
+    <span class="c1"># for IDF sample</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tgt_annotation_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotation_property_iris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">build_annotation_index</span><span class="p">(</span>
+        <span class="n">annotation_property_iris</span>
+    <span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tgt_inverted_annotation_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">build_inverted_annotation_index</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tgt_annotation_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span>
+    <span class="p">)</span>
 
-<span class="sd">        The candidate mapping generation algorithm is proposed in the paper:</span>
-<span class="sd">        [Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># for neighbour sample</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">max_hops</span> <span class="o">=</span> <span class="n">max_hops</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
-        <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
-        <span class="n">reference_class_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">],</span>  <span class="c1"># equivalence or subsumption</span>
-        <span class="n">annotation_property_iris</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>  <span class="c1"># for text-based candidates</span>
-        <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Tokenizer</span><span class="p">,</span>  <span class="c1"># for text-based candidates</span>
-        <span class="n">max_hops</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>  <span class="c1"># for graph-based candidates</span>
-        <span class="n">for_subsumption</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>  <span class="c1"># if for subsumption, avoid adding ancestors as candidates</span>
-    <span class="p">):</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span> <span class="o">=</span> <span class="n">src_onto</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span> <span class="o">=</span> <span class="n">tgt_onto</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reference_class_mappings</span> <span class="o">=</span> <span class="n">reference_class_mappings</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">reference_class_dict</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>  <span class="c1"># to prevent wrongly adding negative candidates</span>
+    <span class="c1"># if for subsumption, avoid adding ancestors as candidates</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">for_subsumption</span> <span class="o">=</span> <span class="n">for_subsumption</span>
+    <span class="c1"># if for subsumption, add (src_class, tgt_class_ancestor) into the reference mappings</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">for_subsumption</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_class_mappings</span><span class="p">:</span>
             <span class="n">src_class_iri</span><span class="p">,</span> <span class="n">tgt_class_iri</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reference_class_dict</span><span class="p">[</span><span class="n">src_class_iri</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tgt_class_iri</span><span class="p">)</span>
-
-        <span class="c1"># for IDF sample</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tgt_annotation_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotation_property_iris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">build_annotation_index</span><span class="p">(</span>
-            <span class="n">annotation_property_iris</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tgt_inverted_annotation_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">build_inverted_annotation_index</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">tgt_annotation_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span>
-        <span class="p">)</span>
-
-        <span class="c1"># for neighbour sample</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">max_hops</span> <span class="o">=</span> <span class="n">max_hops</span>
-
-        <span class="c1"># if for subsumption, avoid adding ancestors as candidates</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">for_subsumption</span> <span class="o">=</span> <span class="n">for_subsumption</span>
-        <span class="c1"># if for subsumption, add (src_class, tgt_class_ancestor) into the reference mappings</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">for_subsumption</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_class_mappings</span><span class="p">:</span>
-                <span class="n">src_class_iri</span><span class="p">,</span> <span class="n">tgt_class_iri</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
-                <span class="n">tgt_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">tgt_class_iri</span><span class="p">)</span>
-                <span class="n">tgt_class_ancestors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">super_entities_of</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">)</span>
-                <span class="k">for</span> <span class="n">tgt_ancestor_iri</span> <span class="ow">in</span> <span class="n">tgt_class_ancestors</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">reference_class_dict</span><span class="p">[</span><span class="n">src_class_iri</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tgt_ancestor_iri</span><span class="p">)</span>
-
-
-    <span class="k">def</span> <span class="nf">mixed_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_class_mapping</span><span class="p">:</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="o">**</span><span class="n">strategy2nums</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;A mixed sampling approach that combines several sampling strategies.</span>
-
-<span class="sd">        As introduced in the Bio-ML paper, this mixed approach guarantees that the number of samples for each</span>
-<span class="sd">        strategy is either the **maximum that can be sampled** or the required number.</span>
-
-<span class="sd">        Specifically, at each sampling iteration, the number of candidates is **first increased by the number of </span>
-<span class="sd">        previously sampled candidates**, as in the worst case, all the candidates sampled at this iteration</span>
-<span class="sd">        will be duplicated with the previous. </span>
-
-<span class="sd">        The random sampling is used as the amending strategy, i.e., if other sampling strategies cannot retrieve</span>
-<span class="sd">        the specified number of samples, then use random sampling to amend the number.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            reference_class_mapping (ReferenceMapping): The reference class mapping for generating the candidate mappings.</span>
-<span class="sd">            **strategy2nums (int): The keyword arguments that specify the expected number of candidates for each</span>
-<span class="sd">                sampling strategy.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="n">valid_tgt_candidate_iris</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">sample_stats</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">total_num_candidates</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="k">for</span> <span class="n">strategy</span><span class="p">,</span> <span class="n">num_canddiates</span> <span class="ow">in</span> <span class="n">strategy2nums</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">if</span> <span class="n">strategy</span> <span class="ow">in</span> <span class="n">SAMPLING_OPTIONS</span><span class="p">:</span>
-                <span class="n">sampler</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">strategy</span><span class="si">}</span><span class="s2">_sample&quot;</span><span class="p">)</span>
-                <span class="c1"># for ith iteration, the worst case is when all n_cands are duplicated</span>
-                <span class="c1"># or should be excluded from other reference targets so we generate</span>
-                <span class="c1"># NOTE:  total_num_candidates + num_candidates + len(excluded_tgt_class_iris)</span>
-                <span class="c1"># candidates first and prune the rest; another edge case is when sampled</span>
-                <span class="c1"># candidates are not sufficient and we use random sample to meet n_cands</span>
-                <span class="n">cur_valid_tgt_candidate_iris</span> <span class="o">=</span> <span class="n">sampler</span><span class="p">(</span>
-                    <span class="n">reference_class_mapping</span><span class="p">,</span> <span class="n">total_num_candidates</span> <span class="o">+</span> <span class="n">num_canddiates</span>
-                <span class="p">)</span>
-                <span class="c1"># remove the duplicated candidates (and excluded refs) and prune the tail</span>
-                <span class="n">cur_valid_tgt_candidate_iris</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-                    <span class="nb">set</span><span class="p">(</span><span class="n">cur_valid_tgt_candidate_iris</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">valid_tgt_candidate_iris</span><span class="p">)</span>
-                <span class="p">)[:</span><span class="n">num_canddiates</span><span class="p">]</span>
-                <span class="n">sample_stats</span><span class="p">[</span><span class="n">strategy</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">cur_valid_tgt_candidate_iris</span><span class="p">)</span>
-                <span class="c1"># use random samples for complementation if not enough</span>
-                <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">cur_valid_tgt_candidate_iris</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_canddiates</span><span class="p">:</span>
-                    <span class="n">amend_candidate_iris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span>
-                        <span class="n">reference_class_mapping</span><span class="p">,</span> <span class="n">num_canddiates</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">cur_valid_tgt_candidate_iris</span><span class="p">)</span>
-                    <span class="p">)</span>
-                    <span class="n">amend_candidate_iris</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-                        <span class="nb">set</span><span class="p">(</span><span class="n">amend_candidate_iris</span><span class="p">)</span>
-                        <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">valid_tgt_candidate_iris</span><span class="p">)</span>
-                        <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">cur_valid_tgt_candidate_iris</span><span class="p">)</span>
-                    <span class="p">)</span>
-                    <span class="n">cur_valid_tgt_candidate_iris</span> <span class="o">+=</span> <span class="n">amend_candidate_iris</span>
-                <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">cur_valid_tgt_candidate_iris</span><span class="p">)</span> <span class="o">==</span> <span class="n">num_canddiates</span>
-                <span class="c1"># record how many random samples to amend</span>
-                <span class="k">if</span> <span class="n">strategy</span> <span class="o">!=</span> <span class="s2">&quot;random&quot;</span><span class="p">:</span>
-                    <span class="n">sample_stats</span><span class="p">[</span><span class="s2">&quot;random&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">num_canddiates</span> <span class="o">-</span> <span class="n">sample_stats</span><span class="p">[</span><span class="n">strategy</span><span class="p">]</span>
-                <span class="n">valid_tgt_candidate_iris</span> <span class="o">+=</span> <span class="n">cur_valid_tgt_candidate_iris</span>
-                <span class="n">total_num_candidates</span> <span class="o">+=</span> <span class="n">num_canddiates</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid sampling trategy: </span><span class="si">{</span><span class="n">strategy</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_tgt_candidate_iris</span><span class="p">)</span> <span class="o">==</span> <span class="n">total_num_candidates</span>
-        <span class="k">return</span> <span class="n">valid_tgt_candidate_iris</span><span class="p">,</span> <span class="n">sample_stats</span>
-
-    <span class="k">def</span> <span class="nf">random_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_class_mapping</span><span class="p">:</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;**Randomly** sample a set of target class candidates $c&#39;_{cand}$ for a given reference mapping $(c, c&#39;)$.</span>
-
-<span class="sd">        The sampled candidate classes will be combined with the source reference class $c$ to get a set of</span>
-<span class="sd">        candidate mappings $\{(c, c&#39;_{cand})\}$.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            reference_class_mapping (ReferenceMapping): The reference class mapping for generating the candidate mappings.</span>
-<span class="sd">            num_candidates (int): The expected number of candidate mappings to generate.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ref_src_class_iri</span><span class="p">,</span> <span class="n">ref_tgt_class_iri</span> <span class="o">=</span> <span class="n">reference_class_mapping</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
-        <span class="n">all_tgt_class_iris</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl_classes</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">valid_tgt_class_iris</span> <span class="o">=</span> <span class="n">all_tgt_class_iris</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">reference_class_dict</span><span class="p">[</span><span class="n">ref_src_class_iri</span><span class="p">]</span>
-        <span class="p">)</span>  <span class="c1"># exclude gold standards</span>
-        <span class="k">assert</span> <span class="ow">not</span> <span class="n">ref_tgt_class_iri</span> <span class="ow">in</span> <span class="n">valid_tgt_class_iris</span>
-        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">valid_tgt_class_iris</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">idf_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_class_mapping</span><span class="p">:</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Sample a set of target class candidates $c&#39;_{cand}$ for a given reference mapping $(c, c&#39;)$ based on the $idf$ scores</span>
-<span class="sd">        w.r.t. the inverted annotation index (sub-word level).</span>
-
-<span class="sd">        Candidate classes with higher $idf$ scores will be considered first, and then combined with the source reference class $c$</span>
-<span class="sd">        to get a set of candidate mappings $\{(c, c&#39;_{cand})\}$.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            reference_class_mapping (ReferenceMapping): The reference class mapping for generating the candidate mappings.</span>
-<span class="sd">            num_candidates (int): The expected number of candidate mappings to generate.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ref_src_class_iri</span><span class="p">,</span> <span class="n">ref_tgt_class_iri</span> <span class="o">=</span> <span class="n">reference_class_mapping</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
-
-        <span class="n">tgt_candidates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_inverted_annotation_index</span><span class="o">.</span><span class="n">idf_select</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">tgt_annotation_index</span><span class="p">[</span><span class="n">ref_tgt_class_iri</span><span class="p">]</span>
-        <span class="p">)</span>  <span class="c1"># select all non-trivial candidates first</span>
-        <span class="n">valid_tgt_class_iris</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">tgt_candidate_iri</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tgt_candidates</span><span class="p">:</span>
-            <span class="c1"># valid as long as it is not one of the reference target</span>
-            <span class="k">if</span> <span class="n">tgt_candidate_iri</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reference_class_dict</span><span class="p">[</span><span class="n">ref_src_class_iri</span><span class="p">]:</span>
-                <span class="n">valid_tgt_class_iris</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tgt_candidate_iri</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_tgt_class_iris</span><span class="p">)</span> <span class="o">==</span> <span class="n">num_candidates</span><span class="p">:</span>
-                <span class="k">break</span>
-        <span class="k">assert</span> <span class="ow">not</span> <span class="n">ref_tgt_class_iri</span> <span class="ow">in</span> <span class="n">valid_tgt_class_iris</span>
-        <span class="k">return</span> <span class="n">valid_tgt_class_iris</span>
-
-    <span class="k">def</span> <span class="nf">neighbour_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_class_mapping</span><span class="p">:</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Sample a set of target class candidates $c&#39;_{cand}$ for a given reference mapping $(c, c&#39;)$ based on the **subsumption</span>
-<span class="sd">        hierarchy**.</span>
-
-<span class="sd">        Define one-hop as one edge derived from an **asserted** subsumption axiom, i.e., to the parent class or the child class.</span>
-<span class="sd">        Candidates classes with nearer hops will be considered first, and then combined with the source reference class $c$</span>
-<span class="sd">        to get a set of candidate mappings $\{(c, c&#39;_{cand})\}$.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            reference_class_mapping (ReferenceMapping): The reference class mapping for generating the candidate mappings.</span>
-<span class="sd">            num_candidates (int): The expected number of candidate mappings to generate.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">ref_src_class_iri</span><span class="p">,</span> <span class="n">ref_tgt_class_iri</span> <span class="o">=</span> <span class="n">reference_class_mapping</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span>
-
-        <span class="n">valid_tgt_class_iris</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="n">cur_hop</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">frontier</span> <span class="o">=</span> <span class="p">[</span><span class="n">ref_tgt_class_iri</span><span class="p">]</span>
-        <span class="c1"># extract from the nearest neighbours until enough candidates or max hop</span>
-        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_tgt_class_iris</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_candidates</span> <span class="ow">and</span> <span class="n">cur_hop</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_hops</span><span class="p">:</span>
-
-            <span class="n">neighbours_of_cur_hop</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="k">for</span> <span class="n">tgt_class_iri</span> <span class="ow">in</span> <span class="n">frontier</span><span class="p">:</span>
-                <span class="n">tgt_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">tgt_class_iri</span><span class="p">)</span>
-                <span class="n">parents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">super_entities_of</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="n">children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">sub_entities_of</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-                <span class="n">neighbours_of_cur_hop</span> <span class="o">+=</span> <span class="n">parents</span> <span class="o">+</span> <span class="n">children</span>  <span class="c1"># used for further hop expansion</span>
-
-            <span class="n">valid_neighbours_of_cur_hop</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">neighbours_of_cur_hop</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_class_dict</span><span class="p">[</span><span class="n">ref_src_class_iri</span><span class="p">])</span>
-            <span class="c1"># print(valid_neighbours_of_cur_hop)</span>
-
-            <span class="c1"># NOTE if by adding neighbours of current hop the require number will be met</span>
-            <span class="c1"># we randomly pick among them</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_neighbours_of_cur_hop</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">num_candidates</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_tgt_class_iris</span><span class="p">):</span>
-                <span class="n">valid_neighbours_of_cur_hop</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
-                    <span class="n">valid_neighbours_of_cur_hop</span><span class="p">,</span> <span class="n">num_candidates</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_tgt_class_iris</span><span class="p">)</span>
-                <span class="p">)</span>
-            <span class="n">valid_tgt_class_iris</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">valid_neighbours_of_cur_hop</span><span class="p">)</span>
-
-            <span class="n">frontier</span> <span class="o">=</span> <span class="n">neighbours_of_cur_hop</span>  <span class="c1"># update the frontier with all possible neighbors</span>
-            <span class="n">cur_hop</span> <span class="o">+=</span> <span class="mi">1</span>
-
-        <span class="k">assert</span> <span class="ow">not</span> <span class="n">ref_tgt_class_iri</span> <span class="ow">in</span> <span class="n">valid_tgt_class_iris</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">valid_tgt_class_iris</span><span class="p">)</span>
+            <span class="n">tgt_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">tgt_class_iri</span><span class="p">)</span>
+            <span class="n">tgt_class_ancestors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">super_entities_of</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">tgt_ancestor_iri</span> <span class="ow">in</span> <span class="n">tgt_class_ancestors</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reference_class_dict</span><span class="p">[</span><span class="n">src_class_iri</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tgt_ancestor_iri</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-        </details>
+          </details>
 
   
 

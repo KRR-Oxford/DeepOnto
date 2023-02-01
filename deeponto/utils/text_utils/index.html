@@ -784,139 +784,6 @@
       <p>Provides text processing utilities.</p>
 
 
-        <details class="quote">
-          <summary>Source code in <code>deeponto/utils/text_utils.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span>
-<span class="normal">43</span>
-<span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span>
-<span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
-<span class="normal">60</span>
-<span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span>
-<span class="normal">77</span>
-<span class="normal">78</span>
-<span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">TextUtils</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provides text processing utilities.&quot;&quot;&quot;</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">process_annotation_literal</span><span class="p">(</span><span class="n">annotation_literal</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pre-process an annotation literal string.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            annotation_literal (str): A literal string of an entity&#39;s annotation.</span>
-<span class="sd">            apply_lowercasing (bool, optional): A boolean that determines lowercasing or not. Defaults to `True`.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            (str): the processed annotation literal string.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># replace the underscores with spaces</span>
-        <span class="n">annotation_literal</span> <span class="o">=</span> <span class="n">annotation_literal</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
-
-        <span class="c1"># if the annotation literal is a valid identifier with first letter capitalised</span>
-        <span class="c1"># we suspect that it could be a Java style identifier that needs to be split</span>
-        <span class="k">if</span> <span class="n">annotation_literal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isupper</span><span class="p">()</span> <span class="ow">and</span> <span class="n">annotation_literal</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">():</span>
-            <span class="n">annotation_literal</span> <span class="o">=</span> <span class="n">TextUtils</span><span class="o">.</span><span class="n">split_java_identifier</span><span class="p">(</span><span class="n">annotation_literal</span><span class="p">)</span>
-
-        <span class="c1"># lowercase the annotation literal if specfied</span>
-        <span class="k">if</span> <span class="n">apply_lowercasing</span><span class="p">:</span>
-            <span class="n">annotation_literal</span> <span class="o">=</span> <span class="n">annotation_literal</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-
-        <span class="k">return</span> <span class="n">annotation_literal</span>
-
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">split_java_identifier</span><span class="p">(</span><span class="n">java_style_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Split words in java&#39;s identifier style into natural language phrase.</span>
-
-<span class="sd">        Examples:</span>
-<span class="sd">            - `&quot;SuperNaturalPower&quot;` $\rightarrow$ `&quot;Super Natural Power&quot;`</span>
-<span class="sd">            - `&quot;APIReference&quot;` $\rightarrow$ `&quot;API Reference&quot;`</span>
-<span class="sd">            - `&quot;Covid19&quot;` $\rightarrow$ `&quot;Covid 19&quot;`</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># split at every capital letter or number (numbers are treated as capital letters)</span>
-        <span class="n">raw_words</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;([0-9A-Z][a-z]*)&quot;</span><span class="p">,</span> <span class="n">java_style_identifier</span><span class="p">)</span>
-        <span class="n">words</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">capitalized_word</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">raw_words</span><span class="p">):</span>
-
-            <span class="c1"># the above regex pattern will split at capitals</span>
-            <span class="c1"># so the capitalized words are split into characters</span>
-            <span class="c1"># i.e., (len(w) == 1)</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">capitalized_word</span> <span class="o">+=</span> <span class="n">w</span>
-                <span class="c1"># edge case for the last word</span>
-                <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_words</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">capitalized_word</span><span class="p">)</span>
-
-            <span class="c1"># if the the current w is a full word, save the previous</span>
-            <span class="c1"># cached capitalized_word and also save current full word</span>
-            <span class="k">elif</span> <span class="n">capitalized_word</span><span class="p">:</span>
-                <span class="n">words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">capitalized_word</span><span class="p">)</span>
-                <span class="n">words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
-                <span class="n">capitalized_word</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-
-            <span class="c1"># just save the current full word otherwise</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">words</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">words</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-        </details>
 
   
 
@@ -1174,8 +1041,7 @@
 
 
 <h2 id="deeponto.utils.text_utils.Tokenizer" class="doc doc-heading">
-        <code>Tokenizer</code>
-
+<code class="highlight language-python"><span class="n">Tokenizer</span><span class="p">(</span><span class="n">tokenizer_type</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1186,69 +1052,17 @@
       <p>A Tokenizer class for both sub-word (pre-trained) and word (rule-based) level tokenization.</p>
 
 
-        <details class="quote">
-          <summary>Source code in <code>deeponto/utils/text_utils.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
+          <details class="quote">
+            <summary>Source code in <code>deeponto/utils/text_utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">Tokenizer</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A Tokenizer class for both sub-word (pre-trained) and word (rule-based) level tokenization.&quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">tokenizer_type</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># hidden tokenizer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tokenize</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the tokenization method</span>
-
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]):</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">))</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_pretrained</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pretrained_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bert-base-uncased&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;(Based on **transformers**) Load a sub-word level tokenizer from pre-trained model.&quot;&quot;&quot;</span>
-        <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="s2">&quot;pre-trained&quot;</span><span class="p">)</span>
-        <span class="n">instance</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">pretrained_path</span><span class="p">)</span>
-        <span class="n">instance</span><span class="o">.</span><span class="n">tokenize</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">_tokenizer</span><span class="o">.</span><span class="n">tokenize</span>
-        <span class="k">return</span> <span class="n">instance</span>
-
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">from_rule_based</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;(Based on **spacy**) Load a word-level (rule-based) tokenizer.&quot;&quot;&quot;</span>
-        <span class="n">spacy</span><span class="o">.</span><span class="n">prefer_gpu</span><span class="p">()</span>
-        <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="s2">&quot;rule-based&quot;</span><span class="p">)</span>
-        <span class="n">instance</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="n">English</span><span class="p">()</span>
-        <span class="n">instance</span><span class="o">.</span><span class="n">tokenize</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">texts</span><span class="p">:</span> <span class="p">[</span><span class="n">word</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">instance</span><span class="o">.</span><span class="n">_tokenizer</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span><span class="o">.</span><span class="n">doc</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">instance</span>
+<span class="normal">101</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">tokenizer_type</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># hidden tokenizer</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tokenize</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the tokenization method</span>
 </code></pre></div></td></tr></table></div>
-        </details>
+          </details>
 
   
 
@@ -1355,8 +1169,7 @@
 
 
 <h2 id="deeponto.utils.text_utils.InvertedIndex" class="doc doc-heading">
-        <code>InvertedIndex</code>
-
+<code class="highlight language-python"><span class="n">InvertedIndex</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1401,91 +1214,25 @@
   </table>
 
 
-        <details class="quote">
-          <summary>Source code in <code>deeponto/utils/text_utils.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
+          <details class="quote">
+            <summary>Source code in <code>deeponto/utils/text_utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
 <span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
 <span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InvertedIndex</span><span class="p">:</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inverted index built from a text index.</span>
-
-<span class="sd">    Attributes:</span>
-<span class="sd">        tokenizer (Tokenizer): A tokenizer instance to be used.</span>
-<span class="sd">        original_index (defaultdict): A dictionary where the values are text strings to be tokenized.</span>
-<span class="sd">        constructed_index (defaultdict): A dictionary that acts as the inverted index of `original_index`.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Tokenizer</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">original_index</span> <span class="o">=</span> <span class="n">index</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">constructed_index</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_index</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="c1"># value is a list of strings</span>
-            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">constructed_index</span><span class="p">[</span><span class="n">token</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">idf_select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">pool_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Given a list of tokens, select a set candidates based on the inverted document frequency (idf) scores.</span>
-
-<span class="sd">        We use `idf` instead of  `tf` because labels have different lengths and thus tf is not a fair measure.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">candidate_pool</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="c1"># D := number of &quot;documents&quot;, i.e., number of &quot;keys&quot; in the original index</span>
-        <span class="n">D</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_index</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">(</span><span class="n">texts</span><span class="p">):</span>
-            <span class="c1"># each token is associated with some classes</span>
-            <span class="n">potential_candidates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constructed_index</span><span class="p">[</span><span class="n">token</span><span class="p">]</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">potential_candidates</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="c1"># We use idf instead of tf because the text for each class is of different length, tf is not a fair measure</span>
-            <span class="c1"># inverse document frequency: with more classes to have the current token tk, the score decreases</span>
-            <span class="n">idf</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">D</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">potential_candidates</span><span class="p">))</span>
-            <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">potential_candidates</span><span class="p">:</span>
-                <span class="c1"># each candidate class is scored by sum(idf)</span>
-                <span class="n">candidate_pool</span><span class="p">[</span><span class="n">candidate</span><span class="p">]</span> <span class="o">+=</span> <span class="n">idf</span>
-        <span class="n">candidate_pool</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">candidate_pool</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-        <span class="c1"># print(f&quot;Select {min(len(candidate_pool), pool_size)} candidates.&quot;)</span>
-        <span class="c1"># select the first K ranked</span>
-        <span class="k">return</span> <span class="n">candidate_pool</span><span class="p">[:</span><span class="n">pool_size</span><span class="p">]</span>
+<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Tokenizer</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">original_index</span> <span class="o">=</span> <span class="n">index</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">constructed_index</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_index</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># value is a list of strings</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">constructed_index</span><span class="p">[</span><span class="n">token</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-        </details>
+          </details>
 
   
 
