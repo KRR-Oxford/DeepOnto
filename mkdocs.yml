@@ -96,6 +96,7 @@ plugins:
           options:
             show_root_toc_entry: false
             members_order: source
+          paths: [src]  # search packages in the src folder
 
 
 extra_javascript:

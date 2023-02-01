@@ -32,11 +32,12 @@ limitations under the License.
 
 **Changelog** :newspaper:
 
-- [ ] **[2023 Feb]** Integrate BERTSubs into $\textsf{DeepOnto}$.
-- [X] **[2023 Jan]** Release $\textsf{DeepOnto}$ **v0.5.x**
-    - Fix the PyPi layout;
-    - Add the ontology verbalisation module;
-    - Rebuild based on the OWLAPI, and remove owlready2 from the essential dependencies.
+- **[2023 Feb]** Integrate BERTSubs into $\textsf{DeepOnto}$.
+    - [ ] On schedule.
+- **[2023 Jan]** Release $\textsf{DeepOnto}$ **v0.5.x**
+    - [X] Shift to `src/` layout and fix the PyPI module;
+    - [X] Add the ontology verbalisation module;
+    - [X] Rebuild based on the OWLAPI, and remove owlready2 from the essential dependencies.
 
 
 ## About
