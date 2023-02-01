@@ -55,7 +55,7 @@ for various ontology engineering purposes.
 
 $\textsf{DeepOnto}$ relies on [OWLAPI](http://owlapi.sourceforge.net/) version 4 (written in Java) for ontologies. 
 
-We use what has been implemented in [mOWL](https://mowl.readthedocs.io/en/latest/index.html) that uses [JPype](https://jpype.readthedocs.io/en/latest/) to bridge Python and Java Virtual Machine (JVM).
+We use what has been implemented in [mOWL](https://mowl.readthedocs.io/en/latest/index.html) that uses [JPype](https://jpype.readthedocs.io/en/latest/) to bridge Python and Java Virtual Machine (JVM). Please check the [JPype documentation](https://jpype.readthedocs.io/en/latest/install.html) for any JVM related issues.
 
 ### Pytorch
 
