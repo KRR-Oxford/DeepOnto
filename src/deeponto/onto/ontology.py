@@ -57,7 +57,7 @@ TOP_BOTTOMS = CfgNode(
 class Ontology:
     """Ontology class that extends from the Java library OWLAPI.
     
-    !!! note
+    !!! note "Typing from OWLAPI"
 
         Types with `OWL` prefix are mostly imported from the OWLAPI library by, for example, 
         `from org.semanticweb.owlapi.model import OWLObject`.
@@ -614,10 +614,10 @@ class OntologyReasoner:
         in the way that if there exists an atomic class `A`, we compute instances for `A` and
         compare them against the other class which could be complex. 
         
-        NOTE that compared to [`check_common_descendants`][deeponto.onto.OntologyReasoner.check_common_descendants]
-        function, the inputs of this function is restricted to OWL class expressions. This is because
-        `descendant` is related to hierarchy and both class and property expressions have a hierarchy,
-        but `instance` is restricted to classes.
+        !!! note "Difference with [`check_common_descendants`][deeponto.onto.OntologyReasoner.check_common_descendants]"
+            The inputs of this function are restricted to **OWL class expressions**. This is because
+            `descendant` is related to hierarchy and both class and property expressions have a hierarchy,
+            but `instance` is restricted to classes.
         """
 
         if not self.has_iri(owl_class1) and not self.has_iri(owl_class2):
@@ -647,8 +647,7 @@ class OntologyReasoner:
             The definition of **Assumed Disjointness** comes from the paper:
             *[still-under-review](link)*.
         
-        !!! note
-
+        !!! note "Assumed Disjointness (Definition)"
             Two class expressions $C$ and $D$ are assumed to be disjoint if they meet the followings:
             
             1. By adding the disjointness axiom of them into the ontology, $C$ and $D$ are **still satisfiable**.
@@ -722,8 +721,7 @@ class OntologyReasoner:
         with following conditions:
         
         
-        !!! note
-        
+        !!! note "Assumed Disjointness (Practical Alternative)"
             Two class expressions $C$ and $D$ are assumed to be disjoint if they
             
             1. **do not** have a **subsumption relationship** between them, 
