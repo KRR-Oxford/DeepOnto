@@ -448,6 +448,9 @@ class NegativeCandidateMappingGenerator:
             else:
                 raise ValueError(f"Invalid sampling trategy: {strategy}.")
         assert len(valid_tgt_candidate_iris) == total_num_candidates
+        
+        # TODO: add the candidate mappings into the reference mapping 
+        
         return valid_tgt_candidate_iris, sample_stats
 
     def random_sample(self, reference_class_mapping: ReferenceMapping, num_candidates: int):
