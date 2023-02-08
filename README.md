@@ -80,6 +80,7 @@ Basic usage of Ontology does not rely on GPUs, but for efficient deep learning m
 Other dependencies are specified in `setup.cfg` and `requirements.txt` which are supposed to be installed along with `deeponto`.
 
 ```bash
+# requiring Python>=3.8
 pip install deeponto
 ```
 
