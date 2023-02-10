@@ -745,7 +745,13 @@
 <h2 id="loading-ontology">Loading Ontology</h2>
 <p><a class="autorefs autorefs-internal" href="../deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a> can be easily loaded from a local ontology file by its path:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
-<span class="n">onto</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;path_to_ontology.owl&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Importing <code>Ontology</code> will require JVM memory allocation (defaults to <code>8g</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="n">Please</span> <span class="n">enter</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">memory</span> <span class="n">located</span> <span class="n">to</span> <span class="n">JVM</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="n">g</span><span class="p">]:</span> <span class="mi">16</span><span class="n">g</span>
+<span class="mi">16</span><span class="n">g</span> <span class="n">maximum</span> <span class="n">memory</span> <span class="n">allocated</span> <span class="n">to</span> <span class="n">JVM</span><span class="o">.</span>
+</code></pre></div>
+<p>Loading an ontology from a local file:</p>
+<div class="highlight"><pre><span></span><code>onto = Ontology(&quot;path_to_ontology.owl&quot;)
 </code></pre></div>
 <h2 id="acessing-ontology-entities">Acessing Ontology Entities</h2>
 <p>The most fundamental feature of <a class="autorefs autorefs-internal" href="../deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a> is to access entities in the ontology such as <strong>classes</strong> (or <em>concepts</em>) and <strong>properties</strong> (<em>object</em>, <em>data</em>, and <em>annotation</em> properties). To get an entity by its IRI, do the following:</p>
@@ -824,7 +830,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 25, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 10, 2023</span>
       
         <br>
         Created:
