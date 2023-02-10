@@ -31,4 +31,5 @@ def init_jvm(memory):
             convertStrings=False)
         
     if jpype.isJVMStarted():
+        print(f"{memory} maximum memory allocated to JVM.")
         print("JVM started successfully.")

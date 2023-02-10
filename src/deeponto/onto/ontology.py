@@ -26,7 +26,10 @@ from deeponto.utils.decorators import paper
 from deeponto import init_jvm
 
 # initialise JVM for python-java interaction
-init_jvm("2g")
+import click
+memory = click.prompt("Please enter the maximum memory located to JVM", type=str, default="8g")
+print()
+init_jvm(memory)
 
 from java.io import File  # type: ignore
 from java.util import Collections  # type: ignore
