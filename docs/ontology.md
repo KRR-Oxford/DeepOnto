@@ -17,7 +17,9 @@ Importing `Ontology` will require JVM memory allocation (defaults to `8g`):
 
 ```python
 Please enter the maximum memory located to JVM: [8g]: 16g
+
 16g maximum memory allocated to JVM.
+JVM started successfully.
 ```
 
 Loading an ontology from a local file:
