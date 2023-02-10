@@ -11,6 +11,18 @@ This page gives typical examples of how to use [`Ontology`][deeponto.onto.Ontolo
 
 ```python
 from deeponto.onto import Ontology
+```
+
+Importing `Ontology` will require JVM memory allocation (defaults to `8g`):
+
+```python
+Please enter the maximum memory located to JVM: [8g]: 16g
+16g maximum memory allocated to JVM.
+```
+
+Loading an ontology from a local file:
+
+```
 onto = Ontology("path_to_ontology.owl")
 ```
 ## Acessing Ontology Entities
