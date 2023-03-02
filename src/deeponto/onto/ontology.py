@@ -584,22 +584,24 @@ class OntologyReasoner:
             computed, compared = entity2, entity1
 
         # for every inferred child of `computed`, check if it is subsumed by `compared``
-        for descendant_iri in self.sub_entities_of(computed):
+        for descendant_iri in self.sub_entities_of(computed, direct=False):
             # print("check a subsumption")
             if self.check_subsumption(self.onto.get_owl_object_from_iri(descendant_iri), compared):
                 return True
         return False
 
-    def instances_of(self, owl_class: OWLClassExpression):
-        """Return the IRIs of sub-entities of a given OWL class expression.
+    def instances_of(self, owl_class: OWLClassExpression, direct: bool = False):
+        """Return the list of named individuals that are instances of a given OWL class expression.
 
         Args:
             owl_class (OWLClassExpression): An ontology class of interest.
+            direct (bool, optional): Return direct instances (`direct=True`) or 
+                also include the sub-classes' instances (`direct=False`). Defaults to `False`.
 
         Returns:
-            (List[OWLNamedIndividual]): A list of named individuals that are entailed instances of `owl_class`.
+            (List[OWLNamedIndividual]): A list of named individuals that are instances of `owl_class`.
         """
-        return list(self.owl_reasoner.getInstances(owl_class).getFlattened())
+        return list(self.owl_reasoner.getInstances(owl_class, direct).getFlattened())
 
     def check_instance(self, owl_instance: OWLNamedIndividual, owl_class: OWLClassExpression):
         """Check if a named individual is an instance of an OWL class.
@@ -634,7 +636,7 @@ class OntologyReasoner:
             computed, compared = owl_class2, owl_class2
 
         # for every inferred instance of `computed`, check if it is subsumed by `compared``
-        for instance in self.instances_of(computed):
+        for instance in self.instances_of(computed, direct=False):
             if self.check_instance(instance, compared):
                 return True
         return False
