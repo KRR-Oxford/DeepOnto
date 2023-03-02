@@ -531,7 +531,7 @@ class OntologyReasoner:
         return self.owl_reasoner.isEntailed(sub_axiom)
 
     def check_disjoint(self, entity1: OWLObject, entity2: OWLObject):
-        """Check if two OWL class expressions are disjoint according to the reasoner."""
+        """Check if two entities are disjoint according to the reasoner."""
         entity_type = self.get_entity_type(entity1)
         assert entity_type == self.get_entity_type(entity2)
 
@@ -701,7 +701,7 @@ class OntologyReasoner:
             2. **do not** have a **common descendant** (in TBox),
             3. **do not** have a **common instance** (in ABox).
 
-        If either of the conditions have been met, then we assume `class1` and `class2` as disjoint.
+        If all the conditions have been met, then we assume `class1` and `class2` as disjoint.
 
         Examples:
             Suppose pre-load an ontology `onto` from the disease ontology file `doid.owl`.
