@@ -29,12 +29,13 @@ class TextUtils:
     """Provides text processing utilities."""
 
     @staticmethod
-    def process_annotation_literal(annotation_literal: str, apply_lowercasing: bool = True):
+    def process_annotation_literal(annotation_literal: str, apply_lowercasing: bool = True, normalise_identifiers: bool = False):
         """Pre-process an annotation literal string.
 
         Args:
             annotation_literal (str): A literal string of an entity's annotation.
-            apply_lowercasing (bool, optional): A boolean that determines lowercasing or not. Defaults to `True`.
+            apply_lowercasing (bool): A boolean that determines lowercasing or not. Defaults to `True`.
+            normalise_identifiers (bool): Whether to normalise annotation text that is in the Java identifier format. Defaults to `False`.
 
         Returns:
             (str): the processed annotation literal string.
@@ -45,7 +46,7 @@ class TextUtils:
 
         # if the annotation literal is a valid identifier with first letter capitalised
         # we suspect that it could be a Java style identifier that needs to be split
-        if annotation_literal[0].isupper() and annotation_literal.isidentifier():
+        if normalise_identifiers and annotation_literal[0].isupper() and annotation_literal.isidentifier():
             annotation_literal = TextUtils.split_java_identifier(annotation_literal)
 
         # lowercase the annotation literal if specfied

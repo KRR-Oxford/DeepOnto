@@ -27,6 +27,7 @@ from deeponto import init_jvm
 
 # initialise JVM for python-java interaction
 import click
+
 memory = click.prompt("Please enter the maximum memory located to JVM", type=str, default="8g")
 print()
 init_jvm(memory)
@@ -59,10 +60,10 @@ TOP_BOTTOMS = CfgNode(
 
 class Ontology:
     """Ontology class that extends from the Java library OWLAPI.
-    
+
     !!! note "Typing from OWLAPI"
 
-        Types with `OWL` prefix are mostly imported from the OWLAPI library by, for example, 
+        Types with `OWL` prefix are mostly imported from the OWLAPI library by, for example,
         `from org.semanticweb.owlapi.model import OWLObject`.
 
     Attributes:
@@ -86,9 +87,7 @@ class Ontology:
         """
         self.owl_path = os.path.abspath(owl_path)
         self.owl_manager = OWLManager.createOWLOntologyManager()
-        self.owl_onto = self.owl_manager.loadOntologyFromOntologyDocument(
-            IRI.create("file:///" + self.owl_path)
-        )
+        self.owl_onto = self.owl_manager.loadOntologyFromOntologyDocument(IRI.create("file:///" + self.owl_path))
         self.owl_iri = str(self.owl_onto.getOntologyID().getOntologyIRI().get())
         self.owl_classes = self.get_owl_objects("Classes")
         self.owl_object_properties = self.get_owl_objects("ObjectProperties")
@@ -103,7 +102,7 @@ class Ontology:
         self._multi_children_classes = None
         self._sibling_class_groups = None
         self._equiv_axioms = None
-        
+
         # summary
         self.info = {
             type(self).__name__: {
@@ -117,50 +116,42 @@ class Ontology:
 
     @property
     def name(self):
-        """Return the name of the ontology file.
-        """
+        """Return the name of the ontology file."""
         return os.path.normpath(self.owl_path).split(os.path.sep)[-1]
 
     @property
     def OWLThing(self):
-        """Return `OWLThing`.
-        """
+        """Return `OWLThing`."""
         return self.owl_data_factory.getOWLThing()
 
     @property
     def OWLNothing(self):
-        """Return `OWLNoThing`.
-        """
+        """Return `OWLNoThing`."""
         return self.owl_data_factory.getOWLNothing()
 
     @property
     def OWLTopObjectProperty(self):
-        """Return `OWLTopObjectProperty`.
-        """
+        """Return `OWLTopObjectProperty`."""
         return self.owl_data_factory.getOWLTopObjectProperty()
 
     @property
     def OWLBottomObjectProperty(self):
-        """Return `OWLBottomObjectProperty`.
-        """
+        """Return `OWLBottomObjectProperty`."""
         return self.owl_data_factory.getOWLBottomObjectProperty()
 
     @property
     def OWLTopDataProperty(self):
-        """Return `OWLTopDataProperty`.
-        """
+        """Return `OWLTopDataProperty`."""
         return self.owl_data_factory.getOWLTopDataProperty()
 
     @property
     def OWLBottomDataProperty(self):
-        """Return `OWLBottomDataProperty`.
-        """
+        """Return `OWLBottomDataProperty`."""
         return self.owl_data_factory.getOWLBottomDataProperty()
 
     @staticmethod
     def get_entity_type(entity: OWLObject, is_singular: bool = False):
-        """A handy method to get the `type` of an `OWLObject` entity.
-        """
+        """A handy method to get the `type` of an `OWLObject` entity."""
         if isinstance(entity, OWLClassExpression):
             return "Classes" if not is_singular else "Class"
         elif isinstance(entity, OWLObjectPropertyExpression):
@@ -190,8 +181,7 @@ class Ontology:
         return owl_objects
 
     def get_owl_object_from_iri(self, iri: str):
-        """Get an `OWLObject` given its IRI.
-        """
+        """Get an `OWLObject` given its IRI."""
         if iri in self.owl_classes.keys():
             return self.owl_classes[iri]
         elif iri in self.owl_object_properties.keys():
@@ -209,19 +199,22 @@ class Ontology:
         annotation_property_iri: Optional[str] = None,
         annotation_language_tag: Optional[str] = None,
         apply_lowercasing: bool = True,
+        normalise_identifiers: bool = False,
     ):
         """Get the annotations of the given `OWLObject`.
 
         Args:
             owl_object (Union[OWLObject, str]): An `OWLObject` or its IRI.
-            annotation_property_iri (str, optional): 
+            annotation_property_iri (str, optional):
                 Any particular annotation property IRI of interest. Defaults to `None`.
-            annotation_language_tag (str, optional): 
-                Any particular annotation language tag of interest; NOTE that not every 
+            annotation_language_tag (str, optional):
+                Any particular annotation language tag of interest; NOTE that not every
                 annotation has a language tag, in this case assume it is in English.
                 Defaults to `None`. Options are `"en"`, `"ge"` etc.
-            apply_lowercasing (bool): Whether or not to apply lowercasing to annotation literals. 
+            apply_lowercasing (bool): Whether or not to apply lowercasing to annotation literals.
                 Defaults to `True`.
+            normalise_identifiers (bool): Whether to normalise annotation text that is in the Java identifier format.
+                Defaults to `False`.
         Returns:
             (Set[str]): A set of annotation literals of the given `OWLObject`.
         """
@@ -234,9 +227,7 @@ class Ontology:
             annotation_property = self.get_owl_object_from_iri(annotation_property_iri)
 
         annotations = []
-        for annotation in EntitySearcher.getAnnotations(
-            owl_object, self.owl_onto, annotation_property
-        ):
+        for annotation in EntitySearcher.getAnnotations(owl_object, self.owl_onto, annotation_property):
 
             annotation = annotation.getValue()
             # boolean that indicates whether the annotation's language is of interest
@@ -260,7 +251,7 @@ class Ontology:
                 if annotation.isLiteral():
                     annotations.append(
                         TextUtils.process_annotation_literal(
-                            str(annotation.getLiteral()), apply_lowercasing
+                            str(annotation.getLiteral()), apply_lowercasing, normalise_identifiers
                         )
                     )
 
@@ -270,7 +261,7 @@ class Ontology:
     def sibling_class_groups(self) -> List[List[str]]:
         """Return grouped sibling classes (with a common *direct* parent);
 
-            NOTE that only groups with size > 1 will be considered
+        NOTE that only groups with size > 1 will be considered
         """
         if not self._sibling_class_groups:
 
@@ -299,8 +290,7 @@ class Ontology:
 
     @property
     def equivalence_axioms(self):
-        """Return all the equivalence class axioms asserted in this `OWLOntology`.
-        """
+        """Return all the equivalence class axioms asserted in this `OWLOntology`."""
         if not self._equiv_axioms:
             self._equiv_axioms = []
             for cl in self.owl_classes.values():
@@ -309,8 +299,7 @@ class Ontology:
         return self._equiv_axioms
 
     def save_onto(self, save_path: str):
-        """Save the ontology file to the given path.
-        """
+        """Save the ontology file to the given path."""
         self.owl_onto.saveOntology(IRI.create(File(save_path).toURI()))
 
     def build_annotation_index(
@@ -318,34 +307,33 @@ class Ontology:
         annotation_property_iris: List[str] = [RDFS_LABEL],
         entity_type: str = "Classes",
         apply_lowercasing: bool = True,
+        normalise_identifiers: bool = False,
     ):
         """Build an annotation index for a given type of entities.
-        
+
         Args:
             annotation_property_iris (List[str]): A list of annotation property IRIs (it is possible
-                that not every annotation property IRI is in use); if not provided, the built-in 
+                that not every annotation property IRI is in use); if not provided, the built-in
                 `rdfs:label` is considered. Defaults to `[RDFS_LABEL]`.
-            entity_type (str, optional): The entity type to be considered. Defaults to `"Classes"`. 
+            entity_type (str, optional): The entity type to be considered. Defaults to `"Classes"`.
                 Options are `"Classes"`, `"ObjectProperties"`, `"DatasetProperties"`, etc.
-            apply_lowercasing (bool): Whether or not to apply lowercasing to annotation literals. 
+            apply_lowercasing (bool): Whether or not to apply lowercasing to annotation literals.
                 Defaults to `True`.
-                
+            normalise_identifiers (bool): Whether to normalise annotation text that is in the Java identifier format.
+                Defaults to `False`.
+
         Returns:
             (Tuple[dict, List[str]]): The built annotation index, and the list of annotation property IRIs that are in use.
         """
 
         annotation_index = defaultdict(set)
         # example: Classes => owl_classes; ObjectProperties => owl_object_properties
-        entity_type = (
-            "owl_" + TextUtils.split_java_identifier(entity_type).replace(" ", "_").lower()
-        )
+        entity_type = "owl_" + TextUtils.split_java_identifier(entity_type).replace(" ", "_").lower()
         entity_index = getattr(self, entity_type)
 
         # preserve available annotation properties
         annotation_property_iris = [
-            airi
-            for airi in annotation_property_iris
-            if airi in self.owl_annotation_properties.keys()
+            airi for airi in annotation_property_iris if airi in self.owl_annotation_properties.keys()
         ]
 
         # build the annotation index without duplicated literals
@@ -357,6 +345,7 @@ class Ontology:
                         annotation_property_iri=airi,
                         annotation_language_tag=None,
                         apply_lowercasing=apply_lowercasing,
+                        normalise_identifiers=normalise_identifiers,
                     )
                 )
 
@@ -364,8 +353,7 @@ class Ontology:
 
     @staticmethod
     def build_inverted_annotation_index(annotation_index: dict, tokenizer: Tokenizer):
-        """Build an inverted annotation index given an annotation index and a tokenizer.
-        """
+        """Build an inverted annotation index given an annotation index and a tokenizer."""
         return InvertedIndex(annotation_index, tokenizer)
 
     def add_axiom(self, owl_axiom: OWLAxiom, return_undo: bool = True):
@@ -395,17 +383,17 @@ class Ontology:
         iri_dict = {IRI.create(entity_iri): IRI.create(replacement_iri)}
         replacer = OWLObjectDuplicator(self.owlDataFactory, iri_dict)
         return replacer.duplicateObject(owl_object)
-    
+
     @paper(
         "Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)",
         "https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33",
     )
     def apply_pruning(self, class_iris_to_be_removed: List[str]):
-        r"""Run pruning given a list of classes that will be pruned.    
-        
+        r"""Run pruning given a list of classes that will be pruned.
+
         !!! credit "paper"
-    
-            This refers to the ontology pruning algorithm introduced in the paper: 
+
+            This refers to the ontology pruning algorithm introduced in the paper:
             [*Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)*](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).
 
         For each class $c$ to be pruned, subsumption axioms will be created between $c$'s parents and children so as to preserve the
@@ -414,7 +402,7 @@ class Ontology:
         Args:
             class_iris_to_be_removed (List[str]): Classes with IRIs in this list will be pruned and the relevant hierarchy will be repaired.
         """
-        
+
         # create the subsumption axioms first
         for cl_iri in class_iris_to_be_removed:
             cl = self.get_owl_object_from_iri(cl_iri)
@@ -423,18 +411,16 @@ class Ontology:
             for parent, child in itertools.product(cl_parents, cl_children):
                 parent = self.get_owl_object_from_iri(parent)
                 child = self.get_owl_object_from_iri(child)
-                sub_axiom = self.owl_data_factory.getOWLSubClassOfAxiom(
-                    child, parent
-                )
+                sub_axiom = self.owl_data_factory.getOWLSubClassOfAxiom(child, parent)
                 self.add_axiom(sub_axiom)
-        
+
         # apply pruning
         class_remover = OWLEntityRemover(Collections.singleton(self.owl_onto))
         for cl_iri in class_iris_to_be_removed:
             cl = self.get_owl_object_from_iri(cl_iri)
             cl.accept(class_remover)
         self.owl_manager.applyChanges(class_remover.getChanges())
-        
+
         # remove IRIs in dictionaries?
         # TODO Test it
 
@@ -461,8 +447,7 @@ class OntologyReasoner:
         self.owl_data_factory = self.onto.owl_data_factory
 
     def reload_reasoner(self):
-        """Reload the reasoner for the current ontology (possibly changed).
-        """
+        """Reload the reasoner for the current ontology (possibly changed)."""
         # release the memory
         self.owl_reasoner.dispose()
         # conduct reasoning on the possibly changed ontology
@@ -471,15 +456,14 @@ class OntologyReasoner:
     @staticmethod
     def get_entity_type(entity: OWLObject, is_singular: bool = False):
         """A handy method to get the type of an entity (`OWLObject`).
-        
+
         NOTE: This method is inherited from the Ontology Class.
         """
         return Ontology.get_entity_type(entity, is_singular)
 
     @staticmethod
     def has_iri(entity: OWLObject):
-        """Check if an entity has an IRI.
-        """
+        """Check if an entity has an IRI."""
         try:
             entity.getIRI()
             return True
@@ -488,15 +472,15 @@ class OntologyReasoner:
 
     def super_entities_of(self, entity: OWLObject, direct: bool = False):
         r"""Return the IRIs of super-entities of a given `OWLObject` according to the reasoner.
-        
+
         A mixture of `getSuperClasses`, `getSuperObjectProperties`, `getSuperDataProperties`
-        functions imported from the OWLAPI reasoner. The type of input entity will be 
+        functions imported from the OWLAPI reasoner. The type of input entity will be
         automatically determined. The top entity such as `owl:Thing` is ignored.
-        
+
 
         Args:
             entity (OWLObject): An `OWLObject` entity of interest.
-            direct (bool, optional): Return parents (`direct=True`) or 
+            direct (bool, optional): Return parents (`direct=True`) or
                 ancestors (`direct=False`). Defaults to `False`.
 
         Returns:
@@ -514,14 +498,14 @@ class OntologyReasoner:
 
     def sub_entities_of(self, entity: OWLObject, direct: bool = False):
         """Return the IRIs of sub-entities of a given `OWLObject` according to the reasoner.
-        
+
         A mixture of `getSubClasses`, `getSubObjectProperties`, `getSubDataProperties`
-        functions imported from the OWLAPI reasoner. The type of input entity will be 
+        functions imported from the OWLAPI reasoner. The type of input entity will be
         automatically determined. The bottom entity such as `owl:Nothing` is ignored.
 
         Args:
             entity (OWLObject): An `OWLObject` entity of interest.
-            direct (bool, optional): Return parents (`direct=True`) or 
+            direct (bool, optional): Return parents (`direct=True`) or
                 ancestors (`direct=False`). Defaults to `False`.
 
         Returns:
@@ -538,35 +522,29 @@ class OntologyReasoner:
         return sub_entity_iris
 
     def check_subsumption(self, sub_entity: OWLObject, super_entity: OWLObject):
-        """Check if the first entity is subsumed by the second entity according to the reasoner.
-        """
+        """Check if the first entity is subsumed by the second entity according to the reasoner."""
         entity_type = self.get_entity_type(sub_entity, is_singular=True)
         assert entity_type == self.get_entity_type(super_entity, is_singular=True)
 
-        sub_axiom = getattr(self.owl_data_factory, f"getOWLSub{entity_type}OfAxiom")(
-            sub_entity, super_entity
-        )
+        sub_axiom = getattr(self.owl_data_factory, f"getOWLSub{entity_type}OfAxiom")(sub_entity, super_entity)
 
         return self.owl_reasoner.isEntailed(sub_axiom)
 
     def check_disjoint(self, entity1: OWLObject, entity2: OWLObject):
-        """Check if two OWL class expressions are disjoint according to the reasoner.
-        """
+        """Check if two OWL class expressions are disjoint according to the reasoner."""
         entity_type = self.get_entity_type(entity1)
         assert entity_type == self.get_entity_type(entity2)
 
-        disjoint_axiom = getattr(self.owl_data_factory, f"getOWLDisjoint{entity_type}Axiom")(
-            [entity1, entity2]
-        )
+        disjoint_axiom = getattr(self.owl_data_factory, f"getOWLDisjoint{entity_type}Axiom")([entity1, entity2])
 
         return self.owl_reasoner.isEntailed(disjoint_axiom)
 
     def check_common_descendants(self, entity1: OWLObject, entity2: OWLObject):
         """Check if two entities have a common decendant.
-        
+
         Entities can be **OWL class or property expressions**, and can be either **atomic
-        or complex**. It takes longer computation time for the complex ones. Complex 
-        entities do not have an IRI. This method is optimised in the way that if 
+        or complex**. It takes longer computation time for the complex ones. Complex
+        entities do not have an IRI. This method is optimised in the way that if
         there exists an atomic entity `A`, we compute descendants for `A` and
         compare them against the other entity which could be complex.
         """
@@ -595,7 +573,7 @@ class OntologyReasoner:
 
         Args:
             owl_class (OWLClassExpression): An ontology class of interest.
-            direct (bool, optional): Return direct instances (`direct=True`) or 
+            direct (bool, optional): Return direct instances (`direct=True`) or
                 also include the sub-classes' instances (`direct=False`). Defaults to `False`.
 
         Returns:
@@ -604,21 +582,18 @@ class OntologyReasoner:
         return list(self.owl_reasoner.getInstances(owl_class, direct).getFlattened())
 
     def check_instance(self, owl_instance: OWLNamedIndividual, owl_class: OWLClassExpression):
-        """Check if a named individual is an instance of an OWL class.
-        """
+        """Check if a named individual is an instance of an OWL class."""
         assertion_axiom = self.owl_data_factory.getOWLClassAssertionAxiom(owl_class, owl_instance)
         return self.owl_reasoner.isEntailed(assertion_axiom)
 
-    def check_common_instances(
-        self, owl_class1: OWLClassExpression, owl_class2: OWLClassExpression
-    ):
+    def check_common_instances(self, owl_class1: OWLClassExpression, owl_class2: OWLClassExpression):
         """Check if two OWL class expressions have a common instance.
-        
+
         Class expressions can be **atomic or complex**, and it takes longer computation time
         for the complex ones. Complex classes do not have an IRI. This method is optimised
         in the way that if there exists an atomic class `A`, we compute instances for `A` and
-        compare them against the other class which could be complex. 
-        
+        compare them against the other class which could be complex.
+
         !!! note "Difference with [`check_common_descendants`][deeponto.onto.OntologyReasoner.check_common_descendants]"
             The inputs of this function are restricted to **OWL class expressions**. This is because
             `descendant` is related to hierarchy and both class and property expressions have a hierarchy,
@@ -641,28 +616,25 @@ class OntologyReasoner:
                 return True
         return False
 
-
-    def check_assumed_disjoint(
-        self, owl_class1: OWLClassExpression, owl_class2: OWLClassExpression
-    ):
+    def check_assumed_disjoint(self, owl_class1: OWLClassExpression, owl_class2: OWLClassExpression):
         r"""Check if two OWL class expressions satisfy the Assumed Disjointness.
-        
+
         !!! credit "Paper"
-        
+
             The definition of **Assumed Disjointness** comes from the paper:
             *[still-under-review](link)*.
-        
+
         !!! note "Assumed Disjointness (Definition)"
             Two class expressions $C$ and $D$ are assumed to be disjoint if they meet the followings:
-            
+
             1. By adding the disjointness axiom of them into the ontology, $C$ and $D$ are **still satisfiable**.
             2. $C$ and $D$ **do not have a common descendant** (otherwise $C$ and $D$ can be satisfiable but their
-            common descendants become the bottom $\bot$.) 
-        
+            common descendants become the bottom $\bot$.)
+
         Note that the special case where $C$ and $D$ are already disjoint is covered by the first check.
-        The paper also proposed a practical alternative to decide Assumed Disjointness. 
+        The paper also proposed a practical alternative to decide Assumed Disjointness.
         See [`check_assumed_disjoint_alternative`][deeponto.onto.OntologyReasoner.check_assumed_disjoint_alternative].
-        
+
         Examples:
             Suppose pre-load an ontology `onto` from the disease ontology file `doid.owl`.
 
@@ -675,7 +647,7 @@ class OntologyReasoner:
             [SUCCESSFULLY] Removing the axiom from the ontology.
             [CHECK2 False] input classes have NO common descendant.
             [PASSED False] assumed disjointness check done.
-            False   
+            False
             ```
         """
         # banner_message("Check Asssumed Disjointness")
@@ -684,9 +656,7 @@ class OntologyReasoner:
         assert entity_type == self.get_entity_type(owl_class2)
 
         # adding the disjointness axiom of `class1`` and `class2``
-        disjoint_axiom = getattr(self.owl_data_factory, f"getOWLDisjoint{entity_type}Axiom")(
-            [owl_class1, owl_class2]
-        )
+        disjoint_axiom = getattr(self.owl_data_factory, f"getOWLDisjoint{entity_type}Axiom")([owl_class1, owl_class2])
         undo_change = self.onto.add_axiom(disjoint_axiom, return_undo=True)
         self.reload_reasoner()
 
@@ -712,29 +682,27 @@ class OntologyReasoner:
         print(f"[PASSED {not has_common_descendants}] assumed disjointness check done.")
         return not has_common_descendants
 
-    def check_assumed_disjoint_alternative(
-        self, owl_class1: OWLClassExpression, owl_class2: OWLClassExpression
-    ):
+    def check_assumed_disjoint_alternative(self, owl_class1: OWLClassExpression, owl_class2: OWLClassExpression):
         r"""Check if two OWL class expressions satisfy the Assumed Disjointness.
-        
+
         !!! credit "Paper"
-        
+
             The definition of **Assumed Disjointness** comes from the paper:
             *[still-under-review](link)*.
-        
+
         The practical alternative version of [`check_assumed_disjoint`][deeponto.onto.OntologyReasoner.check_assumed_disjoint]
         with following conditions:
-        
-        
+
+
         !!! note "Assumed Disjointness (Practical Alternative)"
             Two class expressions $C$ and $D$ are assumed to be disjoint if they
-            
-            1. **do not** have a **subsumption relationship** between them, 
-            2. **do not** have a **common descendant** (in TBox), 
+
+            1. **do not** have a **subsumption relationship** between them,
+            2. **do not** have a **common descendant** (in TBox),
             3. **do not** have a **common instance** (in ABox).
-        
+
         If either of the conditions have been met, then we assume `class1` and `class2` as disjoint.
-        
+
         Examples:
             Suppose pre-load an ontology `onto` from the disease ontology file `doid.owl`.
 
@@ -746,7 +714,7 @@ class OntologyReasoner:
             [CHECK2 False] input classes have NO common descendant;
             Failed the `common descendant check`, skip the `common instance` check.
             [PASSED False] assumed disjointness check done.
-            False   
+            False
             ```
             In this alternative implementation, we do no need to add and remove axioms which will then
             be time-saving.
