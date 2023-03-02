@@ -622,7 +622,7 @@ class OntologyReasoner:
         !!! credit "Paper"
 
             The definition of **Assumed Disjointness** comes from the paper:
-            *[still-under-review](link)*.
+            [Language Model Analysis for Ontology Subsumption Inference](https://arxiv.org/abs/2302.06761).
 
         !!! note "Assumed Disjointness (Definition)"
             Two class expressions $C$ and $D$ are assumed to be disjoint if they meet the followings:
@@ -688,7 +688,7 @@ class OntologyReasoner:
         !!! credit "Paper"
 
             The definition of **Assumed Disjointness** comes from the paper:
-            *[still-under-review](link)*.
+            [Language Model Analysis for Ontology Subsumption Inference](https://arxiv.org/abs/2302.06761).
 
         The practical alternative version of [`check_assumed_disjoint`][deeponto.onto.OntologyReasoner.check_assumed_disjoint]
         with following conditions:
