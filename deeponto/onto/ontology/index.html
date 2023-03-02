@@ -2881,7 +2881,7 @@ ancestors (<code>direct=False</code>). Defaults to <code>False</code>.</p></td>
 
   <div class="doc doc-contents ">
   
-      <p>Check if two OWL class expressions are disjoint according to the reasoner.</p>
+      <p>Check if two entities are disjoint according to the reasoner.</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
@@ -2893,7 +2893,7 @@ ancestors (<code>direct=False</code>). Defaults to <code>False</code>.</p></td>
 <span class="normal">538</span>
 <span class="normal">539</span>
 <span class="normal">540</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_disjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity1</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">entity2</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two OWL class expressions are disjoint according to the reasoner.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two entities are disjoint according to the reasoner.&quot;&quot;&quot;</span>
     <span class="n">entity_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity1</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity2</span><span class="p">)</span>
 
@@ -3414,7 +3414,7 @@ with following conditions:</p>
 <li><strong>do not</strong> have a <strong>common instance</strong> (in ABox).</li>
 </ol>
 </div>
-<p>If either of the conditions have been met, then we assume <code>class1</code> and <code>class2</code> as disjoint.</p>
+<p>If all the conditions have been met, then we assume <code>class1</code> and <code>class2</code> as disjoint.</p>
 
 <p><strong>Examples:</strong></p>
     <p>Suppose pre-load an ontology <code>onto</code> from the disease ontology file <code>doid.owl</code>.</p>
@@ -3517,7 +3517,7 @@ be time-saving.</p>
 <span class="sd">        2. **do not** have a **common descendant** (in TBox),</span>
 <span class="sd">        3. **do not** have a **common instance** (in ABox).</span>
 
-<span class="sd">    If either of the conditions have been met, then we assume `class1` and `class2` as disjoint.</span>
+<span class="sd">    If all the conditions have been met, then we assume `class1` and `class2` as disjoint.</span>
 
 <span class="sd">    Examples:</span>
 <span class="sd">        Suppose pre-load an ontology `onto` from the disease ontology file `doid.owl`.</span>
