@@ -71,6 +71,8 @@ class SubsumptionSamplerBase:
 
 
 class AtomicSubsumptionSampler(SubsumptionSamplerBase):
+    """Sampler for constructing the Atomic Subsumption Inference (SI) dataset.
+    """
     def __init__(self, onto: Ontology):
         super().__init__(onto)
 
