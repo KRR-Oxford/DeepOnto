@@ -252,13 +252,31 @@ class OntologyVerbaliser:
 
         return results
 
-    def verbalise_equivalence_axiom(self, equivalence_axiom: OWLAxiom):
-        #TODO
-        pass
+    # def verbalise_equivalence_axiom(self, equivalence_axiom: OWLAxiom):
+    #     #TODO
+    #     pass
 
-    def verbalise_subsumption_axiom(self, subclassof_axiom: OWLAxiom):
-        #TODO
-        pass
+    def verbalise_subsumption_axiom(self, subsumption_axiom: OWLAxiom):
+        r"""Verbalise a subsumption axiom.
+
+        The subsumption axiom can have two forms:
+        - $C \sqsubseteq D$, the `SubClassOf` axiom;
+        - $C \sqsuperseteq D$, the `SuperClassOf` axiom.
+
+        Args:
+            subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.
+        
+        Returns:
+            (Tuple[CfgNode, CfgNode]): The verbalised sub-concept and super-concept (order matters). 
+        """
+        parsed_subsumption_axiom = self.parser.parse(subsumption_axiom).children[0]  # skip the root node
+        if str(subsumption_axiom).startswith("SubClassOf"):
+            parsed_sub_class, parsed_super_class = parsed_subsumption_axiom.children
+        elif str(subsumption_axiom).startswith("SuperClassOf"):
+            parsed_super_class, parsed_sub_class = parsed_subsumption_axiom.children
+        else:
+            raise RuntimeError(f"The input axiom is not a valid subsumption axiom.")
+        return self.verbalise_class_expression(parsed_sub_class), self.verbalise_class_expression(parsed_super_class)
 
 
 class OntologySyntaxParser:
