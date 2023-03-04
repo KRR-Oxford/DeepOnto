@@ -682,7 +682,7 @@ class OntologyReasoner:
         print(f"[PASSED {not has_common_descendants}] assumed disjointness check done.")
         return not has_common_descendants
 
-    def check_assumed_disjoint_alternative(self, owl_class1: OWLClassExpression, owl_class2: OWLClassExpression):
+    def check_assumed_disjoint_alternative(self, owl_class1: OWLClassExpression, owl_class2: OWLClassExpression, verbose: bool = False):
         r"""Check if two OWL class expressions satisfy the Assumed Disjointness.
 
         !!! credit "Paper"
@@ -709,7 +709,7 @@ class OntologyReasoner:
             ```python
             >>> c1 = onto.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_4058")
             >>> c2 = onto.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_0001816")
-            >>> onto.reasoner.check_assumed_disjoint(c1, c2)
+            >>> onto.reasoner.check_assumed_disjoint(c1, c2, verbose=True)
             [CHECK1 True] input classes have NO subsumption relationship;
             [CHECK2 False] input classes have NO common descendant;
             Failed the `common descendant check`, skip the `common instance` check.
@@ -731,21 +731,26 @@ class OntologyReasoner:
 
         has_subsumption = self.check_subsumption(owl_class1, owl_class2)
         has_subsumption = has_subsumption or self.check_subsumption(owl_class2, owl_class1)
-        print(f"[CHECK1 {not has_subsumption}] input classes have NO subsumption relationship;")
+        if verbose:
+            print(f"[CHECK1 {not has_subsumption}] input classes have NO subsumption relationship;")
         if has_subsumption:
-            print("Failed the `subsumption check`, skip the `common descendant` check.")
-            print(f"[PASSED {not has_subsumption}] assumed disjointness check done.")
+            if verbose:
+                print("Failed the `subsumption check`, skip the `common descendant` check.")
+                print(f"[PASSED {not has_subsumption}] assumed disjointness check done.")
             return False
 
         has_common_descendants = self.check_common_descendants(owl_class1, owl_class2)
-        print(f"[CHECK2 {not has_common_descendants}] input classes have NO common descendant;")
+        if verbose:
+            print(f"[CHECK2 {not has_common_descendants}] input classes have NO common descendant;")
         if has_common_descendants:
-            print("Failed the `common descendant check`, skip the `common instance` check.")
-            print(f"[PASSED {not has_common_descendants}] assumed disjointness check done.")
+            if verbose:
+                print("Failed the `common descendant check`, skip the `common instance` check.")
+                print(f"[PASSED {not has_common_descendants}] assumed disjointness check done.")
             return False
 
         # TODO: `check_common_instances` is still experimental because we have not tested it with ontologies of rich ABox.
         has_common_instances = self.check_common_instances(owl_class1, owl_class2)
-        print(f"[CHECK3 {not has_common_instances}] input classes have NO common instance;")
-        print(f"[PASSED {not has_common_instances}] assumed disjointness check done.")
+        if verbose:
+            print(f"[CHECK3 {not has_common_instances}] input classes have NO common instance;")
+            print(f"[PASSED {not has_common_instances}] assumed disjointness check done.")
         return not has_common_instances
