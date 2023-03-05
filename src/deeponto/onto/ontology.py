@@ -91,6 +91,9 @@ class Ontology:
         self.owl_iri = str(self.owl_onto.getOntologyID().getOntologyIRI().get())
         self.owl_classes = self.get_owl_objects("Classes")
         self.owl_object_properties = self.get_owl_objects("ObjectProperties")
+        # for some reason the top object property is included
+        if OWL_TOP_OBJECT_PROPERTY in self.owl_object_properties.keys():
+            del self.owl_object_properties[OWL_TOP_OBJECT_PROPERTY]
         self.owl_data_properties = self.get_owl_objects("DataProperties")
         self.owl_data_factory = self.owl_manager.getOWLDataFactory()
         self.owl_annotation_properties = self.get_owl_objects("AnnotationProperties")
@@ -381,7 +384,7 @@ class Ontology:
             (OWLObject): The changed `OWLObject` entity.
         """
         iri_dict = {IRI.create(entity_iri): IRI.create(replacement_iri)}
-        replacer = OWLObjectDuplicator(self.owlDataFactory, iri_dict)
+        replacer = OWLObjectDuplicator(self.owl_data_factory, iri_dict)
         return replacer.duplicateObject(owl_object)
 
     @paper(

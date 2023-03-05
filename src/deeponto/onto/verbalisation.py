@@ -62,15 +62,16 @@ class OntologyVerbaliser:
             the names are retrieved from $\texttt{rdfs:label}$.
     """
 
-    def __init__(self, onto: Ontology):
+    def __init__(self, onto: Ontology, apply_lowercasing_to_vocab: bool = False):
         self.onto = onto
         self.parser = OntologySyntaxParser()
         self.nlp = spacy.load("en_core_web_sm")
 
         # build the default vocabulary for entities
+        self.apply_lowercasing_to_vocab = apply_lowercasing_to_vocab
         self.vocab = dict()
         for entity_type in ["Classes", "ObjectProperties", "DataProperties"]:
-            entity_annotations, _ = self.onto.build_annotation_index(entity_type=entity_type, apply_lowercasing=False)
+            entity_annotations, _ = self.onto.build_annotation_index(entity_type=entity_type, apply_lowercasing=self.apply_lowercasing_to_vocab)
             self.vocab.update(**entity_annotations)
         literal_or_iri = lambda k, v: list(v)[0] if v else k  # set vocab to IRI if no string available
         self.vocab = {k: literal_or_iri(k, v) for k, v in self.vocab.items()}  # only set one name for each entity
@@ -83,7 +84,7 @@ class OntologyVerbaliser:
         """
         self.vocab[entity_iri] = entity_name
 
-    def verbalise_class_expression(self, class_expression: Union[OWLClassExpression, RangeNode]):
+    def verbalise_class_expression(self, class_expression: Union[OWLClassExpression, str, RangeNode]):
         r"""Verbalise a class expression (`OWLClassExpression`) or its parsed form (in `RangeNode`).
         
         Currently supported types of class expressions are:
@@ -105,7 +106,7 @@ class OntologyVerbaliser:
         anonymous class **"something"** is appended to the head.
 
         Args:
-            class_expression (Union[OWLClassExpression, RangeNode]): A class expression to be verbalised.
+            class_expression (Union[OWLClassExpression, str, RangeNode]): A class expression to be verbalised.
 
         Raises:
             RuntimeError: Occurs when the class expression is not in one of the supported types.
@@ -260,6 +261,7 @@ class OntologyVerbaliser:
         r"""Verbalise a subsumption axiom.
 
         The subsumption axiom can have two forms:
+        
         - $C \sqsubseteq D$, the `SubClassOf` axiom;
         - $C \sqsuperseteq D$, the `SuperClassOf` axiom.
 
