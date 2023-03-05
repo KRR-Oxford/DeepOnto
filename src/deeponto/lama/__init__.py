@@ -13,4 +13,4 @@
 # limitations under the License.
 
 from .inference import run_inference
-from .subsumption_sampler import AtomicSubsumptionSampler
+from .subsumption_sampler import AtomicSubsumptionSampler, ComplexSubsumptionSampler
