@@ -1,0 +1,14 @@
+[
+    {
+        "positive": ["Yes"],
+        "negative": ["No"]
+    },
+    {
+        "positive": ["Right"],
+        "negative": ["Wrong"]
+    },
+    {
+        "positive": ["Yes", "Right"],
+        "negative": ["No", "Wrong"]
+    }
+]
