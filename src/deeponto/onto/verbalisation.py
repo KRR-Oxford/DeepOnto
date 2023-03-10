@@ -97,7 +97,7 @@ class OntologyVerbaliser:
     def verbalise_class_expression(self, class_expression: Union[OWLClassExpression, str, RangeNode]):
         r"""Verbalise a class expression (`OWLClassExpression`) or its parsed form (in `RangeNode`).
         
-        See currently supported types of class (or concept) expressions [here][deeponto.onto.verbalisation.OntologyVerbaliser]
+        See currently supported types of class (or concept) expressions [here][deeponto.onto.verbalisation.OntologyVerbaliser].
         
 
         Args:
