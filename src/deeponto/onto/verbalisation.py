@@ -50,10 +50,20 @@ except:
 
 
 class OntologyVerbaliser:
-    r"""A rule-based natural language verbaliser for the OWL logical expressions, e.g., [`OWLAxiom`](http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html)
+    r"""A recursive natural language verbaliser for the OWL logical expressions, e.g., [`OWLAxiom`](http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html)
     and [`OWLClassExpression`](https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/model/OWLClassExpression.html).
 
-    This is not a full-fledged ontology verbaliser but can already deal with most kinds of class expressions.
+    The concept patterns supported by this verbaliser are shown below:
+    
+    | **Pattern**                 | **Verbalisation** ($\mathcal{V}$)}                                                                                                                                                    |
+    |-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+    | $A$ (atomic)                | the name ($\texttt{rdfs:label}$) of $A$                                                                                                                                               |
+    | $r$ (property)              | the name ($\texttt{rdfs:label}$) of $r$; *"is"* is appended to the head if the name starts with a passive verb, noun, or adjective                                                    |                                
+    | $\neg C$                    | *"not $\mathcal{V}(C)$"*                                                                                                                                                              |
+    | $\exists r.C$               | *"something that $\mathcal{V}(r)$ some $\mathcal{V}(C)$"*                                                                                                                              |
+    | $\forall r.C$               | *"something that $\mathcal{V}(r)$ only $\mathcal{V}(C)$"*                                                                                                                             |
+    | $C_1 \sqcap ... \sqcap C_n$ | if $C_i = \exists/\forall r.D_i$ and $C_j = \exists/\forall r.D_j$, they will be re-written into $\exists/\forall r.(D_i \sqcap D_j)$ before verbalisation; suppose after re-writing the new expression is $C_1 \sqcap ... \sqcap C_{n'}$ <p> **(a)** if **all** $C_i$s (for $i = 1, ..., n'$) are restrictions, in the form of $\exists/\forall r_i.D_i$: <br /> *"something that $\mathcal{V}(r_1)$ some/only $V(D_1)$ and ... and $\mathcal{V}(r_{n'})$ some/only $V(D_{n'})$"* <br /> **(b)** if **some** $C_i$s (for $i = m+1, ..., n'$) are restrictions, in the form of $\exists/\forall r_i.D_i$: <br /> *"$\mathcal{V}(C_{1})$ and ... and $\mathcal{V}(C_{m})$ that $\mathcal{V}(r_{m+1})$ some/only $V(D_{m+1})$ and ... and $\mathcal{V}(r_{n'})$ some/only $V(D_{n'})$"* <br /> **(c)** if **no** $C_i$ is a restriction: <br /> *"$\mathcal{V}(C_{1})$ and ... and $\mathcal{V}(C_{n'})$"* |
+    | $C_1 \sqcup ... \sqcup C_n$ | similar to verbalising $C_1 \sqcap ... \sqcap C_n$ except that *"and"* is replaced by *"or"* and case **(b)** uses the same verbalisation as case **(c)**                             |
 
     Attributes:
         onto (Ontology): An ontology whose entities are to be verbalised.
@@ -263,7 +273,7 @@ class OntologyVerbaliser:
         The subsumption axiom can have two forms:
         
         - $C \sqsubseteq D$, the `SubClassOf` axiom;
-        - $C \sqsuperseteq D$, the `SuperClassOf` axiom.
+        - $C \sqsupseteq D$, the `SuperClassOf` axiom.
 
         Args:
             subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.
