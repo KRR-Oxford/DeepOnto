@@ -97,23 +97,8 @@ class OntologyVerbaliser:
     def verbalise_class_expression(self, class_expression: Union[OWLClassExpression, str, RangeNode]):
         r"""Verbalise a class expression (`OWLClassExpression`) or its parsed form (in `RangeNode`).
         
-        Currently supported types of class expressions are:
+        See currently supported types of class (or concept) expressions [here][deeponto.onto.verbalisation.OntologyVerbaliser]
         
-        - **Atomic** (named) classes, which have IRIs;
-        - **Negation** (by simply adding a **"not"**);
-        - **Existential** ($\exists r.C$) and **Universal** ($\forall r.C$) restrictions;
-        - **Conjunction** ($C \sqcap D \sqcap ...$) and **Disjunction** ($C \sqcup D \sqcup ...$) statements.
-        
-        Note that the supported types can be **nested to any level** (i.e., $C$ and $D$ can be complex class expressions). 
-        
-        Extra cares are imposed for more natural verbalisation and less redundancy:
-        
-        - merging restriction statements that have the **same object property**;
-        - if **object property** that starts with an **adjective** or a **noun**, add **"it"** to the head;
-        - the keyword **"only"** is inserted between the object property and the class expression for an **universal restriction** statement;
-        - the keyword **"some"** is inserted between the object property and the class expression for an **existential restriction** statement;
-        - in a conjunction or disjunction statement, if there is **no atomic class**, then the keyword for the 
-        anonymous class **"something"** is appended to the head.
 
         Args:
             class_expression (Union[OWLClassExpression, str, RangeNode]): A class expression to be verbalised.
