@@ -55,7 +55,7 @@ class OntologyVerbaliser:
 
     The concept patterns supported by this verbaliser are shown below:
     
-    | **Pattern**                 | **Verbalisation** ($\mathcal{V}$)}                                                                                                                                                    |
+    | **Pattern**                 | **Verbalisation** ($\mathcal{V}$)                                                                                                                                                    |
     |-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
     | $A$ (atomic)                | the name ($\texttt{rdfs:label}$) of $A$                                                                                                                                               |
     | $r$ (property)              | the name ($\texttt{rdfs:label}$) of $r$; *"is"* is appended to the head if the name starts with a passive verb, noun, or adjective                                                    |                                
