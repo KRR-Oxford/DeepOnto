@@ -306,7 +306,7 @@
   
     <li class="md-nav__item">
       <a href="../../../ontology/" class="md-nav__link">
-        Using Ontology
+        Loading Ontology
       </a>
     </li>
   
@@ -320,7 +320,7 @@
   
     <li class="md-nav__item">
       <a href="../../../bertmap/" class="md-nav__link">
-        Using BERTMap and BERTMapLt
+        OM with BERTMap & BERTMapLt
       </a>
     </li>
   
@@ -348,7 +348,7 @@
   
     <li class="md-nav__item">
       <a href="../../../verbaliser/" class="md-nav__link">
-        Using Ontology Verbaliser
+        Ontology Verbaliser
       </a>
     </li>
   
@@ -836,9 +836,47 @@
   <div class="doc doc-contents ">
 
   
-      <p>A rule-based natural language verbaliser for the OWL logical expressions, e.g., <a href="http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html"><code>OWLAxiom</code></a>
+      <p>A recursive natural language verbaliser for the OWL logical expressions, e.g., <a href="http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html"><code>OWLAxiom</code></a>
 and <a href="https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/model/OWLClassExpression.html"><code>OWLClassExpression</code></a>.</p>
-<p>This is not a full-fledged ontology verbaliser but can already deal with most kinds of class expressions.</p>
+<p>The concept patterns supported by this verbaliser are shown below:</p>
+<table>
+<thead>
+<tr>
+<th><strong>Pattern</strong></th>
+<th><strong>Verbalisation</strong> (<span class="arithmatex">\(\mathcal{V}\)</span>)}</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="arithmatex">\(A\)</span> (atomic)</td>
+<td>the name (<span class="arithmatex">\(\texttt{rdfs:label}\)</span>) of <span class="arithmatex">\(A\)</span></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(r\)</span> (property)</td>
+<td>the name (<span class="arithmatex">\(\texttt{rdfs:label}\)</span>) of <span class="arithmatex">\(r\)</span>; <em>"is"</em> is appended to the head if the name starts with a passive verb, noun, or adjective</td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\neg C\)</span></td>
+<td><em>"not <span class="arithmatex">\(\mathcal{V}(C)\)</span>"</em></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\exists r.C\)</span></td>
+<td><em>"something that <span class="arithmatex">\(\mathcal{V}(r)\)</span> some <span class="arithmatex">\(\mathcal{V}(C)\)</span>"</em></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(\forall r.C\)</span></td>
+<td><em>"something that <span class="arithmatex">\(\mathcal{V}(r)\)</span> only <span class="arithmatex">\(\mathcal{V}(C)\)</span>"</em></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(C_1 \sqcap ... \sqcap C_n\)</span></td>
+<td>if <span class="arithmatex">\(C_i = \exists/\forall r.D_i\)</span> and <span class="arithmatex">\(C_j = \exists/\forall r.D_j\)</span>, they will be re-written into <span class="arithmatex">\(\exists/\forall r.(D_i \sqcap D_j)\)</span> before verbalisation; suppose after re-writing the new expression is <span class="arithmatex">\(C_1 \sqcap ... \sqcap C_{n'}\)</span> <p> <strong>(a)</strong> if <strong>all</strong> <span class="arithmatex">\(C_i\)</span>s (for <span class="arithmatex">\(i = 1, ..., n'\)</span>) are restrictions, in the form of <span class="arithmatex">\(\exists/\forall r_i.D_i\)</span>: <br /> <em>"something that <span class="arithmatex">\(\mathcal{V}(r_1)\)</span> some/only <span class="arithmatex">\(V(D_1)\)</span> and ... and <span class="arithmatex">\(\mathcal{V}(r_{n'})\)</span> some/only <span class="arithmatex">\(V(D_{n'})\)</span>"</em> <br /> <strong>(b)</strong> if <strong>some</strong> <span class="arithmatex">\(C_i\)</span>s (for <span class="arithmatex">\(i = m+1, ..., n'\)</span>) are restrictions, in the form of <span class="arithmatex">\(\exists/\forall r_i.D_i\)</span>: <br /> <em>"<span class="arithmatex">\(\mathcal{V}(C_{1})\)</span> and ... and <span class="arithmatex">\(\mathcal{V}(C_{m})\)</span> that <span class="arithmatex">\(\mathcal{V}(r_{m+1})\)</span> some/only <span class="arithmatex">\(V(D_{m+1})\)</span> and ... and <span class="arithmatex">\(\mathcal{V}(r_{n'})\)</span> some/only <span class="arithmatex">\(V(D_{n'})\)</span>"</em> <br /> <strong>(c)</strong> if <strong>no</strong> <span class="arithmatex">\(C_i\)</span> is a restriction: <br /> <em>"<span class="arithmatex">\(\mathcal{V}(C_{1})\)</span> and ... and <span class="arithmatex">\(\mathcal{V}(C_{n'})\)</span>"</em></td>
+</tr>
+<tr>
+<td><span class="arithmatex">\(C_1 \sqcup ... \sqcup C_n\)</span></td>
+<td>similar to verbalising <span class="arithmatex">\(C_1 \sqcap ... \sqcap C_n\)</span> except that <em>"and"</em> is replaced by <em>"or"</em> and case <strong>(b)</strong> uses the same verbalisation as case <strong>(c)</strong></td>
+</tr>
+</tbody>
+</table>
 
   <p><strong>Attributes:</strong></p>
   <table>
@@ -878,19 +916,19 @@ the names are retrieved from <span class="arithmatex">\(\texttt{rdfs:label}\)</s
 
           <details class="quote">
             <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span>
-<span class="normal">68</span>
-<span class="normal">69</span>
-<span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">75</span>
 <span class="normal">76</span>
-<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">apply_lowercasing_to_vocab</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">apply_lowercasing_to_vocab</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">onto</span> <span class="o">=</span> <span class="n">onto</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">OntologySyntaxParser</span><span class="p">()</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">nlp</span> <span class="o">=</span> <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
@@ -936,13 +974,13 @@ function before applying verbalisation.</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">update_entity_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span>
+<span class="normal">93</span>
+<span class="normal">94</span>
+<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">update_entity_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the name of an entity in `self.vocab`.</span>
 
 <span class="sd">    If you want to change the name of a specific entity, you should call this</span>
@@ -1049,17 +1087,7 @@ can be accessed with the key <code>["verbal"]</code>.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 87</span>
-<span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 97</span>
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
@@ -1104,7 +1132,17 @@ can be accessed with the key <code>["verbal"]</code>.</p></td>
 <span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
-<span class="normal">142</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_class_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">OWLClassExpression</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">RangeNode</span><span class="p">]):</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_class_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">OWLClassExpression</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">RangeNode</span><span class="p">]):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Verbalise a class expression (`OWLClassExpression`) or its parsed form (in `RangeNode`).</span>
 
 <span class="sd">    Currently supported types of class expressions are:</span>
@@ -1182,7 +1220,7 @@ can be accessed with the key <code>["verbal"]</code>.</p></td>
 <p>The subsumption axiom can have two forms:</p>
 <ul>
 <li><span class="arithmatex">\(C \sqsubseteq D\)</span>, the <code>SubClassOf</code> axiom;</li>
-<li><span class="arithmatex">\(C \sqsuperseteq D\)</span>, the <code>SuperClassOf</code> axiom.</li>
+<li><span class="arithmatex">\(C \sqsupseteq D\)</span>, the <code>SuperClassOf</code> axiom.</li>
 </ul>
 
   <p><strong>Parameters:</strong></p>
@@ -1229,17 +1267,7 @@ can be accessed with the key <code>["verbal"]</code>.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">260</span>
-<span class="normal">261</span>
-<span class="normal">262</span>
-<span class="normal">263</span>
-<span class="normal">264</span>
-<span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
-<span class="normal">270</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">270</span>
 <span class="normal">271</span>
 <span class="normal">272</span>
 <span class="normal">273</span>
@@ -1250,13 +1278,23 @@ can be accessed with the key <code>["verbal"]</code>.</p></td>
 <span class="normal">278</span>
 <span class="normal">279</span>
 <span class="normal">280</span>
-<span class="normal">281</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_subsumption_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subsumption_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">):</span>
+<span class="normal">281</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span>
+<span class="normal">285</span>
+<span class="normal">286</span>
+<span class="normal">287</span>
+<span class="normal">288</span>
+<span class="normal">289</span>
+<span class="normal">290</span>
+<span class="normal">291</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_subsumption_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subsumption_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Verbalise a subsumption axiom.</span>
 
 <span class="sd">    The subsumption axiom can have two forms:</span>
 
 <span class="sd">    - $C \sqsubseteq D$, the `SubClassOf` axiom;</span>
-<span class="sd">    - $C \sqsuperseteq D$, the `SuperClassOf` axiom.</span>
+<span class="sd">    - $C \sqsupseteq D$, the `SuperClassOf` axiom.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.</span>
@@ -1367,8 +1405,8 @@ accessed by <code>.text</code>. For example:</p>
 
           <details class="quote">
             <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">373</span>
-<span class="normal">374</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">383</span>
+<span class="normal">384</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">pass</span>
 </code></pre></div></td></tr></table></div>
           </details>
@@ -1456,17 +1494,7 @@ fixed length (easier for parsing).</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">376</span>
-<span class="normal">377</span>
-<span class="normal">378</span>
-<span class="normal">379</span>
-<span class="normal">380</span>
-<span class="normal">381</span>
-<span class="normal">382</span>
-<span class="normal">383</span>
-<span class="normal">384</span>
-<span class="normal">385</span>
-<span class="normal">386</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">386</span>
 <span class="normal">387</span>
 <span class="normal">388</span>
 <span class="normal">389</span>
@@ -1483,7 +1511,17 @@ fixed length (easier for parsing).</p>
 <span class="normal">400</span>
 <span class="normal">401</span>
 <span class="normal">402</span>
-<span class="normal">403</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">abbreviate_owl_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span>
+<span class="normal">408</span>
+<span class="normal">409</span>
+<span class="normal">410</span>
+<span class="normal">411</span>
+<span class="normal">412</span>
+<span class="normal">413</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">abbreviate_owl_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Abbreviate the string representations of logical operators to a</span>
 <span class="sd">    fixed length (easier for parsing).</span>
 
@@ -1577,17 +1615,7 @@ method below.</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">405</span>
-<span class="normal">406</span>
-<span class="normal">407</span>
-<span class="normal">408</span>
-<span class="normal">409</span>
-<span class="normal">410</span>
-<span class="normal">411</span>
-<span class="normal">412</span>
-<span class="normal">413</span>
-<span class="normal">414</span>
-<span class="normal">415</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">415</span>
 <span class="normal">416</span>
 <span class="normal">417</span>
 <span class="normal">418</span>
@@ -1596,7 +1624,17 @@ method below.</p>
 <span class="normal">421</span>
 <span class="normal">422</span>
 <span class="normal">423</span>
-<span class="normal">424</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OWLObject</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
+<span class="normal">424</span>
+<span class="normal">425</span>
+<span class="normal">426</span>
+<span class="normal">427</span>
+<span class="normal">428</span>
+<span class="normal">429</span>
+<span class="normal">430</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span>
+<span class="normal">434</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OWLObject</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.verbalisation.RangeNode].</span>
 
 <span class="sd">    This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.verbalisation.OntologySyntaxParser.parse_by_parentheses]</span>
@@ -1724,17 +1762,7 @@ a different parenthesis pattern.</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">426</span>
-<span class="normal">427</span>
-<span class="normal">428</span>
-<span class="normal">429</span>
-<span class="normal">430</span>
-<span class="normal">431</span>
-<span class="normal">432</span>
-<span class="normal">433</span>
-<span class="normal">434</span>
-<span class="normal">435</span>
-<span class="normal">436</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">436</span>
 <span class="normal">437</span>
 <span class="normal">438</span>
 <span class="normal">439</span>
@@ -1788,7 +1816,17 @@ a different parenthesis pattern.</p>
 <span class="normal">487</span>
 <span class="normal">488</span>
 <span class="normal">489</span>
-<span class="normal">490</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">490</span>
+<span class="normal">491</span>
+<span class="normal">492</span>
+<span class="normal">493</span>
+<span class="normal">494</span>
+<span class="normal">495</span>
+<span class="normal">496</span>
+<span class="normal">497</span>
+<span class="normal">498</span>
+<span class="normal">499</span>
+<span class="normal">500</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span> <span class="nf">parse_by_parentheses</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">already_parsed</span><span class="p">:</span> <span class="n">RangeNode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">for_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
@@ -1893,16 +1931,16 @@ a different parenthesis pattern.</p>
 
           <details class="quote">
             <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">502</span>
-<span class="normal">503</span>
-<span class="normal">504</span>
-<span class="normal">505</span>
-<span class="normal">506</span>
-<span class="normal">507</span>
-<span class="normal">508</span>
-<span class="normal">509</span>
-<span class="normal">510</span>
-<span class="normal">511</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">512</span>
+<span class="normal">513</span>
+<span class="normal">514</span>
+<span class="normal">515</span>
+<span class="normal">516</span>
+<span class="normal">517</span>
+<span class="normal">518</span>
+<span class="normal">519</span>
+<span class="normal">520</span>
+<span class="normal">521</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;=</span> <span class="n">end</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;invalid start and end positions ...&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
@@ -1952,17 +1990,7 @@ a different parenthesis pattern.</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">518</span>
-<span class="normal">519</span>
-<span class="normal">520</span>
-<span class="normal">521</span>
-<span class="normal">522</span>
-<span class="normal">523</span>
-<span class="normal">524</span>
-<span class="normal">525</span>
-<span class="normal">526</span>
-<span class="normal">527</span>
-<span class="normal">528</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">528</span>
 <span class="normal">529</span>
 <span class="normal">530</span>
 <span class="normal">531</span>
@@ -1974,7 +2002,17 @@ a different parenthesis pattern.</p>
 <span class="normal">537</span>
 <span class="normal">538</span>
 <span class="normal">539</span>
-<span class="normal">540</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
+<span class="normal">540</span>
+<span class="normal">541</span>
+<span class="normal">542</span>
+<span class="normal">543</span>
+<span class="normal">544</span>
+<span class="normal">545</span>
+<span class="normal">546</span>
+<span class="normal">547</span>
+<span class="normal">548</span>
+<span class="normal">549</span>
+<span class="normal">550</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compare two ranges if they have a different `start` and/or a different `end`.</span>
 
 <span class="sd">    - $R_1 \lt R_2$: if range $R_1$ is completely contained in range $R_2$, and $R_1 \neq R_2$.</span>
@@ -2023,11 +2061,11 @@ a different parenthesis pattern.</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">542</span>
-<span class="normal">543</span>
-<span class="normal">544</span>
-<span class="normal">545</span>
-<span class="normal">546</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">sort_by_start</span><span class="p">(</span><span class="n">nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RangeNode</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A sorting function that sorts the nodes by their starting positions.&quot;&quot;&quot;</span>
     <span class="n">temp</span> <span class="o">=</span> <span class="p">{</span><span class="n">sib</span><span class="p">:</span> <span class="n">sib</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">sib</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">}</span>
@@ -2055,17 +2093,7 @@ a different parenthesis pattern.</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">548</span>
-<span class="normal">549</span>
-<span class="normal">550</span>
-<span class="normal">551</span>
-<span class="normal">552</span>
-<span class="normal">553</span>
-<span class="normal">554</span>
-<span class="normal">555</span>
-<span class="normal">556</span>
-<span class="normal">557</span>
-<span class="normal">558</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">558</span>
 <span class="normal">559</span>
 <span class="normal">560</span>
 <span class="normal">561</span>
@@ -2085,7 +2113,17 @@ a different parenthesis pattern.</p>
 <span class="normal">575</span>
 <span class="normal">576</span>
 <span class="normal">577</span>
-<span class="normal">578</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">insert_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
+<span class="normal">578</span>
+<span class="normal">579</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span>
+<span class="normal">584</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">insert_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inserting a child [`RangeNode`][deeponto.onto.verbalisation.RangeNode].</span>
 
 <span class="sd">    Child nodes have a smaller (inclusive) range, e.g., `[2, 5]` is a child of `[1, 6]`.</span>
@@ -2138,9 +2176,9 @@ a different parenthesis pattern.</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">583</span>
-<span class="normal">584</span>
-<span class="normal">585</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">render_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">render_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Render the whole tree.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">RenderTree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -2169,18 +2207,18 @@ which will be displayed.</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/onto/verbalisation.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">587</span>
-<span class="normal">588</span>
-<span class="normal">589</span>
-<span class="normal">590</span>
-<span class="normal">591</span>
-<span class="normal">592</span>
-<span class="normal">593</span>
-<span class="normal">594</span>
-<span class="normal">595</span>
-<span class="normal">596</span>
-<span class="normal">597</span>
-<span class="normal">598</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">render_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">597</span>
+<span class="normal">598</span>
+<span class="normal">599</span>
+<span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span>
+<span class="normal">608</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">render_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calling this function will generate a temporary `range_node.png` file</span>
 <span class="sd">    which will be displayed.</span>
 
