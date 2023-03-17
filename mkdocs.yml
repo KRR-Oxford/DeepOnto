@@ -43,10 +43,10 @@ extra:
 nav:
     - GET STARTED: 
       - Introduction: index.md
-      - Loading Ontology: ontology.md  # basic usage of ontologies, ontology pruning, etc.
+      - Basic Usage of Ontology: ontology.md  # basic usage of ontologies, ontology pruning, etc.
       - OM with BERTMap & BERTMapLt: bertmap.md
       - Bio-ML Specifications: bio-ml.md
-      - Ontology Verbaliser: verbaliser.md
+      - Verbalising Ontology Concepts: verbaliser.md
     - PACKAGE REFERENCE:
         - Ontology: deeponto/onto/ontology.md
         - Ontology Alignment:
