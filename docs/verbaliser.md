@@ -1,5 +1,5 @@
-# Using Ontology Verbaliser
+# Verbalising Ontology Concepts
 
-See [`OntologyVerbaliser`][deeponto.onto.verbalisation.OntologyVerbaliser] first.
+See code instructions at [`OntologyVerbaliser`][deeponto.onto.verbalisation.OntologyVerbaliser] first.
 
-To be updated soon...
+The detailed tutorial will be available soon...

@@ -1,4 +1,4 @@
-# Using BERTMap and BERTMapLt
+# Ontology Matching with BERTMap and BERTMapLt
 
 !!! credit "Paper"
 
