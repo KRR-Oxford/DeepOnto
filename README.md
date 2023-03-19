@@ -39,7 +39,7 @@ limitations under the License.
 - **[2023 Jan - Feb]** Release $\textsf{DeepOnto}$ **v0.5.x**
     - [X] Shift to the `src/` layout and fix PyPI issues.
     - [X] Add `deeponto.onto.verbalisation` for ontology concept verbalisation.
-    - [X] Rebuild the whole packaged based on the OWLAPI; remove owlready2 from the essential dependencies.
+    - [X] Rebuild the whole package based on the OWLAPI; remove owlready2 from the essential dependencies.
 
 
 ## About
