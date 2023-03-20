@@ -34,6 +34,7 @@ limitations under the License.
 
 
 - **[2023 March - ]** Release $\textsf{DeepOnto}$ **v0.6.x**
+    - [ ] Working on integrating BERTSubs into DeepOnto.
     - [X] Deploy the `deeponto.lama` modules with improved ontology verbalisation. 
 
 - **[2023 Jan - Feb]** Release $\textsf{DeepOnto}$ **v0.5.x**
