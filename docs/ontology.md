@@ -107,7 +107,7 @@ doid.reasoner.check_subsumption(doid_potential_sub_entity, doid_potential_super_
 
 ## Ontology Pruning
 
-The pruning function aims to remove unwanted ontology classes while preserving the relevant hierarchy. Specifically, for each class $c$ to be removed, subsumption axioms will be created between the parents of $c$ and the children of $c'$. Then, an `#!java OWLEntityRemover` will be used to apply the pruning.
+The pruning function aims to remove unwanted ontology classes while preserving the relevant hierarchy. Specifically, for each class $c$ to be removed, subsumption axioms will be created between the parents of $c$ and the children of $c'$. Then, `#!java apply_pruning` will be used to apply the pruning.
 
 !!! credit "paper"
 
