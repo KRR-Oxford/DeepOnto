@@ -112,7 +112,7 @@ The base classes that extend the OWLAPI functionalities are [`Ontology`][deepont
 
 ### BERTSubs
 
-* We are working on transforming BERTSubs' original [experiment codes](https://gitlab.com/chen00217/bert_subsumption) to this project.
+*BERTSubs* [3] is a system for ontology subsumption prediction. We are working on transforming its original [experiment codes](https://gitlab.com/chen00217/bert_subsumption) to this project.
 
 ## License
 
