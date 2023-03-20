@@ -34,13 +34,13 @@ The ontology matching (OM) pipeline of $\textsf{BERTMap}$ consists of following 
 5. Predict mappings for each class $c$ of the source ontology $\mathcal{O}$ by:
     
     - Selecting plausible candidates $c'$s in the target ontology $\mathcal{O'}$ based on **idf scores** w.r.t. the **sub-word inverted index** built from the target ontology annotation index.
-    For $c$ and a candidate $c'$. first check if they can be string-matched (i.e., share a common annotation, or equivalently the maximum edit similarity score is $1.0$); if not,
+    For $c$ and a candidate $c'$, first check if they can be string-matched (i.e., share a common annotation, or equivalently the maximum edit similarity score is $1.0$); if not,
     consider all combinations (cartesian product) of their respective class annotations, compute a synonym score for each combination, and take the **average of synonym scores as the mapping score**.
     - $N$ best scored mappings (no filtering) will be preserved as raw predictions which should have relatively higher recall and lower precision.
 
 6. Extend the raw predictions using an **iterative** algorithm based on the **locality principle**. To be specific, if $c$ and $c'$ are matched with a **relatively high mapping score** ($\geq \kappa$), then search for plausible mappings between the *parents* (resp. *children*) of $c$ and the *parents* (resp. *children*) of $c'$. This process is iterative because there would be new
 highly scored mappings at each round. Terminate mapping extension when there is no
-new mapping with score $\geq \kappa$ found or exceed the maximum number of iterations. Note that $\kappa$ is set to $0.9$ by default same as in the original paper.
+new mapping with score $\geq \kappa$ found or it exceeds the maximum number of iterations. Note that $\kappa$ is set to $0.9$ by default, as in the original paper.
 
 7. Truncate the extended mappings by preserving only those with scores $\geq \lambda$. In the original paper, $\lambda$ is supposed to be tuned on validation mappings – which are often not available. Also, $\lambda$ is not a sensitive hyperparameter in practice. Therefore, we manually set $\lambda$ to $0.9995$ as a default value which usually yields a higher F1 score. Note that both $\kappa$ and $\lambda$ are made available in the configuration file.
 
