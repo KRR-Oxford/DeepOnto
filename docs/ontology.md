@@ -85,7 +85,7 @@ doid.reasoner.super_entities_of(doid_class, direct=False)
     'http://purl.obolibrary.org/obo/DOID_4']
     ```
 
-The outputs are IRIs of the corresponding super-entities. `direct` is a boolean value indicating whether the returned entitiesare **parents** (`#!python direct=True`) or **ancestors** (`#!python direct=False`).
+The outputs are IRIs of the corresponding super-entities. `direct` is a boolean value indicating whether the returned entities are **parents** (`#!python direct=True`) or **ancestors** (`#!python direct=False`).
 
 To get the **sub-entities**, simply replace the method name with `#!python sub_entities_of`.
 
