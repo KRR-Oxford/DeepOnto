@@ -770,7 +770,7 @@ The ontology matching (OM) pipeline of <span class="arithmatex">\(\textsf{BERTMa
 <p>Predict mappings for each class <span class="arithmatex">\(c\)</span> of the source ontology <span class="arithmatex">\(\mathcal{O}\)</span> by:</p>
 <ul>
 <li>Selecting plausible candidates <span class="arithmatex">\(c'\)</span>s in the target ontology <span class="arithmatex">\(\mathcal{O'}\)</span> based on <strong>idf scores</strong> w.r.t. the <strong>sub-word inverted index</strong> built from the target ontology annotation index.
-For <span class="arithmatex">\(c\)</span> and a candidate <span class="arithmatex">\(c'\)</span>. first check if they can be string-matched (i.e., share a common annotation, or equivalently the maximum edit similarity score is <span class="arithmatex">\(1.0\)</span>); if not,
+For <span class="arithmatex">\(c\)</span> and a candidate <span class="arithmatex">\(c'\)</span>, first check if they can be string-matched (i.e., share a common annotation, or equivalently the maximum edit similarity score is <span class="arithmatex">\(1.0\)</span>); if not,
 consider all combinations (cartesian product) of their respective class annotations, compute a synonym score for each combination, and take the <strong>average of synonym scores as the mapping score</strong>.</li>
 <li><span class="arithmatex">\(N\)</span> best scored mappings (no filtering) will be preserved as raw predictions which should have relatively higher recall and lower precision.</li>
 </ul>
@@ -778,7 +778,7 @@ consider all combinations (cartesian product) of their respective class annotati
 <li>
 <p>Extend the raw predictions using an <strong>iterative</strong> algorithm based on the <strong>locality principle</strong>. To be specific, if <span class="arithmatex">\(c\)</span> and <span class="arithmatex">\(c'\)</span> are matched with a <strong>relatively high mapping score</strong> (<span class="arithmatex">\(\geq \kappa\)</span>), then search for plausible mappings between the <em>parents</em> (resp. <em>children</em>) of <span class="arithmatex">\(c\)</span> and the <em>parents</em> (resp. <em>children</em>) of <span class="arithmatex">\(c'\)</span>. This process is iterative because there would be new
 highly scored mappings at each round. Terminate mapping extension when there is no
-new mapping with score <span class="arithmatex">\(\geq \kappa\)</span> found or exceed the maximum number of iterations. Note that <span class="arithmatex">\(\kappa\)</span> is set to <span class="arithmatex">\(0.9\)</span> by default same as in the original paper.</p>
+new mapping with score <span class="arithmatex">\(\geq \kappa\)</span> found or it exceeds the maximum number of iterations. Note that <span class="arithmatex">\(\kappa\)</span> is set to <span class="arithmatex">\(0.9\)</span> by default, as in the original paper.</p>
 </li>
 <li>
 <p>Truncate the extended mappings by preserving only those with scores <span class="arithmatex">\(\geq \lambda\)</span>. In the original paper, <span class="arithmatex">\(\lambda\)</span> is supposed to be tuned on validation mappings – which are often not available. Also, <span class="arithmatex">\(\lambda\)</span> is not a sensitive hyperparameter in practice. Therefore, we manually set <span class="arithmatex">\(\lambda\)</span> to <span class="arithmatex">\(0.9995\)</span> as a default value which usually yields a higher F1 score. Note that both <span class="arithmatex">\(\kappa\)</span> and <span class="arithmatex">\(\lambda\)</span> are made available in the configuration file.</p>
@@ -994,7 +994,7 @@ The file structure of this directory is as follows:</p>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 17, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 20, 2023</span>
       
         <br>
         Created:

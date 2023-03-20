@@ -399,6 +399,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#bertsubs" class="md-nav__link">
+    BERTSubs
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -815,6 +822,7 @@ limitations under the License.
 <li>
 <p><strong>[2023 March - ]</strong> Release <span class="arithmatex">\(\textsf{DeepOnto}\)</span> <strong>v0.6.x</strong></p>
 <ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Working on integrating BERTSubs into DeepOnto.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Deploy the <code>deeponto.lama</code> modules with improved ontology verbalisation. </li>
 </ul>
 </li>
@@ -823,7 +831,7 @@ limitations under the License.
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Shift to the <code>src/</code> layout and fix PyPI issues.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Add <code>deeponto.onto.verbalisation</code> for ontology concept verbalisation.</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Rebuild the whole packaged based on the OWLAPI; remove owlready2 from the essential dependencies.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Rebuild the whole package based on the OWLAPI; remove owlready2 from the essential dependencies.</li>
 </ul>
 </li>
 </ul>
@@ -866,7 +874,9 @@ The base classes that extend the OWLAPI functionalities are <a class="autorefs a
 <h3 id="bertmap">BERTMap</h3>
 <p><em>BERTMap</em> [1] is a BERT-based <em>ontology matching</em> (OM) system originally developed in <a href="https://github.com/KRR-Oxford/BERTMap">repo</a> but is now maintained in <span class="arithmatex">\(\textsf{DeepOnto}\)</span>. See how to use BERTMap in this <a href="https://krr-oxford.github.io/DeepOnto/bertmap/">tutorial</a>.</p>
 <h3 id="bio-ml">Bio-ML</h3>
-<p><em>Bio-ML</em> [2] is an OM resource and has been integrated into the <a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/">Bio-ML track of the OAEI</a>. See <a href="https://krr-oxford.github.io/DeepOnto/bio-ml/">instructions</a> of how to use Bio-ML.</p>
+<p><em>Bio-ML</em> [2] is an OM resource that has been used in the <a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/">Bio-ML track of the OAEI</a>. See <a href="https://krr-oxford.github.io/DeepOnto/bio-ml/">instructions</a> of how to use Bio-ML.</p>
+<h3 id="bertsubs">BERTSubs</h3>
+<p><em>BERTSubs</em> [3] is a system for ontology subsumption prediction. We are working on transforming its original <a href="https://gitlab.com/chen00217/bert_subsumption">experiment codes</a> to this project.</p>
 <h2 id="license">License</h2>
 <div class="admonition license">
 <p class="admonition-title">License</p>
@@ -884,7 +894,7 @@ limitations under the License.</p>
 <ul>
 <li>[1] <em>Yuan He‚ Jiaoyan Chen‚ Denvar Antonyrajah and Ian Horrocks.</em> <strong>BERTMap: A BERT−Based Ontology Alignment System</strong>. In Proceedings of 36th AAAI Conference on Artificial Intelligence 2022 (AAAI-2022). /<a href="https://arxiv.org/abs/2112.02682">arxiv</a>/ /<a href="https://ojs.aaai.org/index.php/AAAI/article/view/20510">aaai</a>/  <a name="bertmap_paper"></a></li>
 <li>[2] <em>Yuan He‚ Jiaoyan Chen‚ Hang Dong, Ernesto Jiménez-Ruiz, Ali Hadian and Ian Horrocks.</em> <strong>Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching</strong>. The 21st International Semantic Web Conference (ISWC-2022, <strong>Best Resource Paper Candidate</strong>). /<a href="https://arxiv.org/abs/2205.03447">arxiv</a>/ /<a href="https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33">iswc</a>/  <a name="bioml_paper"></a></li>
-<li>[3] <em>Jiaoyan Chen, Yuan He, Yuxia Geng, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.</em> <strong>Contextual Semantic Embeddings for Ontology Subsumption Prediction</strong>. World Wide Web. /<a href="https://arxiv.org/abs/2202.09791">arxiv</a>/  <a name="bertsubs_paper"></a></li>
+<li>[3] <em>Jiaoyan Chen, Yuan He, Yuxia Geng, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.</em> <strong>Contextual Semantic Embeddings for Ontology Subsumption Prediction</strong>. World Wide Web Journal (to appear). /<a href="https://arxiv.org/abs/2202.09791">arxiv</a>/  <a name="bertsubs_paper"></a></li>
 <li>[4] <em>Yuan He‚ Jiaoyan Chen, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.</em> <strong>Language Model Analysis for Ontology Subsumption Inference</strong>. 2023 (Under review). /<a href="https://arxiv.org/abs/2302.06761">arxiv</a>/  <a name="ontolama_paper"></a></li>
 </ul>
 <hr />

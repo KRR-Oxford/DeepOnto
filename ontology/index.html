@@ -797,7 +797,7 @@
 <span class="s1">&#39;http://purl.obolibrary.org/obo/DOID_4&#39;</span><span class="p">]</span>
 </code></pre></div></dd>
 </dl>
-<p>The outputs are IRIs of the corresponding super-entities. <code>direct</code> is a boolean value indicating whether the returned entitiesare <strong>parents</strong> (<code class="highlight"><span class="n">direct</span><span class="o">=</span><span class="kc">True</span></code>) or <strong>ancestors</strong> (<code class="highlight"><span class="n">direct</span><span class="o">=</span><span class="kc">False</span></code>).</p>
+<p>The outputs are IRIs of the corresponding super-entities. <code>direct</code> is a boolean value indicating whether the returned entities are <strong>parents</strong> (<code class="highlight"><span class="n">direct</span><span class="o">=</span><span class="kc">True</span></code>) or <strong>ancestors</strong> (<code class="highlight"><span class="n">direct</span><span class="o">=</span><span class="kc">False</span></code>).</p>
 <p>To get the <strong>sub-entities</strong>, simply replace the method name with <code class="highlight"><span class="n">sub_entities_of</span></code>.</p>
 <h3 id="inferring-class-instances">Inferring Class Instances</h3>
 <p>To retrieve the entailed <strong>instances</strong> of a class:</p>
@@ -808,7 +808,7 @@
 <div class="highlight"><pre><span></span><code><span class="n">doid</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">check_subsumption</span><span class="p">(</span><span class="n">doid_potential_sub_entity</span><span class="p">,</span> <span class="n">doid_potential_super_entity</span><span class="p">)</span>
 </code></pre></div>
 <h2 id="ontology-pruning">Ontology Pruning</h2>
-<p>The pruning function aims to remove unwanted ontology classes while preserving the relevant hierarchy. Specifically, for each class <span class="arithmatex">\(c\)</span> to be removed, subsumption axioms will be created between the parents of <span class="arithmatex">\(c\)</span> and the children of <span class="arithmatex">\(c'\)</span>. Then, an <code class="highlight"><span class="n">OWLEntityRemover</span></code> will be used to apply the pruning.</p>
+<p>The pruning function aims to remove unwanted ontology classes while preserving the relevant hierarchy. Specifically, for each class <span class="arithmatex">\(c\)</span> to be removed, subsumption axioms will be created between the parents of <span class="arithmatex">\(c\)</span> and the children of <span class="arithmatex">\(c'\)</span>. Then, <code class="highlight"><span class="n">apply_pruning</span></code> will be used to apply the pruning.</p>
 <div class="admonition credit">
 <p class="admonition-title">paper</p>
 <p>The ontology pruning algorithm is introduced in the paper: 
@@ -833,7 +833,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 17, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 20, 2023</span>
       
         <br>
         Created:
