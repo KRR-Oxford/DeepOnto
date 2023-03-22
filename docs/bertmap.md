@@ -58,7 +58,7 @@ In addition to the traditional OM procedure, the scoring modules of $\textsf{BER
 
 ## Usage
 
-To use $\textsf{BERTMap}$, import the configuration file and two input ontologies to be matched.
+To use $\textsf{BERTMap}$, a configuration file and two input ontologies to be matched should be imported.
 
 ```python
 from deeponto.onto import Ontology
