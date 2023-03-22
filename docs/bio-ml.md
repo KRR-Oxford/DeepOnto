@@ -43,7 +43,7 @@ Statistics for the equivalence matching set-ups. In the **Category** column, *"D
 
 | Source | Task        | Category | #Classes      | #RefMaps (equiv) | #Annot.  | AvgDepths |
 |--------|:-----------:|:--------:|:-------------:|:----------------:|:--------:|:---------:|
-| Mondo  | OMIM-ORDO   | Disease  | 9,642-8838    | 3,721            | 34K-34K  | 1.44-1.63 |
+| Mondo  | OMIM-ORDO   | Disease  | 9,642-8,838    | 3,721           | 34K-34K  | 1.44-1.63 |
 | Mondo  | NCIT-DOID   | Disease  | 6,835-8,848   | 4,684            | 80K-38K  | 2.04-6.85 |
 | UMLS   | SNOMED-FMA  | Body     | 24,182-64,726 | 7,256            | 39K-711K | 1.86-9.32 |
 | UMLS   | SNOMED-NCIT | Pharm    | 16,045-15,250 | 5,803            | 19K-220K | 1.09-3.26 |
@@ -86,7 +86,7 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
 
 ### Evaluation Framework
 
-Each OM pair in $\textsf{Bio-ML}$ consists of an equivalence matching track and a subsumption matching track. Each track considers two perspectives for evaluation, **global matching** and **local ranking**, each under two data split settings, **unsupervised** and **semi-supervised**.
+Each OM pair in $\textsf{Bio-ML}$ consists of an equivalence matching track and a subsumption matching track. Each track considers two perspectives for evaluation, **global matching** and **local ranking**, each of which has two data split settings, **unsupervised** and **semi-supervised**.
 
 #### Local Ranking
 
@@ -215,7 +215,7 @@ subs_generator.subs_from_equivs
       1.0), ...]
     ```
 
-The `subs_generation_ratio` parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The `delete_used_equiv_tgt_class` determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If setting to `#!python True`, then the target side of an (**used**) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes which can be accessed as `subs_generator.used_equiv_tgt_class_iris`.
+The `subs_generation_ratio` parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The `delete_used_equiv_tgt_class` determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If it is set to `#!python True`, then the target side of an (**used**) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes which can be accessed as `subs_generator.used_equiv_tgt_class_iris`.
 
 ### Negative Candidate Mapping Generation
 
