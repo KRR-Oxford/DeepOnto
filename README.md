@@ -24,6 +24,12 @@ limitations under the License.
     <a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/LICENSE">
         <img alt="license" src="https://img.shields.io/github/license/KRR-Oxford/DeepOnto">
     </a>
+    <a href="https://krr-oxford.github.io/DeepOnto/">
+        <img alt="docs" src="https://img.shields.io/badge/website-online-informational">
+    </a>
+    <a href="https://pypi.org/project/deeponto/">
+        <img alt="pypi" src="https://img.shields.io/pypi/v/deeponto">
+    </a>
 </p>
 
 <p align="center">
