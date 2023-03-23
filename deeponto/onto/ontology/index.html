@@ -1439,7 +1439,7 @@ should feel relatively easy to extend the Python classes here.</p>
           <td>
                 <code>str</code>
           </td>
-          <td><p>Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, <code>"DatasetProperties"</code>, etc.</p></td>
+          <td><p>Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, <code>"DataProperties"</code>, etc.</p></td>
           <td>
               <em>required</em>
           </td>
@@ -1484,7 +1484,7 @@ should feel relatively easy to extend the Python classes here.</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get an index of `OWLObject` of certain type from the ontology.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        entity_type (str): Options are `&quot;Classes&quot;`, `&quot;ObjectProperties&quot;`, `&quot;DatasetProperties&quot;`, etc.</span>
+<span class="sd">        entity_type (str): Options are `&quot;Classes&quot;`, `&quot;ObjectProperties&quot;`, `&quot;DataProperties&quot;`, etc.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        (dict): A dictionary that stores the `(iri, owl_object)` pairs</span>
@@ -1848,7 +1848,7 @@ that not every annotation property IRI is in use); if not provided, the built-in
                 <code>str</code>
           </td>
           <td><p>The entity type to be considered. Defaults to <code>"Classes"</code>.
-Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, <code>"DatasetProperties"</code>, etc.</p></td>
+Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, <code>"DataProperties"</code>, etc.</p></td>
           <td>
                 <code>&#39;Classes&#39;</code>
           </td>
@@ -1959,7 +1959,7 @@ Defaults to <code>False</code>.</p></td>
 <span class="sd">            that not every annotation property IRI is in use); if not provided, the built-in</span>
 <span class="sd">            `rdfs:label` is considered. Defaults to `[RDFS_LABEL]`.</span>
 <span class="sd">        entity_type (str, optional): The entity type to be considered. Defaults to `&quot;Classes&quot;`.</span>
-<span class="sd">            Options are `&quot;Classes&quot;`, `&quot;ObjectProperties&quot;`, `&quot;DatasetProperties&quot;`, etc.</span>
+<span class="sd">            Options are `&quot;Classes&quot;`, `&quot;ObjectProperties&quot;`, `&quot;DataProperties&quot;`, etc.</span>
 <span class="sd">        apply_lowercasing (bool): Whether or not to apply lowercasing to annotation literals.</span>
 <span class="sd">            Defaults to `True`.</span>
 <span class="sd">        normalise_identifiers (bool): Whether to normalise annotation text that is in the Java identifier format.</span>

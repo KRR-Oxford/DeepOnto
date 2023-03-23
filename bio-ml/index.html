@@ -832,7 +832,7 @@
 <td>Mondo</td>
 <td align="center">OMIM-ORDO</td>
 <td align="center">Disease</td>
-<td align="center">9,642-8838</td>
+<td align="center">9,642-8,838</td>
 <td align="center">3,721</td>
 <td align="center">34K-34K</td>
 <td align="center">1.44-1.63</td>
@@ -942,7 +942,7 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
 </p>
 
 <h3 id="evaluation-framework">Evaluation Framework</h3>
-<p>Each OM pair in <span class="arithmatex">\(\textsf{Bio-ML}\)</span> consists of an equivalence matching track and a subsumption matching track. Each track considers two perspectives for evaluation, <strong>global matching</strong> and <strong>local ranking</strong>, each under two data split settings, <strong>unsupervised</strong> and <strong>semi-supervised</strong>.</p>
+<p>Each OM pair in <span class="arithmatex">\(\textsf{Bio-ML}\)</span> consists of an equivalence matching track and a subsumption matching track. Each track considers two perspectives for evaluation, <strong>global matching</strong> and <strong>local ranking</strong>, each of which has two data split settings, <strong>unsupervised</strong> and <strong>semi-supervised</strong>.</p>
 <h4 id="local-ranking">Local Ranking</h4>
 <p>Local ranking aims to examine an OM model's ability to distinguish a correct mapping out of several challenging negatives. The model should assign a high score (thus a high ranking) to the correct mapping. The overall results are evaluated using <span class="arithmatex">\(Hits@K\)</span> and <span class="arithmatex">\(MRR\)</span>.</p>
 <p>In <span class="arithmatex">\(\textsf{Bio-ML}\)</span>, candidate mappings are generated for each reference mapping in the test set. As shown in the <a href="#file-structure">file structure</a>, each task setting contains a <code>test.cands.tsv</code> file with each entry a reference mapping and its corresponding target class candidates -- which can be combined with the source reference class to form the candidate mappings. </p>
@@ -1036,7 +1036,7 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
   <span class="mf">1.0</span><span class="p">),</span> <span class="o">...</span><span class="p">]</span>
 </code></pre></div></dd>
 </dl>
-<p>The <code>subs_generation_ratio</code> parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The <code>delete_used_equiv_tgt_class</code> determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If setting to <code class="highlight"><span class="kc">True</span></code>, then the target side of an (<strong>used</strong>) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes which can be accessed as <code>subs_generator.used_equiv_tgt_class_iris</code>.</p>
+<p>The <code>subs_generation_ratio</code> parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The <code>delete_used_equiv_tgt_class</code> determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If it is set to <code class="highlight"><span class="kc">True</span></code>, then the target side of an (<strong>used</strong>) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes which can be accessed as <code>subs_generator.used_equiv_tgt_class_iris</code>.</p>
 <h3 id="negative-candidate-mapping-generation">Negative Candidate Mapping Generation</h3>
 <p>In order to examine an OM model's ability to distinguish the correct mapping among a set of challenging negative candidates, we can apply the <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator">negative canddiate mapping generation</a> algorithm as proposed in the paper, which utilises the <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator.idf_sample"><code>idf_sample</code></a> to generate candidates ambiguious at the textual level (similar naming), and <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator.neighbour_sample"><code>neighbour_sample</code></a> to generate candidates ambiguious at the structural level (e.g., siblings). The algorithm makes sure that <strong>none</strong> of the reference mappings will be added as a negative candidate, and for the subsumption case, the algorithm also takes care of <strong>excluding the ancestors</strong> because they are correct subsumptions.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
@@ -1061,7 +1061,7 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 17, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 22, 2023</span>
       
         <br>
         Created:
