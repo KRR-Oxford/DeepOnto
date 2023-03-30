@@ -172,7 +172,7 @@ class Ontology:
         """Get an index of `OWLObject` of certain type from the ontology.
 
         Args:
-            entity_type (str): Options are `"Classes"`, `"ObjectProperties"`, `"DatasetProperties"`, etc.
+            entity_type (str): Options are `"Classes"`, `"ObjectProperties"`, `"DataProperties"`, etc.
 
         Returns:
             (dict): A dictionary that stores the `(iri, owl_object)` pairs
@@ -319,7 +319,7 @@ class Ontology:
                 that not every annotation property IRI is in use); if not provided, the built-in
                 `rdfs:label` is considered. Defaults to `[RDFS_LABEL]`.
             entity_type (str, optional): The entity type to be considered. Defaults to `"Classes"`.
-                Options are `"Classes"`, `"ObjectProperties"`, `"DatasetProperties"`, etc.
+                Options are `"Classes"`, `"ObjectProperties"`, `"DataProperties"`, etc.
             apply_lowercasing (bool): Whether or not to apply lowercasing to annotation literals.
                 Defaults to `True`.
             normalise_identifiers (bool): Whether to normalise annotation text that is in the Java identifier format.
