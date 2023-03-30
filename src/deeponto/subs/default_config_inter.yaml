@@ -5,6 +5,7 @@ label_property:
   - http://www.w3.org/2000/01/rdf-schema#label
   - http://www.geneontology.org/formats/oboInOwl#hasExactSynonym
 use_one_label: true # true: select only one label
+subsumption_type: named_class # named_class or restriction
 
 test_subsumption_file: GO/test_subsumptions_r.csv
 valid_subsumption_file: GO/valid_subsumptions_r.csv
@@ -18,10 +19,8 @@ prompt:
   context_dup: 4
   max_length: 128
 
-batch_size: 32
-
-fine-tune:
-  do-fine-tune: true
+fine_tune:
+  do_fine_tune: true
   pretrained: bert-base-uncased
   tokenizer": bert-base-uncased
   output_dir: fine-tuned-bert-go
@@ -30,3 +29,7 @@ fine-tune:
   early_stop: false
   train_pos_dup: 2
   train_neg_dup: 2
+  batch_size: 32
+
+evaluation:
+  batch_size: 32
