@@ -22,7 +22,6 @@ import warnings
 import itertools
 
 from deeponto.utils import TextUtils, Tokenizer, InvertedIndex, FileUtils
-from deeponto.utils.decorators import paper
 from deeponto import init_jvm
 
 # initialise JVM for python-java interaction
@@ -48,6 +47,7 @@ OWL_BOTTOM_OBJECT_PROPERTY = "http://www.w3.org/2002/07/owl#bottomObjectProperty
 OWL_TOP_DATA_PROPERTY = "https://www.w3.org/2002/07/owl#topDataProperty"
 OWL_BOTTOM_DATA_PROPERTY = "https://www.w3.org/2002/07/owl#bottomDataProperty"
 RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
+OWL_DEPRECATED = "http://www.w3.org/2002/07/owl#deprecated"
 
 TOP_BOTTOMS = CfgNode(
     {
@@ -260,6 +260,17 @@ class Ontology:
 
         return set(annotations)
 
+    def check_deprecated(self, owl_object: OWLObject):
+        r"""Check if the given OWL object is marked as deprecated according to $\texttt{owl:deprecated}$.
+
+        NOTE: the string literal indicating deprecation is either `'true'` or `'True'`.
+        """
+        deprecated = self.get_owl_object_annotations(owl_object, annotation_property_iri=OWL_DEPRECATED)
+        if deprecated and (list(deprecated)[0] == "true" or list(deprecated)[0] == "True"):
+            return True
+        else:
+            return False
+
     @property
     def sibling_class_groups(self) -> List[List[str]]:
         """Return grouped sibling classes (with a common *direct* parent);
@@ -387,10 +398,6 @@ class Ontology:
         replacer = OWLObjectDuplicator(self.owl_data_factory, iri_dict)
         return replacer.duplicateObject(owl_object)
 
-    @paper(
-        "Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)",
-        "https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33",
-    )
     def apply_pruning(self, class_iris_to_be_removed: List[str]):
         r"""Run pruning given a list of classes that will be pruned.
 
@@ -685,7 +692,9 @@ class OntologyReasoner:
         print(f"[PASSED {not has_common_descendants}] assumed disjointness check done.")
         return not has_common_descendants
 
-    def check_assumed_disjoint_alternative(self, owl_class1: OWLClassExpression, owl_class2: OWLClassExpression, verbose: bool = False):
+    def check_assumed_disjoint_alternative(
+        self, owl_class1: OWLClassExpression, owl_class2: OWLClassExpression, verbose: bool = False
+    ):
         r"""Check if two OWL class expressions satisfy the Assumed Disjointness.
 
         !!! credit "Paper"
