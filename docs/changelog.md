@@ -10,7 +10,10 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased
 
-- [ ] **Add** the BERTSubs module at `deep.onto.subs`.
+- [ ] **Add** the ontology normaliser at `deeponto.onto.normaliser`.
+- [ ] **Add** the BERTSubs module at `deeponto.onto.subs`.
+- [ ] **Add** the `subclass_dict` method for `deeponto.onto.Ontology`.
+- [ ] **Add** the `owl_complex_classes` attribute for `deeponto.onto.Ontology`.
 - [ ] **Add** the [detailed instructions](../verbaliser) for how to use the ontology verbaliser. 
 - [X] **Add** `check_deprecated` method into the `deeponto.onto.Ontology` class.
 
