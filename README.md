@@ -43,7 +43,7 @@ limitations under the License.
 - [X] Deploy the `deeponto.lama` and `deeponto.onto.verbalisation` modules (from **v0.6.x**). 
 - [X] Rebuild the whole package based on the OWLAPI; remove owlready2 from the essential dependencies (from **v0.5.x**). 
 
-The complete [changelog](DeepOnto/changelog) is available.
+The complete changelog is available at: [repository](https://github.com/KRR-Oxford/DeepOnto/blob/main/docs/changelog.md) or [website](https://krr-oxford.github.io/DeepOnto/changelog/).
 
 ## About
 
