@@ -101,22 +101,20 @@ pip install -r requirements.txt
 
 ## Main Features
 
-### Extending the OWLAPI
+### Ontology
 
-$\textsf{DeepOnto}$ extends the OWLAPI library for ontology processing and reasoning, and also for better integration with deep learning modules. 
+- **Extending the OWLAPI**: $\textsf{DeepOnto}$ extends the OWLAPI library for ontology processing and reasoning, and also for better integration with deep learning modules. 
 The base classes that extend the OWLAPI functionalities are [`Ontology`][deeponto.onto.Ontology] and [`OntologyReasoner`][deeponto.onto.OntologyReasoner]. Examples of how to use them can be found [here](https://krr-oxford.github.io/DeepOnto/ontology/).
 
-### BERTMap
+- **Ontology Verbalisation**: The recursive ontology verbaliser originally proposed in [4] is implemented here as an essential module for briding ontologies and texts. See how to use the verbaliser in this [tutorial](https://krr-oxford.github.io/DeepOnto/verbaliser).
 
-*BERTMap* [1] is a BERT-based *ontology matching* (OM) system originally developed in [repo](https://github.com/KRR-Oxford/BERTMap) but is now maintained in $\textsf{DeepOnto}$. See how to use BERTMap in this [tutorial](https://krr-oxford.github.io/DeepOnto/bertmap/).
+### Tools & Resources
 
-### Bio-ML
+- **BERTMap** [1] is a BERT-based *ontology matching* (OM) system originally developed in [repo](https://github.com/KRR-Oxford/BERTMap) but is now maintained in $\textsf{DeepOnto}$. See how to use BERTMap in this [tutorial](https://krr-oxford.github.io/DeepOnto/bertmap/).
 
-*Bio-ML* [2] is an OM resource that has been used in the [Bio-ML track of the OAEI](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/). See [instructions](https://krr-oxford.github.io/DeepOnto/bio-ml/) of how to use Bio-ML.
+- **Bio-ML** [2] is an OM resource that has been used in the [Bio-ML track of the OAEI](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/). See [instructions](https://krr-oxford.github.io/DeepOnto/bio-ml/) of how to use Bio-ML.
 
-### BERTSubs
-
-*BERTSubs* [3] is a system for ontology subsumption prediction. We are working on transforming its original [experiment codes](https://gitlab.com/chen00217/bert_subsumption) to this project.
+- **BERTSubs** [3] is a system for ontology subsumption prediction. We are working on transforming its original [experiment codes](https://gitlab.com/chen00217/bert_subsumption) to this project.
 
 ## License
 
