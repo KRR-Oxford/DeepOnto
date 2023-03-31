@@ -222,12 +222,12 @@ class MappingRefiner:
         """
 
         src_class = self.src_onto.get_owl_object_from_iri(src_class_iri)
-        src_class_parent_iris = self.src_onto.reasoner.super_entities_of(src_class, direct=True)
-        src_class_children_iris = self.src_onto.reasoner.sub_entities_of(src_class, direct=True)
+        src_class_parent_iris = self.src_onto.reasoner.get_inferred_super_entities(src_class, direct=True)
+        src_class_children_iris = self.src_onto.reasoner.get_inferred_sub_entities(src_class, direct=True)
 
         tgt_class = self.tgt_onto.get_owl_object_from_iri(tgt_class_iri)
-        tgt_class_parent_iris = self.tgt_onto.reasoner.super_entities_of(tgt_class, direct=True)
-        tgt_class_children_iris = self.tgt_onto.reasoner.sub_entities_of(tgt_class, direct=True)
+        tgt_class_parent_iris = self.tgt_onto.reasoner.get_inferred_super_entities(tgt_class, direct=True)
+        tgt_class_children_iris = self.tgt_onto.reasoner.get_inferred_sub_entities(tgt_class, direct=True)
 
         # pair up parents and children, respectively; NOTE set() might not be necessary
         parent_pairs = list(set(itertools.product(src_class_parent_iris, tgt_class_parent_iris)))

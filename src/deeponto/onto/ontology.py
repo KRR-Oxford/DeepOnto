@@ -196,6 +196,38 @@ class Ontology:
         else:
             raise KeyError(f"Cannot retrieve unknown IRI: {iri}.")
 
+    def get_asserted_parents(self, owl_object: OWLObject):
+        r"""Get all the asserted parents of a given owl object.
+
+        Args:
+            owl_object (OWLObject): An owl object that could have a parent.
+        Returns:
+            (Set[OWLObject]): The parent set of the given owl object.
+        """
+        entity_type = self.get_entity_type(owl_object)
+        if entity_type == "Classes":
+            return set(EntitySearcher.getSuperClasses(owl_object, self.owl_onto))
+        elif entity_type.endswith("Properties"):
+            return set(EntitySearcher.getSuperProperties(owl_object, self.owl_onto))
+        else:
+            raise ValueError(f"Unsupported entity type {entity_type}.")
+
+    def get_asserted_children(self, owl_object: OWLObject):
+        r"""Get all the asserted children of a given owl object.
+
+        Args:
+            owl_object (OWLObject): An owl object that could have a child.
+        Returns:
+            (Set[OWLObject]): The children set of the given owl object.
+        """
+        entity_type = self.get_entity_type(owl_object)
+        if entity_type == "Classes":
+            return set(EntitySearcher.getSubClasses(owl_object, self.owl_onto))
+        elif entity_type.endswith("Properties"):
+            return set(EntitySearcher.getSubProperties(owl_object, self.owl_onto))
+        else:
+            raise ValueError(f"Unsupported entity type {entity_type}.")
+
     def get_owl_object_annotations(
         self,
         owl_object: Union[OWLObject, str],
@@ -290,7 +322,7 @@ class Ontology:
                 else:
                     cl = self.get_owl_object_from_iri(cl_iri)
 
-                children_iris = self.reasoner.sub_entities_of(cl, direct=True)
+                children_iris = self.reasoner.get_inferred_sub_entities(cl, direct=True)
                 self._multi_children_classes[cl_iri] = children_iris
 
                 if len(children_iris) > 1:
@@ -416,8 +448,8 @@ class Ontology:
         # create the subsumption axioms first
         for cl_iri in class_iris_to_be_removed:
             cl = self.get_owl_object_from_iri(cl_iri)
-            cl_parents = self.reasoner.super_entities_of(cl, direct=True)
-            cl_children = self.reasoner.sub_entities_of(cl, direct=True)
+            cl_parents = self.reasoner.get_inferred_super_entities(cl, direct=True)
+            cl_children = self.reasoner.get_inferred_sub_entities(cl, direct=True)
             for parent, child in itertools.product(cl_parents, cl_children):
                 parent = self.get_owl_object_from_iri(parent)
                 child = self.get_owl_object_from_iri(child)
@@ -480,8 +512,8 @@ class OntologyReasoner:
         except:
             return False
 
-    def super_entities_of(self, entity: OWLObject, direct: bool = False):
-        r"""Return the IRIs of super-entities of a given `OWLObject` according to the reasoner.
+    def get_inferred_super_entities(self, entity: OWLObject, direct: bool = False):
+        r"""Return the IRIs of named super-entities of a given `OWLObject` according to the reasoner.
 
         A mixture of `getSuperClasses`, `getSuperObjectProperties`, `getSuperDataProperties`
         functions imported from the OWLAPI reasoner. The type of input entity will be
@@ -506,8 +538,8 @@ class OntologyReasoner:
             super_entity_iris.remove(TOP)
         return super_entity_iris
 
-    def sub_entities_of(self, entity: OWLObject, direct: bool = False):
-        """Return the IRIs of sub-entities of a given `OWLObject` according to the reasoner.
+    def get_inferred_sub_entities(self, entity: OWLObject, direct: bool = False):
+        """Return the IRIs of named sub-entities of a given `OWLObject` according to the reasoner.
 
         A mixture of `getSubClasses`, `getSubObjectProperties`, `getSubDataProperties`
         functions imported from the OWLAPI reasoner. The type of input entity will be
@@ -572,7 +604,7 @@ class OntologyReasoner:
             computed, compared = entity2, entity1
 
         # for every inferred child of `computed`, check if it is subsumed by `compared``
-        for descendant_iri in self.sub_entities_of(computed, direct=False):
+        for descendant_iri in self.get_inferred_sub_entities(computed, direct=False):
             # print("check a subsumption")
             if self.check_subsumption(self.onto.get_owl_object_from_iri(descendant_iri), compared):
                 return True

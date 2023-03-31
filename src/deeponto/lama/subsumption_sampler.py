@@ -104,7 +104,7 @@ class AtomicSubsumptionSampler(SubsumptionSamplerBase):
         positives = []
         for concept_iri in self.concept_iris:
             owl_concept = self.onto.owl_classes[concept_iri]
-            for subsumer_iri in self.onto.reasoner.super_entities_of(owl_concept, direct=False):
+            for subsumer_iri in self.onto.reasoner.get_inferred_super_entities(owl_concept, direct=False):
                 positives.append((concept_iri, subsumer_iri))
                 pbar.update()
         positives = list(set(sorted(positives)))
@@ -200,13 +200,13 @@ class ComplexSubsumptionSampler(SubsumptionSamplerBase):
 
         # intialise the positive samples from the anchor equivalence axiom
         positives = list(anchor_axiom.asOWLSubClassOfAxioms())
-        for super_concept_iri in self.onto.reasoner.super_entities_of(atomic_concept, direct=False):
+        for super_concept_iri in self.onto.reasoner.get_inferred_super_entities(atomic_concept, direct=False):
             positives.append(
                 self.onto.owl_data_factory.getOWLSubClassOfAxiom(
                     complex_concept, self.onto.get_owl_object_from_iri(super_concept_iri)
                 )
             )
-        for sub_concept_iri in self.onto.reasoner.sub_entities_of(atomic_concept, direct=False):
+        for sub_concept_iri in self.onto.reasoner.get_inferred_sub_entities(atomic_concept, direct=False):
             positives.append(
                 self.onto.owl_data_factory.getOWLSubClassOfAxiom(
                     self.onto.get_owl_object_from_iri(sub_concept_iri), complex_concept
