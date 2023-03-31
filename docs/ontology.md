@@ -39,6 +39,13 @@ doid = Ontology("doid.owl")
 doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969")
 ```
 
+To get the asserted parents or children of a given class or property, do the following:
+
+```python
+doid.get_asserted_parents(doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969"))
+doid.get_asserted_children(doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969"))
+```
+
 To obtain the literal values (as `#!python Set[str]`) of an annotation property (such as $\texttt{rdfs:label}$) for an entity:
 
 ```python
@@ -74,7 +81,7 @@ To get the **super-entities** (a super-class, or a super-propety) of an entity, 
 
 ```python
 doid_class = doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969")
-doid.reasoner.super_entities_of(doid_class, direct=False) 
+doid.reasoner.get_inferred_super_entities(doid_class, direct=False) 
 ```
 
 `#!console Output:`

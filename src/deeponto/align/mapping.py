@@ -294,7 +294,7 @@ class SubsFromEquivMappingGenerator:
 
             # construct subsumption pairs by matching the source class and the target class's parents
             tgt_class = self.tgt_onto.get_owl_object_from_iri(tgt_class_iri)
-            tgt_class_parent_iris = self.tgt_onto.reasoner.super_entities_of(tgt_class, direct=True)
+            tgt_class_parent_iris = self.tgt_onto.reasoner.get_inferred_super_entities(tgt_class, direct=True)
             for parent_iri in tgt_class_parent_iris:
                 # skip this parent if it is marked as "used"
                 if self.delete_used_equiv_tgt_class and used_equivs[parent_iri]:
@@ -383,7 +383,7 @@ class NegativeCandidateMappingGenerator:
             for m in self.reference_class_mappings:
                 src_class_iri, tgt_class_iri = m.to_tuple()
                 tgt_class = self.tgt_onto.get_owl_object_from_iri(tgt_class_iri)
-                tgt_class_ancestors = self.tgt_onto.reasoner.super_entities_of(tgt_class)
+                tgt_class_ancestors = self.tgt_onto.reasoner.get_inferred_super_entities(tgt_class)
                 for tgt_ancestor_iri in tgt_class_ancestors:
                     self.reference_class_dict[src_class_iri].append(tgt_ancestor_iri)
 
@@ -520,8 +520,8 @@ class NegativeCandidateMappingGenerator:
             neighbours_of_cur_hop = []
             for tgt_class_iri in frontier:
                 tgt_class = self.tgt_onto.get_owl_object_from_iri(tgt_class_iri)
-                parents = self.tgt_onto.reasoner.super_entities_of(tgt_class, direct=True)
-                children = self.tgt_onto.reasoner.sub_entities_of(tgt_class, direct=True)
+                parents = self.tgt_onto.reasoner.get_inferred_super_entities(tgt_class, direct=True)
+                children = self.tgt_onto.reasoner.get_inferred_sub_entities(tgt_class, direct=True)
                 neighbours_of_cur_hop += parents + children  # used for further hop expansion
             
             valid_neighbours_of_cur_hop = set(neighbours_of_cur_hop) - set(self.reference_class_dict[ref_src_class_iri])
