@@ -47,6 +47,7 @@ nav:
       - OM with BERTMap & BERTMapLt: bertmap.md
       - Bio-ML Specifications: bio-ml.md
       - Verbalising Ontology Concepts: verbaliser.md
+      - Changelog: changelog.md
     - PACKAGE REFERENCE:
         - Ontology: deeponto/onto/ontology.md
         - Ontology Alignment:
