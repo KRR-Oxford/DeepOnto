@@ -36,18 +36,14 @@ limitations under the License.
   A package for ontology engineering with deep learning. 
 </p>
 
-**Changelog** :newspaper:
 
+**News** :newspaper:
 
-- **[2023 March - ]** Release $\textsf{DeepOnto}$ **v0.6.x**
-    - [ ] Working on integrating BERTSubs into DeepOnto.
-    - [X] Deploy the `deeponto.lama` modules with improved ontology verbalisation. 
+- [ ] Working on integrating BERTSubs into DeepOnto.
+- [X] Deploy the `deeponto.lama` and `deeponto.onto.verbalisation` modules (from **v0.6.x**). 
+- [X] Rebuild the whole package based on the OWLAPI; remove owlready2 from the essential dependencies (from **v0.5.x**). 
 
-- **[2023 Jan - Feb]** Release $\textsf{DeepOnto}$ **v0.5.x**
-    - [X] Shift to the `src/` layout and fix PyPI issues.
-    - [X] Add `deeponto.onto.verbalisation` for ontology concept verbalisation.
-    - [X] Rebuild the whole package based on the OWLAPI; remove owlready2 from the essential dependencies.
-
+The complete [changelog](DeepOnto/changelog) is available.
 
 ## About
 
@@ -57,6 +53,7 @@ for various ontology engineering purposes.
 - **Documentation**: *<https://krr-oxford.github.io/DeepOnto/>*.
 - **Github Repository**: *<https://github.com/KRR-Oxford/DeepOnto>*. 
 - **PyPI**: *<https://pypi.org/project/deeponto/>*. 
+
 
 ## Installation
 
