@@ -34,7 +34,7 @@ init_jvm(memory)
 from java.io import File  # type: ignore
 from java.util import Collections  # type: ignore
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
-from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLNamedIndividual, OWLAxiom, AddAxiom  # type: ignore
+from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLNamedIndividual, OWLAxiom, AddAxiom, AxiomType  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory  # type: ignore
 from org.semanticweb.owlapi.util import OWLObjectDuplicator, OWLEntityRemover  # type: ignore
 from org.semanticweb.owlapi.search import EntitySearcher  # type: ignore
@@ -227,6 +227,21 @@ class Ontology:
             return set(EntitySearcher.getSubProperties(owl_object, self.owl_onto))
         else:
             raise ValueError(f"Unsupported entity type {entity_type}.")
+        
+    def get_complex_classes_in_gcis(self):
+        """Get all the complex classes that occur in at least one of the asserted GCIs.
+        
+        NOTE: This may not include the complex classes in the equivalence axioms.
+        """
+        complex_classes = []
+        for gci in list(self.owl_onto.getAxioms(AxiomType.SUBCLASS_OF)):
+            super_class = gci.getSuperClass()
+            sub_class = gci.getSubClass()
+            if not OntologyReasoner.has_iri(super_class):
+                complex_classes.append(super_class)
+            if not OntologyReasoner.has_iri(sub_class):
+                complex_classes.append(sub_class)
+        return set(complex_classes)
 
     def get_owl_object_annotations(
         self,

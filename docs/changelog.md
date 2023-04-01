@@ -16,6 +16,7 @@ Security in case of vulnerabilities. -->
 - [ ] **Add** the `owl_complex_classes` attribute for `deeponto.onto.Ontology`.
 - [ ] **Add** the [detailed instructions](../verbaliser) for how to use the ontology verbaliser. 
 
+- [X] **Add** the method of getting all complex classes that occur in at least one of the GCIs at `deeponto.onto.Ontology`.
 - [X] **Add** the methods of getting *asserted* parent and children for a given entity at `deeponto.onto.Ontology`.
 - [X] **Rename** the methods of getting inferred super-entities and sub-entities at `deeponto.onto.OntologyReasoner` from `super_entities_of` and `sub_entities_of` to `get_inferred_super_entities` and `get_inferred_sub_entities`, respectively.
 - [X] **Add** `check_deprecated` method into the `deeponto.onto.Ontology` class.
