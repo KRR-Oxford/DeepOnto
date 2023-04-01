@@ -243,6 +243,20 @@ class Ontology:
                 complex_classes.append(sub_class)
         return set(complex_classes)
 
+    def get_subsumptions_in_gcis(self, sub_class_named=True, super_class_named=True):
+        """Get all the subsumptions that occur in at least one of the asserted GCIs.
+
+        NOTE: This may not include the complex classes in the equivalence axioms.
+        """
+        subsumptions = []
+        for gci in list(self.owl_onto.getAxioms(AxiomType.SUBCLASS_OF)):
+            super_class = gci.getSuperClass()
+            sub_class = gci.getSubClass()
+            if sub_class_named == OntologyReasoner.has_iri(sub_class) and super_class_named == OntologyReasoner.has_iri(super_class):
+                subsumptions.append([sub_class, super_class])
+        return subsumptions
+
+
     def get_owl_object_annotations(
         self,
         owl_object: Union[OWLObject, str],
