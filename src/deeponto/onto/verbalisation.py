@@ -41,14 +41,6 @@ ABBREVIATION_DICT = {
 RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
 
 
-# download en_core_web_sm for object property 
-try:
-    spacy.load("en_core_web_sm")
-except:
-    print("Download `en_core_web_sm` for pos tagger.")
-    os.system("python -m spacy download en_core_web_sm")
-
-
 class OntologyVerbaliser:
     r"""A recursive natural language verbaliser for the OWL logical expressions, e.g., [`OWLAxiom`](http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html)
     and [`OWLClassExpression`](https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/model/OWLClassExpression.html).
@@ -75,6 +67,14 @@ class OntologyVerbaliser:
     def __init__(self, onto: Ontology, apply_lowercasing_to_vocab: bool = False):
         self.onto = onto
         self.parser = OntologySyntaxParser()
+        
+        # download en_core_web_sm for object property 
+        try:
+            spacy.load("en_core_web_sm")
+        except:
+            print("Download `en_core_web_sm` for pos tagger.")
+            os.system("python -m spacy download en_core_web_sm")
+            
         self.nlp = spacy.load("en_core_web_sm")
 
         # build the default vocabulary for entities
