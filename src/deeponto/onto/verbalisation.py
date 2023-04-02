@@ -57,6 +57,14 @@ class OntologyVerbaliser:
     | $C_1 \sqcap ... \sqcap C_n$ | if $C_i = \exists/\forall r.D_i$ and $C_j = \exists/\forall r.D_j$, they will be re-written into $\exists/\forall r.(D_i \sqcap D_j)$ before verbalisation; suppose after re-writing the new expression is $C_1 \sqcap ... \sqcap C_{n'}$ <p> **(a)** if **all** $C_i$s (for $i = 1, ..., n'$) are restrictions, in the form of $\exists/\forall r_i.D_i$: <br /> *"something that $\mathcal{V}(r_1)$ some/only $V(D_1)$ and ... and $\mathcal{V}(r_{n'})$ some/only $V(D_{n'})$"* <br /> **(b)** if **some** $C_i$s (for $i = m+1, ..., n'$) are restrictions, in the form of $\exists/\forall r_i.D_i$: <br /> *"$\mathcal{V}(C_{1})$ and ... and $\mathcal{V}(C_{m})$ that $\mathcal{V}(r_{m+1})$ some/only $V(D_{m+1})$ and ... and $\mathcal{V}(r_{n'})$ some/only $V(D_{n'})$"* <br /> **(c)** if **no** $C_i$ is a restriction: <br /> *"$\mathcal{V}(C_{1})$ and ... and $\mathcal{V}(C_{n'})$"* |
     | $C_1 \sqcup ... \sqcup C_n$ | similar to verbalising $C_1 \sqcap ... \sqcap C_n$ except that *"and"* is replaced by *"or"* and case **(b)** uses the same verbalisation as case **(c)**                             |
 
+
+    !!! warning
+
+        This verbaliser utilises spacy for POS tagging used in the auto-correction of property names.
+        Automatic download of the rule-based library `en_core_web_sm` is available at the init function. However, if you
+        somehow cannot find it, please manually download it using `python -m spacy download en_core_web_sm`.
+    
+
     Attributes:
         onto (Ontology): An ontology whose entities are to be verbalised.
         parser (OntologySyntaxParser): A syntax parser for the string representation of an `OWLObject`.
