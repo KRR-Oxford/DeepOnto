@@ -34,7 +34,7 @@ init_jvm(memory)
 from java.io import File  # type: ignore
 from java.util import Collections  # type: ignore
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
-from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLNamedIndividual, OWLAxiom, AddAxiom, AxiomType  # type: ignore
+from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLNamedIndividual, OWLAxiom, AddAxiom, RemoveAxiom, AxiomType  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory  # type: ignore
 from org.semanticweb.owlapi.util import OWLObjectDuplicator, OWLEntityRemover  # type: ignore
 from org.semanticweb.owlapi.search import EntitySearcher  # type: ignore
@@ -486,6 +486,19 @@ class Ontology:
         change = AddAxiom(self.owl_onto, owl_axiom)
         result = self.owl_onto.applyChange(change)
         print(f"[{str(result)}] Adding the axiom {str(owl_axiom)} into the ontology.")
+        if return_undo:
+            return change.reverseChange()
+        
+    def remove_axiom(self, owl_axiom: OWLAxiom, return_undo: bool = True):
+        """Remove an axiom from the current ontology.
+
+        Args:
+            owl_axiom (OWLAxiom): An axiom to be removed.
+            return_undo (bool, optional): Returning the undo operation or not. Defaults to True.
+        """
+        change = RemoveAxiom(self.owl_onto, owl_axiom)
+        result = self.owl_onto.applyChange(change)
+        print(f"[{str(result)}] Removing the axiom {str(owl_axiom)} from the ontology.")
         if return_undo:
             return change.reverseChange()
 
