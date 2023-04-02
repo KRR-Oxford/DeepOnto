@@ -729,11 +729,16 @@ Security in case of vulnerabilities. -->
 <p><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Add</strong> the <a href="../verbaliser">detailed instructions</a> for how to use the ontology verbaliser. </p>
 </li>
 <li class="task-list-item">
-<p><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method of getting all complex classes that occur in at least one of the GCIs at <code>deeponto.onto.Ontology</code>.</p>
+<p><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Move</strong> the spacy <code>en_core_web_sm</code> download into the initialisation of <code>OntologyVerbaliser</code>.</p>
 </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method of checking if an entity is named at <code>deeponto.onto.Ontology</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> the top and bottom data property iris (from "https:" to "http:") at <code>deeponto.onto.Ontology</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method of getting subsumption axioms subject to different entity types at <code>deeponto.onto.Ontology</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the method of getting equivalence axioms by adding support to different entity types at <code>deeponto.onto.Ontology</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method of getting all complex classes that occur in ontology (subsumption and/or equivalence) axioms at <code>deeponto.onto.Ontology</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the methods of getting <em>asserted</em> parent and children for a given entity at <code>deeponto.onto.Ontology</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Rename</strong> the methods of getting inferred super-entities and sub-entities at <code>deeponto.onto.OntologyReasoner</code> from <code>super_entities_of</code> and <code>sub_entities_of</code> to <code>get_inferred_super_entities</code> and <code>get_inferred_sub_entities</code>, respectively.</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>check_deprecated</code> method into the <code>deeponto.onto.Ontology</code> class.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method of checking class deprecation (annotated) at <code>deeponto.onto.Ontology</code></li>
 </ul>
 <h2 id="most-recent">Most Recent</h2>
 <p><strong>v0.6.0 (2023 Mar)</strong></p>
@@ -760,7 +765,7 @@ Security in case of vulnerabilities. -->
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 1, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 2, 2023</span>
       
         <br>
         Created:
