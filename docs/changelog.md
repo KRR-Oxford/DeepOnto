@@ -25,7 +25,7 @@ Security in case of vulnerabilities. -->
 ### Changed
 
 - [X] **Move** the spacy `en_core_web_sm` download into the initialisation of `OntologyVerbaliser`.
-- [X] **Change** the method of getting equivalence axioms by adding support to different entity types at `deeponto.onto.Ont
+- [X] **Change** the method of getting equivalence axioms by adding support to different entity types at `deeponto.onto.Ontology`.
 - [X] **Rename** the methods of getting inferred super-entities and sub-entities at `deeponto.onto.OntologyReasoner`:
     -  `super_entities_of` $\rightarrow$ `get_inferred_super_entities` 
     -  `sub_entities_of` $\rightarrow$ `get_inferred_sub_entities`
