@@ -10,21 +10,30 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased
 
+### Added
+
 - [ ] **Add** the ontology normaliser at `deeponto.onto.normaliser`.
 - [ ] **Add** the BERTSubs module at `deeponto.onto.subs`.
 - [ ] **Add** the `subclass_dict` method for `deeponto.onto.Ontology`.
 - [ ] **Add** the `owl_complex_classes` attribute for `deeponto.onto.Ontology`.
 - [ ] **Add** the [detailed instructions](../verbaliser) for how to use the ontology verbaliser. 
+- [X] **Add** the method `check_named_entity` for checking if an entity is named at `deeponto.onto.Ontology`.
+- [X] **Add** the method `get_subsumption_axioms` for getting subsumption axioms subject to different entity types at `deeponto.onto.Ontology`.
+- [X] **Add** the method `get_asserted_complex_classes` for getting all complex classes that occur in ontology (subsumption and/or equivalence) axioms at `deeponto.onto.Ontology`.
+- [X] **Add** the methods `get_asserted_parents` and `get_asserted_children` for getting asserted parent and children for a given entity at `deeponto.onto.Ontology`.
+- [X] **Add** the method `check_deprecation` for checking an owl object's deprecation (annotated) at `deeponto.onto.Ontology`.
+
+### Changed
 
 - [X] **Move** the spacy `en_core_web_sm` download into the initialisation of `OntologyVerbaliser`.
-- [X] **Add** the method of checking if an entity is named at `deeponto.onto.Ontology`.
+- [X] **Change** the method of getting equivalence axioms by adding support to different entity types at `deeponto.onto.Ont
+- [X] **Rename** the methods of getting inferred super-entities and sub-entities at `deeponto.onto.OntologyReasoner`:
+    -  `super_entities_of` $\rightarrow$ `get_inferred_super_entities` 
+    -  `sub_entities_of` $\rightarrow$ `get_inferred_sub_entities`
+
+### Fixed
+
 - [X] **Fix** the top and bottom data property iris (from "https:" to "http:") at `deeponto.onto.Ontology`.
-- [X] **Add** the method of getting subsumption axioms subject to different entity types at `deeponto.onto.Ontology`.
-- [X] **Change** the method of getting equivalence axioms by adding support to different entity types at `deeponto.onto.Ontology`.
-- [X] **Add** the method of getting all complex classes that occur in ontology (subsumption and/or equivalence) axioms at `deeponto.onto.Ontology`.
-- [X] **Add** the methods of getting *asserted* parent and children for a given entity at `deeponto.onto.Ontology`.
-- [X] **Rename** the methods of getting inferred super-entities and sub-entities at `deeponto.onto.OntologyReasoner` from `super_entities_of` and `sub_entities_of` to `get_inferred_super_entities` and `get_inferred_sub_entities`, respectively.
-- [X] **Add** the method of checking class deprecation (annotated) at `deeponto.onto.Ontology`
 
 ## Most Recent 
 
