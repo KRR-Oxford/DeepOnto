@@ -188,7 +188,7 @@ class ComplexSubsumptionSampler(SubsumptionSamplerBase):
 
     def __init__(self, onto: Ontology):
         super().__init__(onto)
-        self.anchor_axioms = self.onto.equivalence_axioms
+        self.anchor_axioms = self.onto.get_equivalence_axioms("Classes")
 
     def positive_sampling_from_anchor(self, anchor_axiom: OWLAxiom):
         """Returns all positive subsumption pairs extracted from an anchor equivalence axiom."""

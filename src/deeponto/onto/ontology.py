@@ -44,8 +44,8 @@ OWL_THING = "http://www.w3.org/2002/07/owl#Thing"
 OWL_NOTHING = "http://www.w3.org/2002/07/owl#Nothing"
 OWL_TOP_OBJECT_PROPERTY = "http://www.w3.org/2002/07/owl#topObjectProperty"
 OWL_BOTTOM_OBJECT_PROPERTY = "http://www.w3.org/2002/07/owl#bottomObjectProperty"
-OWL_TOP_DATA_PROPERTY = "https://www.w3.org/2002/07/owl#topDataProperty"
-OWL_BOTTOM_DATA_PROPERTY = "https://www.w3.org/2002/07/owl#bottomDataProperty"
+OWL_TOP_DATA_PROPERTY = "http://www.w3.org/2002/07/owl#topDataProperty"
+OWL_BOTTOM_DATA_PROPERTY = "http://www.w3.org/2002/07/owl#bottomDataProperty"
 RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
 OWL_DEPRECATED = "http://www.w3.org/2002/07/owl#deprecated"
 
@@ -105,6 +105,7 @@ class Ontology:
         self._multi_children_classes = None
         self._sibling_class_groups = None
         self._equiv_axioms = None
+        self._subsumption_axioms = None
 
         # summary
         self.info = {
@@ -196,6 +197,44 @@ class Ontology:
         else:
             raise KeyError(f"Cannot retrieve unknown IRI: {iri}.")
 
+    def get_subsumption_axioms(self, entity_type: str = "Classes"):
+        """Return subsumption axioms (subject to input entity type) asserted in the ontology.
+
+        Args:
+            entity_type (str, optional): The entity type to be considered. Defaults to `"Classes"`.
+                Options are `"Classes"`, `"ObjectProperties"`, `"DataProperties"`, and `"AnnotationProperties"`.
+        Returns:
+            (List[OWLAxiom]): A list of equivalence axioms subject to input entity type.
+        """
+        if entity_type == "Classes":
+            return list(self.owl_onto.getAxioms(AxiomType.SUBCLASS_OF))
+        elif entity_type == "ObjectProperties":
+            return list(self.owl_onto.getAxioms(AxiomType.SUB_OBJECT_PROPERTY))
+        elif entity_type == "DataProperties":
+            return list(self.owl_onto.getAxioms(AxiomType.SUB_DATA_PROPERTY))
+        elif entity_type == "AnnotationProperties":
+            return list(self.owl_onto.getAxioms(AxiomType.SUB_ANNOTATION_PROPERTY_OF))
+        else:
+            raise ValueError(f"Unknown entity type {entity_type}.")
+
+    def get_equivalence_axioms(self, entity_type: str = "Classes"):
+        """Return equivalence axioms (subject to input entity type) asserted in the ontology.
+
+        Args:
+            entity_type (str, optional): The entity type to be considered. Defaults to `"Classes"`.
+                Options are `"Classes"`, `"ObjectProperties"`, and `"DataProperties"`.
+        Returns:
+            (List[OWLAxiom]): A list of equivalence axioms subject to input entity type.
+        """
+        if entity_type == "Classes":
+            return list(self.owl_onto.getAxioms(AxiomType.EQUIVALENT_CLASSES))
+        elif entity_type == "ObjectProperties":
+            return list(self.owl_onto.getAxioms(AxiomType.EQUIVALENT_OBJECT_PROPERTIES))
+        elif entity_type == "DataProperties":
+            return list(self.owl_onto.getAxioms(AxiomType.EQUIVALENT_DATA_PROPERTIES))
+        else:
+            raise ValueError(f"Unknown entity type {entity_type}.")
+
     def get_asserted_parents(self, owl_object: OWLObject):
         r"""Get all the asserted parents of a given owl object.
 
@@ -227,35 +266,38 @@ class Ontology:
             return set(EntitySearcher.getSubProperties(owl_object, self.owl_onto))
         else:
             raise ValueError(f"Unsupported entity type {entity_type}.")
-        
-    def get_complex_classes_in_gcis(self):
-        """Get all the complex classes that occur in at least one of the asserted GCIs.
-        
-        NOTE: This may not include the complex classes in the equivalence axioms.
+
+    def get_asserted_complex_classes(self, gci_only: bool = False):
+        """Get complex classes that occur in at least one of the ontology axioms.
+
+        Args:
+            gci_only (bool): If `True`, consider complex classes that occur in GCIs only; otherwise consider
+                those that occur in equivalence axioms as well.
+        Returns:
+            (Set[OWLClassExpression]): A set of complex classes.
         """
         complex_classes = []
-        for gci in list(self.owl_onto.getAxioms(AxiomType.SUBCLASS_OF)):
+
+        for gci in self.get_subsumption_axioms("Classes"):
             super_class = gci.getSuperClass()
             sub_class = gci.getSubClass()
             if not OntologyReasoner.has_iri(super_class):
                 complex_classes.append(super_class)
             if not OntologyReasoner.has_iri(sub_class):
                 complex_classes.append(sub_class)
+
+        # also considering equivalence axioms
+        if not gci_only:
+            for eq in self.get_equivalence_axioms("Classes"):
+                gci = list(eq.asOWLSubClassOfAxioms())[0]
+                super_class = gci.getSuperClass()
+                sub_class = gci.getSubClass()
+                if not OntologyReasoner.has_iri(super_class):
+                    complex_classes.append(super_class)
+                if not OntologyReasoner.has_iri(sub_class):
+                    complex_classes.append(sub_class)
+
         return set(complex_classes)
-
-    def get_subsumptions_in_gcis(self, sub_class_named=True, super_class_named=True):
-        """Get all the subsumptions that occur in at least one of the asserted GCIs.
-
-        NOTE: This may not include the complex classes in the equivalence axioms.
-        """
-        subsumptions = []
-        for gci in list(self.owl_onto.getAxioms(AxiomType.SUBCLASS_OF)):
-            super_class = gci.getSuperClass()
-            sub_class = gci.getSubClass()
-            if sub_class_named == OntologyReasoner.has_iri(sub_class) and super_class_named == OntologyReasoner.has_iri(super_class):
-                subsumptions.append([sub_class, super_class])
-        return subsumptions
-
 
     def get_owl_object_annotations(
         self,
@@ -321,6 +363,19 @@ class Ontology:
 
         return set(annotations)
 
+    def check_named_entity(self, owl_object: OWLObject):
+        r"""Check if the input entity is a named atomic entity. That is,
+        it is not a complex entity, $\top$, or $\bot$.
+        """
+        entity_type = self.get_entity_type(owl_object)
+        top = TOP_BOTTOMS[entity_type].TOP
+        bottom = TOP_BOTTOMS[entity_type].BOTTOM
+        if OntologyReasoner.has_iri(owl_object):
+            iri = str(owl_object.getIRI())
+            # check if the entity is TOP or BOTTOM
+            return iri != top and iri != bottom
+        return False
+
     def check_deprecated(self, owl_object: OWLObject):
         r"""Check if the given OWL object is marked as deprecated according to $\texttt{owl:deprecated}$.
 
@@ -362,16 +417,6 @@ class Ontology:
                         self._sibling_class_groups.append(children_iris)
 
         return self._sibling_class_groups
-
-    @property
-    def equivalence_axioms(self):
-        """Return all the equivalence class axioms asserted in this `OWLOntology`."""
-        if not self._equiv_axioms:
-            self._equiv_axioms = []
-            for cl in self.owl_classes.values():
-                self._equiv_axioms += self.owl_onto.getEquivalentClassesAxioms(cl)
-            self._equiv_axioms = list(set(self._equiv_axioms))
-        return self._equiv_axioms
 
     def save_onto(self, save_path: str):
         """Save the ontology file to the given path."""
