@@ -26,7 +26,7 @@ parser.add_argument('--restriction', type=bool, default=True)
 parser.add_argument('--train_file', type=str, default='./tmp/train_subsumptions_r.csv')
 parser.add_argument('--valid_file', type=str, default='./tmp/valid_subsumptions_r.csv')
 parser.add_argument('--test_file', type=str, default='./tmp/test_subsumptions_r.csv')
-parser.add_argument('--evaluate_onto_file', type=str, default='./tmp/foodon-merged.0.4.8.owl')
+parser.add_argument('--evaluate_onto_file', type=str, default='./tmp/foodon.owl')
 FLAGS, unparsed = parser.parse_known_args()
 
 onto = Ontology(owl_path=FLAGS.onto_file)
