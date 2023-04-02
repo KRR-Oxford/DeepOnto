@@ -54,4 +54,4 @@ Security in case of vulnerabilities. -->
 
 ## Deprecated (before 2023)
 
-The deprecated code (before v0.5.0) is available at the [legacy branch](https://github.com/KRR-Oxford/DeepOnto/tree/legacy).
+The code before v0.5.0 is no longer available.
