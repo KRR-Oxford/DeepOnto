@@ -411,6 +411,26 @@
   
 </li>
         
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v061-2023-april" class="md-nav__link">
+    v0.6.1 (2023 April)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.6.1 (2023 April)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_1" class="md-nav__link">
+    Added
+  </a>
+  
+</li>
+        
           <li class="md-nav__item">
   <a href="#changed" class="md-nav__link">
     Changed
@@ -431,15 +451,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#most-recent" class="md-nav__link">
-    Most Recent
+  <a href="#v060-2023-mar" class="md-nav__link">
+    v0.6.0 (2023 Mar)
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#previous-versions" class="md-nav__link">
-    Previous Versions
+  <a href="#v05x-2023-jan-feb" class="md-nav__link">
+    v0.5.x (2023 Jan - Feb)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deprecated-before-2023" class="md-nav__link">
+    Deprecated (before 2023)
   </a>
   
 </li>
@@ -752,6 +779,10 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Add</strong> the ontology normaliser at <code>deeponto.onto.normaliser</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Add</strong> the BERTSubs module at <code>deeponto.subs</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Add</strong> the <a href="../verbaliser">detailed instructions</a> for how to use the ontology verbaliser. </li>
+</ul>
+<h2 id="v061-2023-april">v0.6.1 (2023 April)</h2>
+<h3 id="added_1">Added</h3>
+<ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method <code>remove_axiom</code> for removing an axiom from the ontology at <code>deeponto.onto.Ontology</code> (note that the counterpart <code>add_axiom</code> has already been available).</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method <code>check_named_entity</code> for checking if an entity is named at <code>deeponto.onto.Ontology</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method <code>get_subsumption_axioms</code> for getting subsumption axioms subject to different entity types at <code>deeponto.onto.Ontology</code>.</li>
@@ -773,14 +804,12 @@ Security in case of vulnerabilities. -->
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> the top and bottom data property iris (from "https:" to "http:") at <code>deeponto.onto.Ontology</code>.</li>
 </ul>
-<h2 id="most-recent">Most Recent</h2>
-<p><strong>v0.6.0 (2023 Mar)</strong></p>
+<h2 id="v060-2023-mar">v0.6.0 (2023 Mar)</h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the OntoLAMA module at <code>deeponto.lama</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the verb auto-correction and more precise documentation for <code>deeponto.onto.verbalisation</code>.</li>
 </ul>
-<h2 id="previous-versions">Previous Versions</h2>
-<p><strong>v0.5.x (2023 Jan - Feb)</strong></p>
+<h2 id="v05x-2023-jan-feb">v0.5.x (2023 Jan - Feb)</h2>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the preliminary ontology verbalisation module at <code>deeponto.onto.verbalisation</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> PyPI issues based on the new code layout.</li>
@@ -788,10 +817,8 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Rebuild</strong> the whole package based on the OWLAPI.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Remove</strong> owlready2 from the essential dependencies.</li>
 </ul>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<h2 id="deprecated-before-2023">Deprecated (before 2023)</h2>
 <p>The deprecated code (before v0.5.0) is available at the <a href="https://github.com/KRR-Oxford/DeepOnto/tree/legacy">legacy branch</a>.</p>
-</div>
 
   <hr>
 <div class="md-source-file">
