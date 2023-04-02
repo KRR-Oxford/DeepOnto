@@ -13,7 +13,7 @@ Security in case of vulnerabilities. -->
 ### Added
 
 - [ ] **Add** the ontology normaliser at `deeponto.onto.normaliser`.
-- [ ] **Add** the BERTSubs module at `deeponto.onto.subs`.
+- [ ] **Add** the BERTSubs module at `deeponto.subs`.
 - [ ] **Add** the [detailed instructions](../verbaliser) for how to use the ontology verbaliser. 
 - [X] **Add** the method `remove_axiom` for removing an axiom from the ontology at `deeponto.onto.Ontology` (note that the counterpart `add_axiom` has already been available).
 - [X] **Add** the method `check_named_entity` for checking if an entity is named at `deeponto.onto.Ontology`.
