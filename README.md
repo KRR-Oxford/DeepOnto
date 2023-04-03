@@ -40,6 +40,7 @@ limitations under the License.
 **News** :newspaper:
 
 - [ ] Working on integrating BERTSubs into DeepOnto.
+- [X] Update the base class `deeponto.onto.Ontology` with more OWLAPI features (**v0.6.1**).
 - [X] Deploy the `deeponto.lama` and `deeponto.onto.verbalisation` modules (**v0.6.0**). 
 - [X] Rebuild the whole package based on the OWLAPI; remove owlready2 from the essential dependencies (from **v0.5.x**). 
 
