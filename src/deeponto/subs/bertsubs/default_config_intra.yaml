@@ -1,15 +1,32 @@
+# Copyright 2023 Jiaoyan Chen. All rights reserved.
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# @paper(
+#     "Contextual Semantic Embeddings for Ontology Subsumption Prediction (World Wide Web Journal)",
+# )
 model: bertsubs
 
-onto_file: ../ontologies/go.origin.07012022.owl,
+onto_file: foodon.owl
 label_property:
   - http://www.w3.org/2000/01/rdf-schema#label
   - http://www.geneontology.org/formats/oboInOwl#hasExactSynonym
 use_one_label: true # true: select only one label
 subsumption_type: named_class # named_class or restriction
 
-test_subsumption_file: GO/test_subsumptions_r.csv
-valid_subsumption_file: GO/valid_subsumptions_r.csv
-train_subsumption_file: GO/train_subsumptions_r.csv
+test_subsumption_file: test_subsumptions_r.csv
+valid_subsumption_file: valid_subsumptions_r.csv
+train_subsumption_file: train_subsumptions_r.csv
 
 prompt:
   prompt_type: isolated # "isolated", "traversal", "path"
@@ -23,7 +40,7 @@ fine_tune:
   do_fine_tune: true
   pretrained: bert-base-uncased
   tokenizer": bert-base-uncased
-  output_dir: fine-tuned-bert-go
+  output_dir: fine-tuned-bert
   warm_up_ratio: 0.0
   num_epochs: 5.0
   early_stop: false
