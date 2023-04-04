@@ -4,7 +4,6 @@ Code inspired by: https://huggingface.co/transformers/training.html
 """
 from typing import List
 
-import pandas as pd
 from datasets import Dataset
 from sklearn.metrics import accuracy_score
 from transformers import (
@@ -16,7 +15,7 @@ from transformers import (
 )
 
 
-class BERTTrainer:
+class BERTSubsumptionClassifierTrainer:
     def __init__(
             self,
             bert_checkpoint: str,
@@ -47,19 +46,19 @@ class BERTTrainer:
         self.early_stop_patience = early_stop_patience
 
     def add_special_tokens(self, tokens: List):
-        """Add additional special tokens to the tokenizer.
+        r"""Add additional special tokens to the tokenizer.
         Args:
-            :param tokens: additional tokens to add, e.g., ["<SUB>","<EOA>","<EOC>"]
+            param tokens: additional tokens to add, e.g., ["<SUB>","<EOA>","<EOC>"]
         """
         special_tokens_dict = {'additional_special_tokens': tokens}
         self.tokenizer.add_special_tokens(special_tokens_dict)
         self.model.resize_token_embeddings(len(self.tokenizer))
 
     def train(self, train_args: TrainingArguments, do_fine_tune: bool = True):
-        """initiate huggingface Trainer with input arguments and start training
+        r"""initiate huggingface Trainer with input arguments and start training
         Args:
-            :param train_args: huggingface trainer's arguments
-            :param do_fine_tune: when it is set to false, we just load some (fine-tuned) checkpoint without further training
+            param train_args: huggingface trainer's arguments
+            param do_fine_tune: when it is set to false, we just load some (fine-tuned) checkpoint without further training
         """
         self.trainer = Trainer(
             model=self.model,
@@ -83,9 +82,21 @@ class BERTTrainer:
         acc = accuracy_score(labels, preds)
         return {"accuracy": acc}
 
-    def load_dataset(self, data: List, batch_size: int = 1024, max_length: int = 512, count_token_size: bool = False) -> Dataset:
-        data_df = pd.DataFrame(data, columns=["sent1", "sent2", "labels"])
-        dataset = Dataset.from_pandas(data_df)
+    def load_dataset(self, data: List, max_length: int = 512, count_token_size: bool = False) -> Dataset:
+        r"""load dataset from list
+                Args:
+                    param data: samples in List
+                    max_length: input sentence maximum length
+                    count_token_size: whether count the toke sizes of the data
+        """
+        # data_df = pd.DataFrame(data, columns=["sent1", "sent2", "labels"])
+        # dataset = Dataset.from_pandas(data_df)
+
+        def iterate():
+            for sample in data:
+                yield {"sent1": sample[0], "sent2": sample[1], "labels": sample[2]}
+        dataset = Dataset.from_generator(iterate)
+
         if count_token_size:
             tokens = self.tokenizer(dataset["sent1"], dataset["sent2"])
             l_sum, num_128, num_256, num_512, l_max = 0, 0, 0, 0, 0
@@ -110,7 +121,6 @@ class BERTTrainer:
                 examples["sent1"], examples["sent2"], max_length=max_length, truncation=True
             ),
             batched=True,
-            batch_size=batch_size,
-            num_proc=10,
+            num_proc=1
         )
         return dataset

@@ -22,7 +22,7 @@ label_property:
   - http://www.w3.org/2000/01/rdf-schema#label
   - http://www.geneontology.org/formats/oboInOwl#hasExactSynonym
 use_one_label: true # true: select only one label
-subsumption_type: named_class # named_class or restriction
+subsumption_type: restriction # named_class or restriction
 
 test_subsumption_file: test_subsumptions_r.csv
 valid_subsumption_file: valid_subsumptions_r.csv
