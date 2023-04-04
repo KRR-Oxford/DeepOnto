@@ -32,7 +32,7 @@ prompt:
   prompt_type: isolated # "isolated", "traversal", "path"
   prompt_hop: 1
   prompt_max_subsumptions: 4
-  use_sub_special_token: false # true: <SUB>, false: <SEP>
+  use_sub_special_token: false # true: <SUB>, false: <SEP> (only works for prompt_type of "path")
   context_dup: 4
   max_length: 128
 

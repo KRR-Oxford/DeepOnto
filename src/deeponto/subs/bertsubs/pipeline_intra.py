@@ -25,7 +25,7 @@ from transformers import TrainingArguments
 from yacs.config import CfgNode
 
 from deeponto.onto import Ontology
-from .bert_classifier import BERTTrainer
+from .bert_classifier import BERTSubsumptionClassifierTrainer
 from .text_semantics import SubsumptionSample
 
 DEFAULT_CONFIG_FILE = os.path.join(os.path.dirname(__file__), "default_config_intra.yaml")
@@ -58,7 +58,8 @@ class BERTSubsIntraPipeline:
 
         start_time = datetime.datetime.now()
         torch.cuda.empty_cache()
-        bert_trainer = BERTTrainer(config.fine_tune.pretrained, train_data=tr, val_data=va, max_length=config.prompt.max_length, early_stop=config.fine_tune.early_stop)
+        bert_trainer = BERTSubsumptionClassifierTrainer(config.fine_tune.pretrained, train_data=tr, val_data=va,
+                                                        max_length=config.prompt.max_length, early_stop=config.fine_tune.early_stop)
 
         epoch_steps = len(bert_trainer.tra) // config.fine_tune.batch_size  # total steps of an epoch
         logging_steps = int(epoch_steps * 0.02) if int(epoch_steps * 0.02) > 0 else 5
@@ -82,7 +83,7 @@ class BERTSubsIntraPipeline:
             metric_for_best_model="accuracy",
             greater_is_better=True
         )
-        if config.fine_tune.do_fine_tune and config.prompt.use_sub_special_token:
+        if config.fine_tune.do_fine_tune and (config.prompt.prompt_type == 'traversal' or (config.prompt.prompt_type == 'path' and config.prompt.use_sub_special_token)):
             bert_trainer.add_special_tokens(['<SUB>'])
 
         bert_trainer.train(train_args=training_args, do_fine_tune=config.fine_tune.do_fine_tune)
