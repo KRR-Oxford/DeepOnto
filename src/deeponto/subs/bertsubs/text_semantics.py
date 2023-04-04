@@ -26,6 +26,18 @@ from yacs.config import CfgNode
 
 
 class SubsumptionSample:
+    r"""Class for sampling functions for training the subsumption prediction model.
+
+        Attributes:
+            onto (Ontology): Target ontology
+            config (CfgNode): Configuration
+            named_classes (Set[String]): classes (IRIs) which are not deprecated
+            iri_label (Dict[String:List]): key -- class iri from named_classes, value -- a list of labels
+            restrictionObjects (Set[OWLClassExpression]): basic existential restrictions that appear in the ontology
+            restrictions (set[String]): strings of basic existential restrictions corresponding to restrictionObjects
+            restriction_label (Dict[String:List]): key -- existential restriction string, value -- a list of existential restriction labels
+            verb (OntologyVerbaliser): object for verbalisation
+    """
 
     def __init__(self, onto: Ontology, config: CfgNode):
         self.onto = onto
@@ -45,14 +57,14 @@ class SubsumptionSample:
         self.restrictionObjects = set()
         self.restrictions = set()
         self.restriction_label = dict()
-        verb = OntologyVerbaliser(onto=onto)
+        self.verb = OntologyVerbaliser(onto=onto)
         for complexC in onto.get_asserted_complex_classes():
             s = str(complexC)
             self.restriction_label[s] = []
             if self.is_basic_existential_restriction(complex_class_str=s):
                 self.restrictionObjects.add(complexC)
                 self.restrictions.add(s)
-                self.restriction_label[s].append(verb.verbalise_class_expression(complexC).verbal)
+                self.restriction_label[s].append(self.verb.verbalise_class_expression(complexC).verbal)
 
     @staticmethod
     def is_basic_existential_restriction(complex_class_str):
@@ -71,9 +83,16 @@ class SubsumptionSample:
                 named_classes.add(iri)
         return named_classes
 
-    # Generate negative subsumptions for training subsumptions
-    # Generate samples
     def generate_samples(self, subsumptions, duplicate=True):
+        r"""Generate text samples from subsumptions
+
+        Args:
+            subsumptions (List[List]): a list of subsumptions, each of which of is a two-component list (subclass iri, and superclass iri/str)
+            duplicate (bool): True -- duplicate the positive and negative samples, False -- do not duplicate
+
+        return:
+            all_sample (List[List]): a list of samples, each of which is a tree-complement list (subclass label, superclass label, classification label (0 or 1))
+        """
         if duplicate:
             pos_dup, neg_dup = self.config.fine_tune.train_pos_dup, self.config.fine_tune.train_neg_dup
         else:
@@ -82,7 +101,7 @@ class SubsumptionSample:
         for subs in subsumptions:
             c1 = subs[0]
             for _ in range(neg_dup):
-                neg_c = self.get_negative_sample(subclass_str=c1, subsumption_type=self.config.subsumption_type)
+                neg_c = self.get_negative_sample(subclass_iri=c1, subsumption_type=self.config.subsumption_type)
                 if neg_c is not None:
                     neg_subsumptions.append([c1, neg_c])
         pos_samples = self.subsumptions_to_samples(subsumptions=subsumptions, sample_label=1)
@@ -106,14 +125,10 @@ class SubsumptionSample:
             if self.config.subsumption_type == 'named_class':
                 supstrs = self.iri_label[supcls] if supcls in self.iri_label and len(self.iri_label[supcls]) else ['']
             else:
-                '''
-                    Warning: some existential restrictions which only appear in the validation or testing file, but not in the ontology for training, will have no generated labels
-                '''
                 if supcls in self.restriction_label and len(self.restriction_label[supcls]) > 0:
                     supstrs = self.restriction_label[supcls]
                 else:
-                    warnings.warn('Warning: %s has no descriptions' % supcls)
-                    supstrs = ['']
+                    supstrs = [self.verb.verbalise_class_expression(supcls).verbal]
 
             if self.config.use_one_label:
                 substrs, supstrs = substrs[0:1], supstrs[0:1]
@@ -220,13 +235,14 @@ class SubsumptionSample:
 
         return local_samples
 
-    '''
-        Given a named subclass, get a negative class for a negative subsumption
-        The current implementation does not consider masked subsumptions
-    '''
 
-    def get_negative_sample(self, subclass_str, subsumption_type='named_class'):
-        subclass = self.onto.get_owl_object_from_iri(iri=subclass_str)
+    def get_negative_sample(self, subclass_iri, subsumption_type='named_class'):
+        r"""Given a named subclass, get a negative class for a negative subsumption
+        Args:
+            subclass_iri (String): subclass iri
+            subsumption_type (String): named_class or restriction
+        """
+        subclass = self.onto.get_owl_object_from_iri(iri=subclass_iri)
         if subsumption_type == 'named_class':
             ancestors = set(self.onto.reasoner.get_inferred_sub_entities(subclass, direct=False))
             neg_c = random.sample(self.named_classes - ancestors, 1)[0]
@@ -237,11 +253,12 @@ class SubsumptionSample:
                     return str(neg_c)
             return None
 
-    '''
-        Transform a subsumption to string with <SUB> and classes' labels
-    '''
 
     def named_subsumption_to_str(self, subsum):
+        r"""Transform a named subsumption to string with <SUB> and classes' labels
+        Args:
+            subsum (List): a two-element list (subclass iri, superclass iri)
+        """
         subc, supc = subsum[0], subsum[1]
         subs = self.iri_label[subc][0] if subc in self.iri_label and len(self.iri_label[subc]) > 0 else ''
         sups = self.iri_label[supc][0] if supc in self.iri_label and len(self.iri_label[supc]) > 0 else ''
@@ -414,13 +431,16 @@ class SubsumptionSample:
                 d += 1
         return subsumptions, no_duplicate
 
-    '''
-         Given a class, get its path subsumptions
-         If the class is a subclass of a target axiom, get subsumptions from downside
-         If the class is a supclass of a target axiom, get subsumptions from upside
-     '''
-
     def path_subsumptions(self, cls, hop=1, direction='subclass'):
+        r"""Given a class, get its path subsumptions.
+        If the class is a subclass of a target axiom, get subsumptions from downside.
+        If the class is a supclass of a target axiom, get subsumptions from upside
+
+        Args:
+            cls (String): class iri
+            hop (int): path depth
+            direction (String): subclass (downside path) or supclass (upside path)
+        """
         subsumptions = list()
         seed = cls
         d = 1
