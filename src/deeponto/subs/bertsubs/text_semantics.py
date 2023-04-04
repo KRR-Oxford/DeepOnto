@@ -57,7 +57,7 @@ class SubsumptionSample:
     @staticmethod
     def is_basic_existential_restriction(complex_class_str):
         IRI = "<https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)>"
-        p = f'ObjectSomeValuesFrom\({IRI}\s{IRI}\)'
+        p = fr'ObjectSomeValuesFrom\({IRI}\s{IRI}\)'
         if re.match(p, complex_class_str):
             return True
         else:
