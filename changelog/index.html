@@ -411,6 +411,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    Changed
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -432,7 +439,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed" class="md-nav__link">
+  <a href="#changed_1" class="md-nav__link">
     Changed
   </a>
   
@@ -780,6 +787,10 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Add</strong> the BERTSubs module at <code>deeponto.subs</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Add</strong> the <a href="../verbaliser">detailed instructions</a> for how to use the ontology verbaliser. </li>
 </ul>
+<h3 id="changed">Changed</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the function <code>get_owl_object_annotations</code> by preserving the relative order of annotation retrieval, i.e., create <code>set</code> first and use the <code>.add()</code> function instead of casting the <code>list</code> into <code>set</code> in the end.</li>
+</ul>
 <h2 id="v061-2023-april">v0.6.1 (2023 April)</h2>
 <h3 id="added_1">Added</h3>
 <ul class="task-list">
@@ -790,7 +801,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the methods <code>get_asserted_parents</code> and <code>get_asserted_children</code> for getting asserted parent and children for a given entity at <code>deeponto.onto.Ontology</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method <code>check_deprecation</code> for checking an owl object's deprecation (annotated) at <code>deeponto.onto.Ontology</code>.</li>
 </ul>
-<h3 id="changed">Changed</h3>
+<h3 id="changed_1">Changed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Move</strong> the spacy <code>en_core_web_sm</code> download into the initialisation of <code>OntologyVerbaliser</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the method of getting equivalence axioms by adding support to different entity types at <code>deeponto.onto.Ontology</code>.</li>
@@ -825,7 +836,7 @@ Security in case of vulnerabilities. -->
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 2, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 4, 2023</span>
       
         <br>
         Created:
