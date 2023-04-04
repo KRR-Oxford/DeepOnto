@@ -332,7 +332,7 @@ class Ontology:
             # return an empty list if `annotation_property_iri` does not exist in this OWLOntology`
             annotation_property = self.get_owl_object_from_iri(annotation_property_iri)
 
-        annotations = []
+        annotations = set()
         for annotation in EntitySearcher.getAnnotations(owl_object, self.owl_onto, annotation_property):
 
             annotation = annotation.getValue()
@@ -355,13 +355,13 @@ class Ontology:
             if fit_language:
                 # only get annotations that have a literal value
                 if annotation.isLiteral():
-                    annotations.append(
+                    annotations.add(
                         TextUtils.process_annotation_literal(
                             str(annotation.getLiteral()), apply_lowercasing, normalise_identifiers
                         )
                     )
 
-        return set(annotations)
+        return annotations
 
     def check_named_entity(self, owl_object: OWLObject):
         r"""Check if the input entity is a named atomic entity. That is,

@@ -15,6 +15,10 @@ Security in case of vulnerabilities. -->
 - [ ] **Add** the ontology normaliser at `deeponto.onto.normaliser`.
 - [ ] **Add** the BERTSubs module at `deeponto.subs`.
 - [ ] **Add** the [detailed instructions](../verbaliser) for how to use the ontology verbaliser. 
+
+### Changed
+
+- [X] **Change** the function `get_owl_object_annotations` by preserving the relative order of annotation retrieval, i.e., create `set` first and use the `.add()` function instead of casting the `list` into `set` in the end.
  
 
 ## v0.6.1 (2023 April)
