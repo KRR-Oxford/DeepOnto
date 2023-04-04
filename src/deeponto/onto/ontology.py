@@ -20,6 +20,7 @@ from collections import defaultdict
 from yacs.config import CfgNode
 import warnings
 import itertools
+import jpype
 
 from deeponto.utils import TextUtils, Tokenizer, InvertedIndex, FileUtils
 from deeponto import init_jvm
@@ -27,9 +28,10 @@ from deeponto import init_jvm
 # initialise JVM for python-java interaction
 import click
 
-memory = click.prompt("Please enter the maximum memory located to JVM", type=str, default="8g")
-print()
-init_jvm(memory)
+if not jpype.isJVMStarted():
+    memory = click.prompt("Please enter the maximum memory located to JVM", type=str, default="8g")
+    print()
+    init_jvm(memory)
 
 from java.io import File  # type: ignore
 from java.util import Collections  # type: ignore
