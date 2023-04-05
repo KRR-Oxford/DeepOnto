@@ -21,6 +21,7 @@ import torch
 import math
 import datetime
 import numpy as np
+from typing import List
 from transformers import TrainingArguments
 from yacs.config import CfgNode
 
@@ -32,10 +33,18 @@ DEFAULT_CONFIG_FILE = os.path.join(os.path.dirname(__file__), "default_config_in
 
 
 class BERTSubsIntraPipeline:
+    r"""Class for the pipeline of intra-ontology subsumption prediction of BERTSubs.
+
+            Attributes:
+                onto (Ontology): Target ontology
+                config (CfgNode): Configuration
+                sampler (SubsumptionSample): object for sampling-related functions
+    """
+
     def __init__(self, onto: Ontology, config: CfgNode):
         self.onto = onto
         self.config = config
-        self.sampler = SubsumptionSample(onto=onto, config=config)
+        self.sampler = SubsumptionSame(onto=onto, config=config)
         start_time = datetime.datetime.now()
 
         read_subsumptions = lambda file_name: [line.strip().split(',') for line in open(file_name).readlines()]
@@ -107,7 +116,15 @@ class BERTSubsIntraPipeline:
         print('\n ------------------------- done! ---------------------------\n\n\n')
 
 
-    def evaluate(self, target_subsumptions, test_type='test'):
+    def evaluate(self, target_subsumptions: List[List], test_type: str = 'test'):
+        r"""Test and calculate the metrics according to a given list of subsumptions
+
+        Args:
+            target_subsumptions (List[List]): a list of subsumptions, each of which of is a two-component list (subclass iri, and superclass iri/str)
+            test_type (str): test or valid
+
+        """
+
         MRR_sum, hits1_sum, hits5_sum, hits10_sum = 0, 0, 0, 0
         MRR, Hits1, Hits5, Hits10 = 0, 0, 0, 0
         size_sum, size_n = 0, 0

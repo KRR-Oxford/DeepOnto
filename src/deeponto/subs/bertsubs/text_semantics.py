@@ -20,6 +20,8 @@ import random
 import sys
 import re
 import warnings
+from typing import List
+
 from deeponto.onto import Ontology
 from deeponto.onto import OntologyVerbaliser
 from yacs.config import CfgNode
@@ -31,11 +33,11 @@ class SubsumptionSample:
         Attributes:
             onto (Ontology): Target ontology
             config (CfgNode): Configuration
-            named_classes (Set[String]): classes (IRIs) which are not deprecated
-            iri_label (Dict[String:List]): key -- class iri from named_classes, value -- a list of labels
+            named_classes (Set[str]): classes (IRIs) which are not deprecated
+            iri_label (Dict[str:List]): key -- class iri from named_classes, value -- a list of labels
             restrictionObjects (Set[OWLClassExpression]): basic existential restrictions that appear in the ontology
-            restrictions (set[String]): strings of basic existential restrictions corresponding to restrictionObjects
-            restriction_label (Dict[String:List]): key -- existential restriction string, value -- a list of existential restriction labels
+            restrictions (set[str]): strings of basic existential restrictions corresponding to restrictionObjects
+            restriction_label (Dict[str:List]): key -- existential restriction string, value -- a list of existential restriction labels
             verb (OntologyVerbaliser): object for verbalisation
     """
 
@@ -47,7 +49,8 @@ class SubsumptionSample:
         for iri in self.named_classes:
             self.iri_label[iri] = []
             for p in config.label_property:
-                strings = onto.get_owl_object_annotations(owl_object=onto.get_owl_object_from_iri(iri), annotation_property_iri=p,
+                strings = onto.get_owl_object_annotations(owl_object=onto.get_owl_object_from_iri(iri),
+                                                          annotation_property_iri=p,
                                                           annotation_language_tag=None, apply_lowercasing=False,
                                                           normalise_identifiers=False)
                 for s in strings:
@@ -83,7 +86,7 @@ class SubsumptionSample:
                 named_classes.add(iri)
         return named_classes
 
-    def generate_samples(self, subsumptions, duplicate=True):
+    def generate_samples(self, subsumptions: List[List], duplicate: bool = True):
         r"""Generate text samples from subsumptions
 
         Args:
@@ -188,7 +191,8 @@ class SubsumptionSample:
                             subsum = context_sub[len(context_sub) - i - 1]
                             subc = subsum[0]
                             s1 += '%s %s ' % (
-                                self.iri_label[subc][0] if subc in self.iri_label and len(self.iri_label[subc]) > 0 else '', sep_token)
+                                self.iri_label[subc][0] if subc in self.iri_label and len(
+                                    self.iri_label[subc]) > 0 else '', sep_token)
                         for substr in substrs:
                             s1_set.add(s1 + substr)
                     else:
@@ -209,7 +213,8 @@ class SubsumptionSample:
                             for subsum in context_sup:
                                 supc = subsum[1]
                                 s2 += ' %s %s' % (sep_token,
-                                                  self.iri_label[supc][0] if supc in self.iri_label and len(self.iri_label[supc]) > 0 else '')
+                                                  self.iri_label[supc][0] if supc in self.iri_label and len(
+                                                      self.iri_label[supc]) > 0 else '')
                             for supstr in supstrs:
                                 s2_set.add(supstr + s2)
                         else:
@@ -235,12 +240,11 @@ class SubsumptionSample:
 
         return local_samples
 
-
-    def get_negative_sample(self, subclass_iri, subsumption_type='named_class'):
+    def get_negative_sample(self, subclass_iri: str, subsumption_type: str = 'named_class'):
         r"""Given a named subclass, get a negative class for a negative subsumption
         Args:
-            subclass_iri (String): subclass iri
-            subsumption_type (String): named_class or restriction
+            subclass_iri (str): subclass iri
+            subsumption_type (str): named_class or restriction
         """
         subclass = self.onto.get_owl_object_from_iri(iri=subclass_iri)
         if subsumption_type == 'named_class':
@@ -253,8 +257,7 @@ class SubsumptionSample:
                     return str(neg_c)
             return None
 
-
-    def named_subsumption_to_str(self, subsum):
+    def named_subsumption_to_str(self, subsum: List):
         r"""Transform a named subsumption to string with <SUB> and classes' labels
         Args:
             subsum (List): a two-element list (subclass iri, superclass iri)
@@ -306,7 +309,9 @@ class SubsumptionSample:
                     for i in range(len(context_sub)):
                         subsum = context_sub[len(context_sub) - i - 1]
                         subc = subsum[0]
-                        s1 += '%s %s ' % (self.iri_label[subc][0] if subc in self.iri_label and len(self.iri_label[subc]) > 0 else '', sep_token)
+                        s1 += '%s %s ' % (
+                        self.iri_label[subc][0] if subc in self.iri_label and len(self.iri_label[subc]) > 0 else '',
+                        sep_token)
                     for substr in substrs:
                         s1_set.add(s1 + substr)
                 else:
@@ -374,7 +379,8 @@ class SubsumptionSample:
                         for subsum in context_sup:
                             supc = subsum[1]
                             s2 += ' %s %s' % (sep_token,
-                                              self.iri_label[supc][0] if supc in self.iri_label and len(self.iri_label[supc]) > 0 else '')
+                                              self.iri_label[supc][0] if supc in self.iri_label and len(
+                                                  self.iri_label[supc]) > 0 else '')
                         for supstr in supstrs:
                             s2_set.add(supstr + s2)
                     else:
@@ -401,7 +407,8 @@ class SubsumptionSample:
             new_seeds = list()
             for s in seeds:
                 if direction == 'subclass':
-                    tmp = self.onto.reasoner.get_inferred_sub_entities(self.onto.get_owl_object_from_iri(iri=s), direct=True)
+                    tmp = self.onto.reasoner.get_inferred_sub_entities(self.onto.get_owl_object_from_iri(iri=s),
+                                                                       direct=True)
                     if len(tmp) > 1:
                         no_duplicate = False
                     random.shuffle(tmp)
@@ -411,7 +418,8 @@ class SubsumptionSample:
                             if c not in new_seeds:
                                 new_seeds.append(c)
                 elif direction == 'supclass':
-                    tmp = self.onto.reasoner.get_inferred_super_entities(self.onto.get_owl_object_from_iri(iri=s), direct=True)
+                    tmp = self.onto.reasoner.get_inferred_super_entities(self.onto.get_owl_object_from_iri(iri=s),
+                                                                         direct=True)
                     if len(tmp) > 1:
                         no_duplicate = False
                     random.shuffle(tmp)
@@ -431,15 +439,15 @@ class SubsumptionSample:
                 d += 1
         return subsumptions, no_duplicate
 
-    def path_subsumptions(self, cls, hop=1, direction='subclass'):
+    def path_subsumptions(self, cls: str, hop: int = 1, direction: str = 'subclass'):
         r"""Given a class, get its path subsumptions.
         If the class is a subclass of a target axiom, get subsumptions from downside.
         If the class is a supclass of a target axiom, get subsumptions from upside
 
         Args:
-            cls (String): class iri
+            cls (str): class iri
             hop (int): path depth
-            direction (String): subclass (downside path) or supclass (upside path)
+            direction (str): subclass (downside path) or supclass (upside path)
         """
         subsumptions = list()
         seed = cls
@@ -447,7 +455,8 @@ class SubsumptionSample:
         no_duplicate = True
         while d <= hop:
             if direction == 'subclass':
-                tmp = self.onto.reasoner.get_inferred_sub_entities(self.onto.get_owl_object_from_iri(iri=seed), direct=True)
+                tmp = self.onto.reasoner.get_inferred_sub_entities(self.onto.get_owl_object_from_iri(iri=seed),
+                                                                   direct=True)
                 if len(tmp) > 1:
                     no_duplicate = False
                 end = True
@@ -462,7 +471,8 @@ class SubsumptionSample:
                 if end:
                     break
             elif direction == 'supclass':
-                tmp = self.onto.reasoner.get_inferred_super_entities(self.onto.get_owl_object_from_iri(iri=seed), direct=True)
+                tmp = self.onto.reasoner.get_inferred_super_entities(self.onto.get_owl_object_from_iri(iri=seed),
+                                                                     direct=True)
                 if len(tmp) > 1:
                     no_duplicate = False
                 end = True
