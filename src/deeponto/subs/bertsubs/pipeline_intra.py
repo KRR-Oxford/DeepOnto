@@ -44,7 +44,7 @@ class BERTSubsIntraPipeline:
     def __init__(self, onto: Ontology, config: CfgNode):
         self.onto = onto
         self.config = config
-        self.sampler = SubsumptionSame(onto=onto, config=config)
+        self.sampler = SubsumptionSample(onto=onto, config=config)
         start_time = datetime.datetime.now()
 
         read_subsumptions = lambda file_name: [line.strip().split(',') for line in open(file_name).readlines()]
