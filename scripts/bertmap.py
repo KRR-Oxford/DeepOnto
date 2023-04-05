@@ -15,7 +15,7 @@
 import os
 import sys
 
-main_dir = os.getcwd().split("DeepOnto")[0] + "DeepOnto"
+main_dir = os.getcwd().split("DeepOnto")[0] + "DeepOnto/src"
 sys.path.append(main_dir)
 
 from deeponto.onto import Ontology
