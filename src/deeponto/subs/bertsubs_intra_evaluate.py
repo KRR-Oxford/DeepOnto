@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import argparse
+import random
 
 from yacs.config import CfgNode
 from deeponto.onto import Ontology
@@ -55,6 +56,7 @@ if FLAGS.subsumption_type == 'restriction':
 else:
     restrictions = []
 
+random.shuffle(subsumptions)
 valid_size = int(len(subsumptions) * FLAGS.valid_ratio)
 test_size = int(len(subsumptions) * FLAGS.test_ratio)
 valid_subsumptions = subsumptions[0:valid_size]

@@ -63,6 +63,7 @@ class BERTSubsIntraPipeline:
         # The train/valid subsumptions are not given. They will be extracted from the given ontology:
         if config.train_subsumption_file is None or config.train_subsumption_file == 'None':
             subsumptions0 = self.extract_subsumptions_from_ontology(onto=onto, subsumption_type=config.subsumption_type)
+            random.shuffle(subsumptions0)
             valid_size = int(len(subsumptions0) * config.valid.valid_ratio)
             train_subsumptions0, valid_subsumptions0 = subsumptions0[valid_size:], subsumptions0[0:valid_size]
             train_subsumptions, valid_subsumptions = [], []
