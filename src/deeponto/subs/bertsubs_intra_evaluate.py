@@ -141,6 +141,7 @@ print('\n---- Evaluation data processing done ----\n')
 print('\n---- Evaluation starts ----\n')
 config = CfgNode(FileUtils.load_file(DEFAULT_CONFIG_FILE))
 config.subsumption_type = FLAGS.subsumption_type
+config.prompt.prompt_type = 'traversal'
 config.train_subsumption_file = FLAGS.train_file
 config.valid_subsumption_file = FLAGS.valid_file
 config.test_subsumption_file = FLAGS.test_file

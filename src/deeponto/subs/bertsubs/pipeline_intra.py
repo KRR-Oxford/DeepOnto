@@ -37,7 +37,7 @@ DEFAULT_CONFIG_FILE = os.path.join(os.path.dirname(__file__), "default_config_in
 
 
 class BERTSubsIntraPipeline:
-    r"""Class for the pipeline of intra-ontology subsumption prediction of BERTSubs.
+    r"""Class for the model training and validation pipeline of intra-ontology subsumption of BERTSubs.
 
             Attributes:
                 onto (Ontology): Target ontology
@@ -51,9 +51,17 @@ class BERTSubsIntraPipeline:
         self.sampler = SubsumptionSample(onto=onto, config=config)
         start_time = datetime.datetime.now()
 
+        n = 0
+        for k in self.sampler.named_classes:
+            n += len(self.sampler.iri_label[k])
+        print('%d named classes, %.1f labels per class' % (len(self.sampler.named_classes), n / len(self.sampler.named_classes)))
+
         read_subsumptions = lambda file_name: [line.strip().split(',') for line in open(file_name).readlines()]
-        test_subsumptions = read_subsumptions(config.test_subsumption_file)
-        if config.train_subsumption_file is None:
+        test_subsumptions = None if config.test_subsumption_file is None or config.test_subsumption_file == 'None' \
+            else read_subsumptions(config.test_subsumption_file)
+
+        # The train/valid subsumptions are not given. They will be extracted from the given ontology:
+        if config.train_subsumption_file is None or config.train_subsumption_file == 'None':
             subsumptions0 = self.extract_subsumptions_from_ontology(onto=onto, subsumption_type=config.subsumption_type)
             valid_size = int(len(subsumptions0) * config.valid.valid_ratio)
             train_subsumptions0, valid_subsumptions0 = subsumptions0[valid_size:], subsumptions0[0:valid_size]
@@ -90,20 +98,17 @@ class BERTSubsIntraPipeline:
                     size_sum += len(c2_neg)
                     item = [str(c1.getIRI()), str(c2)] + [str(r) for r in c2_neg]
                     valid_subsumptions.append(item)
-                    print('valid candidate negative avg. size: %.1f' % (size_sum / len(valid_subsumptions)))
+                print('valid candidate negative avg. size: %.1f' % (size_sum / len(valid_subsumptions)))
             else:
                 warnings.warn('Unknown subsumption type %s' % config.subsumption_type)
                 sys.exit(0)
+
+        # The train/valid subsumptions are given:
         else:
             train_subsumptions = read_subsumptions(config.train_subsumption_file)
             valid_subsumptions = read_subsumptions(config.valid_subsumption_file)
+
         print('Positive train/valid subsumptions: %d/%d' % (len(train_subsumptions), len(valid_subsumptions)))
-
-        n = 0
-        for k in self.sampler.named_classes:
-            n += len(self.sampler.iri_label[k])
-        print('%.1f labels per class' % (n / len(self.sampler.named_classes)))
-
         tr = self.sampler.generate_samples(subsumptions=train_subsumptions)
         va = self.sampler.generate_samples(subsumptions=valid_subsumptions, duplicate=False)
 

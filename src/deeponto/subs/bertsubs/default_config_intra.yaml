@@ -24,16 +24,16 @@ label_property:
 use_one_label: true # true: select only one label
 subsumption_type: named_class # named_class or restriction
 
-# test_subsumption_file is optional. If it is set to None, the output is the fine-tuned model alone;
-#                                    otherwise, the output is the find-tuned model and the testing results.
-test_subsumption_file: test_subsumptions.csv
+# test_subsumption_file is optional. If it is set to None (or left as empty), the output is the fine-tuned model and its validation results;
+#                                    otherwise, the output is the find-tuned model, its validation results and the testing results.
+test_subsumption_file:
 
 # validation_subsumption_file and train_subsumption_file are optional
-# If train_subsumption_file is set to None
+# If train_subsumption_file is set to None (or left as empty)
 #   All the named class (or restriction) subsumptions in the given ontology are used for training and validation
 #   valid_ratio of the subsumptions are for validation, and the remaining are for training
-train_subsumption_file: None
-valid_subsumption_file: None
+train_subsumption_file:
+valid_subsumption_file:
 valid:
   valid_ratio: 0.05
   max_neg_size: 40
