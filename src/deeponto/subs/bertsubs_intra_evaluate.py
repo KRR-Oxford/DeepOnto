@@ -12,14 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import random
 import argparse
-import sys
-import warnings
 
 from yacs.config import CfgNode
 from deeponto.onto import Ontology
-from deeponto.subs.bertsubs import SubsumptionSample
 from deeponto.subs.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE
 from deeponto.utils import FileUtils
 
@@ -41,10 +37,10 @@ parser.add_argument('--test_ratio', type=float, default=0.1)
 parser.add_argument('--test_max_neg_size', type=int, default=40)
 parser.add_argument('--max_depth', type=int, default=3)
 parser.add_argument('--max_width', type=int, default=8)
-parser.add_argument('--subsumption_type', type=str, default='restriction', help='restriction or named_class')
-parser.add_argument('--train_file', type=str, default='./train_subsumptions_r.csv')
-parser.add_argument('--valid_file', type=str, default='./valid_subsumptions_r.csv')
-parser.add_argument('--test_file', type=str, default='./test_subsumptions_r.csv')
+parser.add_argument('--subsumption_type', type=str, default='named_class', help='restriction or named_class')
+parser.add_argument('--train_file', type=str, default='./train_subsumptions.csv')
+parser.add_argument('--valid_file', type=str, default='./valid_subsumptions.csv')
+parser.add_argument('--test_file', type=str, default='./test_subsumptions.csv')
 parser.add_argument('--evaluate_onto_file', type=str, default='./foodon.owl')
 FLAGS, unparsed = parser.parse_known_args()
 
@@ -52,26 +48,12 @@ print('\n---- Evaluation data processing starts ----\n')
 onto = Ontology(owl_path=FLAGS.onto_file)
 all_subsumptions = onto.get_subsumption_axioms(entity_type='Classes')
 
-subsumptions = []
+subsumptions = BERTSubsIntraPipeline.extract_subsumptions_from_ontology(onto=onto, subsumption_type=FLAGS.subsumption_type)
 if FLAGS.subsumption_type == 'restriction':
-    for subs in all_subsumptions:
-        if not onto.check_deprecated(owl_object=subs.getSubClass()) and \
-                not onto.check_named_entity(owl_object=subs.getSuperClass()) and \
-                SubsumptionSample.is_basic_existential_restriction(complex_class_str=str(subs.getSuperClass())):
-            subsumptions.append(subs)
-    restrictions = []
-    for complexC in onto.get_asserted_complex_classes():
-        if SubsumptionSample.is_basic_existential_restriction(complex_class_str=str(complexC)):
-            restrictions.append(complexC)
-elif FLAGS.subsumption_type == 'named_class':
-    for subs in all_subsumptions:
-        if not onto.check_deprecated(owl_object=subs.getSubClass()) and onto.check_named_entity(
-                owl_object=subs.getSuperClass()) and not onto.check_deprecated(owl_object=subs.getSuperClass()):
-            subsumptions.append(subs)
+    restrictions = BERTSubsIntraPipeline.extract_restrictions_from_ontology(onto=onto)
+    print('restrictions: %d' % len(restrictions))
 else:
-    warnings.warn('Unknown super_class_type %s' % FLAGS.super_class_type)
-    print("Unknown super_class_type")
-    sys.exit(0)
+    restrictions = []
 
 valid_size = int(len(subsumptions) * FLAGS.valid_ratio)
 test_size = int(len(subsumptions) * FLAGS.test_ratio)
@@ -83,28 +65,6 @@ print('valid subsumptions: %d' % len(valid_subsumptions))
 print('test subsumptions: %d' % len(test_subsumptions))
 
 
-def get_test_neg_candidates(subclass, gt):
-    all_nebs, seeds = set(), [gt]
-    depth = 1
-    while depth <= FLAGS.max_depth:
-        new_seeds = set()
-        for seed in seeds:
-            nebs = set()
-            for nc_iri in onto.reasoner.get_inferred_sub_entities(seed, direct=True) + onto.reasoner.get_inferred_super_entities(seed, direct=True):
-                nc = onto.owl_classes[nc_iri]
-                if onto.check_named_entity(owl_object=nc) and not onto.check_deprecated(owl_object=nc):
-                    nebs.add(nc)
-            new_seeds = new_seeds.union(nebs)
-            all_nebs = all_nebs.union(nebs)
-        depth += 1
-        seeds = random.sample(new_seeds, FLAGS.max_width) if len(new_seeds) > FLAGS.max_width else new_seeds
-    all_nebs = all_nebs - {onto.owl_classes[iri] for iri in onto.reasoner.get_inferred_super_entities(subclass, direct=False)} - {subclass}
-    if len(all_nebs) > FLAGS.test_max_neg_size:
-        return random.sample(all_nebs, FLAGS.test_max_neg_size)
-    else:
-        return list(all_nebs)
-
-
 def context_candidate(output_file, target_subs):
     with open(output_file, 'w') as ff:
         size_sum = 0
@@ -112,7 +72,11 @@ def context_candidate(output_file, target_subs):
         m = 0
         for subs0 in target_subs:
             subcls, supcls = subs0.getSubClass(), subs0.getSuperClass()
-            neg_candidates = get_test_neg_candidates(subclass=subcls, gt=supcls)
+            neg_candidates = BERTSubsIntraPipeline.get_test_neg_candidates_named_class(subclass=subcls, gt=supcls,
+                                                                                       max_neg_size=FLAGS.test_max_neg_size,
+                                                                                       onto=onto,
+                                                                                       max_depth=FLAGS.max_depth,
+                                                                                       max_width=FLAGS.max_width)
             size = len(neg_candidates)
             size_sum += size
             size_num[size] = size_num[size] + 1 if size in size_num else 1
@@ -121,23 +85,12 @@ def context_candidate(output_file, target_subs):
                 ff.write('%s,%s,%s\n' % (str(subcls.getIRI()), str(supcls.getIRI()), s))
                 m += 1
         print('\t The distribution of negative candidate size:')
-        for size in range(FLAGS.test_max_neg_size + 1):
+        for size in range(1, FLAGS.test_max_neg_size + 1):
             if size in size_num:
                 print('\t size: %d, num: %d' % (size, size_num[size]))
             else:
                 print('\t size: %d, num: 0' % size)
         print('\t %d subsumptions saved; average neg candidate size: %.2f' % (m, size_sum / m))
-
-
-def get_test_neg_candidates_restriction(subcls):
-    neg_restrictions = list()
-    n = FLAGS.test_max_neg_size * 2 if FLAGS.test_max_neg_size * 2 <= len(restrictions) else len(restrictions)
-    for r in random.sample(restrictions, n):
-        if not onto.reasoner.check_subsumption(sub_entity=subcls, super_entity=r):
-            neg_restrictions.append(r)
-            if len(neg_restrictions) >= FLAGS.test_max_neg_size:
-                break
-    return neg_restrictions
 
 
 if FLAGS.subsumption_type == 'restriction':
@@ -149,7 +102,9 @@ if FLAGS.subsumption_type == 'restriction':
         sizes = 0
         for subs in valid_subsumptions:
             c1, c2 = subs.getSubClass(), subs.getSuperClass()
-            c2_neg = get_test_neg_candidates_restriction(subcls=c1)
+            c2_neg = BERTSubsIntraPipeline.get_test_neg_candidates_restriction(subcls=c1,
+                                                                               max_neg_size=FLAGS.test_max_neg_size,
+                                                                               restrictions=restrictions, onto=onto)
             sizes += len(c2_neg)
             strs = [str(r) for r in c2_neg]
             f.write('%s,%s,%s\n' % (str(c1.getIRI()), str(c2), ','.join(strs)))
@@ -158,7 +113,9 @@ if FLAGS.subsumption_type == 'restriction':
         sizes = 0
         for subs in test_subsumptions:
             c1, c2 = subs.getSubClass(), subs.getSuperClass()
-            c2_neg = get_test_neg_candidates_restriction(subcls=c1)
+            c2_neg = BERTSubsIntraPipeline.get_test_neg_candidates_restriction(subcls=c1,
+                                                                               max_neg_size=FLAGS.test_max_neg_size,
+                                                                               restrictions=restrictions, onto=onto)
             sizes += len(c2_neg)
             strs = [str(r) for r in c2_neg]
             f.write('%s,%s,%s\n' % (str(c1.getIRI()), str(c2), ','.join(strs)))

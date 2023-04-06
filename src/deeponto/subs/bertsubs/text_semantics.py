@@ -248,7 +248,7 @@ class SubsumptionSample:
         """
         subclass = self.onto.get_owl_object_from_iri(iri=subclass_iri)
         if subsumption_type == 'named_class':
-            ancestors = set(self.onto.reasoner.get_inferred_sub_entities(subclass, direct=False))
+            ancestors = set(self.onto.reasoner.get_inferred_super_entities(subclass, direct=False))
             neg_c = random.sample(self.named_classes - ancestors, 1)[0]
             return neg_c
         else:

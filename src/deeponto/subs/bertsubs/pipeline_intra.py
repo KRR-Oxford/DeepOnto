@@ -17,6 +17,10 @@
 # )
 
 import os
+import sys
+import warnings
+import random
+
 import torch
 import math
 import datetime
@@ -49,10 +53,51 @@ class BERTSubsIntraPipeline:
 
         read_subsumptions = lambda file_name: [line.strip().split(',') for line in open(file_name).readlines()]
         test_subsumptions = read_subsumptions(config.test_subsumption_file)
-        valid_subsumptions = read_subsumptions(config.valid_subsumption_file)
-        train_subsumptions = read_subsumptions(config.train_subsumption_file)
-        train_num = len(train_subsumptions)
-        print('Positive train subsumptions: %d' % train_num)
+        if config.train_subsumption_file is None:
+            subsumptions0 = self.extract_subsumptions_from_ontology(onto=onto, subsumption_type=config.subsumption_type)
+            valid_size = int(len(subsumptions0) * config.valid.valid_ratio)
+            train_subsumptions0, valid_subsumptions0 = subsumptions0[valid_size:], subsumptions0[0:valid_size]
+            train_subsumptions, valid_subsumptions = [], []
+            if config.subsumption_type == 'named_class':
+                for subs in train_subsumptions0:
+                    c1, c2 = subs.getSubClass(), subs.getSuperClass()
+                    train_subsumptions.append([c1.getIRI(), c2.getIRI()])
+
+                size_sum = 0
+                for subs in valid_subsumptions0:
+                    c1, c2 = subs.getSubClass(), subs.getSuperClass()
+                    neg_candidates = BERTSubsIntraPipeline.get_test_neg_candidates_named_class(subclass=c1, gt=c2,
+                                                                                               max_neg_size=config.valid.max_neg_size, onto=onto)
+                    size = len(neg_candidates)
+                    size_sum += size
+                    if size > 0:
+                        item = [str(c1.getIRI()), str(c2.getIRI())] + [str(c.getIRI()) for c in neg_candidates]
+                        valid_subsumptions.append(item)
+                print('\t average neg candidate size in validation: %.2f' % (size_sum / len(valid_subsumptions)))
+
+            elif config.subsumption_type == 'restriction':
+                for subs in train_subsumptions0:
+                    c1, c2 = subs.getSubClass(), subs.getSuperClass()
+                    train_subsumptions.append([str(c1.getIRI()), str(c2)])
+
+                restrictions = BERTSubsIntraPipeline.extract_restrictions_from_ontology(onto=onto)
+                print('restrictions: %d' % len(restrictions))
+                size_sum = 0
+                for subs in valid_subsumptions0:
+                    c1, c2 = subs.getSubClass(), subs.getSuperClass()
+                    c2_neg = BERTSubsIntraPipeline.get_test_neg_candidates_restriction(subcls=c1, max_neg_size=config.valid.max_neg_size,
+                                                                                       restrictions=restrictions, onto=onto)
+                    size_sum += len(c2_neg)
+                    item = [str(c1.getIRI()), str(c2)] + [str(r) for r in c2_neg]
+                    valid_subsumptions.append(item)
+                    print('valid candidate negative avg. size: %.1f' % (size_sum / len(valid_subsumptions)))
+            else:
+                warnings.warn('Unknown subsumption type %s' % config.subsumption_type)
+                sys.exit(0)
+        else:
+            train_subsumptions = read_subsumptions(config.train_subsumption_file)
+            valid_subsumptions = read_subsumptions(config.valid_subsumption_file)
+        print('Positive train/valid subsumptions: %d/%d' % (len(train_subsumptions), len(valid_subsumptions)))
 
         n = 0
         for k in self.sampler.named_classes:
@@ -68,7 +113,8 @@ class BERTSubsIntraPipeline:
         start_time = datetime.datetime.now()
         torch.cuda.empty_cache()
         bert_trainer = BERTSubsumptionClassifierTrainer(config.fine_tune.pretrained, train_data=tr, val_data=va,
-                                                        max_length=config.prompt.max_length, early_stop=config.fine_tune.early_stop)
+                                                        max_length=config.prompt.max_length,
+                                                        early_stop=config.fine_tune.early_stop)
 
         epoch_steps = len(bert_trainer.tra) // config.fine_tune.batch_size  # total steps of an epoch
         logging_steps = int(epoch_steps * 0.02) if int(epoch_steps * 0.02) > 0 else 5
@@ -92,12 +138,14 @@ class BERTSubsIntraPipeline:
             metric_for_best_model="accuracy",
             greater_is_better=True
         )
-        if config.fine_tune.do_fine_tune and (config.prompt.prompt_type == 'traversal' or (config.prompt.prompt_type == 'path' and config.prompt.use_sub_special_token)):
+        if config.fine_tune.do_fine_tune and (config.prompt.prompt_type == 'traversal' or (
+                config.prompt.prompt_type == 'path' and config.prompt.use_sub_special_token)):
             bert_trainer.add_special_tokens(['<SUB>'])
 
         bert_trainer.train(train_args=training_args, do_fine_tune=config.fine_tune.do_fine_tune)
         if config.fine_tune.do_fine_tune:
-            bert_trainer.trainer.save_model(output_dir=os.path.join(config.fine_tune.output_dir, 'fine-tuned-checkpoint'))
+            bert_trainer.trainer.save_model(
+                output_dir=os.path.join(config.fine_tune.output_dir, 'fine-tuned-checkpoint'))
             print('fine-tuning done, fine-tuned model saved')
         else:
             print('pretrained or fine-tuned model loaded.')
@@ -107,20 +155,21 @@ class BERTSubsIntraPipeline:
         bert_trainer.model.eval()
         device = torch.device(f"cuda") if torch.cuda.is_available() else torch.device("cpu")
         bert_trainer.model.to(device)
-        self.tokenize = lambda x: bert_trainer.tokenizer(x, max_length=config.prompt.max_length, truncation=True, padding=True, return_tensors="pt")
+        self.tokenize = lambda x: bert_trainer.tokenizer(x, max_length=config.prompt.max_length, truncation=True,
+                                                         padding=True, return_tensors="pt")
         softmax = torch.nn.Softmax(dim=1)
         self.classifier = lambda x: softmax(bert_trainer.model(**x).logits)[:, 1]
 
         self.evaluate(target_subsumptions=valid_subsumptions, test_type='valid')
-        self.evaluate(target_subsumptions=test_subsumptions, test_type='test')
+        if test_subsumptions is not None:
+            self.evaluate(target_subsumptions=test_subsumptions, test_type='test')
         print('\n ------------------------- done! ---------------------------\n\n\n')
-
 
     def evaluate(self, target_subsumptions: List[List], test_type: str = 'test'):
         r"""Test and calculate the metrics according to a given list of subsumptions
 
         Args:
-            target_subsumptions (List[List]): a list of subsumptions, each of which of is a two-component list (subclass iri, and superclass iri/str)
+            target_subsumptions (List[List]): a list of subsumptions, each of which of is a two-component list (subclass iri, superclass iri/str)
             test_type (str): test or valid
 
         """
@@ -144,7 +193,8 @@ class BERTSubsIntraPipeline:
                 scores = np.zeros(sample_size)
                 batch_num = math.ceil(sample_size / self.config.evaluation.batch_size)
                 for i in range(batch_num):
-                    j = (i + 1) * self.config.evaluation.batch_size if (i + 1) * self.config.evaluation.batch_size <= sample_size else sample_size
+                    j = (i + 1) * self.config.evaluation.batch_size \
+                        if (i + 1) * self.config.evaluation.batch_size <= sample_size else sample_size
                     inputs = self.tokenize(samples[i * self.config.evaluation.batch_size:j])
                     inputs.to(device)
                     with torch.no_grad():
@@ -163,6 +213,77 @@ class BERTSubsIntraPipeline:
             num = k0 + 1
             MRR, Hits1, Hits5, Hits10 = MRR_sum / num, hits1_sum / num, hits5_sum / num, hits10_sum / num
             if num % 500 == 0:
-                print('\n%d tested, MRR: %.3f, Hits@1: %.3f, Hits@5: %.3f, Hits@10: %.3f\n' % (num, MRR, Hits1, Hits5, Hits10))
+                print('\n%d tested, MRR: %.3f, Hits@1: %.3f, Hits@5: %.3f, Hits@10: %.3f\n' % (
+                num, MRR, Hits1, Hits5, Hits10))
         print('\n[%s], MRR: %.3f, Hits@1: %.3f, Hits@5: %.3f, Hits@10: %.3f\n' % (test_type, MRR, Hits1, Hits5, Hits10))
         print('%.2f samples per testing subsumption' % (size_sum / size_n))
+
+    @staticmethod
+    def extract_subsumptions_from_ontology(onto: Ontology, subsumption_type: str):
+        r"""Extract target subsumptions from a given ontology
+
+        Args:
+            onto (Ontology): the target ontology
+            subsumption_type (str): the type of subsumptions (named_class, or restriction)
+
+        """
+        all_subsumptions = onto.get_subsumption_axioms(entity_type='Classes')
+        subsumptions = []
+        if subsumption_type == 'restriction':
+            for subs in all_subsumptions:
+                if not onto.check_deprecated(owl_object=subs.getSubClass()) and \
+                        not onto.check_named_entity(owl_object=subs.getSuperClass()) and \
+                        SubsumptionSample.is_basic_existential_restriction(complex_class_str=str(subs.getSuperClass())):
+                    subsumptions.append(subs)
+        elif subsumption_type == 'named_class':
+            for subs in all_subsumptions:
+                c1, c2 = subs.getSubClass(), subs.getSuperClass()
+                if onto.check_named_entity(owl_object=c1) and not onto.check_deprecated(owl_object=c1) \
+                        and onto.check_named_entity(owl_object=c2) and not onto.check_deprecated(owl_object=c2):
+                    subsumptions.append(subs)
+        else:
+            warnings.warn('\nUnknown subsumption type: %s\n' % subsumption_type)
+        return subsumptions
+
+    @staticmethod
+    def extract_restrictions_from_ontology(onto: Ontology):
+        restrictions = []
+        for complexC in onto.get_asserted_complex_classes():
+            if SubsumptionSample.is_basic_existential_restriction(complex_class_str=str(complexC)):
+                restrictions.append(complexC)
+        return restrictions
+
+    @staticmethod
+    def get_test_neg_candidates_restriction(subcls, max_neg_size, restrictions, onto):
+        neg_restrictions = list()
+        n = max_neg_size * 2 if max_neg_size * 2 <= len(restrictions) else len(restrictions)
+        for r in random.sample(restrictions, n):
+            if not onto.reasoner.check_subsumption(sub_entity=subcls, super_entity=r):
+                neg_restrictions.append(r)
+                if len(neg_restrictions) >= max_neg_size:
+                    break
+        return neg_restrictions
+
+    @staticmethod
+    def get_test_neg_candidates_named_class(subclass, gt, max_neg_size, onto, max_depth=3, max_width=8):
+        all_nebs, seeds = set(), [gt]
+        depth = 1
+        while depth <= max_depth:
+            new_seeds = set()
+            for seed in seeds:
+                nebs = set()
+                for nc_iri in onto.reasoner.get_inferred_sub_entities(seed, direct=True) + \
+                              onto.reasoner.get_inferred_super_entities(seed, direct=True):
+                    nc = onto.owl_classes[nc_iri]
+                    if onto.check_named_entity(owl_object=nc) and not onto.check_deprecated(owl_object=nc):
+                        nebs.add(nc)
+                new_seeds = new_seeds.union(nebs)
+                all_nebs = all_nebs.union(nebs)
+            depth += 1
+            seeds = random.sample(new_seeds, max_width) if len(new_seeds) > max_width else new_seeds
+        all_nebs = all_nebs - {onto.owl_classes[iri] for iri in
+                               onto.reasoner.get_inferred_super_entities(subclass, direct=False)} - {subclass}
+        if len(all_nebs) > max_neg_size:
+            return random.sample(all_nebs, max_neg_size)
+        else:
+            return list(all_nebs)
