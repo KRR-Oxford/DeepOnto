@@ -1,0 +1,60 @@
+# Copyright 2023 Jiaoyan Chen. All rights reserved.
+
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+
+#     http://www.apache.org/licenses/LICENSE-2.0
+
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# @paper(
+#     "Contextual Semantic Embeddings for Ontology Subsumption Prediction (World Wide Web Journal)",
+# )
+model: bertsubs (inter-ontology)
+
+src_onto_file: ncit.owl
+tgt_onto_file: doid.subs.owl
+src_label_property:
+  - http://www.w3.org/2000/01/rdf-schema#label
+  - http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#P90
+  - http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#P108
+tgt_label_property:
+  - http://www.w3.org/2000/01/rdf-schema#label
+  - http://www.geneontology.org/formats/oboInOwl#hasExactSynonym
+use_one_label: true # true: select only one label
+subsumption_type: named_class # currently, support named_class alone
+
+test_subsumption_file: test_subsumptions.csv
+
+# validation_subsumption_file and train_subsumption_file are optional
+# BERTSubs will extract and use all the subsumptions in the given ontology if they are set to None
+valid_subsumption_file: valid_subsumptions.csv
+train_subsumption_file: train_subsumptions.csv
+
+prompt:
+  prompt_type: isolated # "isolated", "traversal", "path"
+  prompt_hop: 1
+  prompt_max_subsumptions: 4
+  use_sub_special_token: false # true: <SUB>, false: <SEP> (only works for prompt_type of "path")
+  context_dup: 4
+  max_length: 128
+
+fine_tune:
+  do_fine_tune: true
+  pretrained: bert-base-uncased
+  tokenizer": bert-base-uncased
+  output_dir: fine-tuned-bert
+  warm_up_ratio: 0.0
+  num_epochs: 5.0
+  early_stop: false
+  train_pos_dup: 2
+  train_neg_dup: 2
+  batch_size: 32
+
+evaluation:
+  batch_size: 32
