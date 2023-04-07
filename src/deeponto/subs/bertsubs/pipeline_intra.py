@@ -253,6 +253,12 @@ class BERTSubsIntraPipeline:
 
     @staticmethod
     def extract_restrictions_from_ontology(onto: Ontology):
+        r"""extract basic existential restriction from an ontology
+            Args:
+                onto (Ontology): the target ontology
+            return:
+                restrictions (List): a list of restrictions.
+        """
         restrictions = []
         for complexC in onto.get_asserted_complex_classes():
             if SubsumptionSample.is_basic_existential_restriction(complex_class_str=str(complexC)):
