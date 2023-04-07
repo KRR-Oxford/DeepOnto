@@ -119,7 +119,18 @@ class SubsumptionSample:
         random.shuffle(all_samples)
         return all_samples
 
-    def subsumptions_to_samples(self, subsumptions, sample_label):
+    def subsumptions_to_samples(self, subsumptions: List[List], sample_label: int):
+        r"""Transform subsumptions to samples of strings
+
+        Args:
+            subsumptions (List[List]): the given subsumptions
+            sample_label (int): 1 (positive) or 0 (negative)
+
+        return:
+            local_samples (List[List]): a list of samples,
+            each of which has three elements (subclass string, superclss string, label int)
+
+        """
         local_samples = list()
         for subs in subsumptions:
             subcls, supcls = subs[0], subs[1]
