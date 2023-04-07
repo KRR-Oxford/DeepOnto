@@ -26,7 +26,10 @@ subsumption_type: named_class # named_class or restriction
 
 # test_subsumption_file is optional. If it is set to None (or left as empty), the output is the fine-tuned model and its validation results;
 #                                    otherwise, the output is the find-tuned model, its validation results and the testing results.
-test_subsumption_file:
+# test_type: "prediction" (predict scores for candidate subsumptions given in test_submission_file
+#            or "evaluation" (calculate metrics with ground truths given in the test_subsumption_file)
+test_subsumption_file: test_subsumption.csv
+test_type: prediction
 
 # validation_subsumption_file and train_subsumption_file are optional
 # If train_subsumption_file is set to None (or left as empty)
@@ -46,6 +49,7 @@ prompt:
   context_dup: 4
   max_length: 128
 
+# These hyperparameters are about the BERT model and its fine-tuning
 fine_tune:
   do_fine_tune: true
   pretrained: bert-base-uncased

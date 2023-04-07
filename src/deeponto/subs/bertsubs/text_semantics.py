@@ -20,7 +20,7 @@ import random
 import sys
 import re
 import warnings
-from typing import List
+from typing import List, Union
 
 from deeponto.onto import Ontology
 from deeponto.onto import OntologyVerbaliser
@@ -119,12 +119,12 @@ class SubsumptionSample:
         random.shuffle(all_samples)
         return all_samples
 
-    def subsumptions_to_samples(self, subsumptions: List[List], sample_label: int):
+    def subsumptions_to_samples(self, subsumptions: List[List], sample_label: Union[int, None]):
         r"""Transform subsumptions to samples of strings
 
         Args:
             subsumptions (List[List]): the given subsumptions
-            sample_label (int): 1 (positive) or 0 (negative)
+            sample_label (Union[int, None]): 1 (positive), 0 (negative), None (no label)
 
         return:
             local_samples (List[List]): a list of samples,

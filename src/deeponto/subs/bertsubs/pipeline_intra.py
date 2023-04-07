@@ -168,7 +168,12 @@ class BERTSubsIntraPipeline:
 
         self.evaluate(target_subsumptions=valid_subsumptions, test_type='valid')
         if test_subsumptions is not None:
-            self.evaluate(target_subsumptions=test_subsumptions, test_type='test')
+            if config.test_type == 'evaluation':
+                self.evaluate(target_subsumptions=test_subsumptions, test_type='test')
+            elif config.test_type == 'prediction':
+                self.predict(target_subsumptions=test_subsumptions)
+            else:
+                warnings.warn("Unknown test_type: %s" % config.test_type)
         print('\n ------------------------- done! ---------------------------\n\n\n')
 
     def evaluate(self, target_subsumptions: List[List], test_type: str = 'test'):
@@ -223,6 +228,44 @@ class BERTSubsIntraPipeline:
                 num, MRR, Hits1, Hits5, Hits10))
         print('\n[%s], MRR: %.3f, Hits@1: %.3f, Hits@5: %.3f, Hits@10: %.3f\n' % (test_type, MRR, Hits1, Hits5, Hits10))
         print('%.2f samples per testing subsumption' % (size_sum / size_n))
+
+
+    def predict(self, target_subsumptions: List[List]):
+        r"""Predict a score for each given subsumption. The scores will be saved in 'test_subsumption_scores.csv'
+
+        Args:
+            target_subsumptions (List[List]): each item is a list with the first element as the subclass,
+                                              and the remaining elements as n candidate superclasses.
+        """
+        out_lines = []
+        device = torch.device(f"cuda") if torch.cuda.is_available() else torch.device("cpu")
+        for test in target_subsumptions:
+            subcls, candidates = test[0], test[1:]
+            candidate_subsumptions = [[subcls, c] for c in candidates]
+            candidate_scores = []
+
+            for candidate_subsumption in candidate_subsumptions:
+                samples = self.sampler.subsumptions_to_samples(subsumptions=[candidate_subsumption], sample_label=None)
+                sample_size = len(samples)
+                scores = np.zeros(sample_size)
+                batch_num = math.ceil(sample_size / self.config.evaluation.batch_size)
+                for i in range(batch_num):
+                    j = (i + 1) * self.config.evaluation.batch_size \
+                        if (i + 1) * self.config.evaluation.batch_size <= sample_size else sample_size
+                    inputs = self.tokenize(samples[i * self.config.evaluation.batch_size:j])
+                    inputs.to(device)
+                    with torch.no_grad():
+                        batch_scores = self.classifier(inputs)
+                    scores[i * self.config.evaluation.batch_size:j] = batch_scores.cpu().numpy()
+                candidate_scores.append(np.average(scores))
+
+            out_lines.append(','.join([str(i) for i in candidate_scores]))
+
+        out_file = 'test_subsumption_scores.csv'
+        with open(out_file, 'w') as f:
+            for line in out_lines:
+                f.write('%s\n' % line)
+        print('Predicted subsumption scores are saved to %s' % out_file)
 
     @staticmethod
     def extract_subsumptions_from_ontology(onto: Ontology, subsumption_type: str):

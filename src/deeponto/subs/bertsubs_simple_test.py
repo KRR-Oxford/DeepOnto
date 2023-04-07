@@ -8,12 +8,13 @@ from deeponto.onto import Ontology
     with a given ontology (and training/valid subsumptions optionally), and a testing file
 '''
 config = CfgNode(FileUtils.load_file(DEFAULT_CONFIG_FILE))
-config.onto_file = './foodon-merged.0.4.8.owl'
-# config.train_subsumption_file = './train_subsumptions.csv'
-# config.valid_subsumption_file = './valid_subsumptions.csv'
-# config.test_subsumption_file = './test_subsumptions.csv'
-config.subsumption_type = 'restriction'  # named_class, restriction
-config.prompt.prompt_type = 'traversal'  # isolated, traversal, path
+config.onto_file = './foodon.owl'
+config.train_subsumption_file = './train_subsumptions.csv'
+config.valid_subsumption_file = './valid_subsumptions.csv'
+config.test_subsumption_file = './test_subsumptions.csv'
+config.test_type = 'prediction'
+config.subsumption_type = 'named_class'  # named_class, restriction
+config.prompt.prompt_type = 'path'  # isolated, traversal, path
 
 onto = Ontology(owl_path=config.onto_file)
 pipeline = BERTSubsIntraPipeline(onto=onto, config=config)
