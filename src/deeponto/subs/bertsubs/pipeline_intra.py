@@ -37,7 +37,7 @@ DEFAULT_CONFIG_FILE = os.path.join(os.path.dirname(__file__), "default_config_in
 
 
 class BERTSubsIntraPipeline:
-    r"""Class for the model training and validation pipeline of intra-ontology subsumption of BERTSubs.
+    r"""Class for the model training and prediction/validation pipeline of intra-ontology subsumption of BERTSubs.
 
             Attributes:
                 onto (Ontology): Target ontology
