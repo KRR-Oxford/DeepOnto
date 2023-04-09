@@ -17,14 +17,13 @@
 # )
 model: bertsubs (inter-ontology)
 
-src_onto_file: ncit.owl
-tgt_onto_file: doid.subs.owl
+src_onto_file: helis_v1.00.owl
+tgt_onto_file: foodon-merged.0.4.8.subs.owl
 src_label_property:
   - http://www.w3.org/2000/01/rdf-schema#label
-  - http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#P90
-  - http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#P108
 tgt_label_property:
   - http://www.w3.org/2000/01/rdf-schema#label
+  - http://www.geneontology.org/formats/oboInOwl#hasSynonym
   - http://www.geneontology.org/formats/oboInOwl#hasExactSynonym
 use_one_label: true # true: select only one label
 subsumption_type: named_class # named_class or restriction

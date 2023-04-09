@@ -52,8 +52,10 @@ class BERTSubsInterPipeline:
         self.src_onto = src_onto
         self.tgt_onto = tgt_onto
         self.config = config
-        self.src_sampler = SubsumptionSample(onto=src_onto, config=config)
-        self.tgt_sampler = SubsumptionSample(onto=tgt_onto, config=config)
+        self.config.label_property = self.config.src_label_property
+        self.src_sampler = SubsumptionSample(onto=self.src_onto, config=self.config)
+        self.config.label_property = self.config.tgt_label_property
+        self.tgt_sampler = SubsumptionSample(onto=self.tgt_onto, config=self.config)
         start_time = datetime.datetime.now()
 
         read_subsumptions = lambda file_name: [line.strip().split(',') for line in open(file_name).readlines()]
@@ -91,7 +93,7 @@ class BERTSubsInterPipeline:
                 len(src_subsumptions0), len(tgt_subsumptions0)))
 
             src_tr = self.src_sampler.generate_samples(subsumptions=src_subsumptions0)
-            tgt_tr = self.src_sampler.generate_samples(subsumptions=tgt_subsumptions0)
+            tgt_tr = self.tgt_sampler.generate_samples(subsumptions=tgt_subsumptions0)
         else:
             src_tr, tgt_tr = [], []
 
@@ -114,7 +116,7 @@ class BERTSubsInterPipeline:
         start_time = datetime.datetime.now()
         torch.cuda.empty_cache()
         bert_trainer = BERTSubsumptionClassifierTrainer(config.fine_tune.pretrained, train_data=tr,
-                                                        val_data=tr[0:(len(tr) / 5)],
+                                                        val_data=tr[0:int(len(tr) / 5)],
                                                         max_length=config.prompt.max_length,
                                                         early_stop=config.fine_tune.early_stop)
 
