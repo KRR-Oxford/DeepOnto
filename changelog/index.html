@@ -418,6 +418,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    Fixed
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -446,7 +453,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed" class="md-nav__link">
+  <a href="#fixed_1" class="md-nav__link">
     Fixed
   </a>
   
@@ -789,7 +796,12 @@ Security in case of vulnerabilities. -->
 </ul>
 <h3 id="changed">Changed</h3>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the function <code>get_owl_object_annotations</code> by preserving the relative order of annotation retrieval, i.e., create <code>set</code> first and use the <code>.add()</code> function instead of casting the <code>list</code> into <code>set</code> in the end.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Amend</strong> JVM checking before displaying the JVM memory prompt from importing <code>deeponto.onto.Ontology</code>; if started already, skip this step.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the function <code>get_owl_object_annotations</code> at <code>deeponto.onto.Ontology</code> by preserving the relative order of annotation retrieval, i.e., create <code>set</code> first and use the <code>.add()</code> function instead of casting the <code>list</code> into <code>set</code> in the end.</li>
+</ul>
+<h3 id="fixed">Fixed</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> the function <code>check_deprecated</code> at <code>deeponto.onto.Ontology</code> by adding a check for the <span class="arithmatex">\(\texttt{owl:deprecated}\)</span> annotation property -- if this property does not exist in the current ontology, return <code>False</code> (not deprecated).</li>
 </ul>
 <h2 id="v061-2023-april">v0.6.1 (2023 April)</h2>
 <h3 id="added_1">Added</h3>
@@ -811,7 +823,7 @@ Security in case of vulnerabilities. -->
 </ul>
 </li>
 </ul>
-<h3 id="fixed">Fixed</h3>
+<h3 id="fixed_1">Fixed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> the top and bottom data property iris (from "https:" to "http:") at <code>deeponto.onto.Ontology</code>.</li>
 </ul>
@@ -836,7 +848,7 @@ Security in case of vulnerabilities. -->
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 4, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 9, 2023</span>
       
         <br>
         Created:
