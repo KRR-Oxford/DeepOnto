@@ -333,9 +333,9 @@ class SubsumptionSample:
 
             return list(s1_set)
 
-    def supclass_to_samples(self, supcls, subsumption_type='named class'):
+    def supclass_to_samples(self, supcls, subsumption_type='named_class'):
 
-        if subsumption_type == 'named class':
+        if subsumption_type == 'named_class':
             supstrs = self.iri_label[supcls] if supcls in self.iri_label and len(self.iri_label[supcls]) else ['']
         else:
             if supcls in self.restriction_label and len(self.restriction_label[supcls]) > 0:
@@ -345,14 +345,14 @@ class SubsumptionSample:
                 supstrs = ['']
 
         if self.config.use_one_label:
-            if subsumption_type == 'named class':
+            if subsumption_type == 'named_class':
                 supstrs = supstrs[0:1]
 
         if self.config.prompt.prompt_type == 'isolated':
             return supstrs
 
         elif self.config.prompt.prompt_type == 'traversal':
-            if subsumption_type == 'named class':
+            if subsumption_type == 'named_class':
                 sups_list_strs = set()
                 for _ in range(self.config.prompt.context_dup):
                     context_sup, no_duplicate = self.traversal_subsumptions(cls=supcls,
@@ -379,7 +379,7 @@ class SubsumptionSample:
         elif self.config.prompt.prompt_type == 'path':
             sep_token = '<SUB>' if self.config.prompt.use_sub_special_token else '<SEP>'
 
-            if subsumption_type == 'named class':
+            if subsumption_type == 'named_class':
                 s2_set = set()
                 for _ in range(self.config.prompt.context_dup):
                     context_sup, no_duplicate = self.path_subsumptions(cls=supcls,
