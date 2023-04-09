@@ -70,7 +70,7 @@ class BERTSubsIntraPipeline:
             if config.subsumption_type == 'named_class':
                 for subs in train_subsumptions0:
                     c1, c2 = subs.getSubClass(), subs.getSuperClass()
-                    train_subsumptions.append([c1.getIRI(), c2.getIRI()])
+                    train_subsumptions.append([str(c1.getIRI()), str(c2.getIRI())])
 
                 size_sum = 0
                 for subs in valid_subsumptions0:
@@ -159,8 +159,8 @@ class BERTSubsIntraPipeline:
         print('Fine-tuning costs %.1f minutes' % ((end_time - start_time).seconds / 60))
 
         bert_trainer.model.eval()
-        device = torch.device(f"cuda") if torch.cuda.is_available() else torch.device("cpu")
-        bert_trainer.model.to(device)
+        self.device = torch.device(f"cuda") if torch.cuda.is_available() else torch.device("cpu")
+        bert_trainer.model.to(self.device)
         self.tokenize = lambda x: bert_trainer.tokenizer(x, max_length=config.prompt.max_length, truncation=True,
                                                          padding=True, return_tensors="pt")
         softmax = torch.nn.Softmax(dim=1)
@@ -176,6 +176,24 @@ class BERTSubsIntraPipeline:
                 warnings.warn("Unknown test_type: %s" % config.test_type)
         print('\n ------------------------- done! ---------------------------\n\n\n')
 
+    def score(self, samples: List[List]):
+        r"""score the samples with the classifier
+        Args:
+             samples (List[List]): each item is a list with two strings (input)
+        """
+        sample_size = len(samples)
+        scores = np.zeros(sample_size)
+        batch_num = math.ceil(sample_size / self.config.evaluation.batch_size)
+        for i in range(batch_num):
+            j = (i + 1) * self.config.evaluation.batch_size \
+                if (i + 1) * self.config.evaluation.batch_size <= sample_size else sample_size
+            inputs = self.tokenize(samples[i * self.config.evaluation.batch_size:j])
+            inputs.to(self.device)
+            with torch.no_grad():
+                batch_scores = self.classifier(inputs)
+            scores[i * self.config.evaluation.batch_size:j] = batch_scores.cpu().numpy()
+        return scores
+
     def evaluate(self, target_subsumptions: List[List], test_type: str = 'test'):
         r"""Test and calculate the metrics according to a given list of subsumptions
 
@@ -188,29 +206,17 @@ class BERTSubsIntraPipeline:
         MRR_sum, hits1_sum, hits5_sum, hits10_sum = 0, 0, 0, 0
         MRR, Hits1, Hits5, Hits10 = 0, 0, 0, 0
         size_sum, size_n = 0, 0
-        device = torch.device(f"cuda") if torch.cuda.is_available() else torch.device("cpu")
         for k0, test in enumerate(target_subsumptions):
             subcls, gt = test[0], test[1]
             candidates = test[1:]
 
             candidate_subsumptions = [[subcls, c] for c in candidates]
             candidate_scores = np.zeros(len(candidate_subsumptions))
-
             for k1, candidate_subsumption in enumerate(candidate_subsumptions):
                 samples = self.sampler.subsumptions_to_samples(subsumptions=[candidate_subsumption], sample_label=None)
-                sample_size = len(samples)
-                size_sum += sample_size
+                size_sum += len(samples)
                 size_n += 1
-                scores = np.zeros(sample_size)
-                batch_num = math.ceil(sample_size / self.config.evaluation.batch_size)
-                for i in range(batch_num):
-                    j = (i + 1) * self.config.evaluation.batch_size \
-                        if (i + 1) * self.config.evaluation.batch_size <= sample_size else sample_size
-                    inputs = self.tokenize(samples[i * self.config.evaluation.batch_size:j])
-                    inputs.to(device)
-                    with torch.no_grad():
-                        batch_scores = self.classifier(inputs)
-                    scores[i * self.config.evaluation.batch_size:j] = batch_scores.cpu().numpy()
+                scores = self.score(samples=samples)
                 candidate_scores[k1] = np.average(scores)
 
             sorted_indexes = np.argsort(candidate_scores)[::-1]
@@ -238,7 +244,6 @@ class BERTSubsIntraPipeline:
                                               and the remaining elements as n candidate superclasses.
         """
         out_lines = []
-        device = torch.device(f"cuda") if torch.cuda.is_available() else torch.device("cpu")
         for test in target_subsumptions:
             subcls, candidates = test[0], test[1:]
             candidate_subsumptions = [[subcls, c] for c in candidates]
@@ -246,17 +251,7 @@ class BERTSubsIntraPipeline:
 
             for candidate_subsumption in candidate_subsumptions:
                 samples = self.sampler.subsumptions_to_samples(subsumptions=[candidate_subsumption], sample_label=None)
-                sample_size = len(samples)
-                scores = np.zeros(sample_size)
-                batch_num = math.ceil(sample_size / self.config.evaluation.batch_size)
-                for i in range(batch_num):
-                    j = (i + 1) * self.config.evaluation.batch_size \
-                        if (i + 1) * self.config.evaluation.batch_size <= sample_size else sample_size
-                    inputs = self.tokenize(samples[i * self.config.evaluation.batch_size:j])
-                    inputs.to(device)
-                    with torch.no_grad():
-                        batch_scores = self.classifier(inputs)
-                    scores[i * self.config.evaluation.batch_size:j] = batch_scores.cpu().numpy()
+                scores = self.score(samples=samples)
                 candidate_scores.append(np.average(scores))
 
             out_lines.append(','.join([str(i) for i in candidate_scores]))
