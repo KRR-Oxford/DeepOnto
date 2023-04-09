@@ -33,7 +33,7 @@ from deeponto.onto import Ontology
 from .bert_classifier import BERTSubsumptionClassifierTrainer
 from .text_semantics import SubsumptionSample
 
-DEFAULT_CONFIG_FILE = os.path.join(os.path.dirname(__file__), "default_config_intra.yaml")
+DEFAULT_CONFIG_FILE_INTRA = os.path.join(os.path.dirname(__file__), "default_config_intra.yaml")
 
 
 class BERTSubsIntraPipeline:

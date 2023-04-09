@@ -17,7 +17,7 @@ import random
 
 from yacs.config import CfgNode
 from deeponto.onto import Ontology
-from deeponto.subs.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE
+from deeponto.subs.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE_INTRA
 from deeponto.utils import FileUtils
 
 '''
@@ -141,7 +141,7 @@ onto.save_onto(save_path=FLAGS.evaluate_onto_file)
 print('\n---- Evaluation data processing done ----\n')
 
 print('\n---- Evaluation starts ----\n')
-config = CfgNode(FileUtils.load_file(DEFAULT_CONFIG_FILE))
+config = CfgNode(FileUtils.load_file(DEFAULT_CONFIG_FILE_INTRA))
 config.subsumption_type = FLAGS.subsumption_type
 config.prompt.prompt_type = 'traversal'
 config.train_subsumption_file = FLAGS.train_file
