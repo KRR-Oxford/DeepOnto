@@ -27,14 +27,21 @@ tgt_label_property:
   - http://www.w3.org/2000/01/rdf-schema#label
   - http://www.geneontology.org/formats/oboInOwl#hasExactSynonym
 use_one_label: true # true: select only one label
-subsumption_type: named_class # currently, support named_class alone
+subsumption_type: named_class # named_class or restriction
 
+# test_subsumption_file is optional. If it is set to None (or left as empty), the output is the fine-tuned model (and its validation results);
+#                                    otherwise, the output is the find-tuned model, (its validation results) and the testing results.
+# test_type: "prediction" (predict scores for candidate subsumptions given in test_submission_file
+#            or "evaluation" (calculate metrics with ground truths given in the test_subsumption_file)
 test_subsumption_file: test_subsumptions.csv
+test_type: evaluation
 
-# validation_subsumption_file and train_subsumption_file are optional
-# BERTSubs will extract and use all the subsumptions in the given ontology if they are set to None
-valid_subsumption_file: valid_subsumptions.csv
-train_subsumption_file: train_subsumptions.csv
+# valid_subsumption_file is optional. If it is set, validation metrics are calculated and output.
+valid_subsumption_file:
+
+# train_subsumption_file is optional. If it is set, the samples will be added for fine-tuning
+train_subsumption_file:
+use_ontology_subsumptions_training: true
 
 prompt:
   prompt_type: isolated # "isolated", "traversal", "path"
