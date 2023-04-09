@@ -381,8 +381,13 @@ class Ontology:
     def check_deprecated(self, owl_object: OWLObject):
         r"""Check if the given OWL object is marked as deprecated according to $\texttt{owl:deprecated}$.
 
-        NOTE: the string literal indicating deprecation is either `'true'` or `'True'`.
+        NOTE: the string literal indicating deprecation is either `'true'` or `'True'`. Also, if $\texttt{owl:deprecated}$
+        is not defined in this ontology, return `False` by default.
         """
+        if not OWL_DEPRECATED in self.owl_annotation_properties.keys():
+            # return False if owl:deprecated is not defined in this ontology
+            return False
+            
         deprecated = self.get_owl_object_annotations(owl_object, annotation_property_iri=OWL_DEPRECATED)
         if deprecated and (list(deprecated)[0] == "true" or list(deprecated)[0] == "True"):
             return True
