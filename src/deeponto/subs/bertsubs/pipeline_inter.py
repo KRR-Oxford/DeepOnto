@@ -185,8 +185,8 @@ class BERTSubsInterPipeline:
         """
         pos_samples = list()
         for subs in subsumptions:
-            sub_strs = self.src_sampler.subclass_to_string(subcls=subs[0])
-            sup_strs = self.tgt_sampler.supclass_to_samples(supcls=subs[1],
+            sub_strs = self.src_sampler.subclass_to_strings(subcls=subs[0])
+            sup_strs = self.tgt_sampler.supclass_to_strings(supcls=subs[1],
                                                             subsumption_type=self.config.subsumption_type)
             for sub_str in sub_strs:
                 for sup_str in sup_strs:
@@ -202,8 +202,8 @@ class BERTSubsInterPipeline:
 
         neg_samples = list()
         for subs in neg_subsumptions:
-            sub_strs = self.src_sampler.subclass_to_string(subcls=subs[0])
-            sup_strs = self.tgt_sampler.supclass_to_samples(supcls=subs[1],
+            sub_strs = self.src_sampler.subclass_to_strings(subcls=subs[0])
+            sup_strs = self.tgt_sampler.supclass_to_strings(supcls=subs[1],
                                                             subsumption_type=self.config.subsumption_type)
             for sub_str in sub_strs:
                 for sup_str in sup_strs:
@@ -223,8 +223,8 @@ class BERTSubsInterPipeline:
             subsumption (List): a subsumption composed of two IRIs
         """
         subcls, supcls = subsumption[0], subsumption[1]
-        substrs = self.src_sampler.subclass_to_string(subcls=subcls)
-        supstrs = self.tgt_sampler.supclass_to_samples(supcls=supcls, subsumption_type='named_class')
+        substrs = self.src_sampler.subclass_to_strings(subcls=subcls)
+        supstrs = self.tgt_sampler.supclass_to_strings(supcls=supcls, subsumption_type='named_class')
         samples = list()
         for substr in substrs:
             for supstr in supstrs:

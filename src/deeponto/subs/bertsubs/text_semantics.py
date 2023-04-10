@@ -278,7 +278,11 @@ class SubsumptionSample:
         sups = self.iri_label[supc][0] if supc in self.iri_label and len(self.iri_label[supc]) > 0 else ''
         return '%s <SUB> %s' % (subs, sups)
 
-    def subclass_to_string(self, subcls):
+    def subclass_to_strings(self, subcls):
+        r"""Transform a subclass into strings (with the path or traversal context template)
+        Args:
+            subcls (str): the given subclass iri
+        """
         substrs = self.iri_label[subcls] if subcls in self.iri_label and len(self.iri_label[subcls]) > 0 else ['']
 
         if self.config.use_one_label:
@@ -333,7 +337,12 @@ class SubsumptionSample:
 
             return list(s1_set)
 
-    def supclass_to_samples(self, supcls, subsumption_type='named_class'):
+    def supclass_to_strings(self, supcls: str, subsumption_type: str = 'named_class'):
+        r"""Transform a supclass into strings (with the path or traversal context template if the subsumption type is 'named_class')
+               Args:
+                   supcls (str): the given super class iri
+                   subsumption_type (str): the type of subsumption
+        """
 
         if subsumption_type == 'named_class':
             supstrs = self.iri_label[supcls] if supcls in self.iri_label and len(self.iri_label[supcls]) else ['']
@@ -409,7 +418,17 @@ class SubsumptionSample:
             print('unknown context type %s' % self.config.prompt.prompt_type)
             sys.exit(0)
 
-    def traversal_subsumptions(self, cls, hop=1, direction='subclass', max_subsumptions=5):
+    def traversal_subsumptions(self, cls: str, hop: int = 1, direction: str = 'subclass', max_subsumptions: int = 5):
+        r"""Given a class, get its traversal subsumptions.
+                If the class is a subclass of a target axiom, get subsumptions from downside.
+                If the class is a supclass of a target axiom, get subsumptions from upside
+
+        Args:
+            cls (str): class iri
+            hop (int): path depth
+            direction (str): subclass (downside path) or supclass (upside path)
+            max_subsumptions (int): the maximum subsumptions to consider
+        """
         subsumptions = list()
         seeds = [cls]
         d = 1
