@@ -1,4 +1,9 @@
 from yacs.config import CfgNode
+
+import sys
+main_dir = os.getcwd().split("DeepOnto")[0] + "DeepOnto/src"
+sys.path.append(main_dir)
+
 from deeponto.subs.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE_INTRA, BERTSubsInterPipeline, DEFAULT_CONFIG_FILE_INTER
 from deeponto.utils import FileUtils
 from deeponto.onto import Ontology
