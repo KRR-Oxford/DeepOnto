@@ -61,7 +61,7 @@ nav:
         - Subsumption Inference:
           - BERTSubs (intra): deeponto/subs/bertsubs/index.md
         - Language Model Probing:
-          - OntoLAMA: deeponto/probing/ontolama.md
+          - OntoLAMA: deeponto/probe/ontolama.md
         - Utilities: 
           - Text Utilities: deeponto/utils/text_utils.md
           - File Utilities: deeponto/utils/file_utils.md
