@@ -31,7 +31,7 @@ from transformers import TrainingArguments
 
 from deeponto.onto import Ontology
 from .bert_classifier import BERTSubsumptionClassifierTrainer
-from .text_semantics import SubsumptionSample
+from .text_semantics import SubsumptionSampler
 from .pipeline_intra import BERTSubsIntraPipeline
 
 DEFAULT_CONFIG_FILE_INTER = os.path.join(os.path.dirname(__file__), "default_config_inter.yaml")
@@ -53,9 +53,9 @@ class BERTSubsInterPipeline:
         self.tgt_onto = tgt_onto
         self.config = config
         self.config.label_property = self.config.src_label_property
-        self.src_sampler = SubsumptionSample(onto=self.src_onto, config=self.config)
+        self.src_sampler = SubsumptionSampler(onto=self.src_onto, config=self.config)
         self.config.label_property = self.config.tgt_label_property
-        self.tgt_sampler = SubsumptionSample(onto=self.tgt_onto, config=self.config)
+        self.tgt_sampler = SubsumptionSampler(onto=self.tgt_onto, config=self.config)
         start_time = datetime.datetime.now()
 
         read_subsumptions = lambda file_name: [line.strip().split(',') for line in open(file_name).readlines()]

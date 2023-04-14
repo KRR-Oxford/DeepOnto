@@ -27,18 +27,18 @@ from deeponto.onto import OntologyVerbaliser
 from yacs.config import CfgNode
 
 
-class SubsumptionSample:
+class SubsumptionSampler:
     r"""Class for sampling functions for training the subsumption prediction model.
 
-        Attributes:
-            onto (Ontology): Target ontology
-            config (CfgNode): Configuration
-            named_classes (Set[str]): classes (IRIs) which are not deprecated
-            iri_label (Dict[str:List]): key -- class iri from named_classes, value -- a list of labels
-            restrictionObjects (Set[OWLClassExpression]): basic existential restrictions that appear in the ontology
-            restrictions (set[str]): strings of basic existential restrictions corresponding to restrictionObjects
-            restriction_label (Dict[str:List]): key -- existential restriction string, value -- a list of existential restriction labels
-            verb (OntologyVerbaliser): object for verbalisation
+    Attributes:
+        onto (Ontology): Target ontology
+        config (CfgNode): Configuration
+        named_classes (Set[str]): classes (IRIs) which are not deprecated
+        iri_label (Dict[str:List]): key -- class iri from named_classes, value -- a list of labels
+        restrictionObjects (Set[OWLClassExpression]): basic existential restrictions that appear in the ontology
+        restrictions (set[str]): strings of basic existential restrictions corresponding to restrictionObjects
+        restriction_label (Dict[str:List]): key -- existential restriction string, value -- a list of existential restriction labels
+        verb (OntologyVerbaliser): object for verbalisation
     """
 
     def __init__(self, onto: Ontology, config: CfgNode):
