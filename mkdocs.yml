@@ -49,13 +49,19 @@ nav:
       - Verbalising Ontology Concepts: verbaliser.md
       - Changelog: changelog.md
     - PACKAGE REFERENCE:
-        - Ontology: deeponto/onto/ontology.md
+        - Core Ontology API: 
+          - Ontology & Reasoning: deeponto/onto/ontology.md
+          - Verbalisation: deeponto/onto/verbalisation.md
         - Ontology Alignment:
           - Mapping: deeponto/align/mapping.md
           - BERTMap: deeponto/align/bertmap/index.md
           - LogMap: deeponto/align/logmap/index.md
+          - BERTSubs (inter): deeponto/align/bertsubs/index.md
           - Evaluation: deeponto/align/evaluation.md
-        - Ontology Verbalisation: deeponto/onto/verbalisation.md
+        - Subsumption Inference:
+          - BERTSubs (intra): deeponto/subs/bertsubs/index.md
+        - Language Model Probing:
+          - OntoLAMA: deeponto/probing/ontolama.md
         - Utilities: 
           - Text Utilities: deeponto/utils/text_utils.md
           - File Utilities: deeponto/utils/file_utils.md
