@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # Credit to: https://github.com/thunlp/OpenPrompt/blob/main/experiments/cli.py
-"""Script for running openprompt models for OntoLAMA."""
+# """Script for running openprompt models for OntoLAMA."""
 
 import os
 from typing import List
