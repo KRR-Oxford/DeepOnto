@@ -44,9 +44,10 @@ nav:
     - GET STARTED: 
       - Introduction: index.md
       - Basic Usage of Ontology: ontology.md  # basic usage of ontologies, ontology pruning, etc.
+      - Verbalising Ontology Concepts: verbaliser.md
       - OM with BERTMap & BERTMapLt: bertmap.md
       - Bio-ML Specifications: bio-ml.md
-      - Verbalising Ontology Concepts: verbaliser.md
+      - Predicting subsumptions using BERTSubs: bertsubs.md
       - Changelog: changelog.md
     - PACKAGE REFERENCE:
         - Core Ontology API: 
