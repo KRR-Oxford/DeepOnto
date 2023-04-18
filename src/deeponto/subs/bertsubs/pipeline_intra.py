@@ -37,7 +37,7 @@ DEFAULT_CONFIG_FILE_INTRA = os.path.join(os.path.dirname(__file__), "default_con
 
 
 class BERTSubsIntraPipeline:
-    r"""Class for the intra-ontology subsumption prediction setting of \textsf{BERTSubs}.
+    r"""Class for the intra-ontology subsumption prediction setting of BERTSubs.
 
     Attributes:
         onto (Ontology): The target ontology.
