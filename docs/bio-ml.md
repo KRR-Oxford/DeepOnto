@@ -171,7 +171,22 @@ Reference mappings in `full.tsv` are further divided into different splits for t
 
 ### Ontology Pruning
 
-In order to obtain scalable OM pairs, the **ontology pruning** algorithm proposed in the $\textsf{Bio-ML}$ paper can be used to truncate a large-scale ontology according to certain criteria such as the **semantic type**. Once obtaining the list of class IRIs to be truncated, apply the ontology pruning following the code [here](/ontology/#ontology-pruning).
+In order to obtain scalable OM pairs, the **ontology pruning** algorithm proposed in the $\textsf{Bio-ML}$ paper can be used to truncate a large-scale ontology according to certain criteria such as the **semantic type**. The pruning function aims to remove unwanted ontology classes while preserving the relevant hierarchy. Specifically, for each class $c$ to be removed, subsumption axioms will be created between the parents of $c$ and the children of $c'$. Following this is the removal of all axioms related to the unwanted classes.
+
+Once obtaining the list of class IRIs to be removed, apply the ontology pruning following the code below:
+
+```python
+from deeponto.onto import Ontology
+
+doid = Ontology("doid.owl")
+to_be_removed_class_iris = [
+    "http://purl.obolibrary.org/obo/DOID_0060158",
+    "http://purl.obolibrary.org/obo/DOID_9969"
+]
+doid.apply_pruning(to_be_removed_class_iris)
+doid.save_onto("doid.pruned.owl")  # save the pruned ontology locally
+```
+
 
 ### Subsumption Mapping Construction
 

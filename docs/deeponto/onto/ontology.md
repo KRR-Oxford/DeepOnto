@@ -1,3 +1,5 @@
+# Ontology
+
 Python classes in this page are strongly dependent on the OWLAPI library. 
 The base class [`Ontology`][deeponto.onto.Ontology] extends several features
 including convenient access to specially defined entities (e.g., `owl:Thing` and `owl:Nothing`),
@@ -10,3 +12,5 @@ should feel relatively easy to extend the Python classes here.
 
 ::: deeponto.onto.ontology
     heading_level: 2
+    options:
+        members: ["Ontology"]

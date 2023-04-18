@@ -43,15 +43,17 @@ extra:
 nav:
     - GET STARTED: 
       - Introduction: index.md
-      - Basic Usage of Ontology: ontology.md  # basic usage of ontologies, ontology pruning, etc.
-      - Verbalising Ontology Concepts: verbaliser.md
-      - OM with BERTMap & BERTMapLt: bertmap.md
-      - Bio-ML Specifications: bio-ml.md
-      - Predicting subsumptions using BERTSubs: bertsubs.md
+      - Load an ontology: ontology.md  # basic usage of ontologies, ontology pruning, etc.
       - Changelog: changelog.md
+    - TUTORIALS:
+      - Verbalise ontology concepts: verbaliser.md
+      - Ontology matching with BERTMap & BERTMapLt: bertmap.md
+      - Bio-ML specifications: bio-ml.md
+      - Subsumption inference with BERTSubs: bertsubs.md
     - PACKAGE REFERENCE:
-        - Core Ontology Modules: 
-          - Ontology & Reasoning: deeponto/onto/ontology.md
+        - Core Ontology API: 
+          - Ontology: deeponto/onto/ontology.md
+          - Reasoning: deeponto/onto/reasoning.md
           - Verbalisation: deeponto/onto/verbalisation.md
         - Ontology Alignment:
           - Mapping: deeponto/align/mapping.md

@@ -112,27 +112,6 @@ The implemented reasoner also supports several **entailment checks** for subsump
 doid.reasoner.check_subsumption(doid_potential_sub_entity, doid_potential_super_entity)
 ```
 
-## Ontology Pruning
-
-The pruning function aims to remove unwanted ontology classes while preserving the relevant hierarchy. Specifically, for each class $c$ to be removed, subsumption axioms will be created between the parents of $c$ and the children of $c'$. Then, `#!java apply_pruning` will be used to apply the pruning.
-
-!!! credit "paper"
-
-    The ontology pruning algorithm is introduced in the paper: 
-    [*Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)*](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).
-
-```python
-from deeponto.onto import Ontology
-
-doid = Ontology("doid.owl")
-to_be_removed_class_iris = [
-    "http://purl.obolibrary.org/obo/DOID_0060158",
-    "http://purl.obolibrary.org/obo/DOID_9969"
-]
-doid.apply_pruning(to_be_removed_class_iris)
-doid.save_onto("doid.pruned.owl")  # save the pruned ontology locally
-```
-
 ----------------------------------------------------------------
 ## Feature Requests
 
