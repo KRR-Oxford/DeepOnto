@@ -71,6 +71,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://krr-oxford.github.io/DeepOnto/deeponto/onto/reasoning/</loc>
+         <lastmod>2023-04-18</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/onto/verbalisation/</loc>
          <lastmod>2023-04-18</lastmod>
          <changefreq>daily</changefreq>

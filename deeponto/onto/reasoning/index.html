@@ -1,0 +1,2399 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="Yuan He (KRR-Oxford)">
+      
+      
+        <link rel="canonical" href="https://krr-oxford.github.io/DeepOnto/deeponto/onto/reasoning/">
+      
+      
+        <link rel="prev" href="../ontology/">
+      
+      
+        <link rel="next" href="../verbalisation/">
+      
+      <link rel="icon" href="../../../images/favicon_package/favicon.ico">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.5">
+    
+    
+      
+        <title>Reasoning - DeepOnto</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.558e4712.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.2505c338.min.css">
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ontology-reasoning" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="DeepOnto" class="md-header__button md-logo" aria-label="DeepOnto" data-md-component="logo">
+      
+  <img src="../../../images/favicon_package/safari-pinned-tab.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            DeepOnto
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Reasoning
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/KRR-Oxford/DeepOnto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    KRR-Oxford/DeepOnto
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<!--
+  Copyright (c) 2016-2023 Martin Donath <martin.donath@squidfunk.com>
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to
+  deal in the Software without restriction, including without limitation the
+  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+  sell copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  IN THE SOFTWARE.
+-->
+
+<!-- Determine class according to configuration -->
+
+
+
+  
+
+
+<!-- Main navigation -->
+<nav
+  class="md-nav md-nav--primary md-nav--integrated"
+  aria-label="Navigation"
+  data-md-level="0"
+>
+
+  <!-- Site title -->
+  <label class="md-nav__title" for="__drawer">
+    <a
+      href="../../.."
+      title="DeepOnto"
+      class="md-nav__button md-logo"
+      aria-label="DeepOnto"
+      data-md-component="logo"
+    >
+      
+  <img src="../../../images/favicon_package/safari-pinned-tab.svg" alt="logo">
+
+    </a>
+    <!-- DeepOnto -->
+  </label>
+
+  <!-- Repository information -->
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/KRR-Oxford/DeepOnto" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    KRR-Oxford/DeepOnto
+  </div>
+</a>
+    </div>
+  
+
+  <!-- Render item list -->
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1" tabindex="0" aria-expanded="false">
+          GET STARTED
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="GET STARTED" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          GET STARTED
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../ontology/" class="md-nav__link">
+        Load an ontology
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../changelog/" class="md-nav__link">
+        Changelog
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="false">
+          TUTORIALS
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="TUTORIALS" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          TUTORIALS
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../verbaliser/" class="md-nav__link">
+        Verbalise ontology concepts
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bertmap/" class="md-nav__link">
+        Ontology matching with BERTMap & BERTMapLt
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bio-ml/" class="md-nav__link">
+        Bio-ML specifications
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../bertsubs/" class="md-nav__link">
+        Subsumption inference with BERTSubs
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="true">
+          PACKAGE REFERENCE
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="PACKAGE REFERENCE" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          PACKAGE REFERENCE
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" checked>
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1" tabindex="0" aria-expanded="true">
+          Core Ontology API
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Core Ontology API" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Core Ontology API
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ontology/" class="md-nav__link">
+        Ontology
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Reasoning
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Reasoning
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner" class="md-nav__link">
+    OntologyReasoner
+  </a>
+  
+    <nav class="md-nav" aria-label="OntologyReasoner">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner.reload_reasoner" class="md-nav__link">
+    reload_reasoner()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner.get_entity_type" class="md-nav__link">
+    get_entity_type()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner.has_iri" class="md-nav__link">
+    has_iri()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner.get_inferred_super_entities" class="md-nav__link">
+    get_inferred_super_entities()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner.get_inferred_sub_entities" class="md-nav__link">
+    get_inferred_sub_entities()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner.check_subsumption" class="md-nav__link">
+    check_subsumption()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner.check_disjoint" class="md-nav__link">
+    check_disjoint()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner.check_common_descendants" class="md-nav__link">
+    check_common_descendants()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner.instances_of" class="md-nav__link">
+    instances_of()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner.check_instance" class="md-nav__link">
+    check_instance()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner.check_common_instances" class="md-nav__link">
+    check_common_instances()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner.check_assumed_disjoint" class="md-nav__link">
+    check_assumed_disjoint()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.ontology.OntologyReasoner.check_assumed_disjoint_alternative" class="md-nav__link">
+    check_assumed_disjoint_alternative()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verbalisation/" class="md-nav__link">
+        Verbalisation
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2" tabindex="0" aria-expanded="false">
+          Ontology Alignment
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ontology Alignment" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Ontology Alignment
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../align/mapping/" class="md-nav__link">
+        Mapping
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../align/bertmap/" class="md-nav__link">
+        BERTMap
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../align/logmap/" class="md-nav__link">
+        LogMap
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../align/bertsubs/" class="md-nav__link">
+        BERTSubs (Inter)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../align/evaluation/" class="md-nav__link">
+        Evaluation
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_3" type="checkbox" id="__nav_3_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_3" tabindex="0" aria-expanded="false">
+          Subsumption Inference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Subsumption Inference" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_3">
+          <span class="md-nav__icon md-icon"></span>
+          Subsumption Inference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../subs/bertsubs/" class="md-nav__link">
+        BERTSubs (Intra)
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_4" type="checkbox" id="__nav_3_4" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_4" tabindex="0" aria-expanded="false">
+          Language Model Probing
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Language Model Probing" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_4">
+          <span class="md-nav__icon md-icon"></span>
+          Language Model Probing
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../probe/ontolama/" class="md-nav__link">
+        OntoLAMA
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_5" type="checkbox" id="__nav_3_5" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_5" tabindex="0" aria-expanded="false">
+          Utilities
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Utilities" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_5">
+          <span class="md-nav__icon md-icon"></span>
+          Utilities
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utils/text_utils/" class="md-nav__link">
+        Text Utilities
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utils/file_utils/" class="md-nav__link">
+        File Utilities
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utils/logging/" class="md-nav__link">
+        Logging
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utils/data_utils/" class="md-nav__link">
+        Data Utilities
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../utils/decorators/" class="md-nav__link">
+        Decorators
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+  
+  
+
+
+
+<h1 id="ontology-reasoning">Ontology Reasoning</h1>
+
+
+<div class="doc doc-object doc-module">
+
+
+
+  <div class="doc doc-contents first">
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="deeponto.onto.ontology.OntologyReasoner" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">OntologyReasoner</span><span class="p">(</span><span class="n">onto</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Ontology reasoner class that extends from the Java library OWLAPI.</p>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>onto</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="deeponto.onto.ontology.Ontology" href="../ontology/#deeponto.onto.ontology.Ontology">Ontology</a></code>
+          </td>
+          <td><p>The input <code>deeponto</code> ontology.</p></td>
+        </tr>
+        <tr>
+          <td><code>owl_reasoner_factory</code></td>
+          <td>
+                <code>OWLReasonerFactory</code>
+          </td>
+          <td><p>A reasoner factory for creating a reasoner.</p></td>
+        </tr>
+        <tr>
+          <td><code>owl_reasoner</code></td>
+          <td>
+                <code>OWLReasoner</code>
+          </td>
+          <td><p>The created reasoner.</p></td>
+        </tr>
+        <tr>
+          <td><code>owl_data_factory</code></td>
+          <td>
+                <code>OWLDataFactory</code>
+          </td>
+          <td><p>A data factory (inherited from <code>onto</code>) for manipulating axioms.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+  
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>onto</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="deeponto.onto.ontology.Ontology" href="../ontology/#deeponto.onto.ontology.Ontology">Ontology</a></code>
+          </td>
+          <td><p>The input ontology to conduct reasoning on.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">574</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span>
+<span class="normal">579</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span>
+<span class="normal">583</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise an ontology reasoner.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        onto (Ontology): The input ontology to conduct reasoning on.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">onto</span> <span class="o">=</span> <span class="n">onto</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner_factory</span> <span class="o">=</span> <span class="n">ReasonerFactory</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner_factory</span><span class="o">.</span><span class="n">createReasoner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_onto</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">owl_data_factory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_data_factory</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.ontology.OntologyReasoner.reload_reasoner" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">reload_reasoner</span><span class="p">()</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Reload the reasoner for the current ontology (possibly changed).</p>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span>
+<span class="normal">589</span>
+<span class="normal">590</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">reload_reasoner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reload the reasoner for the current ontology (possibly changed).&quot;&quot;&quot;</span>
+    <span class="c1"># release the memory</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+    <span class="c1"># conduct reasoning on the possibly changed ontology</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner_factory</span><span class="o">.</span><span class="n">createReasoner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_onto</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.ontology.OntologyReasoner.get_entity_type" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">is_singular</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>A handy method to get the type of an entity (<code>OWLObject</code>).</p>
+<p>NOTE: This method is inherited from the Ontology Class.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">592</span>
+<span class="normal">593</span>
+<span class="normal">594</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span>
+<span class="normal">598</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span> <span class="nf">get_entity_type</span><span class="p">(</span><span class="n">entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">is_singular</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A handy method to get the type of an entity (`OWLObject`).</span>
+
+<span class="sd">    NOTE: This method is inherited from the Ontology Class.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Ontology</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">is_singular</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.ontology.OntologyReasoner.has_iri" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">has_iri</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Check if an entity has an IRI.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">600</span>
+<span class="normal">601</span>
+<span class="normal">602</span>
+<span class="normal">603</span>
+<span class="normal">604</span>
+<span class="normal">605</span>
+<span class="normal">606</span>
+<span class="normal">607</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span> <span class="nf">has_iri</span><span class="p">(</span><span class="n">entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an entity has an IRI.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">entity</span><span class="o">.</span><span class="n">getIRI</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.ontology.OntologyReasoner.get_inferred_super_entities" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_inferred_super_entities</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return the IRIs of named super-entities of a given <code>OWLObject</code> according to the reasoner.</p>
+<p>A mixture of <code>getSuperClasses</code>, <code>getSuperObjectProperties</code>, <code>getSuperDataProperties</code>
+functions imported from the OWLAPI reasoner. The type of input entity will be
+automatically determined. The top entity such as <code>owl:Thing</code> is ignored.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>entity</code></td>
+          <td>
+                <code><span title="org.semanticweb.owlapi.model.OWLObject">OWLObject</span></code>
+          </td>
+          <td><p>An <code>OWLObject</code> entity of interest.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>direct</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>Return parents (<code>direct=True</code>) or
+ancestors (<code>direct=False</code>). Defaults to <code>False</code>.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="typing.List">List</span>[str]</code>
+          </td>
+          <td><p>A list of IRIs of the super-entities of the given <code>OWLObject</code> entity.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">609</span>
+<span class="normal">610</span>
+<span class="normal">611</span>
+<span class="normal">612</span>
+<span class="normal">613</span>
+<span class="normal">614</span>
+<span class="normal">615</span>
+<span class="normal">616</span>
+<span class="normal">617</span>
+<span class="normal">618</span>
+<span class="normal">619</span>
+<span class="normal">620</span>
+<span class="normal">621</span>
+<span class="normal">622</span>
+<span class="normal">623</span>
+<span class="normal">624</span>
+<span class="normal">625</span>
+<span class="normal">626</span>
+<span class="normal">627</span>
+<span class="normal">628</span>
+<span class="normal">629</span>
+<span class="normal">630</span>
+<span class="normal">631</span>
+<span class="normal">632</span>
+<span class="normal">633</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_inferred_super_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">direct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return the IRIs of named super-entities of a given `OWLObject` according to the reasoner.</span>
+
+<span class="sd">    A mixture of `getSuperClasses`, `getSuperObjectProperties`, `getSuperDataProperties`</span>
+<span class="sd">    functions imported from the OWLAPI reasoner. The type of input entity will be</span>
+<span class="sd">    automatically determined. The top entity such as `owl:Thing` is ignored.</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        entity (OWLObject): An `OWLObject` entity of interest.</span>
+<span class="sd">        direct (bool, optional): Return parents (`direct=True`) or</span>
+<span class="sd">            ancestors (`direct=False`). Defaults to `False`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (List[str]): A list of IRIs of the super-entities of the given `OWLObject` entity.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">entity_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+    <span class="n">get_super</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;getSuper</span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">TOP</span> <span class="o">=</span> <span class="n">TOP_BOTTOMS</span><span class="p">[</span><span class="n">entity_type</span><span class="p">]</span><span class="o">.</span><span class="n">TOP</span>  <span class="c1"># get the corresponding TOP entity</span>
+    <span class="n">super_entities</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="p">,</span> <span class="n">get_super</span><span class="p">)(</span><span class="n">entity</span><span class="p">,</span> <span class="n">direct</span><span class="p">)</span><span class="o">.</span><span class="n">getFlattened</span><span class="p">()</span>
+    <span class="n">super_entity_iris</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">getIRI</span><span class="p">())</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">super_entities</span><span class="p">]</span>
+    <span class="c1"># the root node is owl#Thing</span>
+    <span class="k">if</span> <span class="n">TOP</span> <span class="ow">in</span> <span class="n">super_entity_iris</span><span class="p">:</span>
+        <span class="n">super_entity_iris</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">TOP</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">super_entity_iris</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.ontology.OntologyReasoner.get_inferred_sub_entities" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_inferred_sub_entities</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return the IRIs of named sub-entities of a given <code>OWLObject</code> according to the reasoner.</p>
+<p>A mixture of <code>getSubClasses</code>, <code>getSubObjectProperties</code>, <code>getSubDataProperties</code>
+functions imported from the OWLAPI reasoner. The type of input entity will be
+automatically determined. The bottom entity such as <code>owl:Nothing</code> is ignored.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>entity</code></td>
+          <td>
+                <code><span title="org.semanticweb.owlapi.model.OWLObject">OWLObject</span></code>
+          </td>
+          <td><p>An <code>OWLObject</code> entity of interest.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>direct</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>Return parents (<code>direct=True</code>) or
+ancestors (<code>direct=False</code>). Defaults to <code>False</code>.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="typing.List">List</span>[str]</code>
+          </td>
+          <td><p>A list of IRIs of the sub-entities of the given <code>OWLObject</code> entity.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">635</span>
+<span class="normal">636</span>
+<span class="normal">637</span>
+<span class="normal">638</span>
+<span class="normal">639</span>
+<span class="normal">640</span>
+<span class="normal">641</span>
+<span class="normal">642</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span>
+<span class="normal">655</span>
+<span class="normal">656</span>
+<span class="normal">657</span>
+<span class="normal">658</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_inferred_sub_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">direct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the IRIs of named sub-entities of a given `OWLObject` according to the reasoner.</span>
+
+<span class="sd">    A mixture of `getSubClasses`, `getSubObjectProperties`, `getSubDataProperties`</span>
+<span class="sd">    functions imported from the OWLAPI reasoner. The type of input entity will be</span>
+<span class="sd">    automatically determined. The bottom entity such as `owl:Nothing` is ignored.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        entity (OWLObject): An `OWLObject` entity of interest.</span>
+<span class="sd">        direct (bool, optional): Return parents (`direct=True`) or</span>
+<span class="sd">            ancestors (`direct=False`). Defaults to `False`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (List[str]): A list of IRIs of the sub-entities of the given `OWLObject` entity.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">entity_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span>
+    <span class="n">get_sub</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;getSub</span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">BOTTOM</span> <span class="o">=</span> <span class="n">TOP_BOTTOMS</span><span class="p">[</span><span class="n">entity_type</span><span class="p">]</span><span class="o">.</span><span class="n">BOTTOM</span>
+    <span class="n">sub_entities</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="p">,</span> <span class="n">get_sub</span><span class="p">)(</span><span class="n">entity</span><span class="p">,</span> <span class="n">direct</span><span class="p">)</span><span class="o">.</span><span class="n">getFlattened</span><span class="p">()</span>
+    <span class="n">sub_entity_iris</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">getIRI</span><span class="p">())</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">sub_entities</span><span class="p">]</span>
+    <span class="c1"># the root node is owl#Thing</span>
+    <span class="k">if</span> <span class="n">BOTTOM</span> <span class="ow">in</span> <span class="n">sub_entity_iris</span><span class="p">:</span>
+        <span class="n">sub_entity_iris</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">BOTTOM</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sub_entity_iris</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.ontology.OntologyReasoner.check_subsumption" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">check_subsumption</span><span class="p">(</span><span class="n">sub_entity</span><span class="p">,</span> <span class="n">super_entity</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Check if the first entity is subsumed by the second entity according to the reasoner.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">660</span>
+<span class="normal">661</span>
+<span class="normal">662</span>
+<span class="normal">663</span>
+<span class="normal">664</span>
+<span class="normal">665</span>
+<span class="normal">666</span>
+<span class="normal">667</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_subsumption</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub_entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">super_entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the first entity is subsumed by the second entity according to the reasoner.&quot;&quot;&quot;</span>
+    <span class="n">entity_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">sub_entity</span><span class="p">,</span> <span class="n">is_singular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">super_entity</span><span class="p">,</span> <span class="n">is_singular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">sub_axiom</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_data_factory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;getOWLSub</span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">OfAxiom&quot;</span><span class="p">)(</span><span class="n">sub_entity</span><span class="p">,</span> <span class="n">super_entity</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="o">.</span><span class="n">isEntailed</span><span class="p">(</span><span class="n">sub_axiom</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.ontology.OntologyReasoner.check_disjoint" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">check_disjoint</span><span class="p">(</span><span class="n">entity1</span><span class="p">,</span> <span class="n">entity2</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Check if two entities are disjoint according to the reasoner.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">669</span>
+<span class="normal">670</span>
+<span class="normal">671</span>
+<span class="normal">672</span>
+<span class="normal">673</span>
+<span class="normal">674</span>
+<span class="normal">675</span>
+<span class="normal">676</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_disjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity1</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">entity2</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two entities are disjoint according to the reasoner.&quot;&quot;&quot;</span>
+    <span class="n">entity_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity2</span><span class="p">)</span>
+
+    <span class="n">disjoint_axiom</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_data_factory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;getOWLDisjoint</span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">Axiom&quot;</span><span class="p">)([</span><span class="n">entity1</span><span class="p">,</span> <span class="n">entity2</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="o">.</span><span class="n">isEntailed</span><span class="p">(</span><span class="n">disjoint_axiom</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.ontology.OntologyReasoner.check_common_descendants" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">check_common_descendants</span><span class="p">(</span><span class="n">entity1</span><span class="p">,</span> <span class="n">entity2</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Check if two entities have a common decendant.</p>
+<p>Entities can be <strong>OWL class or property expressions</strong>, and can be either <strong>atomic
+or complex</strong>. It takes longer computation time for the complex ones. Complex
+entities do not have an IRI. This method is optimised in the way that if
+there exists an atomic entity <code>A</code>, we compute descendants for <code>A</code> and
+compare them against the other entity which could be complex.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">678</span>
+<span class="normal">679</span>
+<span class="normal">680</span>
+<span class="normal">681</span>
+<span class="normal">682</span>
+<span class="normal">683</span>
+<span class="normal">684</span>
+<span class="normal">685</span>
+<span class="normal">686</span>
+<span class="normal">687</span>
+<span class="normal">688</span>
+<span class="normal">689</span>
+<span class="normal">690</span>
+<span class="normal">691</span>
+<span class="normal">692</span>
+<span class="normal">693</span>
+<span class="normal">694</span>
+<span class="normal">695</span>
+<span class="normal">696</span>
+<span class="normal">697</span>
+<span class="normal">698</span>
+<span class="normal">699</span>
+<span class="normal">700</span>
+<span class="normal">701</span>
+<span class="normal">702</span>
+<span class="normal">703</span>
+<span class="normal">704</span>
+<span class="normal">705</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_common_descendants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity1</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">entity2</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two entities have a common decendant.</span>
+
+<span class="sd">    Entities can be **OWL class or property expressions**, and can be either **atomic</span>
+<span class="sd">    or complex**. It takes longer computation time for the complex ones. Complex</span>
+<span class="sd">    entities do not have an IRI. This method is optimised in the way that if</span>
+<span class="sd">    there exists an atomic entity `A`, we compute descendants for `A` and</span>
+<span class="sd">    compare them against the other entity which could be complex.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">entity_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity2</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_iri</span><span class="p">(</span><span class="n">entity1</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_iri</span><span class="p">(</span><span class="n">entity2</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Computing descendants for two complex entities is not efficient.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># `computed` is the one we compute the descendants</span>
+    <span class="c1"># `compared` is the one we compare `computed`&#39;s descendant one-by-one</span>
+    <span class="c1"># we set the atomic entity as `computed` for efficiency if there is one</span>
+    <span class="n">computed</span><span class="p">,</span> <span class="n">compared</span> <span class="o">=</span> <span class="n">entity1</span><span class="p">,</span> <span class="n">entity2</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_iri</span><span class="p">(</span><span class="n">entity1</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_iri</span><span class="p">(</span><span class="n">entity2</span><span class="p">):</span>
+        <span class="n">computed</span><span class="p">,</span> <span class="n">compared</span> <span class="o">=</span> <span class="n">entity2</span><span class="p">,</span> <span class="n">entity1</span>
+
+    <span class="c1"># for every inferred child of `computed`, check if it is subsumed by `compared``</span>
+    <span class="k">for</span> <span class="n">descendant_iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_inferred_sub_entities</span><span class="p">(</span><span class="n">computed</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># print(&quot;check a subsumption&quot;)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_subsumption</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">descendant_iri</span><span class="p">),</span> <span class="n">compared</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.ontology.OntologyReasoner.instances_of" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">instances_of</span><span class="p">(</span><span class="n">owl_class</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return the list of named individuals that are instances of a given OWL class expression.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>owl_class</code></td>
+          <td>
+                <code><span title="org.semanticweb.owlapi.model.OWLClassExpression">OWLClassExpression</span></code>
+          </td>
+          <td><p>An ontology class of interest.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>direct</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>Return direct instances (<code>direct=True</code>) or
+also include the sub-classes' instances (<code>direct=False</code>). Defaults to <code>False</code>.</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="typing.List">List</span>[<span title="org.semanticweb.owlapi.model.OWLNamedIndividual">OWLNamedIndividual</span>]</code>
+          </td>
+          <td><p>A list of named individuals that are instances of <code>owl_class</code>.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">707</span>
+<span class="normal">708</span>
+<span class="normal">709</span>
+<span class="normal">710</span>
+<span class="normal">711</span>
+<span class="normal">712</span>
+<span class="normal">713</span>
+<span class="normal">714</span>
+<span class="normal">715</span>
+<span class="normal">716</span>
+<span class="normal">717</span>
+<span class="normal">718</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">instances_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_class</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">direct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the list of named individuals that are instances of a given OWL class expression.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        owl_class (OWLClassExpression): An ontology class of interest.</span>
+<span class="sd">        direct (bool, optional): Return direct instances (`direct=True`) or</span>
+<span class="sd">            also include the sub-classes&#39; instances (`direct=False`). Defaults to `False`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (List[OWLNamedIndividual]): A list of named individuals that are instances of `owl_class`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="o">.</span><span class="n">getInstances</span><span class="p">(</span><span class="n">owl_class</span><span class="p">,</span> <span class="n">direct</span><span class="p">)</span><span class="o">.</span><span class="n">getFlattened</span><span class="p">())</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.ontology.OntologyReasoner.check_instance" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">check_instance</span><span class="p">(</span><span class="n">owl_instance</span><span class="p">,</span> <span class="n">owl_class</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Check if a named individual is an instance of an OWL class.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">720</span>
+<span class="normal">721</span>
+<span class="normal">722</span>
+<span class="normal">723</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_instance</span><span class="p">:</span> <span class="n">OWLNamedIndividual</span><span class="p">,</span> <span class="n">owl_class</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if a named individual is an instance of an OWL class.&quot;&quot;&quot;</span>
+    <span class="n">assertion_axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_data_factory</span><span class="o">.</span><span class="n">getOWLClassAssertionAxiom</span><span class="p">(</span><span class="n">owl_class</span><span class="p">,</span> <span class="n">owl_instance</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="o">.</span><span class="n">isEntailed</span><span class="p">(</span><span class="n">assertion_axiom</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.ontology.OntologyReasoner.check_common_instances" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">check_common_instances</span><span class="p">(</span><span class="n">owl_class1</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Check if two OWL class expressions have a common instance.</p>
+<p>Class expressions can be <strong>atomic or complex</strong>, and it takes longer computation time
+for the complex ones. Complex classes do not have an IRI. This method is optimised
+in the way that if there exists an atomic class <code>A</code>, we compute instances for <code>A</code> and
+compare them against the other class which could be complex.</p>
+<div class="admonition note">
+<p class="admonition-title">Difference with <a class="autorefs autorefs-internal" href="#deeponto.onto.ontology.OntologyReasoner.check_common_descendants"><code>check_common_descendants</code></a></p>
+<p>The inputs of this function are restricted to <strong>OWL class expressions</strong>. This is because
+<code>descendant</code> is related to hierarchy and both class and property expressions have a hierarchy,
+but <code>instance</code> is restricted to classes.</p>
+</div>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">725</span>
+<span class="normal">726</span>
+<span class="normal">727</span>
+<span class="normal">728</span>
+<span class="normal">729</span>
+<span class="normal">730</span>
+<span class="normal">731</span>
+<span class="normal">732</span>
+<span class="normal">733</span>
+<span class="normal">734</span>
+<span class="normal">735</span>
+<span class="normal">736</span>
+<span class="normal">737</span>
+<span class="normal">738</span>
+<span class="normal">739</span>
+<span class="normal">740</span>
+<span class="normal">741</span>
+<span class="normal">742</span>
+<span class="normal">743</span>
+<span class="normal">744</span>
+<span class="normal">745</span>
+<span class="normal">746</span>
+<span class="normal">747</span>
+<span class="normal">748</span>
+<span class="normal">749</span>
+<span class="normal">750</span>
+<span class="normal">751</span>
+<span class="normal">752</span>
+<span class="normal">753</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_common_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_class1</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two OWL class expressions have a common instance.</span>
+
+<span class="sd">    Class expressions can be **atomic or complex**, and it takes longer computation time</span>
+<span class="sd">    for the complex ones. Complex classes do not have an IRI. This method is optimised</span>
+<span class="sd">    in the way that if there exists an atomic class `A`, we compute instances for `A` and</span>
+<span class="sd">    compare them against the other class which could be complex.</span>
+
+<span class="sd">    !!! note &quot;Difference with [`check_common_descendants`][deeponto.onto.OntologyReasoner.check_common_descendants]&quot;</span>
+<span class="sd">        The inputs of this function are restricted to **OWL class expressions**. This is because</span>
+<span class="sd">        `descendant` is related to hierarchy and both class and property expressions have a hierarchy,</span>
+<span class="sd">        but `instance` is restricted to classes.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_iri</span><span class="p">(</span><span class="n">owl_class1</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_iri</span><span class="p">(</span><span class="n">owl_class2</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Computing instances for two complex classes is not efficient.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># `computed` is the one we compute the instances</span>
+    <span class="c1"># `compared` is the one we compare `computed`&#39;s descendant one-by-one</span>
+    <span class="c1"># we set the atomic entity as `computed` for efficiency if there is one</span>
+    <span class="n">computed</span><span class="p">,</span> <span class="n">compared</span> <span class="o">=</span> <span class="n">owl_class1</span><span class="p">,</span> <span class="n">owl_class2</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_iri</span><span class="p">(</span><span class="n">owl_class1</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_iri</span><span class="p">(</span><span class="n">owl_class2</span><span class="p">):</span>
+        <span class="n">computed</span><span class="p">,</span> <span class="n">compared</span> <span class="o">=</span> <span class="n">owl_class2</span><span class="p">,</span> <span class="n">owl_class2</span>
+
+    <span class="c1"># for every inferred instance of `computed`, check if it is subsumed by `compared``</span>
+    <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">instances_of</span><span class="p">(</span><span class="n">computed</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_instance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">compared</span><span class="p">):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.ontology.OntologyReasoner.check_assumed_disjoint" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">check_assumed_disjoint</span><span class="p">(</span><span class="n">owl_class1</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Check if two OWL class expressions satisfy the Assumed Disjointness.</p>
+<div class="admonition credit">
+<p class="admonition-title">Paper</p>
+<p>The definition of <strong>Assumed Disjointness</strong> comes from the paper:
+<a href="https://arxiv.org/abs/2302.06761">Language Model Analysis for Ontology Subsumption Inference</a>.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Assumed Disjointness (Definition)</p>
+<p>Two class expressions <span class="arithmatex">\(C\)</span> and <span class="arithmatex">\(D\)</span> are assumed to be disjoint if they meet the followings:</p>
+<ol>
+<li>By adding the disjointness axiom of them into the ontology, <span class="arithmatex">\(C\)</span> and <span class="arithmatex">\(D\)</span> are <strong>still satisfiable</strong>.</li>
+<li><span class="arithmatex">\(C\)</span> and <span class="arithmatex">\(D\)</span> <strong>do not have a common descendant</strong> (otherwise <span class="arithmatex">\(C\)</span> and <span class="arithmatex">\(D\)</span> can be satisfiable but their
+common descendants become the bottom <span class="arithmatex">\(\bot\)</span>.)</li>
+</ol>
+</div>
+<p>Note that the special case where <span class="arithmatex">\(C\)</span> and <span class="arithmatex">\(D\)</span> are already disjoint is covered by the first check.
+The paper also proposed a practical alternative to decide Assumed Disjointness.
+See <a class="autorefs autorefs-internal" href="#deeponto.onto.ontology.OntologyReasoner.check_assumed_disjoint_alternative"><code>check_assumed_disjoint_alternative</code></a>.</p>
+
+<p><strong>Examples:</strong></p>
+    <p>Suppose pre-load an ontology <code>onto</code> from the disease ontology file <code>doid.owl</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">c1</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_4058&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_0001816&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">check_assumed_disjoint</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span>
+<span class="p">[</span><span class="n">SUCCESSFULLY</span><span class="p">]</span> <span class="n">Adding</span> <span class="n">the</span> <span class="n">axiom</span> <span class="n">DisjointClasses</span><span class="p">(</span><span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">purl</span><span class="o">.</span><span class="n">obolibrary</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">obo</span><span class="o">/</span><span class="n">DOID_0001816</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">purl</span><span class="o">.</span><span class="n">obolibrary</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">obo</span><span class="o">/</span><span class="n">DOID_4058</span><span class="o">&gt;</span><span class="p">)</span> <span class="n">into</span> <span class="n">the</span> <span class="n">ontology</span><span class="o">.</span>
+<span class="p">[</span><span class="n">CHECK1</span> <span class="kc">True</span><span class="p">]</span> <span class="nb">input</span> <span class="n">classes</span> <span class="n">are</span> <span class="n">still</span> <span class="n">satisfiable</span><span class="p">;</span>
+<span class="p">[</span><span class="n">SUCCESSFULLY</span><span class="p">]</span> <span class="n">Removing</span> <span class="n">the</span> <span class="n">axiom</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">ontology</span><span class="o">.</span>
+<span class="p">[</span><span class="n">CHECK2</span> <span class="kc">False</span><span class="p">]</span> <span class="nb">input</span> <span class="n">classes</span> <span class="n">have</span> <span class="n">NO</span> <span class="n">common</span> <span class="n">descendant</span><span class="o">.</span>
+<span class="p">[</span><span class="n">PASSED</span> <span class="kc">False</span><span class="p">]</span> <span class="n">assumed</span> <span class="n">disjointness</span> <span class="n">check</span> <span class="n">done</span><span class="o">.</span>
+<span class="kc">False</span>
+</code></pre></div>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">755</span>
+<span class="normal">756</span>
+<span class="normal">757</span>
+<span class="normal">758</span>
+<span class="normal">759</span>
+<span class="normal">760</span>
+<span class="normal">761</span>
+<span class="normal">762</span>
+<span class="normal">763</span>
+<span class="normal">764</span>
+<span class="normal">765</span>
+<span class="normal">766</span>
+<span class="normal">767</span>
+<span class="normal">768</span>
+<span class="normal">769</span>
+<span class="normal">770</span>
+<span class="normal">771</span>
+<span class="normal">772</span>
+<span class="normal">773</span>
+<span class="normal">774</span>
+<span class="normal">775</span>
+<span class="normal">776</span>
+<span class="normal">777</span>
+<span class="normal">778</span>
+<span class="normal">779</span>
+<span class="normal">780</span>
+<span class="normal">781</span>
+<span class="normal">782</span>
+<span class="normal">783</span>
+<span class="normal">784</span>
+<span class="normal">785</span>
+<span class="normal">786</span>
+<span class="normal">787</span>
+<span class="normal">788</span>
+<span class="normal">789</span>
+<span class="normal">790</span>
+<span class="normal">791</span>
+<span class="normal">792</span>
+<span class="normal">793</span>
+<span class="normal">794</span>
+<span class="normal">795</span>
+<span class="normal">796</span>
+<span class="normal">797</span>
+<span class="normal">798</span>
+<span class="normal">799</span>
+<span class="normal">800</span>
+<span class="normal">801</span>
+<span class="normal">802</span>
+<span class="normal">803</span>
+<span class="normal">804</span>
+<span class="normal">805</span>
+<span class="normal">806</span>
+<span class="normal">807</span>
+<span class="normal">808</span>
+<span class="normal">809</span>
+<span class="normal">810</span>
+<span class="normal">811</span>
+<span class="normal">812</span>
+<span class="normal">813</span>
+<span class="normal">814</span>
+<span class="normal">815</span>
+<span class="normal">816</span>
+<span class="normal">817</span>
+<span class="normal">818</span>
+<span class="normal">819</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_assumed_disjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_class1</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Check if two OWL class expressions satisfy the Assumed Disjointness.</span>
+
+<span class="sd">    !!! credit &quot;Paper&quot;</span>
+
+<span class="sd">        The definition of **Assumed Disjointness** comes from the paper:</span>
+<span class="sd">        [Language Model Analysis for Ontology Subsumption Inference](https://arxiv.org/abs/2302.06761).</span>
+
+<span class="sd">    !!! note &quot;Assumed Disjointness (Definition)&quot;</span>
+<span class="sd">        Two class expressions $C$ and $D$ are assumed to be disjoint if they meet the followings:</span>
+
+<span class="sd">        1. By adding the disjointness axiom of them into the ontology, $C$ and $D$ are **still satisfiable**.</span>
+<span class="sd">        2. $C$ and $D$ **do not have a common descendant** (otherwise $C$ and $D$ can be satisfiable but their</span>
+<span class="sd">        common descendants become the bottom $\bot$.)</span>
+
+<span class="sd">    Note that the special case where $C$ and $D$ are already disjoint is covered by the first check.</span>
+<span class="sd">    The paper also proposed a practical alternative to decide Assumed Disjointness.</span>
+<span class="sd">    See [`check_assumed_disjoint_alternative`][deeponto.onto.OntologyReasoner.check_assumed_disjoint_alternative].</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        Suppose pre-load an ontology `onto` from the disease ontology file `doid.owl`.</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">        &gt;&gt;&gt; c1 = onto.get_owl_object_from_iri(&quot;http://purl.obolibrary.org/obo/DOID_4058&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; c2 = onto.get_owl_object_from_iri(&quot;http://purl.obolibrary.org/obo/DOID_0001816&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; onto.reasoner.check_assumed_disjoint(c1, c2)</span>
+<span class="sd">        [SUCCESSFULLY] Adding the axiom DisjointClasses(&lt;http://purl.obolibrary.org/obo/DOID_0001816&gt; &lt;http://purl.obolibrary.org/obo/DOID_4058&gt;) into the ontology.</span>
+<span class="sd">        [CHECK1 True] input classes are still satisfiable;</span>
+<span class="sd">        [SUCCESSFULLY] Removing the axiom from the ontology.</span>
+<span class="sd">        [CHECK2 False] input classes have NO common descendant.</span>
+<span class="sd">        [PASSED False] assumed disjointness check done.</span>
+<span class="sd">        False</span>
+<span class="sd">        ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># banner_message(&quot;Check Asssumed Disjointness&quot;)</span>
+
+    <span class="n">entity_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">owl_class1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">owl_class2</span><span class="p">)</span>
+
+    <span class="c1"># adding the disjointness axiom of `class1`` and `class2``</span>
+    <span class="n">disjoint_axiom</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_data_factory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;getOWLDisjoint</span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">Axiom&quot;</span><span class="p">)([</span><span class="n">owl_class1</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">])</span>
+    <span class="n">undo_change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">add_axiom</span><span class="p">(</span><span class="n">disjoint_axiom</span><span class="p">,</span> <span class="n">return_undo</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reload_reasoner</span><span class="p">()</span>
+
+    <span class="c1"># check if they are still satisfiable</span>
+    <span class="n">still_satisfiable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="o">.</span><span class="n">isSatisfiable</span><span class="p">(</span><span class="n">owl_class1</span><span class="p">)</span>
+    <span class="n">still_satisfiable</span> <span class="o">=</span> <span class="n">still_satisfiable</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="o">.</span><span class="n">isSatisfiable</span><span class="p">(</span><span class="n">owl_class2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[CHECK1 </span><span class="si">{</span><span class="n">still_satisfiable</span><span class="si">}</span><span class="s2">] input classes are still satisfiable;&quot;</span><span class="p">)</span>
+
+    <span class="c1"># remove the axiom and re-construct the reasoner</span>
+    <span class="n">undo_change_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_onto</span><span class="o">.</span><span class="n">applyChange</span><span class="p">(</span><span class="n">undo_change</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">undo_change_result</span><span class="p">)</span><span class="si">}</span><span class="s2">] Removing the axiom from the ontology.&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reload_reasoner</span><span class="p">()</span>
+
+    <span class="c1"># failing first check, there is no need to do the second.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">still_satisfiable</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed `satisfiability check`, skip the `common descendant` check.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[PASSED </span><span class="si">{</span><span class="n">still_satisfiable</span><span class="si">}</span><span class="s2">] assumed disjointness check done.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># otherwise, the classes are still satisfiable and we should conduct the second check</span>
+    <span class="n">has_common_descendants</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_common_descendants</span><span class="p">(</span><span class="n">owl_class1</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[CHECK2 </span><span class="si">{</span><span class="ow">not</span><span class="w"> </span><span class="n">has_common_descendants</span><span class="si">}</span><span class="s2">] input classes have NO common descendant.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[PASSED </span><span class="si">{</span><span class="ow">not</span><span class="w"> </span><span class="n">has_common_descendants</span><span class="si">}</span><span class="s2">] assumed disjointness check done.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">has_common_descendants</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.ontology.OntologyReasoner.check_assumed_disjoint_alternative" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">check_assumed_disjoint_alternative</span><span class="p">(</span><span class="n">owl_class1</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Check if two OWL class expressions satisfy the Assumed Disjointness.</p>
+<div class="admonition credit">
+<p class="admonition-title">Paper</p>
+<p>The definition of <strong>Assumed Disjointness</strong> comes from the paper:
+<a href="https://arxiv.org/abs/2302.06761">Language Model Analysis for Ontology Subsumption Inference</a>.</p>
+</div>
+<p>The practical alternative version of <a class="autorefs autorefs-internal" href="#deeponto.onto.ontology.OntologyReasoner.check_assumed_disjoint"><code>check_assumed_disjoint</code></a>
+with following conditions:</p>
+<div class="admonition note">
+<p class="admonition-title">Assumed Disjointness (Practical Alternative)</p>
+<p>Two class expressions <span class="arithmatex">\(C\)</span> and <span class="arithmatex">\(D\)</span> are assumed to be disjoint if they</p>
+<ol>
+<li><strong>do not</strong> have a <strong>subsumption relationship</strong> between them,</li>
+<li><strong>do not</strong> have a <strong>common descendant</strong> (in TBox),</li>
+<li><strong>do not</strong> have a <strong>common instance</strong> (in ABox).</li>
+</ol>
+</div>
+<p>If all the conditions have been met, then we assume <code>class1</code> and <code>class2</code> as disjoint.</p>
+
+<p><strong>Examples:</strong></p>
+    <p>Suppose pre-load an ontology <code>onto</code> from the disease ontology file <code>doid.owl</code>.</p>
+<p><div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">c1</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_4058&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_0001816&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">check_assumed_disjoint</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">[</span><span class="n">CHECK1</span> <span class="kc">True</span><span class="p">]</span> <span class="nb">input</span> <span class="n">classes</span> <span class="n">have</span> <span class="n">NO</span> <span class="n">subsumption</span> <span class="n">relationship</span><span class="p">;</span>
+<span class="p">[</span><span class="n">CHECK2</span> <span class="kc">False</span><span class="p">]</span> <span class="nb">input</span> <span class="n">classes</span> <span class="n">have</span> <span class="n">NO</span> <span class="n">common</span> <span class="n">descendant</span><span class="p">;</span>
+<span class="n">Failed</span> <span class="n">the</span> <span class="err">`</span><span class="n">common</span> <span class="n">descendant</span> <span class="n">check</span><span class="err">`</span><span class="p">,</span> <span class="n">skip</span> <span class="n">the</span> <span class="err">`</span><span class="n">common</span> <span class="n">instance</span><span class="err">`</span> <span class="n">check</span><span class="o">.</span>
+<span class="p">[</span><span class="n">PASSED</span> <span class="kc">False</span><span class="p">]</span> <span class="n">assumed</span> <span class="n">disjointness</span> <span class="n">check</span> <span class="n">done</span><span class="o">.</span>
+<span class="kc">False</span>
+</code></pre></div>
+In this alternative implementation, we do no need to add and remove axioms which will then
+be time-saving.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">821</span>
+<span class="normal">822</span>
+<span class="normal">823</span>
+<span class="normal">824</span>
+<span class="normal">825</span>
+<span class="normal">826</span>
+<span class="normal">827</span>
+<span class="normal">828</span>
+<span class="normal">829</span>
+<span class="normal">830</span>
+<span class="normal">831</span>
+<span class="normal">832</span>
+<span class="normal">833</span>
+<span class="normal">834</span>
+<span class="normal">835</span>
+<span class="normal">836</span>
+<span class="normal">837</span>
+<span class="normal">838</span>
+<span class="normal">839</span>
+<span class="normal">840</span>
+<span class="normal">841</span>
+<span class="normal">842</span>
+<span class="normal">843</span>
+<span class="normal">844</span>
+<span class="normal">845</span>
+<span class="normal">846</span>
+<span class="normal">847</span>
+<span class="normal">848</span>
+<span class="normal">849</span>
+<span class="normal">850</span>
+<span class="normal">851</span>
+<span class="normal">852</span>
+<span class="normal">853</span>
+<span class="normal">854</span>
+<span class="normal">855</span>
+<span class="normal">856</span>
+<span class="normal">857</span>
+<span class="normal">858</span>
+<span class="normal">859</span>
+<span class="normal">860</span>
+<span class="normal">861</span>
+<span class="normal">862</span>
+<span class="normal">863</span>
+<span class="normal">864</span>
+<span class="normal">865</span>
+<span class="normal">866</span>
+<span class="normal">867</span>
+<span class="normal">868</span>
+<span class="normal">869</span>
+<span class="normal">870</span>
+<span class="normal">871</span>
+<span class="normal">872</span>
+<span class="normal">873</span>
+<span class="normal">874</span>
+<span class="normal">875</span>
+<span class="normal">876</span>
+<span class="normal">877</span>
+<span class="normal">878</span>
+<span class="normal">879</span>
+<span class="normal">880</span>
+<span class="normal">881</span>
+<span class="normal">882</span>
+<span class="normal">883</span>
+<span class="normal">884</span>
+<span class="normal">885</span>
+<span class="normal">886</span>
+<span class="normal">887</span>
+<span class="normal">888</span>
+<span class="normal">889</span>
+<span class="normal">890</span>
+<span class="normal">891</span>
+<span class="normal">892</span>
+<span class="normal">893</span>
+<span class="normal">894</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_assumed_disjoint_alternative</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">owl_class1</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Check if two OWL class expressions satisfy the Assumed Disjointness.</span>
+
+<span class="sd">    !!! credit &quot;Paper&quot;</span>
+
+<span class="sd">        The definition of **Assumed Disjointness** comes from the paper:</span>
+<span class="sd">        [Language Model Analysis for Ontology Subsumption Inference](https://arxiv.org/abs/2302.06761).</span>
+
+<span class="sd">    The practical alternative version of [`check_assumed_disjoint`][deeponto.onto.OntologyReasoner.check_assumed_disjoint]</span>
+<span class="sd">    with following conditions:</span>
+
+
+<span class="sd">    !!! note &quot;Assumed Disjointness (Practical Alternative)&quot;</span>
+<span class="sd">        Two class expressions $C$ and $D$ are assumed to be disjoint if they</span>
+
+<span class="sd">        1. **do not** have a **subsumption relationship** between them,</span>
+<span class="sd">        2. **do not** have a **common descendant** (in TBox),</span>
+<span class="sd">        3. **do not** have a **common instance** (in ABox).</span>
+
+<span class="sd">    If all the conditions have been met, then we assume `class1` and `class2` as disjoint.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        Suppose pre-load an ontology `onto` from the disease ontology file `doid.owl`.</span>
+
+<span class="sd">        ```python</span>
+<span class="sd">        &gt;&gt;&gt; c1 = onto.get_owl_object_from_iri(&quot;http://purl.obolibrary.org/obo/DOID_4058&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; c2 = onto.get_owl_object_from_iri(&quot;http://purl.obolibrary.org/obo/DOID_0001816&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; onto.reasoner.check_assumed_disjoint(c1, c2, verbose=True)</span>
+<span class="sd">        [CHECK1 True] input classes have NO subsumption relationship;</span>
+<span class="sd">        [CHECK2 False] input classes have NO common descendant;</span>
+<span class="sd">        Failed the `common descendant check`, skip the `common instance` check.</span>
+<span class="sd">        [PASSED False] assumed disjointness check done.</span>
+<span class="sd">        False</span>
+<span class="sd">        ```</span>
+<span class="sd">        In this alternative implementation, we do no need to add and remove axioms which will then</span>
+<span class="sd">        be time-saving.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># banner_message(&quot;Check Asssumed Disjointness (Alternative)&quot;)</span>
+
+    <span class="c1"># # Check for entailed disjointness (short-cut)</span>
+    <span class="c1"># if self.check_disjoint(owl_class1, owl_class2):</span>
+    <span class="c1">#     print(f&quot;Input classes are already entailed as disjoint.&quot;)</span>
+    <span class="c1">#     return True</span>
+
+    <span class="c1"># Check for entailed subsumption,</span>
+    <span class="c1"># common descendants and common instances</span>
+
+    <span class="n">has_subsumption</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_subsumption</span><span class="p">(</span><span class="n">owl_class1</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">)</span>
+    <span class="n">has_subsumption</span> <span class="o">=</span> <span class="n">has_subsumption</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_subsumption</span><span class="p">(</span><span class="n">owl_class2</span><span class="p">,</span> <span class="n">owl_class1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[CHECK1 </span><span class="si">{</span><span class="ow">not</span><span class="w"> </span><span class="n">has_subsumption</span><span class="si">}</span><span class="s2">] input classes have NO subsumption relationship;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">has_subsumption</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed the `subsumption check`, skip the `common descendant` check.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[PASSED </span><span class="si">{</span><span class="ow">not</span><span class="w"> </span><span class="n">has_subsumption</span><span class="si">}</span><span class="s2">] assumed disjointness check done.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">has_common_descendants</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_common_descendants</span><span class="p">(</span><span class="n">owl_class1</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[CHECK2 </span><span class="si">{</span><span class="ow">not</span><span class="w"> </span><span class="n">has_common_descendants</span><span class="si">}</span><span class="s2">] input classes have NO common descendant;&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">has_common_descendants</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Failed the `common descendant check`, skip the `common instance` check.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[PASSED </span><span class="si">{</span><span class="ow">not</span><span class="w"> </span><span class="n">has_common_descendants</span><span class="si">}</span><span class="s2">] assumed disjointness check done.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="c1"># TODO: `check_common_instances` is still experimental because we have not tested it with ontologies of rich ABox.</span>
+    <span class="n">has_common_instances</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_common_instances</span><span class="p">(</span><span class="n">owl_class1</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[CHECK3 </span><span class="si">{</span><span class="ow">not</span><span class="w"> </span><span class="n">has_common_instances</span><span class="si">}</span><span class="s2">] input classes have NO common instance;&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[PASSED </span><span class="si">{</span><span class="ow">not</span><span class="w"> </span><span class="n">has_common_instances</span><span class="si">}</span><span class="s2">] assumed disjointness check done.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">has_common_instances</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+  <hr>
+<div class="md-source-file">
+  <small>
+    
+      Last update:
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 18, 2023</span>
+      
+        <br>
+        Created:
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 18, 2023</span>
+      
+    
+  </small>
+</div>
+
+
+
+
+
+                
+
+  
+    <div class="md-source-date">
+      <small>
+        <span class="twemoji">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg> 
+        </span>
+        GitHub: <span class='git-page-authors'><a href='https://github.com/Lawhy'>@Lawhy</a>
+        &nbsp;
+        <span class="twemoji">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c.2 35.5-28.5 64.3-64 64.3H128.1c-35.3 0-64-28.7-64-64V287.6H32c-18 0-32-14-32-32.1 0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7l255.4 224.5c8 7 12 15 11 24zM352 224c0-35.3-28.7-64-64-64s-64 28.7-64 64 28.7 64 64 64 64-28.7 64-64zm-96 96c-44.2 0-80 35.8-80 80 0 8.8 7.2 16 16 16h192c8.8 0 16-7.2 16-16 0-44.2-35.8-80-80-80h-64z"/></svg> 
+        </span>
+        Personal Page: <span class='git-page-authors'><a href='https://www.yuanhe.wiki/'>yuanhe.wiki</a>
+      </small>
+    </div>
+  
+
+              </article>
+            </div>
+          
+          
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2021 Yuan He (KRR-Oxford)
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/deeponto/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6zM286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3zM167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4zm-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://github.com/Lawhy" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://twitter.com/YuanHe97" target="_blank" rel="noopener" title="twitter.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.sections", "toc.integrate", "navigation.top", "header.autohide", "toc.follow", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.51d95adb.min.js"></script>
+      
+        <script src="../../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>
