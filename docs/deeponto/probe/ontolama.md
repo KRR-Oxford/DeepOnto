@@ -1,8 +1,8 @@
-::: deeponto.probing.ontolama.inference
+::: deeponto.probe.ontolama.inference
     heading_level: 2
 
-::: deeponto.probing.ontolama.subsumption_sampler
+::: deeponto.probe.ontolama.subsumption_sampler
     heading_level: 2
 
-::: deeponto.probing.ontolama.data_processor
+::: deeponto.probe.ontolama.data_processor
     heading_level: 2
