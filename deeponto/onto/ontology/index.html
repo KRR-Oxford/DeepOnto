@@ -2833,7 +2833,7 @@ Defaults to <code>False</code>.</p></td>
           <td>
                 <code>bool</code>
           </td>
-          <td><p>Returning the undo operation or not. Defaults to True.</p></td>
+          <td><p>Returning the undo operation or not. Defaults to <code>True</code>.</p></td>
           <td>
                 <code>True</code>
           </td>
@@ -2859,7 +2859,7 @@ Defaults to <code>False</code>.</p></td>
 
 <span class="sd">    Args:</span>
 <span class="sd">        owl_axiom (OWLAxiom): An axiom to be added.</span>
-<span class="sd">        return_undo (bool, optional): Returning the undo operation or not. Defaults to True.</span>
+<span class="sd">        return_undo (bool, optional): Returning the undo operation or not. Defaults to `True`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">change</span> <span class="o">=</span> <span class="n">AddAxiom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_onto</span><span class="p">,</span> <span class="n">owl_axiom</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_onto</span><span class="o">.</span><span class="n">applyChange</span><span class="p">(</span><span class="n">change</span><span class="p">)</span>
@@ -2912,7 +2912,7 @@ Defaults to <code>False</code>.</p></td>
           <td>
                 <code>bool</code>
           </td>
-          <td><p>Returning the undo operation or not. Defaults to True.</p></td>
+          <td><p>Returning the undo operation or not. Defaults to <code>True</code>.</p></td>
           <td>
                 <code>True</code>
           </td>
@@ -2938,7 +2938,7 @@ Defaults to <code>False</code>.</p></td>
 
 <span class="sd">    Args:</span>
 <span class="sd">        owl_axiom (OWLAxiom): An axiom to be removed.</span>
-<span class="sd">        return_undo (bool, optional): Returning the undo operation or not. Defaults to True.</span>
+<span class="sd">        return_undo (bool, optional): Returning the undo operation or not. Defaults to `True`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">change</span> <span class="o">=</span> <span class="n">RemoveAxiom</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_onto</span><span class="p">,</span> <span class="n">owl_axiom</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_onto</span><span class="o">.</span><span class="n">applyChange</span><span class="p">(</span><span class="n">change</span><span class="p">)</span>
