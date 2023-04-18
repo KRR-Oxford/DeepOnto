@@ -102,6 +102,10 @@ pip install -r requirements.txt
 
 ## Main Features
 
+<!-- <p align="center">
+  <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/deeponto.svg" height="500" style="width: 80%;">
+</p> -->
+
 ### Core Ontology API
 
 The base class of $\textsf{DeepOnto}$ is [`Ontology`][deeponto.onto.Ontology], which encapsulates and extends the features of the OWLAPI library for processing ontologies. See quick usage at [load an ontology](https://krr-oxford.github.io/DeepOnto/ontology/). Several essential modules that revolve around [`Ontology`][deeponto.onto.Ontology] are then built to enhance the core ontology API, including:
