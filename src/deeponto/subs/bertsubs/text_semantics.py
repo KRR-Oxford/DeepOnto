@@ -31,14 +31,14 @@ class SubsumptionSampler:
     r"""Class for sampling functions for training the subsumption prediction model.
 
     Attributes:
-        onto (Ontology): Target ontology
-        config (CfgNode): Configuration
-        named_classes (Set[str]): classes (IRIs) which are not deprecated
-        iri_label (Dict[str:List]): key -- class iri from named_classes, value -- a list of labels
-        restrictionObjects (Set[OWLClassExpression]): basic existential restrictions that appear in the ontology
-        restrictions (set[str]): strings of basic existential restrictions corresponding to restrictionObjects
-        restriction_label (Dict[str:List]): key -- existential restriction string, value -- a list of existential restriction labels
-        verb (OntologyVerbaliser): object for verbalisation
+        onto (Ontology): The target ontology.
+        config (CfgNode): The loaded configuration.
+        named_classes (Set[str]): IRIs of named classes that are not deprecated.
+        iri_label (Dict[str, List]): key -- class iris from `named_classes`, value -- a list of labels.
+        restrictionObjects (Set[OWLClassExpression]): Basic existential restrictions that appear in the ontology.
+        restrictions (set[str]): Strings of basic existential restrictions corresponding to `restrictionObjects`.
+        restriction_label (Dict[str:List]): key -- existential restriction string, value -- a list of existential restriction labels.
+        verb (OntologyVerbaliser): object for verbalisation.
     """
 
     def __init__(self, onto: Ontology, config: CfgNode):
@@ -49,10 +49,13 @@ class SubsumptionSampler:
         for iri in self.named_classes:
             self.iri_label[iri] = []
             for p in config.label_property:
-                strings = onto.get_owl_object_annotations(owl_object=onto.get_owl_object_from_iri(iri),
-                                                          annotation_property_iri=p,
-                                                          annotation_language_tag=None, apply_lowercasing=False,
-                                                          normalise_identifiers=False)
+                strings = onto.get_owl_object_annotations(
+                    owl_object=onto.get_owl_object_from_iri(iri),
+                    annotation_property_iri=p,
+                    annotation_language_tag=None,
+                    apply_lowercasing=False,
+                    normalise_identifiers=False,
+                )
                 for s in strings:
                     if s not in self.iri_label[iri]:
                         self.iri_label[iri].append(s)
@@ -70,9 +73,10 @@ class SubsumptionSampler:
                 self.restriction_label[s].append(self.verb.verbalise_class_expression(complexC).verbal)
 
     @staticmethod
-    def is_basic_existential_restriction(complex_class_str):
+    def is_basic_existential_restriction(complex_class_str: str):
+        """Determine if a complex class expression is a basic existential restriction."""
         IRI = "<https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)>"
-        p = fr'ObjectSomeValuesFrom\({IRI}\s{IRI}\)'
+        p = rf"ObjectSomeValuesFrom\({IRI}\s{IRI}\)"
         if re.match(p, complex_class_str):
             return True
         else:
@@ -87,14 +91,15 @@ class SubsumptionSampler:
         return named_classes
 
     def generate_samples(self, subsumptions: List[List], duplicate: bool = True):
-        r"""Generate text samples from subsumptions
+        r"""Generate text samples from subsumptions.
 
         Args:
-            subsumptions (List[List]): a list of subsumptions, each of which of is a two-component list (subclass iri, and superclass iri/str)
-            duplicate (bool): True -- duplicate the positive and negative samples, False -- do not duplicate
+            subsumptions (List[List]): A list of subsumptions, each of which of is a two-component list `(sub_class_iri, super_class_iri_or_str)`.
+            duplicate (bool): `True` -- duplicate the positive and negative samples, `False` -- do not duplicate.
 
-        return:
-            all_sample (List[List]): a list of samples, each of which is a tree-complement list (subclass label, superclass label, classification label (0 or 1))
+        Returns:
+            (List[List]): A list of samples, each element is a triple
+                in the form of `(sub_class_string, super_class_string, label_index)`.
         """
         if duplicate:
             pos_dup, neg_dup = self.config.fine_tune.train_pos_dup, self.config.fine_tune.train_neg_dup
@@ -111,33 +116,37 @@ class SubsumptionSampler:
         pos_samples = pos_dup * pos_samples
         neg_samples = self.subsumptions_to_samples(subsumptions=neg_subsumptions, sample_label=0)
         if len(neg_samples) < len(pos_samples):
-            neg_samples = neg_samples + [random.choice(neg_samples) for _ in range(len(pos_samples) - len(neg_samples))]
+            neg_samples = neg_samples + [
+                random.choice(neg_samples) for _ in range(len(pos_samples) - len(neg_samples))
+            ]
         if len(neg_samples) > len(pos_samples):
-            pos_samples = pos_samples + [random.choice(pos_samples) for _ in range(len(neg_samples) - len(pos_samples))]
-        print('pos_samples: %d, neg_samples: %d' % (len(pos_samples), len(neg_samples)))
-        all_samples = [s for s in pos_samples + neg_samples if s[0] != '' and s[1] != '']
+            pos_samples = pos_samples + [
+                random.choice(pos_samples) for _ in range(len(neg_samples) - len(pos_samples))
+            ]
+        print("pos_samples: %d, neg_samples: %d" % (len(pos_samples), len(neg_samples)))
+        all_samples = [s for s in pos_samples + neg_samples if s[0] != "" and s[1] != ""]
         random.shuffle(all_samples)
         return all_samples
 
     def subsumptions_to_samples(self, subsumptions: List[List], sample_label: Union[int, None]):
-        r"""Transform subsumptions to samples of strings
+        r"""Transform subsumptions into samples of strings.
 
         Args:
-            subsumptions (List[List]): the given subsumptions
-            sample_label (Union[int, None]): 1 (positive), 0 (negative), None (no label)
+            subsumptions (List[List]): The given subsumptions.
+            sample_label (Union[int, None]): `1` (positive), `0` (negative), `None` (no label).
 
-        return:
-            local_samples (List[List]): a list of samples,
-            each of which has three elements (subclass string, superclss string, label int)
+        Returns:
+            (List[List]): A list of samples, each element is a triple
+                in the form of `(sub_class_string, super_class_string, label_index)`.
 
         """
         local_samples = list()
         for subs in subsumptions:
             subcls, supcls = subs[0], subs[1]
-            substrs = self.iri_label[subcls] if subcls in self.iri_label and len(self.iri_label[subcls]) > 0 else ['']
+            substrs = self.iri_label[subcls] if subcls in self.iri_label and len(self.iri_label[subcls]) > 0 else [""]
 
-            if self.config.subsumption_type == 'named_class':
-                supstrs = self.iri_label[supcls] if supcls in self.iri_label and len(self.iri_label[supcls]) else ['']
+            if self.config.subsumption_type == "named_class":
+                supstrs = self.iri_label[supcls] if supcls in self.iri_label and len(self.iri_label[supcls]) else [""]
             else:
                 if supcls in self.restriction_label and len(self.restriction_label[supcls]) > 0:
                     supstrs = self.restriction_label[supcls]
@@ -147,33 +156,37 @@ class SubsumptionSampler:
             if self.config.use_one_label:
                 substrs, supstrs = substrs[0:1], supstrs[0:1]
 
-            if self.config.prompt.prompt_type == 'isolated':
+            if self.config.prompt.prompt_type == "isolated":
                 for substr in substrs:
                     for supstr in supstrs:
                         local_samples.append([substr, supstr])
 
-            elif self.config.prompt.prompt_type == 'traversal':
+            elif self.config.prompt.prompt_type == "traversal":
                 subs_list_strs = set()
                 for _ in range(self.config.prompt.context_dup):
-                    context_sub, no_duplicate = self.traversal_subsumptions(cls=subcls,
-                                                                            hop=self.config.prompt.prompt_hop,
-                                                                            direction='subclass',
-                                                                            max_subsumptions=self.config.prompt.prompt_max_subsumptions)
+                    context_sub, no_duplicate = self.traversal_subsumptions(
+                        cls=subcls,
+                        hop=self.config.prompt.prompt_hop,
+                        direction="subclass",
+                        max_subsumptions=self.config.prompt.prompt_max_subsumptions,
+                    )
                     subs_list = [self.named_subsumption_to_str(subsum) for subsum in context_sub]
-                    subs_list_str = ' <SEP> '.join(subs_list)
+                    subs_list_str = " <SEP> ".join(subs_list)
                     subs_list_strs.add(subs_list_str)
                     if no_duplicate:
                         break
 
-                if self.config.subsumption_type == 'named_class':
+                if self.config.subsumption_type == "named_class":
                     sups_list_strs = set()
                     for _ in range(self.config.prompt.context_dup):
-                        context_sup, no_duplicate = self.traversal_subsumptions(cls=supcls,
-                                                                                hop=self.config.prompt.prompt_hop,
-                                                                                direction='supclass',
-                                                                                max_subsumptions=self.config.prompt.prompt_max_subsumptions)
+                        context_sup, no_duplicate = self.traversal_subsumptions(
+                            cls=supcls,
+                            hop=self.config.prompt.prompt_hop,
+                            direction="supclass",
+                            max_subsumptions=self.config.prompt.prompt_max_subsumptions,
+                        )
                         sups_list = [self.named_subsumption_to_str(subsum) for subsum in context_sup]
-                        sups_list_str = ' <SEP> '.join(sups_list)
+                        sups_list_str = " <SEP> ".join(sups_list)
                         sups_list_strs.add(sups_list_str)
                         if no_duplicate:
                             break
@@ -182,55 +195,61 @@ class SubsumptionSampler:
 
                 for subs_list_str in subs_list_strs:
                     for substr in substrs:
-                        s1 = substr + ' <SEP> ' + subs_list_str
+                        s1 = substr + " <SEP> " + subs_list_str
                         for sups_list_str in sups_list_strs:
                             for supstr in supstrs:
-                                s2 = supstr + ' <SEP> ' + sups_list_str
+                                s2 = supstr + " <SEP> " + sups_list_str
                                 local_samples.append([s1, s2])
 
-            elif self.config.prompt.prompt_type == 'path':
-                sep_token = '<SUB>' if self.config.prompt.use_sub_special_token else '<SEP>'
+            elif self.config.prompt.prompt_type == "path":
+                sep_token = "<SUB>" if self.config.prompt.use_sub_special_token else "<SEP>"
 
                 s1_set = set()
                 for _ in range(self.config.prompt.context_dup):
-                    context_sub, no_duplicate = self.path_subsumptions(cls=subcls,
-                                                                       hop=self.config.prompt.prompt_hop,
-                                                                       direction='subclass')
+                    context_sub, no_duplicate = self.path_subsumptions(
+                        cls=subcls, hop=self.config.prompt.prompt_hop, direction="subclass"
+                    )
                     if len(context_sub) > 0:
-                        s1 = ''
+                        s1 = ""
                         for i in range(len(context_sub)):
                             subsum = context_sub[len(context_sub) - i - 1]
                             subc = subsum[0]
-                            s1 += '%s %s ' % (
-                                self.iri_label[subc][0] if subc in self.iri_label and len(
-                                    self.iri_label[subc]) > 0 else '', sep_token)
+                            s1 += "%s %s " % (
+                                self.iri_label[subc][0]
+                                if subc in self.iri_label and len(self.iri_label[subc]) > 0
+                                else "",
+                                sep_token,
+                            )
                         for substr in substrs:
                             s1_set.add(s1 + substr)
                     else:
                         for substr in substrs:
-                            s1_set.add('%s %s' % (sep_token, substr))
+                            s1_set.add("%s %s" % (sep_token, substr))
 
                     if no_duplicate:
                         break
 
-                if self.config.subsumption_type == 'named_class':
+                if self.config.subsumption_type == "named_class":
                     s2_set = set()
                     for _ in range(self.config.prompt.context_dup):
-                        context_sup, no_duplicate = self.path_subsumptions(cls=supcls,
-                                                                           hop=self.config.prompt.prompt_hop,
-                                                                           direction='supclass')
+                        context_sup, no_duplicate = self.path_subsumptions(
+                            cls=supcls, hop=self.config.prompt.prompt_hop, direction="supclass"
+                        )
                         if len(context_sup) > 0:
-                            s2 = ''
+                            s2 = ""
                             for subsum in context_sup:
                                 supc = subsum[1]
-                                s2 += ' %s %s' % (sep_token,
-                                                  self.iri_label[supc][0] if supc in self.iri_label and len(
-                                                      self.iri_label[supc]) > 0 else '')
+                                s2 += " %s %s" % (
+                                    sep_token,
+                                    self.iri_label[supc][0]
+                                    if supc in self.iri_label and len(self.iri_label[supc]) > 0
+                                    else "",
+                                )
                             for supstr in supstrs:
                                 s2_set.add(supstr + s2)
                         else:
                             for supstr in supstrs:
-                                s2_set.add('%s %s' % (supstr, sep_token))
+                                s2_set.add("%s %s" % (supstr, sep_token))
 
                         if no_duplicate:
                             break
@@ -251,14 +270,15 @@ class SubsumptionSampler:
 
         return local_samples
 
-    def get_negative_sample(self, subclass_iri: str, subsumption_type: str = 'named_class'):
-        r"""Given a named subclass, get a negative class for a negative subsumption
+    def get_negative_sample(self, subclass_iri: str, subsumption_type: str = "named_class"):
+        r"""Given a named subclass, get a negative class for a negative subsumption.
+
         Args:
-            subclass_iri (str): subclass iri
-            subsumption_type (str): named_class or restriction
+            subclass_iri (str): IRI of a given sub-class.
+            subsumption_type (str): `named_class` or `restriction`.
         """
         subclass = self.onto.get_owl_object_from_iri(iri=subclass_iri)
-        if subsumption_type == 'named_class':
+        if subsumption_type == "named_class":
             ancestors = set(self.onto.reasoner.get_inferred_super_entities(subclass, direct=False))
             neg_c = random.sample(self.named_classes - ancestors, 1)[0]
             return neg_c
@@ -269,37 +289,41 @@ class SubsumptionSampler:
             return None
 
     def named_subsumption_to_str(self, subsum: List):
-        r"""Transform a named subsumption to string with <SUB> and classes' labels
+        r"""Transform a named subsumption into string with `<SUB>` and classes' labels.
+
         Args:
-            subsum (List): a two-element list (subclass iri, superclass iri)
+            subsum (List[Tuple]): A list of subsumption pairs in the form of `(sub_class_iri, super_class_iri)`.
         """
         subc, supc = subsum[0], subsum[1]
-        subs = self.iri_label[subc][0] if subc in self.iri_label and len(self.iri_label[subc]) > 0 else ''
-        sups = self.iri_label[supc][0] if supc in self.iri_label and len(self.iri_label[supc]) > 0 else ''
-        return '%s <SUB> %s' % (subs, sups)
+        subs = self.iri_label[subc][0] if subc in self.iri_label and len(self.iri_label[subc]) > 0 else ""
+        sups = self.iri_label[supc][0] if supc in self.iri_label and len(self.iri_label[supc]) > 0 else ""
+        return "%s <SUB> %s" % (subs, sups)
 
     def subclass_to_strings(self, subcls):
-        r"""Transform a subclass into strings (with the path or traversal context template)
+        r"""Transform a sub-class into strings (with the path or traversal context template).
+
         Args:
-            subcls (str): the given subclass iri
+            subcls (str): IRI of the sub-class.
         """
-        substrs = self.iri_label[subcls] if subcls in self.iri_label and len(self.iri_label[subcls]) > 0 else ['']
+        substrs = self.iri_label[subcls] if subcls in self.iri_label and len(self.iri_label[subcls]) > 0 else [""]
 
         if self.config.use_one_label:
             substrs = substrs[0:1]
 
-        if self.config.prompt.prompt_type == 'isolated':
+        if self.config.prompt.prompt_type == "isolated":
             return substrs
 
-        elif self.config.prompt.prompt_type == 'traversal':
+        elif self.config.prompt.prompt_type == "traversal":
             subs_list_strs = set()
             for _ in range(self.config.prompt.context_dup):
-                context_sub, no_duplicate = self.traversal_subsumptions(cls=subcls,
-                                                                        hop=self.config.prompt.prompt_hop,
-                                                                        direction='subclass',
-                                                                        max_subsumptions=self.config.prompt.prompt_max_subsumptions)
+                context_sub, no_duplicate = self.traversal_subsumptions(
+                    cls=subcls,
+                    hop=self.config.prompt.prompt_hop,
+                    direction="subclass",
+                    max_subsumptions=self.config.prompt.prompt_max_subsumptions,
+                )
                 subs_list = [self.named_subsumption_to_str(subsum) for subsum in context_sub]
-                subs_list_str = ' <SEP> '.join(subs_list)
+                subs_list_str = " <SEP> ".join(subs_list)
                 subs_list_strs.add(subs_list_str)
                 if no_duplicate:
                     break
@@ -307,69 +331,75 @@ class SubsumptionSampler:
             strs = list()
             for subs_list_str in subs_list_strs:
                 for substr in substrs:
-                    s1 = substr + ' <SEP> ' + subs_list_str
+                    s1 = substr + " <SEP> " + subs_list_str
                     strs.append(s1)
             return strs
 
-        elif self.config.prompt.prompt_type == 'path':
-            sep_token = '<SUB>' if self.config.prompt.use_sub_special_token else '<SEP>'
+        elif self.config.prompt.prompt_type == "path":
+            sep_token = "<SUB>" if self.config.prompt.use_sub_special_token else "<SEP>"
 
             s1_set = set()
             for _ in range(self.config.prompt.context_dup):
-                context_sub, no_duplicate = self.path_subsumptions(cls=subcls,
-                                                                   hop=self.config.prompt.prompt_hop,
-                                                                   direction='subclass')
+                context_sub, no_duplicate = self.path_subsumptions(
+                    cls=subcls, hop=self.config.prompt.prompt_hop, direction="subclass"
+                )
                 if len(context_sub) > 0:
-                    s1 = ''
+                    s1 = ""
                     for i in range(len(context_sub)):
                         subsum = context_sub[len(context_sub) - i - 1]
                         subc = subsum[0]
-                        s1 += '%s %s ' % (
-                        self.iri_label[subc][0] if subc in self.iri_label and len(self.iri_label[subc]) > 0 else '',
-                        sep_token)
+                        s1 += "%s %s " % (
+                            self.iri_label[subc][0]
+                            if subc in self.iri_label and len(self.iri_label[subc]) > 0
+                            else "",
+                            sep_token,
+                        )
                     for substr in substrs:
                         s1_set.add(s1 + substr)
                 else:
                     for substr in substrs:
-                        s1_set.add('%s %s' % (sep_token, substr))
+                        s1_set.add("%s %s" % (sep_token, substr))
                 if no_duplicate:
                     break
 
             return list(s1_set)
 
-    def supclass_to_strings(self, supcls: str, subsumption_type: str = 'named_class'):
-        r"""Transform a supclass into strings (with the path or traversal context template if the subsumption type is 'named_class')
-               Args:
-                   supcls (str): the given super class iri
-                   subsumption_type (str): the type of subsumption
+    def supclass_to_strings(self, supcls: str, subsumption_type: str = "named_class"):
+        r"""Transform a super-class into strings (with the path or traversal context template if the subsumption type is `"named_class"`).
+
+        Args:
+            supcls (str): IRI of the super-class.
+            subsumption_type (str): The type of the subsumption.
         """
 
-        if subsumption_type == 'named_class':
-            supstrs = self.iri_label[supcls] if supcls in self.iri_label and len(self.iri_label[supcls]) else ['']
+        if subsumption_type == "named_class":
+            supstrs = self.iri_label[supcls] if supcls in self.iri_label and len(self.iri_label[supcls]) else [""]
         else:
             if supcls in self.restriction_label and len(self.restriction_label[supcls]) > 0:
                 supstrs = self.restriction_label[supcls]
             else:
-                warnings.warn('Warning: %s has no descriptions' % supcls)
-                supstrs = ['']
+                warnings.warn("Warning: %s has no descriptions" % supcls)
+                supstrs = [""]
 
         if self.config.use_one_label:
-            if subsumption_type == 'named_class':
+            if subsumption_type == "named_class":
                 supstrs = supstrs[0:1]
 
-        if self.config.prompt.prompt_type == 'isolated':
+        if self.config.prompt.prompt_type == "isolated":
             return supstrs
 
-        elif self.config.prompt.prompt_type == 'traversal':
-            if subsumption_type == 'named_class':
+        elif self.config.prompt.prompt_type == "traversal":
+            if subsumption_type == "named_class":
                 sups_list_strs = set()
                 for _ in range(self.config.prompt.context_dup):
-                    context_sup, no_duplicate = self.traversal_subsumptions(cls=supcls,
-                                                                            hop=self.config.prompt.prompt_hop,
-                                                                            direction='supclass',
-                                                                            max_subsumptions=self.config.prompt.prompt_max_subsumptions)
+                    context_sup, no_duplicate = self.traversal_subsumptions(
+                        cls=supcls,
+                        hop=self.config.prompt.prompt_hop,
+                        direction="supclass",
+                        max_subsumptions=self.config.prompt.prompt_max_subsumptions,
+                    )
                     sups_list = [self.named_subsumption_to_str(subsum) for subsum in context_sup]
-                    sups_list_str = ' <SEP> '.join(sups_list)
+                    sups_list_str = " <SEP> ".join(sups_list)
                     sups_list_strs.add(sups_list_str)
                     if no_duplicate:
                         break
@@ -380,32 +410,34 @@ class SubsumptionSampler:
             strs = list()
             for sups_list_str in sups_list_strs:
                 for supstr in supstrs:
-                    s2 = supstr + ' <SEP> ' + sups_list_str
+                    s2 = supstr + " <SEP> " + sups_list_str
                     strs.append(s2)
             return strs
 
+        elif self.config.prompt.prompt_type == "path":
+            sep_token = "<SUB>" if self.config.prompt.use_sub_special_token else "<SEP>"
 
-        elif self.config.prompt.prompt_type == 'path':
-            sep_token = '<SUB>' if self.config.prompt.use_sub_special_token else '<SEP>'
-
-            if subsumption_type == 'named_class':
+            if subsumption_type == "named_class":
                 s2_set = set()
                 for _ in range(self.config.prompt.context_dup):
-                    context_sup, no_duplicate = self.path_subsumptions(cls=supcls,
-                                                                       hop=self.config.prompt.prompt_hop,
-                                                                       direction='supclass')
+                    context_sup, no_duplicate = self.path_subsumptions(
+                        cls=supcls, hop=self.config.prompt.prompt_hop, direction="supclass"
+                    )
                     if len(context_sup) > 0:
-                        s2 = ''
+                        s2 = ""
                         for subsum in context_sup:
                             supc = subsum[1]
-                            s2 += ' %s %s' % (sep_token,
-                                              self.iri_label[supc][0] if supc in self.iri_label and len(
-                                                  self.iri_label[supc]) > 0 else '')
+                            s2 += " %s %s" % (
+                                sep_token,
+                                self.iri_label[supc][0]
+                                if supc in self.iri_label and len(self.iri_label[supc]) > 0
+                                else "",
+                            )
                         for supstr in supstrs:
                             s2_set.add(supstr + s2)
                     else:
                         for supstr in supstrs:
-                            s2_set.add('%s %s' % (supstr, sep_token))
+                            s2_set.add("%s %s" % (supstr, sep_token))
 
                     if no_duplicate:
                         break
@@ -415,19 +447,20 @@ class SubsumptionSampler:
             return list(s2_set)
 
         else:
-            print('unknown context type %s' % self.config.prompt.prompt_type)
+            print("unknown context type %s" % self.config.prompt.prompt_type)
             sys.exit(0)
 
-    def traversal_subsumptions(self, cls: str, hop: int = 1, direction: str = 'subclass', max_subsumptions: int = 5):
-        r"""Given a class, get its traversal subsumptions.
-                If the class is a subclass of a target axiom, get subsumptions from downside.
-                If the class is a supclass of a target axiom, get subsumptions from upside
+    def traversal_subsumptions(self, cls: str, hop: int = 1, direction: str = "subclass", max_subsumptions: int = 5):
+        r"""Given a class, get its subsumptions by traversing the class hierarchy.
+
+            If the class is a sub-class in the subsumption axiom, get subsumptions from downside.
+            If the class is a super-class in the subsumption axiom, get subsumptions from upside.
 
         Args:
-            cls (str): class iri
-            hop (int): path depth
-            direction (str): subclass (downside path) or supclass (upside path)
-            max_subsumptions (int): the maximum subsumptions to consider
+            cls (str): IRI of a named class.
+            hop (int): The depth of the path.
+            direction (str): `subclass` (downside path) or `supclass` (upside path).
+            max_subsumptions (int): The maximum number of subsumptions to consider.
         """
         subsumptions = list()
         seeds = [cls]
@@ -436,9 +469,10 @@ class SubsumptionSampler:
         while d <= hop:
             new_seeds = list()
             for s in seeds:
-                if direction == 'subclass':
-                    tmp = self.onto.reasoner.get_inferred_sub_entities(self.onto.get_owl_object_from_iri(iri=s),
-                                                                       direct=True)
+                if direction == "subclass":
+                    tmp = self.onto.reasoner.get_inferred_sub_entities(
+                        self.onto.get_owl_object_from_iri(iri=s), direct=True
+                    )
                     if len(tmp) > 1:
                         no_duplicate = False
                     random.shuffle(tmp)
@@ -447,9 +481,10 @@ class SubsumptionSampler:
                             subsumptions.append([c, s])
                             if c not in new_seeds:
                                 new_seeds.append(c)
-                elif direction == 'supclass':
-                    tmp = self.onto.reasoner.get_inferred_super_entities(self.onto.get_owl_object_from_iri(iri=s),
-                                                                         direct=True)
+                elif direction == "supclass":
+                    tmp = self.onto.reasoner.get_inferred_super_entities(
+                        self.onto.get_owl_object_from_iri(iri=s), direct=True
+                    )
                     if len(tmp) > 1:
                         no_duplicate = False
                     random.shuffle(tmp)
@@ -459,7 +494,7 @@ class SubsumptionSampler:
                             if c not in new_seeds:
                                 new_seeds.append(c)
                 else:
-                    warnings.warn('Unknown direction: %s' % direction)
+                    warnings.warn("Unknown direction: %s" % direction)
             if len(subsumptions) >= max_subsumptions:
                 subsumptions = random.sample(subsumptions, max_subsumptions)
                 break
@@ -469,24 +504,26 @@ class SubsumptionSampler:
                 d += 1
         return subsumptions, no_duplicate
 
-    def path_subsumptions(self, cls: str, hop: int = 1, direction: str = 'subclass'):
+    def path_subsumptions(self, cls: str, hop: int = 1, direction: str = "subclass"):
         r"""Given a class, get its path subsumptions.
-        If the class is a subclass of a target axiom, get subsumptions from downside.
-        If the class is a supclass of a target axiom, get subsumptions from upside
+
+            If the class is a sub-class in the subsumption axiom, get subsumptions from downside.
+            If the class is a super-class in the subsumption axiom, get subsumptions from upside.
 
         Args:
-            cls (str): class iri
-            hop (int): path depth
-            direction (str): subclass (downside path) or supclass (upside path)
+            cls (str): IRI of a named class.
+            hop (int): The depth of the path.
+            direction (str): `subclass` (downside path) or `supclass` (upside path).
         """
         subsumptions = list()
         seed = cls
         d = 1
         no_duplicate = True
         while d <= hop:
-            if direction == 'subclass':
-                tmp = self.onto.reasoner.get_inferred_sub_entities(self.onto.get_owl_object_from_iri(iri=seed),
-                                                                   direct=True)
+            if direction == "subclass":
+                tmp = self.onto.reasoner.get_inferred_sub_entities(
+                    self.onto.get_owl_object_from_iri(iri=seed), direct=True
+                )
                 if len(tmp) > 1:
                     no_duplicate = False
                 end = True
@@ -500,9 +537,10 @@ class SubsumptionSampler:
                             break
                 if end:
                     break
-            elif direction == 'supclass':
-                tmp = self.onto.reasoner.get_inferred_super_entities(self.onto.get_owl_object_from_iri(iri=seed),
-                                                                     direct=True)
+            elif direction == "supclass":
+                tmp = self.onto.reasoner.get_inferred_super_entities(
+                    self.onto.get_owl_object_from_iri(iri=seed), direct=True
+                )
                 if len(tmp) > 1:
                     no_duplicate = False
                 end = True
@@ -517,7 +555,7 @@ class SubsumptionSampler:
                 if end:
                     break
             else:
-                warnings.warn('Unknown direction: %s' % direction)
+                warnings.warn("Unknown direction: %s" % direction)
 
             d += 1
         return subsumptions, no_duplicate

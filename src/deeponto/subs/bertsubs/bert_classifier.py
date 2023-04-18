@@ -58,19 +58,19 @@ class BERTSubsumptionClassifierTrainer:
         self.early_stop_patience = early_stop_patience
 
     def add_special_tokens(self, tokens: List):
-        r"""Add additional special tokens to the tokenizer.
+        r"""Add additional special tokens into the tokenizer's vocab.
         Args:
-            tokens: additional tokens to add, e.g., ["<SUB>","<EOA>","<EOC>"]
+            tokens (List[str]): additional tokens to add, e.g., `["<SUB>","<EOA>","<EOC>"]`
         """
         special_tokens_dict = {"additional_special_tokens": tokens}
         self.tokenizer.add_special_tokens(special_tokens_dict)
         self.model.resize_token_embeddings(len(self.tokenizer))
 
     def train(self, train_args: TrainingArguments, do_fine_tune: bool = True):
-        r"""initiate huggingface Trainer with input arguments and start training
+        r"""Initiate the Huggingface trainer with input arguments and start training.
         Args:
-            train_args: huggingface trainer's arguments
-            do_fine_tune: when it is set to false, we just load some (fine-tuned) checkpoint without further training
+            train_args (TrainingArguments): Arguments for training.
+            do_fine_tune (bool): `False` means loading the checkpoint without training. Defaults to `True`.
         """
         self.trainer = Trainer(
             model=self.model,
@@ -87,17 +87,19 @@ class BERTSubsumptionClassifierTrainer:
 
     @staticmethod
     def compute_metrics(pred):
+        """Auxiliary function to add accurate metric into evaluation.
+        """
         labels = pred.label_ids
         preds = pred.predictions.argmax(-1)
         acc = accuracy_score(labels, preds)
         return {"accuracy": acc}
 
     def load_dataset(self, data: List, max_length: int = 512, count_token_size: bool = False) -> Dataset:
-        r"""load dataset from list
+        r"""Load a Huggingface dataset from a list of samples.
         Args:
-            data: samples in List
-            max_length: input sentence maximum length
-            count_token_size: whether count the toke sizes of the data
+            data (List[Tuple]): Data samples in a list.
+            max_length (int): Maximum length of the input sequence.
+            count_token_size (bool): Whether or not to count the token sizes of the data. Defaults to `False`.
         """
         # data_df = pd.DataFrame(data, columns=["sent1", "sent2", "labels"])
         # dataset = Dataset.from_pandas(data_df)

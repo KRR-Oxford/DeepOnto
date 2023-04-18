@@ -57,10 +57,10 @@ nav:
           - Mapping: deeponto/align/mapping.md
           - BERTMap: deeponto/align/bertmap/index.md
           - LogMap: deeponto/align/logmap/index.md
-          - BERTSubs (inter): deeponto/align/bertsubs/index.md
+          - BERTSubs (Inter): deeponto/align/bertsubs/index.md
           - Evaluation: deeponto/align/evaluation.md
         - Subsumption Inference:
-          - BERTSubs (intra): deeponto/subs/bertsubs/index.md
+          - BERTSubs (Intra): deeponto/subs/bertsubs/index.md
         - Language Model Probing:
           - OntoLAMA: deeponto/probe/ontolama.md
         - Utilities: 

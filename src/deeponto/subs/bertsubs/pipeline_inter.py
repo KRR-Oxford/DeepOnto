@@ -40,12 +40,12 @@ DEFAULT_CONFIG_FILE_INTER = os.path.join(os.path.dirname(__file__), "default_con
 class BERTSubsInterPipeline:
     r"""Class for the model training and prediction/validation pipeline of inter-ontology subsumption of BERTSubs.
 
-            Attributes:
-                src_onto (Ontology): Source ontology (the subclass side)
-                tgt_onto (Ontology): Target ontology (the superclass side)
-                config (CfgNode): Configuration
-                src_sampler (SubsumptionSample): object for sampling-related functions of the source ontology
-                tgt_sampler (SubsumptionSample): object for sampling-related functions of the target ontology
+    Attributes:
+        src_onto (Ontology): Source ontology (the sub-class side).
+        tgt_onto (Ontology): Target ontology (the super-class side).
+        config (CfgNode): Configuration.
+        src_sampler (SubsumptionSampler): Object for sampling-related functions of the source ontology.
+        tgt_sampler (SubsumptionSampler): Object for sampling-related functions of the target ontology.
     """
 
     def __init__(self, src_onto: Ontology, tgt_onto: Ontology, config: CfgNode):
@@ -179,9 +179,9 @@ class BERTSubsInterPipeline:
     def inter_ontology_sampling(self, subsumptions: List[List], pos_dup: int = 1, neg_dup: int = 1):
         r"""Transform inter-ontology subsumptions to two-string samples
         Args:
-            subsumptions (List[List[): a list of subsumptions; each subsumption is composed of two IRIs
-            pos_dup (int): positive sample duplication
-            neg_dup (int): negative sample duplication
+            subsumptions (List[List]): A list of subsumptions; each subsumption is composed of two IRIs.
+            pos_dup (int): Positive sample duplication.
+            neg_dup (int): Negative sample duplication.
         """
         pos_samples = list()
         for subs in subsumptions:
@@ -218,9 +218,10 @@ class BERTSubsInterPipeline:
         return all_samples
 
     def inter_ontology_subsumption_to_sample(self, subsumption: List):
-        r"""Transform an inter ontology subsumption to a sample (a two-string list)
+        r"""Transform an inter ontology subsumption into a sample (a two-string list).
+        
         Args:
-            subsumption (List): a subsumption composed of two IRIs
+            subsumption (List): a subsumption composed of two IRIs.
         """
         subcls, supcls = subsumption[0], subsumption[1]
         substrs = self.src_sampler.subclass_to_strings(subcls=subcls)
@@ -232,9 +233,10 @@ class BERTSubsInterPipeline:
         return samples
 
     def score(self, samples):
-        r"""score the samples with the classifier
+        r"""Score the samples with the classifier.
+        
         Args:
-            samples (List[List]): each item is a list with two strings (input)
+            samples (List[List]): Each item is a list with two strings (input).
         """
         sample_size = len(samples)
         scores = np.zeros(sample_size)
@@ -250,10 +252,11 @@ class BERTSubsInterPipeline:
         return scores
 
     def evaluate(self, target_subsumptions: List[List], test_type: str = 'test'):
-        r"""Test and calculate the metrics according to a given list of subsumptions
+        r"""Test and calculate the metrics according to a given list of subsumptions.
+        
         Args:
-            target_subsumptions (List[List]): a list of subsumptions, each of which of is a two-component list (subclass iri, superclass iri/str)
-            test_type (str): test or valid
+            target_subsumptions (List[List]): A list of subsumptions, each of which of is a two-component list `(subclass_iri, super_class_iri_or_str)`.
+            test_type (str): `"test"` or `"valid"`.
         """
         MRR_sum, hits1_sum, hits5_sum, hits10_sum = 0, 0, 0, 0
         MRR, Hits1, Hits5, Hits10 = 0, 0, 0, 0
@@ -286,10 +289,13 @@ class BERTSubsInterPipeline:
         print('%.2f samples per testing subsumption' % (size_sum / size_n))
 
     def predict(self, target_subsumptions: List[List]):
-        r"""Predict a score for each given subsumption. The scores will be saved in 'test_subsumption_scores.csv'
+        r"""Predict a score for each given subsumption. 
+        
+        The scores will be saved in `test_subsumption_scores.csv`.
+        
         Args:
-            target_subsumptions (List[List]): each item is a list with the first element as the subclass,
-                                              and the remaining elements as n candidate superclasses.
+            target_subsumptions (List[List]): Each item is a list with the first element as the sub-class,
+                                              and the remaining elements as n candidate super-classes.
         """
         out_lines = []
         for test in target_subsumptions:

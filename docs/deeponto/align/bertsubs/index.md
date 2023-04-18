@@ -29,6 +29,10 @@ and then apply BERT matching.
 $\textsf{BERTMapLt}$ is a light-weight version of $\textsf{BERTMap}$ *without* the BERT module and mapping refiner.
 
 See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
+
+!!! warning "Unreleased"
+
+    This page is still preliminary, the relevant code has not been updated to pypi.
  
 
 ::: deeponto.subs.bertsubs.pipeline_inter

@@ -1,5 +1,9 @@
 # Subsumption Prediction with BERTSubs
 
+!!! warning "Unreleased"
+
+    This page is still preliminary, the relevant code has not been updated to pypi.
+
 !!! credit "Paper"
 
     Paper for BERTSubs: [Contextual Semantic Embeddings for Ontology Subsumption Prediction (WWWJ-2023)](link-to-paper).

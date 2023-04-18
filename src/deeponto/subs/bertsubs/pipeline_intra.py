@@ -294,7 +294,7 @@ class BERTSubsIntraPipeline:
 
         Args:
             onto (Ontology): The target ontology.
-            subsumption_type (str): the type of subsumptions, options are `named_class` or `restriction`.
+            subsumption_type (str): the type of subsumptions, options are `"named_class"` or `"restriction"`.
 
         """
         all_subsumptions = onto.get_subsumption_axioms(entity_type="Classes")
