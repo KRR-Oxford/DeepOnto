@@ -375,15 +375,15 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#ontology" class="md-nav__link">
-    Ontology
+  <a href="#core-ontology-api" class="md-nav__link">
+    Core Ontology API
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#tools-resources" class="md-nav__link">
-    Tools &amp; Resources
+  <a href="#tools-and-resources" class="md-nav__link">
+    Tools and Resources
   </a>
   
 </li>
@@ -1069,26 +1069,32 @@ pip<span class="w"> </span>install<span class="w"> </span>deeponto
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </code></pre></div>
 <h2 id="main-features">Main Features</h2>
-<h3 id="ontology">Ontology</h3>
+<h3 id="core-ontology-api">Core Ontology API</h3>
+<p>The base class of <span class="arithmatex">\(\textsf{DeepOnto}\)</span> is <a class="autorefs autorefs-internal" href="deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a>, which encapsulates and extends the features of the OWLAPI library for processing ontologies. See quick usage at <a href="https://krr-oxford.github.io/DeepOnto/ontology/">load an ontology</a>. Several essential modules that revolve around <a class="autorefs autorefs-internal" href="deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a> are then built to enhance the core ontology API, including:</p>
 <ul>
 <li>
-<p><strong>Extending the OWLAPI</strong>: <span class="arithmatex">\(\textsf{DeepOnto}\)</span> extends the OWLAPI library for ontology processing and reasoning, and also for better integration with deep learning modules. 
-The base classes that extend the OWLAPI functionalities are <a class="autorefs autorefs-internal" href="deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a> and <a class="autorefs autorefs-internal" href="deeponto/onto/reasoning/#deeponto.onto.ontology.OntologyReasoner"><code>OntologyReasoner</code></a>. Examples of how to use them can be found <a href="https://krr-oxford.github.io/DeepOnto/ontology/">here</a>.</p>
+<p><strong>Ontology Reasoning</strong>: Each instance of <span class="arithmatex">\(\textsf{DeepOnto}\)</span> has an<a class="autorefs autorefs-internal" href="deeponto/onto/reasoning/#deeponto.onto.ontology.OntologyReasoner"><code>OntologyReasoner</code></a> as its attribute, which handles all the reasoning activities about the ontology such as checking consistency and entailment.</p>
 </li>
 <li>
-<p><strong>Ontology Verbalisation</strong>: The recursive ontology verbaliser originally proposed in [4] is implemented here as an essential module for briding ontologies and texts. See how to use the verbaliser in this <a href="https://krr-oxford.github.io/DeepOnto/verbaliser">tutorial</a>.</p>
+<p><strong>Ontology Verbalisation</strong>: The recursive ontology verbaliser originally proposed in [4] is implemented here as an essential module for briding ontologies and texts. See <a href="https://krr-oxford.github.io/DeepOnto/verbaliser">verbalising ontology concepts</a>.</p>
+</li>
+<li>
+<p>We have a plan of releasing more modules to support ontology normalisation, ontology-to-graph transformation, and more.</p>
 </li>
 </ul>
-<h3 id="tools-resources">Tools &amp; Resources</h3>
+<!-- - **Ontology Normalisation** (not ready):   -->
+
+<h3 id="tools-and-resources">Tools and Resources</h3>
+<p>Individual tools and resources are implemented based on the core ontology API. Currently, <span class="arithmatex">\(\textsf{DeepOnto}\)</span> supports the following:</p>
 <ul>
 <li>
-<p><strong>BERTMap</strong> [1] is a BERT-based <em>ontology matching</em> (OM) system originally developed in <a href="https://github.com/KRR-Oxford/BERTMap">repo</a> but is now maintained in <span class="arithmatex">\(\textsf{DeepOnto}\)</span>. See how to use BERTMap in this <a href="https://krr-oxford.github.io/DeepOnto/bertmap/">tutorial</a>.</p>
+<p><strong>BERTMap</strong> [1] is a BERT-based <em>ontology matching</em> (OM) system originally developed in <a href="https://github.com/KRR-Oxford/BERTMap">repo</a> but is now maintained in <span class="arithmatex">\(\textsf{DeepOnto}\)</span>. See <a href="https://krr-oxford.github.io/DeepOnto/bertmap/">ontology Matching with BERTMap &amp; BERTMapLt</a>.</p>
 </li>
 <li>
-<p><strong>Bio-ML</strong> [2] is an OM resource that has been used in the <a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/">Bio-ML track of the OAEI</a>. See <a href="https://krr-oxford.github.io/DeepOnto/bio-ml/">instructions</a> of how to use Bio-ML.</p>
+<p><strong>Bio-ML</strong> [2] is an OM resource that has been used in the <a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/">Bio-ML track of the OAEI</a>. See <a href="https://krr-oxford.github.io/DeepOnto/bio-ml/">bio-ML specifications</a>.</p>
 </li>
 <li>
-<p><strong>BERTSubs</strong> [3] is a system for ontology subsumption prediction. We are working on transforming its original <a href="https://gitlab.com/chen00217/bert_subsumption">experiment codes</a> to this project.</p>
+<p><strong>BERTSubs</strong> [3] is a system for ontology subsumption prediction. We are working on transforming its original <a href="https://gitlab.com/chen00217/bert_subsumption">experimental code</a> to this project.</p>
 </li>
 </ul>
 <h2 id="license">License</h2>
