@@ -13,8 +13,7 @@ Security in case of vulnerabilities. -->
 ### Added
 
 - [ ] **Add** the ontology normaliser at `deeponto.onto.normaliser`.
-- [ ] **Add** the BERTSubs module at `deeponto.subs`.
-- [ ] **Add** the [detailed instructions](../verbaliser) for how to use the ontology verbaliser. 
+- [X] **Add** the BERTSubs module at `deeponto.subs.bertsubs`; its inter-ontology setting is also imported at `deeponto.align.bertsubs`.
 
 ### Changed
 

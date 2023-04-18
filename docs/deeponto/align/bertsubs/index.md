@@ -32,7 +32,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
 
 !!! warning "Unreleased"
 
-    This page is still preliminary, the relevant code has not been updated to pypi.
+    The relevant code for this page has not been updated to pypi.
  
 
 ::: deeponto.subs.bertsubs.pipeline_inter

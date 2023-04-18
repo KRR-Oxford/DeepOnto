@@ -2,7 +2,7 @@
 
 !!! warning "Unreleased"
 
-    This page is still preliminary, the relevant code has not been updated to pypi.
+    The relevant code for this page has not been updated to pypi.
 
 !!! credit "Paper"
 
