@@ -102,20 +102,27 @@ pip install -r requirements.txt
 
 ## Main Features
 
-### Ontology
+### Core Ontology API
 
-- **Extending the OWLAPI**: $\textsf{DeepOnto}$ extends the OWLAPI library for ontology processing and reasoning, and also for better integration with deep learning modules. 
-The base classes that extend the OWLAPI functionalities are [`Ontology`][deeponto.onto.Ontology] and [`OntologyReasoner`][deeponto.onto.OntologyReasoner]. Examples of how to use them can be found [here](https://krr-oxford.github.io/DeepOnto/ontology/).
+The base class of $\textsf{DeepOnto}$ is [`Ontology`][deeponto.onto.Ontology], which encapsulates and extends the features of the OWLAPI library for processing ontologies. See quick usage at [load an ontology](https://krr-oxford.github.io/DeepOnto/ontology/). Several essential modules that revolve around [`Ontology`][deeponto.onto.Ontology] are then built to enhance the core ontology API, including:
 
-- **Ontology Verbalisation**: The recursive ontology verbaliser originally proposed in [4] is implemented here as an essential module for briding ontologies and texts. See how to use the verbaliser in this [tutorial](https://krr-oxford.github.io/DeepOnto/verbaliser).
+- **Ontology Reasoning**: Each instance of $\textsf{DeepOnto}$ has an[`OntologyReasoner`][deeponto.onto.OntologyReasoner] as its attribute, which handles all the reasoning activities about the ontology such as checking consistency and entailment.
 
-### Tools & Resources
+- **Ontology Verbalisation**: The recursive ontology verbaliser originally proposed in [4] is implemented here as an essential module for briding ontologies and texts. See [verbalising ontology concepts](https://krr-oxford.github.io/DeepOnto/verbaliser).
 
-- **BERTMap** [1] is a BERT-based *ontology matching* (OM) system originally developed in [repo](https://github.com/KRR-Oxford/BERTMap) but is now maintained in $\textsf{DeepOnto}$. See how to use BERTMap in this [tutorial](https://krr-oxford.github.io/DeepOnto/bertmap/).
+- We have a plan of releasing more modules to support ontology normalisation, ontology-to-graph transformation, and more.
 
-- **Bio-ML** [2] is an OM resource that has been used in the [Bio-ML track of the OAEI](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/). See [instructions](https://krr-oxford.github.io/DeepOnto/bio-ml/) of how to use Bio-ML.
+<!-- - **Ontology Normalisation** (not ready):   -->
 
-- **BERTSubs** [3] is a system for ontology subsumption prediction. We are working on transforming its original [experiment codes](https://gitlab.com/chen00217/bert_subsumption) to this project.
+### Tools and Resources
+
+Individual tools and resources are implemented based on the core ontology API. Currently, $\textsf{DeepOnto}$ supports the following:
+
+- **BERTMap** [1] is a BERT-based *ontology matching* (OM) system originally developed in [repo](https://github.com/KRR-Oxford/BERTMap) but is now maintained in $\textsf{DeepOnto}$. See [ontology Matching with BERTMap & BERTMapLt](https://krr-oxford.github.io/DeepOnto/bertmap/).
+
+- **Bio-ML** [2] is an OM resource that has been used in the [Bio-ML track of the OAEI](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/). See [bio-ML specifications](https://krr-oxford.github.io/DeepOnto/bio-ml/).
+
+- **BERTSubs** [3] is a system for ontology subsumption prediction. We are working on transforming its original [experimental code](https://gitlab.com/chen00217/bert_subsumption) to this project.
 
 ## License
 
