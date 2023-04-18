@@ -488,7 +488,7 @@ class Ontology:
 
         Args:
             owl_axiom (OWLAxiom): An axiom to be added.
-            return_undo (bool, optional): Returning the undo operation or not. Defaults to True.
+            return_undo (bool, optional): Returning the undo operation or not. Defaults to `True`.
         """
         change = AddAxiom(self.owl_onto, owl_axiom)
         result = self.owl_onto.applyChange(change)
@@ -501,7 +501,7 @@ class Ontology:
 
         Args:
             owl_axiom (OWLAxiom): An axiom to be removed.
-            return_undo (bool, optional): Returning the undo operation or not. Defaults to True.
+            return_undo (bool, optional): Returning the undo operation or not. Defaults to `True`.
         """
         change = RemoveAxiom(self.owl_onto, owl_axiom)
         result = self.owl_onto.applyChange(change)
