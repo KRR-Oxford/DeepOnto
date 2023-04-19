@@ -7,12 +7,16 @@ Removed for now removed features.
 Fixed for any bug fixes.
 Security in case of vulnerabilities. -->
 
-
 ## Unreleased
-
 ### Added
 
 - [ ] **Add** the ontology normaliser at `deeponto.onto.normaliser`.
+- [ ] **Add** the ontology-to-graph builder at `deeponto.onto.graph_builder`.
+
+## v0.7.0 (2023 April)
+
+### Added
+
 - [X] **Add** the BERTSubs module at `deeponto.subs.bertsubs`; its inter-ontology setting is also imported at `deeponto.align.bertsubs`.
 
 ### Changed
