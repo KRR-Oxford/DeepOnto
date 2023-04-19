@@ -639,6 +639,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../deeponto/onto/pruning/" class="md-nav__link">
+        Pruning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../deeponto/onto/verbalisation/" class="md-nav__link">
         Verbalisation
       </a>
@@ -1000,6 +1014,7 @@ Security in case of vulnerabilities. -->
 </ul>
 <h3 id="changed">Changed</h3>
 <ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Move</strong> the pruning functionality into <code>deeponto.onto.OntologyPruner</code> as a separate module.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Amend</strong> JVM checking before displaying the JVM memory prompt from importing <code>deeponto.onto.Ontology</code>; if started already, skip this step.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the function <code>get_owl_object_annotations</code> at <code>deeponto.onto.Ontology</code> by preserving the relative order of annotation retrieval, i.e., create <code>set</code> first and use the <code>.add()</code> function instead of casting the <code>list</code> into <code>set</code> in the end.</li>
 </ul>
@@ -1052,7 +1067,7 @@ Security in case of vulnerabilities. -->
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 18, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 19, 2023</span>
       
         <br>
         Created:

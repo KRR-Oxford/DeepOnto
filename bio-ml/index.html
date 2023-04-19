@@ -658,6 +658,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../deeponto/onto/pruning/" class="md-nav__link">
+        Pruning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../deeponto/onto/verbalisation/" class="md-nav__link">
         Verbalisation
       </a>
@@ -1221,15 +1235,16 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
 <h3 id="ontology-pruning">Ontology Pruning</h3>
 <p>In order to obtain scalable OM pairs, the <strong>ontology pruning</strong> algorithm proposed in the <span class="arithmatex">\(\textsf{Bio-ML}\)</span> paper can be used to truncate a large-scale ontology according to certain criteria such as the <strong>semantic type</strong>. The pruning function aims to remove unwanted ontology classes while preserving the relevant hierarchy. Specifically, for each class <span class="arithmatex">\(c\)</span> to be removed, subsumption axioms will be created between the parents of <span class="arithmatex">\(c\)</span> and the children of <span class="arithmatex">\(c'\)</span>. Following this is the removal of all axioms related to the unwanted classes.</p>
 <p>Once obtaining the list of class IRIs to be removed, apply the ontology pruning following the code below:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">OntologyPruner</span>
 
 <span class="n">doid</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;doid.owl&quot;</span><span class="p">)</span>
+<span class="n">pruner</span> <span class="o">=</span> <span class="n">OntologyPruner</span><span class="p">(</span><span class="n">doid</span><span class="p">)</span>
 <span class="n">to_be_removed_class_iris</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_0060158&quot;</span><span class="p">,</span>
     <span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_9969&quot;</span>
 <span class="p">]</span>
-<span class="n">doid</span><span class="o">.</span><span class="n">apply_pruning</span><span class="p">(</span><span class="n">to_be_removed_class_iris</span><span class="p">)</span>
-<span class="n">doid</span><span class="o">.</span><span class="n">save_onto</span><span class="p">(</span><span class="s2">&quot;doid.pruned.owl&quot;</span><span class="p">)</span>  <span class="c1"># save the pruned ontology locally</span>
+<span class="n">pruner</span><span class="o">.</span><span class="n">min_hierarchy_prune</span><span class="p">(</span><span class="n">to_be_removed_class_iris</span><span class="p">)</span>
+<span class="n">pruner</span><span class="o">.</span><span class="n">save_onto</span><span class="p">(</span><span class="s2">&quot;doid.pruned.owl&quot;</span><span class="p">)</span>  <span class="c1"># save the pruned ontology locally</span>
 </code></pre></div>
 <h3 id="subsumption-mapping-construction">Subsumption Mapping Construction</h3>
 <p>It is often that OM datasets include equivalence matching but <strong>not</strong> subsumption matching. However, it is possible to create a subsumption matching task from each equivalence matching task. Given a list of <strong>equivalence reference mappings</strong> (see <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.ReferenceMapping.read_table_mappings">how to load from a local file</a>) in the form of <span class="arithmatex">\(\{(c, c') | c \equiv c' \}\)</span>, the reference subsumption mappings can be created by searching for the <strong>subsumers</strong> of <span class="arithmatex">\(c'\)</span>, then yielding <span class="arithmatex">\(\{(c, c'') | c \equiv c', c' \sqsubseteq c'' \}\)</span>. We have implemented a <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.SubsFromEquivMappingGenerator">subsumption mapping generator</a> for this purpose:</p>
@@ -1291,7 +1306,7 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 18, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 19, 2023</span>
       
         <br>
         Created:

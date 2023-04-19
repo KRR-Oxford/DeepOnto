@@ -10,20 +10,20 @@
         <meta name="author" content="Yuan He (KRR-Oxford)">
       
       
-        <link rel="canonical" href="https://krr-oxford.github.io/DeepOnto/deeponto/align/logmap/">
+        <link rel="canonical" href="https://krr-oxford.github.io/DeepOnto/deeponto/onto/pruning/">
       
       
-        <link rel="prev" href="../bertmap/">
+        <link rel="prev" href="../reasoning/">
       
       
-        <link rel="next" href="../bertsubs/">
+        <link rel="next" href="../verbalisation/">
       
       <link rel="icon" href="../../../images/favicon_package/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.5">
     
     
       
-        <title>LogMap - DeepOnto</title>
+        <title>Pruning - DeepOnto</title>
       
     
     
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#deeponto.align.logmap.run_logmap_repair" class="md-skip">
+        <a href="#ontology-pruning" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              LogMap
+              Pruning
             
           </span>
         </div>
@@ -459,18 +459,20 @@
               
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" checked>
       
       
       
-        <label class="md-nav__link" for="__nav_3_1" tabindex="0" aria-expanded="false">
+        <label class="md-nav__link" for="__nav_3_1" tabindex="0" aria-expanded="true">
           Core Ontology API
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -488,7 +490,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../onto/ontology/" class="md-nav__link">
+      <a href="../ontology/" class="md-nav__link">
         Ontology
       </a>
     </li>
@@ -502,100 +504,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../onto/reasoning/" class="md-nav__link">
+      <a href="../reasoning/" class="md-nav__link">
         Reasoning
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../onto/pruning/" class="md-nav__link">
-        Pruning
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../onto/verbalisation/" class="md-nav__link">
-        Verbalisation
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-    
-  
-  
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" checked>
-      
-      
-      
-        <label class="md-nav__link" for="__nav_3_2" tabindex="0" aria-expanded="true">
-          Ontology Alignment
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Ontology Alignment" data-md-level="2">
-        <label class="md-nav__title" for="__nav_3_2">
-          <span class="md-nav__icon md-icon"></span>
-          Ontology Alignment
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../mapping/" class="md-nav__link">
-        Mapping
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../bertmap/" class="md-nav__link">
-        BERTMap
       </a>
     </li>
   
@@ -614,14 +524,16 @@
       <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
       
       
+        
+      
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          LogMap
+          Pruning
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        LogMap
+        Pruning
       </a>
       
         
@@ -629,6 +541,8 @@
 <nav class="md-nav md-nav--secondary" aria-label="Table of contents">
   
   
+  
+    
   
   
     <label class="md-nav__title" for="__toc">
@@ -638,9 +552,29 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#deeponto.align.logmap.run_logmap_repair" class="md-nav__link">
-    run_logmap_repair()
+  <a href="#deeponto.onto.pruning.OntologyPruner" class="md-nav__link">
+    OntologyPruner
   </a>
+  
+    <nav class="md-nav" aria-label="OntologyPruner">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.pruning.OntologyPruner.save_onto" class="md-nav__link">
+    save_onto()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.pruning.OntologyPruner.min_hierarchy_prune" class="md-nav__link">
+    min_hierarchy_prune()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -659,7 +593,97 @@
   
   
     <li class="md-nav__item">
-      <a href="../bertsubs/" class="md-nav__link">
+      <a href="../verbalisation/" class="md-nav__link">
+        Verbalisation
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2" tabindex="0" aria-expanded="false">
+          Ontology Alignment
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Ontology Alignment" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Ontology Alignment
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../align/mapping/" class="md-nav__link">
+        Mapping
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../align/bertmap/" class="md-nav__link">
+        BERTMap
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../align/logmap/" class="md-nav__link">
+        LogMap
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../align/bertsubs/" class="md-nav__link">
         BERTSubs (Inter)
       </a>
     </li>
@@ -673,7 +697,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../evaluation/" class="md-nav__link">
+      <a href="../../align/evaluation/" class="md-nav__link">
         Evaluation
       </a>
     </li>
@@ -914,13 +938,7 @@
 
 
 
-  <h1>LogMap</h1>
-
-<p>Run LogMap matcher 4.0 in a <code>jar</code> command.</p>
-<div class="admonition credit">
-<p class="admonition-title">Credit</p>
-<p>See LogMap repository at: <a href="https://github.com/ernestojimenezruiz/logmap-matcher">https://github.com/ernestojimenezruiz/logmap-matcher</a>.</p>
-</div>
+<h1 id="ontology-pruning">Ontology Pruning</h1>
 
 
 <div class="doc doc-object doc-module">
@@ -940,68 +958,211 @@
 
 
 
-
-<div class="doc doc-object doc-function">
-
+<div class="doc doc-object doc-class">
 
 
-<h2 id="deeponto.align.logmap.run_logmap_repair" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">run_logmap_repair</span><span class="p">(</span><span class="n">src_onto_path</span><span class="p">,</span> <span class="n">tgt_onto_path</span><span class="p">,</span> <span class="n">mapping_file_path</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span></code>
+
+<h2 id="deeponto.onto.pruning.OntologyPruner" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">OntologyPruner</span><span class="p">(</span><span class="n">onto</span><span class="p">)</span></code>
 
 </h2>
 
 
   <div class="doc doc-contents ">
+
   
-      <p>Run the repair module of LogMap with <code>java -jar</code>.</p>
+      <p>Class for in-place ontology pruning.</p>
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>onto</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="deeponto.onto.ontology.Ontology" href="../ontology/#deeponto.onto.ontology.Ontology">Ontology</a></code>
+          </td>
+          <td><p>The input ontology to be pruned. Note that the pruning process is in-place.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+
+          <details class="quote">
+            <summary>Source code in <code>deeponto/onto/pruning.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">onto</span> <span class="o">=</span> <span class="n">onto</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_pruning_applied</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.onto.pruning.OntologyPruner.save_onto" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">save_onto</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Save the pruned ontology file to the given path.</p>
 
       <details class="quote">
-        <summary>Source code in <code>deeponto/align/logmap/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
-<span class="normal">19</span>
-<span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
+        <summary>Source code in <code>deeponto/onto/pruning.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
-<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run_logmap_repair</span><span class="p">(</span>
-    <span class="n">src_onto_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tgt_onto_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">mapping_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run the repair module of LogMap with `java -jar`.&quot;&quot;&quot;</span>
+<span class="normal">40</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_onto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save the pruned ontology file to the given path.&quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_pruning_applied</span><span class="si">}</span><span class="s2"> pruning algorithm has been applied.&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Save the pruned ontology file to </span><span class="si">{</span><span class="n">save_path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">save_onto</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
 
-    <span class="c1"># find logmap directory</span>
-    <span class="n">logmap_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+</div>
 
-    <span class="c1"># obtain absolute paths</span>
-    <span class="n">src_onto_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">src_onto_path</span><span class="p">)</span>
-    <span class="n">tgt_onto_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">tgt_onto_path</span><span class="p">)</span>
-    <span class="n">mapping_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">mapping_file_path</span><span class="p">)</span>
-    <span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+<div class="doc doc-object doc-function">
 
-    <span class="c1"># run jar command</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Run the repair module of LogMap from </span><span class="si">{</span><span class="n">logmap_path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-    <span class="n">repair_command</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="sa">f</span><span class="s2">&quot;java -jar </span><span class="si">{</span><span class="n">logmap_path</span><span class="si">}</span><span class="s2">/logmap-matcher-4.0.jar DEBUGGER &quot;</span>
-        <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot;file:</span><span class="si">{</span><span class="n">src_onto_path</span><span class="si">}</span><span class="s2"> file:</span><span class="si">{</span><span class="n">tgt_onto_path</span><span class="si">}</span><span class="s2"> TXT </span><span class="si">{</span><span class="n">mapping_file_path</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2"> false true&quot;</span>
-    <span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The jar command is:</span><span class="se">\n</span><span class="si">{</span><span class="n">repair_command</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-    <span class="n">FileUtils</span><span class="o">.</span><span class="n">run_jar</span><span class="p">(</span><span class="n">repair_command</span><span class="p">)</span>
+
+
+<h3 id="deeponto.onto.pruning.OntologyPruner.min_hierarchy_prune" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">min_hierarchy_prune</span><span class="p">(</span><span class="n">class_iris_to_be_removed</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Prune while applying minimum preservation of relevant hierarchy.</p>
+<div class="admonition credit">
+<p class="admonition-title">paper</p>
+<p>This refers to the ontology pruning algorithm introduced in the paper:
+<a href="https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33"><em>Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)</em></a>.</p>
+</div>
+<p>For each class <span class="arithmatex">\(c\)</span> to be pruned, subsumption axioms will be created between <span class="arithmatex">\(c\)</span>'s parents and children so as to preserve the
+relevant hierarchy.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>class_iris_to_be_removed</code></td>
+          <td>
+                <code><span title="typing.List">List</span>[str]</code>
+          </td>
+          <td><p>Classes with IRIs in this list will be pruned and the relevant hierarchy will be repaired.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+      <details class="quote">
+        <summary>Source code in <code>deeponto/onto/pruning.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">min_hierarchy_prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iris_to_be_removed</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Prune while applying minimum preservation of relevant hierarchy.</span>
+
+<span class="sd">    !!! credit &quot;paper&quot;</span>
+
+<span class="sd">        This refers to the ontology pruning algorithm introduced in the paper:</span>
+<span class="sd">        [*Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)*](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).</span>
+
+<span class="sd">    For each class $c$ to be pruned, subsumption axioms will be created between $c$&#39;s parents and children so as to preserve the</span>
+<span class="sd">    relevant hierarchy.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        class_iris_to_be_removed (List[str]): Classes with IRIs in this list will be pruned and the relevant hierarchy will be repaired.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># create the subsumption axioms first</span>
+    <span class="k">for</span> <span class="n">cl_iri</span> <span class="ow">in</span> <span class="n">class_iris_to_be_removed</span><span class="p">:</span>
+        <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">cl_iri</span><span class="p">)</span>
+        <span class="n">cl_parents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_asserted_parents</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
+        <span class="n">cl_children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_asserted_children</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">parent</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">cl_parents</span><span class="p">,</span> <span class="n">cl_children</span><span class="p">):</span>
+            <span class="n">sub_axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_data_factory</span><span class="o">.</span><span class="n">getOWLSubClassOfAxiom</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">add_axiom</span><span class="p">(</span><span class="n">sub_axiom</span><span class="p">)</span>
+
+    <span class="c1"># apply pruning</span>
+    <span class="n">class_remover</span> <span class="o">=</span> <span class="n">OWLEntityRemover</span><span class="p">(</span><span class="n">Collections</span><span class="o">.</span><span class="n">singleton</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_onto</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">cl_iri</span> <span class="ow">in</span> <span class="n">class_iris_to_be_removed</span><span class="p">:</span>
+        <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">cl_iri</span><span class="p">)</span>
+        <span class="n">cl</span><span class="o">.</span><span class="n">accept</span><span class="p">(</span><span class="n">class_remover</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_manager</span><span class="o">.</span><span class="n">applyChanges</span><span class="p">(</span><span class="n">class_remover</span><span class="o">.</span><span class="n">getChanges</span><span class="p">())</span>
+
+    <span class="c1"># remove IRIs in dictionaries?</span>
+    <span class="c1"># TODO Test it</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_pruning_applied</span> <span class="o">=</span> <span class="s2">&quot;min_hierarchy&quot;</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -1016,16 +1177,25 @@
 
 </div>
 
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 1, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 19, 2023</span>
       
         <br>
         Created:
-        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 14, 2023</span>
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 19, 2023</span>
       
     
   </small>

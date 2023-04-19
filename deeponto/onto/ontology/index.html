@@ -706,13 +706,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#deeponto.onto.ontology.Ontology.apply_pruning" class="md-nav__link">
-    apply_pruning()
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -735,6 +728,20 @@
     <li class="md-nav__item">
       <a href="../reasoning/" class="md-nav__link">
         Reasoning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pruning/" class="md-nav__link">
+        Pruning
       </a>
     </li>
   
@@ -3056,122 +3063,6 @@ Defaults to <code>False</code>.</p></td>
     <span class="n">iri_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">IRI</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">entity_iri</span><span class="p">):</span> <span class="n">IRI</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">replacement_iri</span><span class="p">)}</span>
     <span class="n">replacer</span> <span class="o">=</span> <span class="n">OWLObjectDuplicator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_data_factory</span><span class="p">,</span> <span class="n">iri_dict</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">replacer</span><span class="o">.</span><span class="n">duplicateObject</span><span class="p">(</span><span class="n">owl_object</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.onto.ontology.Ontology.apply_pruning" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">apply_pruning</span><span class="p">(</span><span class="n">class_iris_to_be_removed</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Run pruning given a list of classes that will be pruned.</p>
-<div class="admonition credit">
-<p class="admonition-title">paper</p>
-<p>This refers to the ontology pruning algorithm introduced in the paper:
-<a href="https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33"><em>Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)</em></a>.</p>
-</div>
-<p>For each class <span class="arithmatex">\(c\)</span> to be pruned, subsumption axioms will be created between <span class="arithmatex">\(c\)</span>'s parents and children so as to preserve the
-relevant hierarchy.</p>
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>class_iris_to_be_removed</code></td>
-          <td>
-                <code><span title="typing.List">List</span>[str]</code>
-          </td>
-          <td><p>Classes with IRIs in this list will be pruned and the relevant hierarchy will be repaired.</p></td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/onto/ontology.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">527</span>
-<span class="normal">528</span>
-<span class="normal">529</span>
-<span class="normal">530</span>
-<span class="normal">531</span>
-<span class="normal">532</span>
-<span class="normal">533</span>
-<span class="normal">534</span>
-<span class="normal">535</span>
-<span class="normal">536</span>
-<span class="normal">537</span>
-<span class="normal">538</span>
-<span class="normal">539</span>
-<span class="normal">540</span>
-<span class="normal">541</span>
-<span class="normal">542</span>
-<span class="normal">543</span>
-<span class="normal">544</span>
-<span class="normal">545</span>
-<span class="normal">546</span>
-<span class="normal">547</span>
-<span class="normal">548</span>
-<span class="normal">549</span>
-<span class="normal">550</span>
-<span class="normal">551</span>
-<span class="normal">552</span>
-<span class="normal">553</span>
-<span class="normal">554</span>
-<span class="normal">555</span>
-<span class="normal">556</span>
-<span class="normal">557</span>
-<span class="normal">558</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">apply_pruning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iris_to_be_removed</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Run pruning given a list of classes that will be pruned.</span>
-
-<span class="sd">    !!! credit &quot;paper&quot;</span>
-
-<span class="sd">        This refers to the ontology pruning algorithm introduced in the paper:</span>
-<span class="sd">        [*Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)*](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).</span>
-
-<span class="sd">    For each class $c$ to be pruned, subsumption axioms will be created between $c$&#39;s parents and children so as to preserve the</span>
-<span class="sd">    relevant hierarchy.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        class_iris_to_be_removed (List[str]): Classes with IRIs in this list will be pruned and the relevant hierarchy will be repaired.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="c1"># create the subsumption axioms first</span>
-    <span class="k">for</span> <span class="n">cl_iri</span> <span class="ow">in</span> <span class="n">class_iris_to_be_removed</span><span class="p">:</span>
-        <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">cl_iri</span><span class="p">)</span>
-        <span class="n">cl_parents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">get_inferred_super_entities</span><span class="p">(</span><span class="n">cl</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">cl_children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">get_inferred_sub_entities</span><span class="p">(</span><span class="n">cl</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">parent</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">cl_parents</span><span class="p">,</span> <span class="n">cl_children</span><span class="p">):</span>
-            <span class="n">parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
-            <span class="n">child</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
-            <span class="n">sub_axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_data_factory</span><span class="o">.</span><span class="n">getOWLSubClassOfAxiom</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_axiom</span><span class="p">(</span><span class="n">sub_axiom</span><span class="p">)</span>
-
-    <span class="c1"># apply pruning</span>
-    <span class="n">class_remover</span> <span class="o">=</span> <span class="n">OWLEntityRemover</span><span class="p">(</span><span class="n">Collections</span><span class="o">.</span><span class="n">singleton</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_onto</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">cl_iri</span> <span class="ow">in</span> <span class="n">class_iris_to_be_removed</span><span class="p">:</span>
-        <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">cl_iri</span><span class="p">)</span>
-        <span class="n">cl</span><span class="o">.</span><span class="n">accept</span><span class="p">(</span><span class="n">class_remover</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">owl_manager</span><span class="o">.</span><span class="n">applyChanges</span><span class="p">(</span><span class="n">class_remover</span><span class="o">.</span><span class="n">getChanges</span><span class="p">())</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
