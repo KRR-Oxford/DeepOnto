@@ -132,7 +132,7 @@ Individual tools and resources are implemented based on the core ontology API. C
 
 !!! license "License"
 
-    Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.
+    Copyright 2021 Yuan He (KRR-Oxford) and Jiaoyan Chen. All rights reserved.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -154,6 +154,6 @@ Individual tools and resources are implemented based on the core ontology API. C
 
 ----------------------------------------------------------------
 
-Please report any bugs or queries by raising a GitHub issue or sending emails to the maintainer (Yuan He) through:
+Please report any bugs or queries by raising a GitHub issue or sending emails to the maintainers (Yuan He or Jiaoyan Chen) through:
 
 > first_name.last_name@cs.ox.ac.uk
