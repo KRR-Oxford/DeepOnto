@@ -111,6 +111,8 @@ The base class of $\textsf{DeepOnto}$ is [`Ontology`][deeponto.onto.Ontology], w
 
 - **Ontology Reasoning**: Each instance of $\textsf{DeepOnto}$ has an[`OntologyReasoner`][deeponto.onto.OntologyReasoner] as its attribute, which handles all the reasoning activities about the ontology such as checking consistency and entailment.
 
+- **Ontology Pruning**: This module aims to incorporate pruning algorithms for extracting a sub-ontology from an input ontology.
+
 - **Ontology Verbalisation**: The recursive ontology verbaliser originally proposed in [4] is implemented here as an essential module for briding ontologies and texts. See [verbalising ontology concepts](https://krr-oxford.github.io/DeepOnto/verbaliser).
 
 - We have a plan of releasing more modules to support ontology normalisation, ontology-to-graph transformation, and more.
