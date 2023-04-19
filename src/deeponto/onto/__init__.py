@@ -12,4 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from .ontology import Ontology, OntologyReasoner
+from .pruning import OntologyPruner
 from .verbalisation import OntologyVerbaliser, OntologySyntaxParser

@@ -524,42 +524,6 @@ class Ontology:
         replacer = OWLObjectDuplicator(self.owl_data_factory, iri_dict)
         return replacer.duplicateObject(owl_object)
 
-    def apply_pruning(self, class_iris_to_be_removed: List[str]):
-        r"""Run pruning given a list of classes that will be pruned.
-
-        !!! credit "paper"
-
-            This refers to the ontology pruning algorithm introduced in the paper:
-            [*Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)*](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33).
-
-        For each class $c$ to be pruned, subsumption axioms will be created between $c$'s parents and children so as to preserve the
-        relevant hierarchy.
-
-        Args:
-            class_iris_to_be_removed (List[str]): Classes with IRIs in this list will be pruned and the relevant hierarchy will be repaired.
-        """
-
-        # create the subsumption axioms first
-        for cl_iri in class_iris_to_be_removed:
-            cl = self.get_owl_object_from_iri(cl_iri)
-            cl_parents = self.reasoner.get_inferred_super_entities(cl, direct=True)
-            cl_children = self.reasoner.get_inferred_sub_entities(cl, direct=True)
-            for parent, child in itertools.product(cl_parents, cl_children):
-                parent = self.get_owl_object_from_iri(parent)
-                child = self.get_owl_object_from_iri(child)
-                sub_axiom = self.owl_data_factory.getOWLSubClassOfAxiom(child, parent)
-                self.add_axiom(sub_axiom)
-
-        # apply pruning
-        class_remover = OWLEntityRemover(Collections.singleton(self.owl_onto))
-        for cl_iri in class_iris_to_be_removed:
-            cl = self.get_owl_object_from_iri(cl_iri)
-            cl.accept(class_remover)
-        self.owl_manager.applyChanges(class_remover.getChanges())
-
-        # remove IRIs in dictionaries?
-        # TODO Test it
-
 
 class OntologyReasoner:
     """Ontology reasoner class that extends from the Java library OWLAPI.

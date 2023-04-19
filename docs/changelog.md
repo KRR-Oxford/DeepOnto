@@ -17,6 +17,7 @@ Security in case of vulnerabilities. -->
 
 ### Changed
 
+- [X] **Move** the pruning functionality into `deeponto.onto.OntologyPruner` as a separate module.
 - [X] **Amend** JVM checking before displaying the JVM memory prompt from importing `deeponto.onto.Ontology`; if started already, skip this step.
 - [X] **Change** the function `get_owl_object_annotations` at `deeponto.onto.Ontology` by preserving the relative order of annotation retrieval, i.e., create `set` first and use the `.add()` function instead of casting the `list` into `set` in the end.
 

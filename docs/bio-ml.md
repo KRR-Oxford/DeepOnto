@@ -176,15 +176,16 @@ In order to obtain scalable OM pairs, the **ontology pruning** algorithm propose
 Once obtaining the list of class IRIs to be removed, apply the ontology pruning following the code below:
 
 ```python
-from deeponto.onto import Ontology
+from deeponto.onto import Ontology, OntologyPruner
 
 doid = Ontology("doid.owl")
+pruner = OntologyPruner(doid)
 to_be_removed_class_iris = [
     "http://purl.obolibrary.org/obo/DOID_0060158",
     "http://purl.obolibrary.org/obo/DOID_9969"
 ]
-doid.apply_pruning(to_be_removed_class_iris)
-doid.save_onto("doid.pruned.owl")  # save the pruned ontology locally
+pruner.min_hierarchy_prune(to_be_removed_class_iris)
+pruner.save_onto("doid.pruned.owl")  # save the pruned ontology locally
 ```
 
 

@@ -54,6 +54,7 @@ nav:
         - Core Ontology API: 
           - Ontology: deeponto/onto/ontology.md
           - Reasoning: deeponto/onto/reasoning.md
+          - Pruning: deeponto/onto/pruning.md
           - Verbalisation: deeponto/onto/verbalisation.md
         - Ontology Alignment:
           - Mapping: deeponto/align/mapping.md
