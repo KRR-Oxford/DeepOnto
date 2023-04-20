@@ -17,6 +17,7 @@ import random
 from yacs.config import CfgNode
 
 import sys
+import os
 main_dir = os.getcwd().split("DeepOnto")[0] + "DeepOnto/src"
 sys.path.append(main_dir)
 
