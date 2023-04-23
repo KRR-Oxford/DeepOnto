@@ -40,7 +40,7 @@ limitations under the License.
 **News** :newspaper:
 
 - [X] Deploy the `deeponto.subs.bertsubs` and `deeponto.onto.pruning` modules (**v0.7.0**).
-- [X] Deploy the ~~`deeponto.lama`~~ `deeponto.probe.ontolama` and `deeponto.onto.verbalisation` modules (**v0.6.0**). 
+- [X] Deploy the `deeponto.probe.ontolama` and `deeponto.onto.verbalisation` modules (**v0.6.0**). 
 - [X] Rebuild the whole package based on the OWLAPI; remove owlready2 from the essential dependencies (from **v0.5.x**). 
 
 The complete changelog is available at: [repository](https://github.com/KRR-Oxford/DeepOnto/blob/main/docs/changelog.md) or [website](https://krr-oxford.github.io/DeepOnto/changelog/).
