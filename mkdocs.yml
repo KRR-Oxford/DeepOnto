@@ -51,7 +51,7 @@ nav:
       - Bio-ML specifications: bio-ml.md
       - Subsumption inference with BERTSubs: bertsubs.md
     - PACKAGE REFERENCE:
-        - Ontology Processing (Base): 
+        - Ontology Processing: 
           - Ontology: deeponto/onto/ontology.md
           - Reasoning: deeponto/onto/reasoning.md
           - Pruning: deeponto/onto/pruning.md
