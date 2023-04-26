@@ -8,10 +8,15 @@ Fixed for any bug fixes.
 Security in case of vulnerabilities. -->
 
 ## Unreleased
+
 ### Added
 
 - [ ] **Add** the ontology normaliser at `deeponto.onto.normaliser`.
 - [ ] **Add** the ontology-to-graph builder at `deeponto.onto.graph_builder`.
+
+### Changed
+
+- [X] **Change** `get_owl_object_annotations` by adding `uniqify` at the end to preserve the order.
 
 ## v0.7.0 (2023 April)
 
