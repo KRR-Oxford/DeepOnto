@@ -18,6 +18,10 @@ Security in case of vulnerabilities. -->
 
 - [X] **Change** `get_owl_object_annotations` by adding `uniqify` at the end to preserve the order.
 
+### Fixed
+
+- [X] **Fix** BERTMap's non-synonym sampling when the class labels are not available using the try-catch block.
+
 ## v0.7.0 (2023 April)
 
 ### Added

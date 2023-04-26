@@ -203,10 +203,14 @@ class AnnotationThesaurus:
         # randomly select disjoint synonym group pairs from all
         for _ in range(num_samples):
             left_synonym_group, right_synonym_group = tuple(random.sample(self.synonym_groups, 2))
-            # randomly choose one label from a synonym group
-            left_label = random.choice(list(left_synonym_group))
-            right_label = random.choice(list(right_synonym_group))
-            nonsyonym_pool.append((left_label, right_label))
+            try:
+                # randomly choose one label from a synonym group
+                left_label = random.choice(list(left_synonym_group))
+                right_label = random.choice(list(right_synonym_group))
+                nonsyonym_pool.append((left_label, right_label))
+            except:
+                # skip if there are no class labels
+                continue
 
         # DataUtils.uniqify is too slow so we should avoid operating it too often
         nonsyonym_pool = DataUtils.uniqify(nonsyonym_pool)
@@ -254,11 +258,15 @@ class AnnotationThesaurus:
         for sibling_class_group in sibling_class_groups:
             # random select two sibling classes; no weights this time
             left_class_iri, right_class_iri = tuple(random.sample(sibling_class_group, 2))
-            # random select a label for each of them
-            left_label = random.choice(list(self.annotation_index[left_class_iri]))
-            right_label = random.choice(list(self.annotation_index[right_class_iri]))
-            # add the label pair to the pool
-            nonsynonym_pool.append((left_label, right_label))
+            try:
+                # random select a label for each of them
+                left_label = random.choice(list(self.annotation_index[left_class_iri]))
+                right_label = random.choice(list(self.annotation_index[right_class_iri]))
+                # add the label pair to the pool
+                nonsynonym_pool.append((left_label, right_label))
+            except:
+                # skip them if there are no class labels
+                continue
 
         # DataUtils.uniqify is too slow so we should avoid operating it too often
         nonsynonym_pool = DataUtils.uniqify(nonsynonym_pool)
@@ -454,10 +462,14 @@ class CrossOntologyTextSemanticsCorpus:
         # randomly select disjoint synonym group pairs from all
         for _ in range(num_samples):
             left_class_pair, right_class_pair = tuple(random.sample(cross_onto_synonym_group_pair, 2))
-            # randomly choose one label from a synonym group
-            left_label = random.choice(list(left_class_pair[0]))  # choosing the src side by [0]
-            right_label = random.choice(list(right_class_pair[1]))  # choosing the tgt side by [1]
-            nonsynonym_pool.append((left_label, right_label))
+            try:
+                # randomly choose one label from a synonym group
+                left_label = random.choice(list(left_class_pair[0]))  # choosing the src side by [0]
+                right_label = random.choice(list(right_class_pair[1]))  # choosing the tgt side by [1]
+                nonsynonym_pool.append((left_label, right_label))
+            except:
+                # skip if there are no class labels
+                continue
 
         # DataUtils.uniqify is too slow so we should avoid operating it too often
         nonsynonym_pool = DataUtils.uniqify(nonsynonym_pool)
