@@ -172,7 +172,7 @@ class BERTSynonymClassifier:
                 examples["annotation1"], examples["annotation2"], max_length=self.max_length_for_input, truncation=True
             ),
             batched=True,
-            desc=f"Load {split} data with batch size 1000:",
+            desc=f"Load {split} data:",
         )
         return dataset
 
