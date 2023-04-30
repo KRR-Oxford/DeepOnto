@@ -24,7 +24,7 @@ The current version of $\textsf{BERTSubs}$ is able to predict:
 <br>
 
 <p align="center">
-    <img alt="bertsubs.jpeg" src="../images/bertsubs.jpeg">
+    <img alt="bertsubs.jpeg" src="../images/bertsubs.jpeg" width=60% height=auto>
     <p align="center">Figure 1. Pipeline illustration of BERTSubs.</p>
 </p>
 
