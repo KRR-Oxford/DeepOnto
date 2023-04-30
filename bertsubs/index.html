@@ -419,9 +419,47 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Subsumption inference with BERTSubs
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         Subsumption inference with BERTSubs
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation-case-and-dataset-ontology-completion" class="md-nav__link">
+    Evaluation Case and Dataset (Ontology Completion)
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -888,7 +926,7 @@
 <h1 id="subsumption-prediction-with-bertsubs">Subsumption Prediction with BERTSubs</h1>
 <div class="admonition credit">
 <p class="admonition-title">Paper</p>
-<p>Paper for BERTSubs: <a href="link-to-paper">Contextual Semantic Embeddings for Ontology Subsumption Prediction (WWWJ-2023)</a>.</p>
+<p>Paper for BERTSubs: <a href="https://arxiv.org/abs/2202.09791">Contextual Semantic Embeddings for Ontology Subsumption Prediction (accepted by WWW Journal in 2023)</a>.</p>
 <div class="highlight"><pre><span></span><code>@article{chen2022contextual,
 title={Contextual semantic embeddings for ontology subsumption prediction},
 author={Chen, Jiaoyan and He, Yuan and Geng, Yuxia and Jimenez-Ruiz, Ernesto and Dong, Hang and Horrocks, Ian},
@@ -897,15 +935,113 @@ year={2022}
 }
 </code></pre></div>
 </div>
-<p>This page gives the tutorial for <span class="arithmatex">\(\textsf{BERTSubs}\)</span> including the model summary and usage instructions.</p>
-<p>(to be updated) ...</p>
+<p>This page gives the tutorial for <span class="arithmatex">\(\textsf{BERTSubs}\)</span> including the functions, the summary of the models and usage instructions.</p>
+<p><br>
+The current version of <span class="arithmatex">\(\textsf{BERTSubs}\)</span> is able to predict:</p>
+<ol>
+<li>named subsumptions between two named classes, or complex subsumptions between one named class and one complex class, <strong>within an ontology</strong>,</li>
+<li>named subsumption between two named classes, or complex subsumptions between one named class and one complex class, <strong>across two ontologies</strong> (note the former corresponds to subsumption mapping). 
+<br></li>
+</ol>
+<p align="center">
+    <img alt="bertsubs.jpeg" src="../images/bertsubs.jpeg">
+    <p align="center">Figure 1. Pipeline illustration of BERTSubs.</p>
+</p>
+
+<p><br>
+The pipeline of <span class="arithmatex">\(\textsf{BERTSubs}\)</span> consists of following steps.</p>
+<ol>
+<li>
+<p><strong>Corpus Construction</strong>: extracting a set of sentence pairs from positive and negative subsumptions from the target ontology (or ontologies), with one of the following three templates used for transforming each class into a sentence,</p>
+<ul>
+<li>Isolated Class, which just uses the names of the input class,</li>
+<li>Path Context, which uses the names of the upper (resp. down) path starting from the input superclass (resp. subclass),</li>
+<li>Breadth-first Class Context, which uses the names of the input class's surrounding classes.</li>
+</ul>
+</li>
+<li>
+<p><strong>Model Fine-tuning</strong>: fine-tuning a language model such as BERT with the above sentence pairs.</p>
+</li>
+<li><strong>Prediction</strong>: using the fine-tuned language model to predict the subsumption scores of the given candidate class pairs.</li>
+</ol>
+<p>Note that the optionally given subsumptions via a train subsumption file can also be used for fine-tuning. 
+Please see more technical details in the <a href="https://arxiv.org/abs/2202.09791">paper</a>.</p>
+<h2 id="evaluation-case-and-dataset-ontology-completion">Evaluation Case and Dataset (Ontology Completion)</h2>
+<p>The evaluation is implemented <a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/scripts/bertsubs_intra_evaluate.py">scripts/bertsubs_intra_evaluate.py</a>.
+Download an ontology (e.g., <a href="https://github.com/KRR-Oxford/OWL2Vec-Star/blob/master/case_studies/ontologies.tar.gz">FoodOn</a>) and run:
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>bertsubs_intra_evaluate.py<span class="w"> </span>--onto_file<span class="w"> </span>./foodon-merged.0.4.8.ow
+</code></pre></div></p>
+<p>The parameter --subsumption_type can be set to <strong>'restriction' for complex class subsumptions</strong>, and <strong>'named_class' for named class subsumptions</strong>. Please see the programme for more parameters and their meanings.</p>
+<p>It executes the following procedure:</p>
+<ol>
+<li>
+<p>The named class or complex class subsumption axioms of an ontology is partitioned into a train set, a valid set and a test set. They are saved as train, valid and test files, respectively.</p>
+</li>
+<li>
+<p>The test and the valid subsumption axioms are removed from the original ontology, and a new ontology is saved.</p>
+</li>
+</ol>
+<p>Notice: for a named class test/valid subsumption, a set of negative candidate super classes are extracted from the ground truth super class's neighbourhood.
+For a complex class test/valid subsumption, a set of negative candidate super classes are randomly extracted from all the complex classes in the ontology.</p>
+<h2 id="usage">Usage</h2>
+<p>To run <span class="arithmatex">\(\textsf{BERTSubs}\)</span>, a configuration file and one input ontology (or two ontologies) are mandatory.
+If candidate class pairs are given, a fine-tuned language model and a file with predicted scores of the candidate class pairs in the test file are output;
+otherwise, only the fine-grained language model is output.
+The test metrics (MRR and Hits@K) can also be output if the ground truth and a set of negative candidate super classes are given for the subclass of each valid/test subsumption. </p>
+<ol>
+<li>
+<p>The following code is for intra-ontology subsumption.
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">yacs.config</span> <span class="kn">import</span> <span class="n">CfgNode</span>
+<span class="kn">from</span> <span class="nn">deeponto.subs.bertsubs</span> <span class="kn">import</span> <span class="n">BERTSubsIntraPipeline</span><span class="p">,</span> <span class="n">DEFAULT_CONFIG_FILE_INTRA</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">FileUtils</span>
+<span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">CfgNode</span><span class="p">(</span><span class="n">FileUtils</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="n">DEFAULT_CONFIG_FILE_INTRA</span><span class="p">))</span> <span class="c1"># Load default configuration file</span>
+<span class="n">config</span><span class="o">.</span><span class="n">onto_file</span> <span class="o">=</span> <span class="s1">&#39;./foodon.owl&#39;</span>
+<span class="n">config</span><span class="o">.</span><span class="n">train_subsumption_file</span> <span class="o">=</span> <span class="s1">&#39;./train_subsumptions.csv&#39;</span> <span class="c1"># optional</span>
+<span class="n">config</span><span class="o">.</span><span class="n">valid_subsumption_file</span> <span class="o">=</span> <span class="s1">&#39;./valid_subsumptions.csv&#39;</span> <span class="c1"># optional</span>
+<span class="n">config</span><span class="o">.</span><span class="n">test_subsumption_file</span> <span class="o">=</span> <span class="s1">&#39;./test_subsumptions.csv&#39;</span> <span class="c1">#optional</span>
+<span class="n">config</span><span class="o">.</span><span class="n">test_type</span> <span class="o">=</span> <span class="s1">&#39;evaluation&#39;</span> <span class="c1">#&#39;evaluation&#39;: calculate metrics with ground truths given in the test_subsumption_file; &#39;prediction&#39;: predict scores for candidate subsumptions given in test_submission_file</span>
+<span class="n">config</span><span class="o">.</span><span class="n">subsumption_type</span> <span class="o">=</span> <span class="s1">&#39;named_class&#39;</span>  <span class="c1"># &#39;named_class&#39; or &#39;restriction&#39; </span>
+<span class="n">config</span><span class="o">.</span><span class="n">prompt</span><span class="o">.</span><span class="n">prompt_type</span> <span class="o">=</span> <span class="s1">&#39;isolated&#39;</span>  <span class="c1"># &#39;isolated&#39;, &#39;traversal&#39;, &#39;path&#39; (three templates)</span>
+
+<span class="n">onto</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="n">owl_path</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">onto_file</span><span class="p">)</span>
+<span class="n">intra_pipeline</span> <span class="o">=</span> <span class="n">BERTSubsIntraPipeline</span><span class="p">(</span><span class="n">onto</span><span class="o">=</span><span class="n">onto</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+</code></pre></div></p>
+</li>
+<li>
+<p>The following code is for inter-ontology subsumption.
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">yacs.config</span> <span class="kn">import</span> <span class="n">CfgNode</span>
+<span class="kn">from</span> <span class="nn">deeponto.subs.bertsubs</span> <span class="kn">import</span> <span class="n">BERTSubsInterPipeline</span><span class="p">,</span> <span class="n">DEFAULT_CONFIG_FILE_INTER</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">FileUtils</span>
+<span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">CfgNode</span><span class="p">(</span><span class="n">FileUtils</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="n">DEFAULT_CONFIG_FILE_INTER</span><span class="p">))</span> <span class="c1"># Load default configuration file</span>
+<span class="n">config</span><span class="o">.</span><span class="n">src_onto_file</span> <span class="o">=</span> <span class="s1">&#39;./helis2foodon/helis_v1.00.owl&#39;</span>
+<span class="n">config</span><span class="o">.</span><span class="n">tgt_onto_file</span> <span class="o">=</span> <span class="s1">&#39;./helis2foodon/foodon-merged.0.4.8.subs.owl&#39;</span>
+<span class="n">config</span><span class="o">.</span><span class="n">train_subsumption_file</span> <span class="o">=</span> <span class="s1">&#39;./helis2foodon/train_subsumptions.csv&#39;</span> <span class="c1"># optional</span>
+<span class="n">config</span><span class="o">.</span><span class="n">valid_subsumption_file</span> <span class="o">=</span> <span class="s1">&#39;./helis2foodon/valid_subsumptions.csv&#39;</span> <span class="c1"># optional</span>
+<span class="n">config</span><span class="o">.</span><span class="n">test_subsumption_file</span> <span class="o">=</span> <span class="s1">&#39;./helis2foodon/test_subsumptions.csv&#39;</span> <span class="c1"># optional</span>
+<span class="n">config</span><span class="o">.</span><span class="n">test_type</span> <span class="o">=</span> <span class="s1">&#39;evaluation&#39;</span> <span class="c1"># &#39;evaluation&#39;, or &#39;prediction&#39;</span>
+<span class="n">config</span><span class="o">.</span><span class="n">subsumption_type</span> <span class="o">=</span> <span class="s1">&#39;named_class&#39;</span>  <span class="c1"># &#39;named_class&#39;, or &#39;restriction&#39;</span>
+<span class="n">config</span><span class="o">.</span><span class="n">prompt</span><span class="o">.</span><span class="n">prompt_type</span> <span class="o">=</span> <span class="s1">&#39;path&#39;</span>   <span class="c1"># &#39;isolated&#39;, &#39;traversal&#39;, &#39;path&#39; (three templates)</span>
+
+<span class="n">src_onto</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="n">owl_path</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">src_onto_file</span><span class="p">)</span>
+<span class="n">tgt_onto</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="n">owl_path</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">tgt_onto_file</span><span class="p">)</span>
+<span class="n">inter_pipeline</span> <span class="o">=</span> <span class="n">BERTSubsInterPipeline</span><span class="p">(</span><span class="n">src_onto</span><span class="o">=</span><span class="n">src_onto</span><span class="p">,</span> <span class="n">tgt_onto</span><span class="o">=</span><span class="n">tgt_onto</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+</code></pre></div></p>
+</li>
+</ol>
+<p>For more details on the configuration, please see the comment in the default configuration files 
+<a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/src/deeponto/subs/bertsubs/default_config_intra.yaml">default_config_intra.yaml</a>
+and <a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/src/deeponto/subs/bertsubs/pipeline_inter.py">default_config_inter.yaml</a>.</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 19, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 30, 2023</span>
       
         <br>
         Created:
