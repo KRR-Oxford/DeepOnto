@@ -2,7 +2,7 @@
 
 !!! credit "Paper"
 
-    Paper for BERTSubs: [Contextual Semantic Embeddings for Ontology Subsumption Prediction (accepted by WWW Journal in 2023)].
+    Paper for BERTSubs: [Contextual Semantic Embeddings for Ontology Subsumption Prediction (accepted by WWW Journal in 2023)](https://arxiv.org/abs/2202.09791).
 
     ```
     @article{chen2022contextual,
@@ -24,7 +24,7 @@ The current version of $\textsf{BERTSubs}$ is able to predict:
 <br>
 
 <p align="center">
-    <img alt="bertsubs.jpeg" src="../images/bertsubs.jpeg">
+    <img alt="bertsubs.jpeg" src="../images/bertsubs.jpeg" width=60% height=auto>
     <p align="center">Figure 1. Pipeline illustration of BERTSubs.</p>
 </p>
 
