@@ -49,7 +49,7 @@ Please see more technical details in the [paper](https://arxiv.org/abs/2202.0979
 The evaluation is implemented [scripts/bertsubs_intra_evaluate.py](https://github.com/KRR-Oxford/DeepOnto/blob/main/scripts/bertsubs_intra_evaluate.py).
 Download an ontology (e.g., [FoodOn](https://github.com/KRR-Oxford/OWL2Vec-Star/blob/master/case_studies/ontologies.tar.gz)) and run:
 ```bash
-python bertsubs_intra_evaluate.py --onto_file ./foodon-merged.0.4.8.ow
+python bertsubs_intra_evaluate.py --onto_file ./foodon-merged.0.4.8.owl
 ```
 
 The parameter --subsumption_type can be set to **'restriction' for complex class subsumptions**, and **'named_class' for named class subsumptions**. Please see the programme for more parameters and their meanings.
