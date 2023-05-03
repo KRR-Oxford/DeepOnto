@@ -129,7 +129,7 @@ Individual tools and resources are implemented based on the core ontology API. C
 
 - **BERTSubs** [3] is a system for ontology subsumption prediction. We have transformed its original [experimental code](https://gitlab.com/chen00217/bert_subsumption) into this project. See [subsumption prediction with BERTSubs](https://krr-oxford.github.io/DeepOnto/bertsubs/).
 
-- **OntoLAMA*** [4] is a set of language model probing datasets for ontology subsumption inference. See [OntoLAMA specifications](https://krr-oxford.github.io/DeepOnto/ontolama) for the use of the datasets and the prompt-based probing approach.
+- **OntoLAMA** [4] is a set of language model probing datasets for ontology subsumption inference. See [OntoLAMA specifications](https://krr-oxford.github.io/DeepOnto/ontolama) for the use of the datasets and the prompt-based probing approach.
 
 
 ## License
