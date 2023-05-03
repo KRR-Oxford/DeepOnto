@@ -107,7 +107,7 @@ pip install -r requirements.txt
 
 ### Ontology Processing
 
-The base class of $\textsf{DeepOnto}$ is [`Ontology`][deeponto.onto.Ontology], which encapsulates and extends the features of the OWLAPI library for processing ontologies. See quick usage at [load an ontology](https://krr-oxford.github.io/DeepOnto/ontology/). Several essential modules that revolve around [`Ontology`][deeponto.onto.Ontology] are then built to enhance the core ontology API, including:
+The base class of $\textsf{DeepOnto}$ is [`Ontology`][deeponto.onto.Ontology], which encapsulates and extends the features of the OWLAPI library for processing ontologies. See quick usage at [load an ontology](https://krr-oxford.github.io/DeepOnto/ontology/). Several essential modules that revolve around [`Ontology`][deeponto.onto.Ontology] are then built to enhance ontology processing, including:
 
 - **Ontology Reasoning**: Each instance of $\textsf{DeepOnto}$ has an[`OntologyReasoner`][deeponto.onto.OntologyReasoner] as its attribute, which handles all the reasoning activities about the ontology such as checking consistency and entailment.
 
@@ -152,10 +152,10 @@ Individual tools and resources are implemented based on the core ontology API. C
 
 ## Publications
 
-- [1] *Yuan He‚ Jiaoyan Chen‚ Denvar Antonyrajah and Ian Horrocks.* **BERTMap: A BERT−Based Ontology Alignment System**. In Proceedings of 36th AAAI Conference on Artificial Intelligence 2022 (AAAI-2022). /[arxiv](https://arxiv.org/abs/2112.02682)/ /[aaai](https://ojs.aaai.org/index.php/AAAI/article/view/20510)/  <a name="bertmap_paper"></a>
+- [1] *Yuan He‚ Jiaoyan Chen‚ Denvar Antonyrajah and Ian Horrocks.* **BERTMap: A BERT−Based Ontology Alignment System**. In Proceedings of 36th AAAI Conference on Artificial Intelligence (AAAI-2022). /[arxiv](https://arxiv.org/abs/2112.02682)/ /[aaai](https://ojs.aaai.org/index.php/AAAI/article/view/20510)/  <a name="bertmap_paper"></a>
 - [2] *Yuan He‚ Jiaoyan Chen‚ Hang Dong, Ernesto Jiménez-Ruiz, Ali Hadian and Ian Horrocks.* **Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching**. The 21st International Semantic Web Conference (ISWC-2022, **Best Resource Paper Candidate**). /[arxiv](https://arxiv.org/abs/2205.03447)/ /[iswc](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33)/  <a name="bioml_paper"></a>
-- [3] *Jiaoyan Chen, Yuan He, Yuxia Geng, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.* **Contextual Semantic Embeddings for Ontology Subsumption Prediction**. World Wide Web Journal 2023. /[arxiv](https://arxiv.org/abs/2202.09791)/  <a name="bertsubs_paper"></a>
-- [4] *Yuan He‚ Jiaoyan Chen, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.* **Language Model Analysis for Ontology Subsumption Inference**. Findings of ACL 2023 (to appear). /[arxiv](https://arxiv.org/abs/2302.06761)/  <a name="ontolama_paper"></a>
+- [3] *Jiaoyan Chen, Yuan He, Yuxia Geng, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.* **Contextual Semantic Embeddings for Ontology Subsumption Prediction**. World Wide Web Journal （WWWJ-2023). /[arxiv](https://arxiv.org/abs/2202.09791)/ /[wwwj](https://link.springer.com/article/10.1007/s11280-023-01169-9)/  <a name="bertsubs_paper"></a>
+- [4] *Yuan He‚ Jiaoyan Chen, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.* **Language Model Analysis for Ontology Subsumption Inference**. Findings of the Association for Computational Linguistics (ACL-2023, to appear). /[arxiv](https://arxiv.org/abs/2302.06761)/  <a name="ontolama_paper"></a>
 
 
 ----------------------------------------------------------------
