@@ -16,7 +16,7 @@
         <link rel="prev" href="../bio-ml/">
       
       
-        <link rel="next" href="../deeponto/onto/ontology/">
+        <link rel="next" href="../ontolama/">
       
       <link rel="icon" href="../images/favicon_package/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.5">
@@ -461,6 +461,20 @@
   
 </nav>
       
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ontolama/" class="md-nav__link">
+        OntoLAMA specifications
+      </a>
     </li>
   
 
@@ -969,7 +983,7 @@ Please see more technical details in the <a href="https://arxiv.org/abs/2202.097
 <h2 id="evaluation-case-and-dataset-ontology-completion">Evaluation Case and Dataset (Ontology Completion)</h2>
 <p>The evaluation is implemented <a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/scripts/bertsubs_intra_evaluate.py">scripts/bertsubs_intra_evaluate.py</a>.
 Download an ontology (e.g., <a href="https://github.com/KRR-Oxford/OWL2Vec-Star/blob/master/case_studies/ontologies.tar.gz">FoodOn</a>) and run:
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>bertsubs_intra_evaluate.py<span class="w"> </span>--onto_file<span class="w"> </span>./foodon-merged.0.4.8.ow
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>bertsubs_intra_evaluate.py<span class="w"> </span>--onto_file<span class="w"> </span>./foodon-merged.0.4.8.owl
 </code></pre></div></p>
 <p>The parameter --subsumption_type can be set to <strong>'restriction' for complex class subsumptions</strong>, and <strong>'named_class' for named class subsumptions</strong>. Please see the programme for more parameters and their meanings.</p>
 <p>It executes the following procedure:</p>
@@ -1041,7 +1055,7 @@ and <a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/src/deeponto/subs/
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 30, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">May 2, 2023</span>
       
         <br>
         Created:

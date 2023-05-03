@@ -2,117 +2,122 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/bertmap/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/bertsubs/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/bio-ml/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/changelog/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://krr-oxford.github.io/DeepOnto/ontolama/</loc>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/ontology/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/verbaliser/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/align/evaluation/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/align/mapping/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/align/bertmap/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/align/bertsubs/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/align/logmap/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/onto/ontology/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/onto/pruning/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/onto/reasoning/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/onto/verbalisation/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/probe/ontolama/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/subs/bertsubs/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/utils/data_utils/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/utils/decorators/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/utils/file_utils/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/utils/logging/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/utils/text_utils/</loc>
-         <lastmod>2023-04-30</lastmod>
+         <lastmod>2023-05-03</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

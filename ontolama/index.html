@@ -10,27 +10,27 @@
         <meta name="author" content="Yuan He (KRR-Oxford)">
       
       
-        <link rel="canonical" href="https://krr-oxford.github.io/DeepOnto/deeponto/utils/data_utils/">
+        <link rel="canonical" href="https://krr-oxford.github.io/DeepOnto/ontolama/">
       
       
-        <link rel="prev" href="../logging/">
+        <link rel="prev" href="../bertsubs/">
       
       
-        <link rel="next" href="../decorators/">
+        <link rel="next" href="../deeponto/onto/ontology/">
       
-      <link rel="icon" href="../../../images/favicon_package/favicon.ico">
+      <link rel="icon" href="../images/favicon_package/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.5">
     
     
       
-        <title>Data Utilities - DeepOnto</title>
+        <title>OntoLAMA specifications - DeepOnto</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.558e4712.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.558e4712.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.2505c338.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.2505c338.min.css">
       
       
 
@@ -46,11 +46,11 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#deeponto.utils.data_utils.DataUtils" class="md-skip">
+        <a href="#ontolama-specifications" class="md-skip">
           Skip to content
         </a>
       
@@ -89,9 +89,9 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="DeepOnto" class="md-header__button md-logo" aria-label="DeepOnto" data-md-component="logo">
+    <a href=".." title="DeepOnto" class="md-header__button md-logo" aria-label="DeepOnto" data-md-component="logo">
       
-  <img src="../../../images/favicon_package/safari-pinned-tab.svg" alt="logo">
+  <img src="../images/favicon_package/safari-pinned-tab.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -107,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Data Utilities
+              OntoLAMA specifications
             
           </span>
         </div>
@@ -219,14 +219,14 @@
   <!-- Site title -->
   <label class="md-nav__title" for="__drawer">
     <a
-      href="../../.."
+      href=".."
       title="DeepOnto"
       class="md-nav__button md-logo"
       aria-label="DeepOnto"
       data-md-component="logo"
     >
       
-  <img src="../../../images/favicon_package/safari-pinned-tab.svg" alt="logo">
+  <img src="../images/favicon_package/safari-pinned-tab.svg" alt="logo">
 
     </a>
     <!-- DeepOnto -->
@@ -287,7 +287,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -301,7 +301,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ontology/" class="md-nav__link">
+      <a href="../ontology/" class="md-nav__link">
         Load an ontology
       </a>
     </li>
@@ -315,115 +315,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../changelog/" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         Changelog
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    
-      
-    
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
-      
-      
-      
-        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="false">
-          TUTORIALS
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="TUTORIALS" data-md-level="1">
-        <label class="md-nav__title" for="__nav_2">
-          <span class="md-nav__icon md-icon"></span>
-          TUTORIALS
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../verbaliser/" class="md-nav__link">
-        Verbalise ontology concepts
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../bertmap/" class="md-nav__link">
-        Ontology matching with BERTMap & BERTMapLt
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../bio-ml/" class="md-nav__link">
-        Bio-ML specifications
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../bertsubs/" class="md-nav__link">
-        Subsumption inference with BERTSubs
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../ontolama/" class="md-nav__link">
-        OntoLAMA specifications
       </a>
     </li>
   
@@ -453,11 +346,187 @@
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
       
       
       
-        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="true">
+        <label class="md-nav__link" for="__nav_2" tabindex="0" aria-expanded="true">
+          TUTORIALS
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="TUTORIALS" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          TUTORIALS
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../verbaliser/" class="md-nav__link">
+        Verbalise ontology concepts
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bertmap/" class="md-nav__link">
+        Ontology matching with BERTMap & BERTMapLt
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bio-ml/" class="md-nav__link">
+        Bio-ML specifications
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../bertsubs/" class="md-nav__link">
+        Subsumption inference with BERTSubs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          OntoLAMA specifications
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        OntoLAMA specifications
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    Introduction
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#links" class="md-nav__link">
+    Links
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#statistics" class="md-nav__link">
+    Statistics
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    Usage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prompt-based-probing" class="md-nav__link">
+    Prompt-based Probing
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+      
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+      
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="false">
           PACKAGE REFERENCE
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -502,7 +571,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../onto/ontology/" class="md-nav__link">
+      <a href="../deeponto/onto/ontology/" class="md-nav__link">
         Ontology
       </a>
     </li>
@@ -516,7 +585,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../onto/reasoning/" class="md-nav__link">
+      <a href="../deeponto/onto/reasoning/" class="md-nav__link">
         Reasoning
       </a>
     </li>
@@ -530,7 +599,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../onto/pruning/" class="md-nav__link">
+      <a href="../deeponto/onto/pruning/" class="md-nav__link">
         Pruning
       </a>
     </li>
@@ -544,7 +613,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../onto/verbalisation/" class="md-nav__link">
+      <a href="../deeponto/onto/verbalisation/" class="md-nav__link">
         Verbalisation
       </a>
     </li>
@@ -592,7 +661,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/mapping/" class="md-nav__link">
+      <a href="../deeponto/align/mapping/" class="md-nav__link">
         Mapping
       </a>
     </li>
@@ -606,7 +675,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/bertmap/" class="md-nav__link">
+      <a href="../deeponto/align/bertmap/" class="md-nav__link">
         BERTMap
       </a>
     </li>
@@ -620,7 +689,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/logmap/" class="md-nav__link">
+      <a href="../deeponto/align/logmap/" class="md-nav__link">
         LogMap
       </a>
     </li>
@@ -634,7 +703,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/bertsubs/" class="md-nav__link">
+      <a href="../deeponto/align/bertsubs/" class="md-nav__link">
         BERTSubs (Inter)
       </a>
     </li>
@@ -648,7 +717,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/evaluation/" class="md-nav__link">
+      <a href="../deeponto/align/evaluation/" class="md-nav__link">
         Evaluation
       </a>
     </li>
@@ -696,7 +765,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../subs/bertsubs/" class="md-nav__link">
+      <a href="../deeponto/subs/bertsubs/" class="md-nav__link">
         BERTSubs (Intra)
       </a>
     </li>
@@ -744,7 +813,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../probe/ontolama/" class="md-nav__link">
+      <a href="../deeponto/probe/ontolama/" class="md-nav__link">
         OntoLAMA
       </a>
     </li>
@@ -763,20 +832,18 @@
               
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_5" type="checkbox" id="__nav_3_5" checked>
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_5" type="checkbox" id="__nav_3_5" >
       
       
       
-        <label class="md-nav__link" for="__nav_3_5" tabindex="0" aria-expanded="true">
+        <label class="md-nav__link" for="__nav_3_5" tabindex="0" aria-expanded="false">
           Utilities
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -794,7 +861,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../text_utils/" class="md-nav__link">
+      <a href="../deeponto/utils/text_utils/" class="md-nav__link">
         Text Utilities
       </a>
     </li>
@@ -808,7 +875,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../file_utils/" class="md-nav__link">
+      <a href="../deeponto/utils/file_utils/" class="md-nav__link">
         File Utilities
       </a>
     </li>
@@ -822,7 +889,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../logging/" class="md-nav__link">
+      <a href="../deeponto/utils/logging/" class="md-nav__link">
         Logging
       </a>
     </li>
@@ -834,68 +901,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Data Utilities
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../deeponto/utils/data_utils/" class="md-nav__link">
         Data Utilities
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#deeponto.utils.data_utils.DataUtils" class="md-nav__link">
-    DataUtils
-  </a>
-  
-    <nav class="md-nav" aria-label="DataUtils">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#deeponto.utils.data_utils.DataUtils.uniqify" class="md-nav__link">
-    uniqify()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deeponto.utils.data_utils.DataUtils.sort_dict_by_values" class="md-nav__link">
-    sort_dict_by_values()
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -907,7 +917,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../decorators/" class="md-nav__link">
+      <a href="../deeponto/utils/decorators/" class="md-nav__link">
         Decorators
       </a>
     </li>
@@ -948,150 +958,123 @@
 
 
 
-  <h1>Data Utilities</h1>
-
-<div class="doc doc-object doc-module">
-
-
-
-  <div class="doc doc-contents first">
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="deeponto.utils.data_utils.DataUtils" class="doc doc-heading">
-        <code>DataUtils</code>
-
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-
-
-
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.utils.data_utils.DataUtils.uniqify" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">uniqify</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
-  </span>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Return a list of unique elements without messing around the order</p>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/utils/data_utils.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">uniqify</span><span class="p">(</span><span class="n">ls</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a list of unique elements without messing around the order&quot;&quot;&quot;</span>
-    <span class="n">non_empty_ls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="p">))</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">non_empty_ls</span><span class="p">))</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
+<h1 id="ontolama-specifications">OntoLAMA Specifications</h1>
+<div class="admonition credit">
+<p class="admonition-title">paper</p>
+<p>Paper for OntoLAMA:
+<a href="https://arxiv.org/abs/2302.06761">Language Model Analysis for Ontology Subsumption Inference (Findings of ACL 2023, to appear)</a>.</p>
+<div class="highlight"><pre><span></span><code>@article{he2023language,
+title={Language Model Analysis for Ontology Subsumption Inference},
+author={He, Yuan and Chen, Jiaoyan and Jim{\&#39;e}nez-Ruiz, Ernesto and Dong, Hang and Horrocks, Ian},
+journal={arXiv preprint arXiv:2302.06761},
+year={2023}
+}
+</code></pre></div>
 </div>
+<p>This page provides an overview of the <span class="arithmatex">\(\textsf{OntoLAMA}\)</span> datasets, how to use them, and the related probing approach introduced in the research paper.</p>
+<h2 id="introduction">Introduction</h2>
+<p><span class="arithmatex">\(\textsf{OntoLAMA}\)</span> is a set of language model (LM) probing datasets for ontology subsumption inference. The work follows the "LMs-as-KBs" literature but focuses on conceptualised knowledge extracted from formalised KBs such as the OWL ontologies. Specifically, the subsumption inference (SI) task is introduced and formulated in the Natural Language Inference (NLI) style, where the sub-concept and the super-concept involved in a subsumption axiom are verbalised and fitted into a template to form the premise and hypothesis, respectively. The sampled axioms are verified through ontology reasoning. The SI task is further divided into Atomic SI and Complex SI where the former involves only atomic named concepts and the latter involves both atomic and complex concepts. Real-world ontologies of different scales and domains are used for constructing OntoLAMA and in total there are <strong>four</strong> Atomic SI datasets and <strong>two</strong> Complex SI datasets.</p>
+<h2 id="links">Links</h2>
+<ul>
+<li>Datasets available at Zenodo: <em><a href="https://doi.org/10.5281/zenodo.6480540">https://doi.org/10.5281/zenodo.6480540</a></em> (CC BY 4.0 International).</li>
+<li>Also available at Huggingface: <em><a href="https://huggingface.co/datasets/krr-oxford/OntoLAMA">https://huggingface.co/datasets/krr-oxford/OntoLAMA</a></em>.</li>
+<li>The source code for dataset construction and LM probing is available at: <em><a href="https://krr-oxford.github.io/DeepOnto/deeponto/probe/ontolama/">https://krr-oxford.github.io/DeepOnto/deeponto/probe/ontolama/</a></em>.</li>
+</ul>
+<h2 id="statistics">Statistics</h2>
+<p><small></p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>#NamedConcepts</th>
+<th>#EquivAxioms</th>
+<th>#Dataset (Train/Dev/Test)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Schema.org</td>
+<td>894</td>
+<td>-</td>
+<td>Atomic SI: 808/404/2,830</td>
+</tr>
+<tr>
+<td>DOID</td>
+<td>11,157</td>
+<td>-</td>
+<td>Atomic SI: 90,500/11,312/11,314</td>
+</tr>
+<tr>
+<td>FoodOn</td>
+<td>30,995</td>
+<td>2,383</td>
+<td>Atomic SI: 768,486/96,060/96,062 <br /> Complex SI: 3,754/1,850/13,080</td>
+</tr>
+<tr>
+<td>GO</td>
+<td>43,303</td>
+<td>11,456</td>
+<td>Atomic SI: 772,870/96,608/96,610 <br /> Complex SI: 72,318/9,040/9,040</td>
+</tr>
+<tr>
+<td>MNLI</td>
+<td>-</td>
+<td>-</td>
+<td>biMNLI: 235,622/26,180/12,906</td>
+</tr>
+</tbody>
+</table>
+<p></small></p>
+<h2 id="usage">Usage</h2>
+<p>Users have two options for accessing the OntoLAMA datasets. They can either download the datasets directly from <a href="https://doi.org/10.5281/zenodo.6480540">Zenodo</a> or use the <a href="https://huggingface.co/datasets/krr-oxford/OntoLAMA">Huggingface Datasets platform</a>. </p>
+<p>If using Huggingface, users should first install the <code>dataset</code> package:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>datasets
+</code></pre></div>
+<p>Then, a dataset can be accessed by:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">datasets</span> <span class="kn">import</span> <span class="n">load_dataset</span>
+<span class="c1"># dataset = load_dataset(&quot;krr-oxford/OntoLAMA&quot;, dataset_name)</span>
+<span class="c1"># for example, loading the Complex SI dataset of Go</span>
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">load_dataset</span><span class="p">(</span><span class="s2">&quot;krr-oxford/OntoLAMA&quot;</span><span class="p">,</span> <span class="s2">&quot;go-complex-SI&quot;</span><span class="p">)</span> 
+</code></pre></div>
+<p>Options of <code>dataset_name</code> include:</p>
+<ul>
+<li><code>"bimnli"</code> (from MNLI)</li>
+<li><code>"schemaorg-atomic-SI"</code> (from Schema.org)</li>
+<li><code>"doid-atomic-SI"</code> (from DOID)</li>
+<li><code>"foodon-atomic-SI"</code>, <code>"foodon-complex-SI"</code> (from FoodOn)</li>
+<li><code>"go-atomic-SI"</code>, <code>"go-complex-SI"</code> (from Go)</li>
+</ul>
+<p>After loading the dataset, a particular data split can be accessed by:</p>
+<div class="highlight"><pre><span></span><code><span class="n">dataset</span><span class="p">[</span><span class="n">split_name</span><span class="p">]</span>  <span class="c1"># split_name = &quot;train&quot;, &quot;validation&quot;, or &quot;test&quot;</span>
+</code></pre></div>
+<p>Please refer to the <a href="https://huggingface.co/datasets/krr-oxford/OntoLAMA">Huggingface page</a> for examples of data points and explanations of data fields.</p>
+<p>If downloading from Zenodo, users can simply target on specific <code>.jsonl</code> files.</p>
+<h2 id="prompt-based-probing">Prompt-based Probing</h2>
+<p><span class="arithmatex">\(\textsf{OntoLAMA}\)</span> adopts the prompt-based probing approach to examine an LM's knowledge. Specifically, it wraps the verbalised sub-concept and super-concept into a template with a masked position; the LM is expected to predict the masked token and determine whether there exists a subsumption relationship between the two concepts.</p>
+<p>To conduct probing, users can write the following code into a script, e.g., <code>probing.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">openprompt.config</span> <span class="kn">import</span> <span class="n">get_config</span>
+<span class="kn">from</span> <span class="nn">deeponto.probe.ontolama</span> <span class="kn">import</span> <span class="n">run_inference</span>
 
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.utils.data_utils.DataUtils.sort_dict_by_values" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">sort_dict_by_values</span><span class="p">(</span><span class="n">dic</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
-  </span>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Return a sorted dict by values with first k reserved if provided.</p>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/utils/data_utils.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">sort_dict_by_values</span><span class="p">(</span><span class="n">dic</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a sorted dict by values with first k reserved if provided.&quot;&quot;&quot;</span>
-    <span class="n">sorted_items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dic</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="n">desc</span><span class="p">))</span>
-    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">sorted_items</span><span class="p">[:</span><span class="n">k</span><span class="p">])</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
-</div>
-
-
-
-  </div>
-
-  </div>
-
-</div>
-
-
-
-
-  </div>
-
-  </div>
-
-</div>
+<span class="n">run_inference</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</code></pre></div>
+<p>Then, run the script with the following command:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>probing.py<span class="w"> </span>--config_yaml<span class="w"> </span>config.yaml
+</code></pre></div>
+<p>See an example of <code>config.yaml</code> at <a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/scripts/ontolama/config.yaml"><code>DeepOnto/scripts/ontolama/config.yaml</code></a></p>
+<p>The template file for the SI task (two templates) is located in <a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/scripts/ontolama/si_templates.txt"><code>DeepOnto/scripts/ontolama/si_templates.txt</code></a>.</p>
+<p>The template file for the biMNLI task (two templates) is located in <a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/scripts/ontolama/nli_templates.txt"><code>DeepOnto/scripts/ontolama/nli_templates.txt</code></a>.</p>
+<p>The label word file for both SI and biMNLI tasks is located in <a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/scripts/ontolama/label_words.jsonl"><code>DeepOnto/scripts/ontolama/label_words.jsonl</code></a>.</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 1, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">May 3, 2023</span>
       
         <br>
         Created:
-        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 22, 2023</span>
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 10, 2023</span>
       
     
   </small>
@@ -1190,12 +1173,12 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.sections", "toc.integrate", "navigation.top", "header.autohide", "toc.follow", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.sections", "toc.integrate", "navigation.top", "header.autohide", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.51d95adb.min.js"></script>
+      <script src="../assets/javascripts/bundle.51d95adb.min.js"></script>
       
-        <script src="../../../javascripts/mathjax.js"></script>
+        <script src="../javascripts/mathjax.js"></script>
       
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       
