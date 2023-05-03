@@ -1051,6 +1051,10 @@ year={2023}
 <p>If downloading from Zenodo, users can simply target on specific <code>.jsonl</code> files.</p>
 <h2 id="prompt-based-probing">Prompt-based Probing</h2>
 <p><span class="arithmatex">\(\textsf{OntoLAMA}\)</span> adopts the prompt-based probing approach to examine an LM's knowledge. Specifically, it wraps the verbalised sub-concept and super-concept into a template with a masked position; the LM is expected to predict the masked token and determine whether there exists a subsumption relationship between the two concepts.</p>
+<blockquote>
+<p>The verbalisation algorithm has been implemented as a separate ontology processing module, see 
+<a href="https://krr-oxford.github.io/DeepOnto/verbaliser/">verbalise ontology concepts</a>.</p>
+</blockquote>
 <p>To conduct probing, users can write the following code into a script, e.g., <code>probing.py</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">openprompt.config</span> <span class="kn">import</span> <span class="n">get_config</span>
 <span class="kn">from</span> <span class="nn">deeponto.probe.ontolama</span> <span class="kn">import</span> <span class="n">run_inference</span>
