@@ -7,7 +7,7 @@ Please cite the following paper if you consider using our verbaliser.
 !!! credit "Paper"
 
     The recursive concept verbaliser is proposed in the paper:
-    [Language Model Analysis for Ontology Subsumption Inference](https://arxiv.org/abs/2302.06761).
+    [Language Model Analysis for Ontology Subsumption Inference (Findings of ACL 2023, to appear)](https://arxiv.org/abs/2302.06761).
 
     ```
     @article{he2023language,
