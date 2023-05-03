@@ -24,7 +24,7 @@ It also gives the tutorial for how to apply the [OM dataset construction approac
 
 ## Bio-ML
 
-The **Bio-ML** dataset provides **five** ontology pairs for both equivalence and subsumption ontology matching. These OM pairs are constructed using the approaches described in the [OM construction section](#om-dataset-construction).
+The $\textsf{Bio-ML}$ dataset provides **five** ontology pairs for both equivalence and subsumption ontology matching. These OM pairs are constructed using the approaches described in the [OM construction section](#om-dataset-construction).
 
 - **Download link**: *<https://doi.org/10.5281/zenodo.6510086>* (CC BY 4.0 International).
 - **Resource Paper**: *<https://arxiv.org/abs/2205.03447>*.
