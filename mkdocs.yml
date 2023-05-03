@@ -50,6 +50,7 @@ nav:
       - Ontology matching with BERTMap & BERTMapLt: bertmap.md
       - Bio-ML specifications: bio-ml.md
       - Subsumption inference with BERTSubs: bertsubs.md
+      - OntoLAMA specifications: ontolama.md
     - PACKAGE REFERENCE:
         - Ontology Processing: 
           - Ontology: deeponto/onto/ontology.md
