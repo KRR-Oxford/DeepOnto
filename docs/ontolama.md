@@ -83,6 +83,9 @@ If downloading from Zenodo, users can simply target on specific `.jsonl` files.
 
 $\textsf{OntoLAMA}$ adopts the prompt-based probing approach to examine an LM's knowledge. Specifically, it wraps the verbalised sub-concept and super-concept into a template with a masked position; the LM is expected to predict the masked token and determine whether there exists a subsumption relationship between the two concepts.
 
+> The verbalisation algorithm has been implemented as a separate ontology processing module, see 
+[verbalise ontology concepts](https://krr-oxford.github.io/DeepOnto/verbaliser/).
+
 To conduct probing, users can write the following code into a script, e.g., `probing.py`:
 
 ```python
