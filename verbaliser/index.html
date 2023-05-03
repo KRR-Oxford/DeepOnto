@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#verbalising-ontology-concepts" class="md-skip">
+        <a href="#verbalise-ontology-concepts" class="md-skip">
           Skip to content
         </a>
       
@@ -899,16 +899,74 @@
 
 
 
-<h1 id="verbalising-ontology-concepts">Verbalising Ontology Concepts</h1>
-<p>See code instructions at <a class="autorefs autorefs-internal" href="../deeponto/onto/verbalisation/#deeponto.onto.verbalisation.OntologyVerbaliser"><code>OntologyVerbaliser</code></a> first.</p>
-<p>The detailed tutorial will be available soon...</p>
+<h1 id="verbalise-ontology-concepts">Verbalise Ontology Concepts</h1>
+<p>Verbalising concept expressions is very useful for models that take textual inputs. While the named concepts can be verbalised simply using their names (or labels), complex concepts that involve logical operators require a more sophisticated algorithm. In <span class="arithmatex">\(\textsf{DeepOnto}\)</span>, we have implemented the recursive concept verbaliser originally proposed in the OntoLAMA paper to address the need.</p>
+<div class="admonition credit">
+<p class="admonition-title">Paper</p>
+<p>The recursive concept verbaliser is proposed in the paper:
+<a href="https://arxiv.org/abs/2302.06761">Language Model Analysis for Ontology Subsumption Inference (Findings of ACL 2023, to appear)</a>.</p>
+<div class="highlight"><pre><span></span><code>@article{he2023language,
+    title={Language Model Analysis for Ontology Subsumption Inference},
+    author={He, Yuan and Chen, Jiaoyan and Jim{\&#39;e}nez-Ruiz, Ernesto and Dong, Hang and Horrocks, Ian},
+    journal={arXiv preprint arXiv:2302.06761},
+    year={2023}
+}
+</code></pre></div>
+</div>
+<p>This rule-based verbaliser (found in <a class="autorefs autorefs-internal" href="../deeponto/onto/verbalisation/#deeponto.onto.verbalisation.OntologyVerbaliser"><code>OntologyVerbaliser</code></a>) first parses a complex concept expression into a sub-formula tree (with <a class="autorefs autorefs-internal" href="../deeponto/onto/verbalisation/#deeponto.onto.verbalisation.OntologySyntaxParser"><code>OntologySyntaxParser</code></a>). Each intermediate node within the tree represents the decomposition of a specific logical operator, while the leaf nodes are named concepts or properties.  The verbaliser then recursively merges the verbalisations in a bottom-to-top manner, creating the overall textual representation of the complex concept. An example of this process is shown in the following figure:</p>
+<p></br></p>
+<p align="center">
+    <img alt="verbalisation" src="../images/verbalisation.svg" width=50% height=auto>
+    <p align="center">Figure 1. Example taken from the OntoLAMA paper. </p>
+</p>
+
+<p></br></p>
+<p>To use the verbaliser, do the following:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">OntologyVerbaliser</span>
+
+<span class="c1"># load an ontology and init the verbaliser</span>
+<span class="n">onto</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;some_ontology_file.owl&quot;</span><span class="p">)</span>
+<span class="n">verbaliser</span> <span class="o">=</span> <span class="n">OntologyVerbaliser</span><span class="p">(</span><span class="n">onto</span><span class="p">)</span>
+</code></pre></div>
+<p>To verbalise a complex concept expression:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># get complex concepts asserted in the ontology</span>
+<span class="n">complex_concepts</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_asserted_complex_classes</span><span class="p">()</span>
+
+<span class="c1"># verbalise the first complex concept</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">verbaliser</span><span class="o">.</span><span class="n">verbalise_class_expression</span><span class="p">(</span><span class="n">complex_concepts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div>
+<p>To verbaliser a subsumption axiom:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># get subsumption axioms from the ontology</span>
+<span class="n">subsumption_axioms</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_subsumption_axioms</span><span class="p">()</span>
+
+<span class="c1"># verbalise the first subsumption axiom</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">verbaliser</span><span class="o">.</span><span class="n">verbalise_subsumption_axiom</span><span class="p">(</span><span class="n">subsumption_axioms</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div>
+<p>Notice that the verbalised result is a <code>CfgNode</code> object which keeps track of the
+recursive process. Users can access the final verbalisation by:</p>
+<div class="highlight"><pre><span></span><code><span class="n">result</span><span class="o">.</span><span class="n">verbal</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Updating entity names</p>
+<p>Users can manually update the vocabulary for named entities by:</p>
+<div class="highlight"><pre><span></span><code><span class="n">verbaliser</span><span class="o">.</span><span class="n">update_entity_name</span><span class="p">(</span><span class="n">entity_iri</span><span class="p">,</span> <span class="n">entity_name</span><span class="p">)</span>
+</code></pre></div>
+<p>This is useful when the entity labels are not naturally fitted into the verbalised sentence.</p>
+</div>
+<p>Moreover, users can see the parsed sub-formula tree using:</p>
+<div class="highlight"><pre><span></span><code><span class="n">tree</span> <span class="o">=</span> <span class="n">verbaliser</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">subsumption_axioms</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">render_image</span><span class="p">()</span>
+</code></pre></div>
+<blockquote>
+<p>See an example with image at <a class="autorefs autorefs-internal" href="../deeponto/onto/verbalisation/#deeponto.onto.verbalisation.OntologySyntaxParser"><code>OntologySyntaxParser</code></a>.</p>
+</blockquote>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 17, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">May 3, 2023</span>
       
         <br>
         Created:
