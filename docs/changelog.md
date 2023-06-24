@@ -15,7 +15,7 @@ Security in case of vulnerabilities. -->
 - [ ] **Add** the ontology-to-graph builder at `deeponto.onto.graph_builder`.
 
 
-## v0.7.1 (2023 June)
+## v0.7.3 (2023 June)
 
 ### Changed
 
