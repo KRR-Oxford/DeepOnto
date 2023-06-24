@@ -39,7 +39,7 @@ limitations under the License.
 
 **News** :newspaper:
 
-- [X] Upload Java dependencies directly and remove mowl from pip dependencies (**v0.7.1**).
+- [X] Upload Java dependencies directly and remove mowl from pip dependencies (**v0.7.5**).
 - [X] Deploy the `deeponto.subs.bertsubs` and `deeponto.onto.pruning` modules (**v0.7.0**).
 - [X] Deploy the `deeponto.probe.ontolama` and `deeponto.onto.verbalisation` modules (**v0.6.0**). 
 - [X] Rebuild the whole package based on the OWLAPI; remove owlready2 from the essential dependencies (from **v0.5.x**). 
