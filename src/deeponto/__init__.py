@@ -15,7 +15,6 @@
 # the following code is credited to the mOWL library 
 import jpype
 import os
-import mowl
 import platform
 
 # this function is modified from the mOWL library
