@@ -19,7 +19,7 @@ import platform
 
 # this function is modified from the mOWL library
 def init_jvm(memory):
-    jars_dir = os.path.join(os.path.dirname( os.path.realpath(__file__)), "java/")
+    jars_dir = os.path.join(os.path.dirname( os.path.realpath(__file__)), "javalib/")
     
     if not os.path.exists(jars_dir):
         raise FileNotFoundError(f"JAR files not found. Make sure that the lib directory exists \
