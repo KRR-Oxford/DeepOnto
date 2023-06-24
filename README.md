@@ -99,6 +99,9 @@ One can git clone the repository without installing through PyPI and install the
 pip install -r requirements.txt
 ```
 
+!!! Warning
+
+    The new version of `transformers` requires an additional argument `[torch]` (see `requirements.txt`); this feature will be introduced in the next release of DeepOnto.
 
 ## Main Features
 
