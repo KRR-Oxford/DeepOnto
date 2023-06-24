@@ -9,7 +9,7 @@ pandas
 numpy
 scikit_learn
 openprompt==1.0.0
-transformers
+transformers[torch]
 datasets
 spacy
 pprintpp

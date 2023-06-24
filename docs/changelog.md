@@ -14,6 +14,10 @@ Security in case of vulnerabilities. -->
 - [ ] **Add** the ontology normaliser at `deeponto.onto.normaliser`.
 - [ ] **Add** the ontology-to-graph builder at `deeponto.onto.graph_builder`.
 
+### Changed
+
+- [X] **Change** the dependency `transformers` to `transformers[torch]`.
+
 
 ## v0.7.5 (2023 June)
 
