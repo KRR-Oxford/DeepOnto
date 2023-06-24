@@ -14,6 +14,7 @@
 
 # the following code is credited to the mOWL library 
 import jpype
+import jpype.imports  # very important for basic Java dependencies!
 import os
 import platform
 
