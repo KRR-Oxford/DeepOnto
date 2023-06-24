@@ -39,6 +39,7 @@ limitations under the License.
 
 **News** :newspaper:
 
+- [X] Set up Java dependency builder directly (**v0.7.1**).
 - [X] Deploy the `deeponto.subs.bertsubs` and `deeponto.onto.pruning` modules (**v0.7.0**).
 - [X] Deploy the `deeponto.probe.ontolama` and `deeponto.onto.verbalisation` modules (**v0.6.0**). 
 - [X] Rebuild the whole package based on the OWLAPI; remove owlready2 from the essential dependencies (from **v0.5.x**). 
@@ -65,8 +66,8 @@ We use what has been implemented in [mOWL](https://mowl.readthedocs.io/en/latest
 
 
 !!! Warning
-  
-    According to [mOWL](https://mowl.readthedocs.io/en/latest/index.html), the current integration with OWLAPI can **work on Linux or Mac OS** but **not Windows**.
+
+    ~~According to [mOWL](https://mowl.readthedocs.io/en/latest/index.html), the current integration with OWLAPI can **work on Linux or Mac OS** but **not Windows**.~~ The system restriction should be lifted now, please make a query if the incompatibility still exists.
 
 ### Pytorch
 

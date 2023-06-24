@@ -14,8 +14,12 @@ Security in case of vulnerabilities. -->
 - [ ] **Add** the ontology normaliser at `deeponto.onto.normaliser`.
 - [ ] **Add** the ontology-to-graph builder at `deeponto.onto.graph_builder`.
 
+
+## v0.7.1 (2023 June)
+
 ### Changed
 
+- [X] **Change** Java dependencies from using `lib` from mowl to direct import.
 - [X] **Change** `get_owl_object_annotations` by adding `uniqify` at the end to preserve the order.
 
 ### Fixed
