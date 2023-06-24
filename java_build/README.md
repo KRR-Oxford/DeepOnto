@@ -1,1 +1,0 @@
-This directory contains all the necessary files (imported and modified from the mOWL library) for creating the Java dependencies. 
