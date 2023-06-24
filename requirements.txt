@@ -1,4 +1,4 @@
-JPype1==1.3.0
+JPype1==1.4.1
 # mowl-borg==0.1.0
 yacs
 torch

@@ -15,11 +15,13 @@
 # the following code is credited to the mOWL library 
 import jpype
 import os
+import mowl
 import platform
 
 # this function is modified from the mOWL library
 def init_jvm(memory):
-    jars_dir = os.path.join(os.path.dirname( os.path.realpath(__file__)), "javalib/")
+    jars_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib/")
+    # jars_dir = os.path.join(os.path.dirname(os.path.realpath(mowl.__file__)), "lib/")
     
     if not os.path.exists(jars_dir):
         raise FileNotFoundError(f"JAR files not found. Make sure that the lib directory exists \
@@ -29,7 +31,7 @@ and contains the JAR dependencies.")
         jars = f'{str.join(";", [jars_dir + name for name in os.listdir(jars_dir)])}'
     else:
         jars = f'{str.join(":", [jars_dir + name for name in os.listdir(jars_dir)])}'
-    
+        
     if not jpype.isJVMStarted():
 
         jpype.startJVM(
