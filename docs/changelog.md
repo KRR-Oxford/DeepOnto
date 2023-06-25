@@ -11,8 +11,8 @@ Security in case of vulnerabilities. -->
 
 ### Added
 
-- [ ] **Add** the ontology normaliser at `deeponto.onto.normaliser`.
-- [ ] **Add** the ontology-to-graph builder at `deeponto.onto.graph_builder`.
+- [ ] **Add** the ontology normaliser at `deeponto.onto.OntologyNormaliser`.
+- [X] **Add** the ontology projector at `deeponto.onto.OntologyProjector`.
 
 ### Changed
 

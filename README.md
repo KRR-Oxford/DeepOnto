@@ -39,6 +39,7 @@ limitations under the License.
 
 **News** :newspaper:
 
+- [ ] Deploy `deeponto.onto.OntologyNormaliser` and `deeponto.onto.OntologyProjector` (unreleased).
 - [X] Upload Java dependencies directly and remove mowl from pip dependencies (**v0.7.5**).
 - [X] Deploy the `deeponto.subs.bertsubs` and `deeponto.onto.pruning` modules (**v0.7.0**).
 - [X] Deploy the `deeponto.probe.ontolama` and `deeponto.onto.verbalisation` modules (**v0.6.0**). 
