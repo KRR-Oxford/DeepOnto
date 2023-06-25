@@ -14,3 +14,4 @@
 from .ontology import Ontology, OntologyReasoner
 from .pruning import OntologyPruner
 from .verbalisation import OntologyVerbaliser, OntologySyntaxParser
+from .projection import OntologyProjector
