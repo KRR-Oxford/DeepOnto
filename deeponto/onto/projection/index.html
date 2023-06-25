@@ -10,18 +10,20 @@
         <meta name="author" content="Yuan He (KRR-Oxford)">
       
       
-        <link rel="canonical" href="https://krr-oxford.github.io/DeepOnto/deeponto/utils/decorators/">
+        <link rel="canonical" href="https://krr-oxford.github.io/DeepOnto/deeponto/onto/projection/">
       
       
-        <link rel="prev" href="../data_utils/">
+        <link rel="prev" href="../verbalisation/">
       
+      
+        <link rel="next" href="../../align/mapping/">
       
       <link rel="icon" href="../../../images/favicon_package/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.5">
     
     
       
-        <title>Decorators - DeepOnto</title>
+        <title>Projection - DeepOnto</title>
       
     
     
@@ -73,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#deeponto.utils.decorators.timer" class="md-skip">
+        <a href="#ontology-projection" class="md-skip">
           Skip to content
         </a>
       
@@ -105,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Decorators
+              Projection
             
           </span>
         </div>
@@ -471,18 +473,20 @@
               
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" checked>
       
       
       
-        <label class="md-nav__link" for="__nav_3_1" tabindex="0" aria-expanded="false">
+        <label class="md-nav__link" for="__nav_3_1" tabindex="0" aria-expanded="true">
           Ontology Processing
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -500,7 +504,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../onto/ontology/" class="md-nav__link">
+      <a href="../ontology/" class="md-nav__link">
         Ontology
       </a>
     </li>
@@ -514,7 +518,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../onto/reasoning/" class="md-nav__link">
+      <a href="../reasoning/" class="md-nav__link">
         Reasoning
       </a>
     </li>
@@ -528,7 +532,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../onto/pruning/" class="md-nav__link">
+      <a href="../pruning/" class="md-nav__link">
         Pruning
       </a>
     </li>
@@ -542,7 +546,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../onto/verbalisation/" class="md-nav__link">
+      <a href="../verbalisation/" class="md-nav__link">
         Verbalisation
       </a>
     </li>
@@ -554,11 +558,65 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../../onto/projection/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Projection
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Projection
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#deeponto.onto.projection.OntologyProjector" class="md-nav__link">
+    OntologyProjector
+  </a>
+  
+    <nav class="md-nav" aria-label="OntologyProjector">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deeponto.onto.projection.OntologyProjector.project" class="md-nav__link">
+    project()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -775,20 +833,18 @@
               
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_5" type="checkbox" id="__nav_3_5" checked>
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_3_5" type="checkbox" id="__nav_3_5" >
       
       
       
-        <label class="md-nav__link" for="__nav_3_5" tabindex="0" aria-expanded="true">
+        <label class="md-nav__link" for="__nav_3_5" tabindex="0" aria-expanded="false">
           Utilities
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -806,7 +862,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../text_utils/" class="md-nav__link">
+      <a href="../../utils/text_utils/" class="md-nav__link">
         Text Utilities
       </a>
     </li>
@@ -820,7 +876,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../file_utils/" class="md-nav__link">
+      <a href="../../utils/file_utils/" class="md-nav__link">
         File Utilities
       </a>
     </li>
@@ -834,7 +890,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../logging/" class="md-nav__link">
+      <a href="../../utils/logging/" class="md-nav__link">
         Logging
       </a>
     </li>
@@ -848,7 +904,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../data_utils/" class="md-nav__link">
+      <a href="../../utils/data_utils/" class="md-nav__link">
         Data Utilities
       </a>
     </li>
@@ -860,62 +916,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Decorators
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../utils/decorators/" class="md-nav__link">
         Decorators
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#deeponto.utils.decorators.timer" class="md-nav__link">
-    timer()
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deeponto.utils.decorators.debug" class="md-nav__link">
-    debug()
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#deeponto.utils.decorators.paper" class="md-nav__link">
-    paper()
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -954,7 +959,8 @@
 
 
 
-  <h1>Decorators</h1>
+<h1 id="ontology-projection">Ontology Projection</h1>
+
 
 <div class="doc doc-object doc-module">
 
@@ -973,120 +979,154 @@
 
 
 
-
-<div class="doc doc-object doc-function">
-
+<div class="doc doc-object doc-class">
 
 
-<h2 id="deeponto.utils.decorators.timer" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">timer</span><span class="p">(</span><span class="n">function</span><span class="p">)</span></code>
+
+<h2 id="deeponto.onto.projection.OntologyProjector" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">OntologyProjector</span><span class="p">(</span><span class="n">bidirectional_taxonomy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_taxonomy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_literals</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
 
   <div class="doc doc-contents ">
+
   
-      <p>Print the runtime of the decorated function.</p>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/utils/decorators.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">timer</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the runtime of the decorated function.&quot;&quot;&quot;</span>
-
-    <span class="nd">@wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">wrapper_timer</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>  <span class="c1"># 1</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>  <span class="c1"># 2</span>
-        <span class="n">run_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>  <span class="c1"># 3</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Finished </span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2"> in </span><span class="si">{</span><span class="n">run_time</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> secs.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">value</span>
-
-    <span class="k">return</span> <span class="n">wrapper_timer</span>
-</code></pre></div></td></tr></table></div>
-      </details>
-  </div>
-
+      <p>Class for ontology projection -- transforming ontology axioms into triples.</p>
+<div class="admonition note">
+<p class="admonition-title">Credit</p>
+<p>The code of this class originates from the <a href="https://mowl.readthedocs.io/en/latest/index.html">mOWL library</a>.</p>
 </div>
 
-<div class="doc doc-object doc-function">
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>bidirectional_taxonomy</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>If <code>True</code> then per each <code>SubClass</code> edge one <code>SuperClass</code> edge will
+be generated. Defaults to <code>False</code>.</p></td>
+        </tr>
+        <tr>
+          <td><code>only_taxonomy</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>If <code>True</code>, then projection will only include <code>subClass</code> edges. Defaults to <code>False</code>.</p></td>
+        </tr>
+        <tr>
+          <td><code>include_literals</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>If <code>True</code> the projection will also include triples involving data property
+assertions and annotations. Defaults to <code>False</code>.</p></td>
+        </tr>
+    </tbody>
+  </table>
 
 
-
-<h2 id="deeponto.utils.decorators.debug" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">debug</span><span class="p">(</span><span class="n">function</span><span class="p">)</span></code>
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Print the function signature and return value.</p>
-
-      <details class="quote">
-        <summary>Source code in <code>deeponto/utils/decorators.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
+          <details class="quote">
+            <summary>Source code in <code>deeponto/onto/projection.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span>
 <span class="normal">44</span>
-<span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the function signature and return value.&quot;&quot;&quot;</span>
-
-    <span class="nd">@wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">wrapper_debug</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="n">args_repr</span> <span class="o">=</span> <span class="p">[</span><span class="nb">repr</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">]</span>
-        <span class="n">kwargs_repr</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">!r}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
-        <span class="n">signature</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">args_repr</span> <span class="o">+</span> <span class="n">kwargs_repr</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Calling </span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">signature</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-        <span class="n">value</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">function</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2"> returned </span><span class="si">{</span><span class="n">value</span><span class="si">!r}</span><span class="s2">.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">value</span>
-
-    <span class="k">return</span> <span class="n">wrapper_debug</span>
+<span class="normal">45</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bidirectional_taxonomy</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_taxonomy</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_literals</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">bidirectional_taxonomy</span> <span class="o">=</span> <span class="n">bidirectional_taxonomy</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">include_literals</span> <span class="o">=</span> <span class="n">include_literals</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">only_taxonomy</span> <span class="o">=</span> <span class="n">only_taxonomy</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">projector</span> <span class="o">=</span> <span class="n">Projector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bidirectional_taxonomy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">only_taxonomy</span><span class="p">,</span>
+                               <span class="bp">self</span><span class="o">.</span><span class="n">include_literals</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-      </details>
-  </div>
+          </details>
 
-</div>
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
 
 <div class="doc doc-object doc-function">
 
 
 
-<h2 id="deeponto.utils.decorators.paper" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">paper</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span></code>
+<h3 id="deeponto.onto.projection.OntologyProjector.project" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">project</span><span class="p">(</span><span class="n">ontology</span><span class="p">)</span></code>
 
-</h2>
+</h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Add paper tagger for methods.</p>
+      <p>The projection algorithm implemented in OWL2Vec*.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>ontology</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="deeponto.onto.ontology.Ontology" href="../ontology/#deeponto.onto.ontology.Ontology">Ontology</a></code>
+          </td>
+          <td><p>An ontology to be processed.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>Set</code>
+          </td>
+          <td><p>Set of triples after projection.</p></td>
+        </tr>
+    </tbody>
+  </table>
 
       <details class="quote">
-        <summary>Source code in <code>deeponto/utils/decorators.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
+        <summary>Source code in <code>deeponto/onto/projection.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
@@ -1096,32 +1136,36 @@
 <span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span>
-<span class="normal">65</span>
-<span class="normal">66</span>
-<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">paper</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">link</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add paper tagger for methods.&quot;&quot;&quot;</span>
-    <span class="c1"># Define a new decorator, named &quot;decorator&quot;, to return</span>
-    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-        <span class="c1"># Ensure the decorated function keeps its metadata</span>
-        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-            <span class="c1"># Call the function being decorated and return the result</span>
-            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ontology</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The projection algorithm implemented in OWL2Vec*.</span>
 
-        <span class="n">wrapper</span><span class="o">.</span><span class="n">paper_title</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;This method is associated with tha paper of title: &quot;</span><span class="si">{</span><span class="n">title</span><span class="si">}</span><span class="s1">&quot;.&#39;</span>
-        <span class="n">wrapper</span><span class="o">.</span><span class="n">paper_link</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;This method is associated with the paper with link: </span><span class="si">{</span><span class="n">link</span><span class="si">}</span><span class="s2">.&quot;</span>
-        <span class="k">return</span> <span class="n">wrapper</span>
+<span class="sd">    Args:</span>
+<span class="sd">        ontology (Ontology): An ontology to be processed.</span>
 
-    <span class="c1"># Return the new decorator</span>
-    <span class="k">return</span> <span class="n">decorator</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        (Set): Set of triples after projection.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ontology</span> <span class="o">=</span> <span class="n">ontology</span><span class="o">.</span><span class="n">owl_onto</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ontology</span><span class="p">,</span> <span class="n">OWLOntology</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+            <span class="s2">&quot;Input ontology must be of type `org.semanticweb.owlapi.model.OWLOntology`.&quot;</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">projector</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">ontology</span><span class="p">)</span>
+    <span class="n">triples</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">src</span><span class="p">()),</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">rel</span><span class="p">()),</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">dst</span><span class="p">()))</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">dst</span><span class="p">())</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">triples</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
 
 </div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
 
 
 
@@ -1136,11 +1180,11 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 1, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 25, 2023</span>
       
         <br>
         Created:
-        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 14, 2023</span>
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 25, 2023</span>
       
     
   </small>

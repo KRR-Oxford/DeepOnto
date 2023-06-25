@@ -71,6 +71,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://krr-oxford.github.io/DeepOnto/deeponto/onto/projection/</loc>
+         <lastmod>2023-06-25</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/onto/pruning/</loc>
          <lastmod>2023-06-25</lastmod>
          <changefreq>daily</changefreq>
