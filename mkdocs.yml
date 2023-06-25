@@ -57,6 +57,7 @@ nav:
           - Reasoning: deeponto/onto/reasoning.md
           - Pruning: deeponto/onto/pruning.md
           - Verbalisation: deeponto/onto/verbalisation.md
+          - Projection: deeponto/onto/projection.md
         - Ontology Alignment:
           - Mapping: deeponto/align/mapping.md
           - BERTMap: deeponto/align/bertmap/index.md
