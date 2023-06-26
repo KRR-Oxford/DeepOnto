@@ -36,7 +36,7 @@ class OntologyNormaliser:
         The code of this class originates from the [mOWL library](https://mowl.readthedocs.io/en/latest/index.html),
         which utilises the normalisation functionality from the Java library `Jcel`.
 
-    The normalisation process transforms an ontology into **normal forms** in the Description Logic $\mathcal{EL}$, including:
+    The normalisation process transforms ontology axioms into **normal forms** in the Description Logic $\mathcal{EL}$, including:
 
     - $C \sqsubseteq D$
     - $C \sqcap C' \sqsubseteq D$
@@ -63,7 +63,7 @@ class OntologyNormaliser:
             ontology (Ontology): An ontology to be normalised.
 
         Returns:
-            (Set[OWLAxiom]): A set of normalised axioms.
+            (List[OWLAxiom]): A list of normalised TBox axioms.
         """
 
         processed_owl_onto = self.preprocess_ontology(ontology)
@@ -86,8 +86,18 @@ class OntologyNormaliser:
         factory = IntegerOntologyObjectFactoryImpl()
         normalised_ontology = normaliser.normalize(intAxioms, factory)
         self.rTranslator = ReverseAxiomTranslator(translator, processed_owl_onto)
-
-        return normalised_ontology
+        
+        normalised_axioms = []
+        # revert the jcel axioms to the original OWLAxioms
+        for ax in normalised_ontology:
+            try:
+                axiom = self.rTranslator.visit(ax)
+                normalised_axioms.append(axiom)
+            except Exception as e:
+                logging.info("Reverse translation. Ignoring axiom: %s", ax)
+                logging.info(e)
+                
+        return list(set(axioms))
 
     def preprocess_ontology(self, ontology: Ontology):
         """Preprocess the ontology to remove axioms that are not supported by the normalisation process."""
