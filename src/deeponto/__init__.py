@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# the following code is credited to the mOWL library 
+# the following code is credited to the mOWL library under the BSD 3-Clause License:
+# https://github.com/bio-ontology-research-group/mowl/blob/main/LICENSE
 import jpype
 import jpype.imports  # very important for basic Java dependencies!
 import os
 import platform
 
-# this function is modified from the mOWL library
 def init_jvm(memory):
     jars_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib/")
     # jars_dir = os.path.join(os.path.dirname(os.path.realpath(mowl.__file__)), "lib/")
