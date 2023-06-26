@@ -14,55 +14,119 @@
 
 from __future__ import annotations
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
 from . import Ontology
 
-from org.semanticweb.owlapi.model import IRI, OWLClassExpression  # type: ignore
+from de.tudresden.inf.lat.jcel.ontology.normalization import OntologyNormalizer  # type: ignore
+from de.tudresden.inf.lat.jcel.ontology.axiom.extension import IntegerOntologyObjectFactoryImpl  # type: ignore
+from de.tudresden.inf.lat.jcel.owlapi.translator import ReverseAxiomTranslator  # type: ignore
+from de.tudresden.inf.lat.jcel.owlapi.translator import Translator  # type: ignore
+from org.semanticweb.owlapi.model.parameters import Imports  # type: ignore
+from java.util import HashSet  # type: ignore
 
 
 class OntologyNormaliser:
     r"""Class for ontology normalisation.
-    
+
+    !!! note "Credit"
+
+        The code of this class originates from the [mOWL library](https://mowl.readthedocs.io/en/latest/index.html),
+        which utilises the normalisation functionality from the Java library `Jcel`.
+
+    The normalisation process transforms an ontology into **normal forms** in the Description Logic $\mathcal{EL}$, including:
+
+    - $C \sqsubseteq D$
+    - $C \sqcap C' \sqsubseteq D$
+    - $C \sqsubseteq \exists r.D$
+    - $\exists r.C \sqsubseteq D$
+
+    where $C$ and $C'$ can be named concepts or $\top$, $D$ is a named concept or $\bot$, $r$ is a role (property).
+
+
+
     Attributes:
         onto (Ontology): The input ontology to be normalised.
         temp_super_class_index (Dict[OWLCLassExpression, OWLClass]): A dictionary in the form of `{complex_sub_class: temp_super_class}`, which means
             `temp_super_class` is created during the normalisation of a complex subsumption axiom that has `complex_sub_class` as the sub-class.
     """
-    
-    def __init__(self, onto: Ontology):
-        self.onto = onto
-        self.temp_super_class_index = dict()  # index of temporary super-classes for complex subsumption axioms' sub-classes.
-        self._temp_class_num = 0
-        
-        
-    def get_temp_super_class(self, complex_sub_class: OWLClassExpression):
-        """Get the temporary super class of a complex class (which acts as the sub-class of some 
-        complex subsumption axiom). Randomise a new IRI if not existed.
-        """
-        # assign a new temporary super class if not existed
-        if not complex_sub_class in self.temp_super_class_index.keys():
-            temp_class = self.onto.owl_data_factory.getOWLClass(IRI.create(f"http://TEMP_CLASS_{self._temp_class_num}"))
-            self._temp_class_num += 1
-            self.temp_super_class_index[complex_sub_class] = temp_class
-            
-        return self.temp_super_class_index[complex_sub_class]
-        
-    
-    def split_complex_subsumption_axiom(self, complex_subsumption_axiom: OWLClassExpression):
-        r"""Split a complex subsumption axiom $C \sqsubseteq D$ ($C$ and $D$ are both complex classes)
-        into $C \sqsubseteq X$ and $X \sqsubseteq D$ where $X$ is a temporary class.
-        
-        If $C$ or $D$ is not complex, return a singleton set that contains the input axiom.
+
+    def __init__(self):
+        return
+
+    def normalise(self, ontology: Ontology):
+        r"""Performs the $\mathcal{EL}$ normalisation.
 
         Args:
-            complex_subsumption_axiom (OWLClassExpression): A subsumption axiom with complex classes on both sides.
+            ontology (Ontology): An ontology to be normalised.
+
         Returns:
-            (Set[OWLClassExpression]): A set of resulting axioms.
+            (Set[OWLAxiom]): A set of normalised axioms.
         """
-        # check if this axiom is indeed a complex subsumption axiom
-        # a complex class has no IRI
-        is_complex_sub_class =  not self.onto.reasoner.has_iri(complex_subsumption_axiom.getSubClass())
-        is_complex_super_class = not self.onto.reasoner.has_iri(complex_subsumption_axiom.getSuperClass())
-        if is_complex_sub_class and is_complex_super_class:
-            temp_class = self.onto.owl_data_factory.getOWLClass(IRI.create("http://TEMP_CLASS"))
-        else:
-            return set([complex_subsumption_axiom])
+
+        processed_owl_onto = self.preprocess_ontology(ontology)
+        root_ont = processed_owl_onto
+        translator = Translator(
+            processed_owl_onto.getOWLOntologyManager().getOWLDataFactory(), IntegerOntologyObjectFactoryImpl()
+        )
+        axioms = HashSet()
+        axioms.addAll(root_ont.getAxioms())
+        translator.getTranslationRepository().addAxiomEntities(root_ont)
+
+        for ont in root_ont.getImportsClosure():
+            axioms.addAll(ont.getAxioms())
+            translator.getTranslationRepository().addAxiomEntities(ont)
+
+        intAxioms = translator.translateSA(axioms)
+
+        normaliser = OntologyNormalizer()
+
+        factory = IntegerOntologyObjectFactoryImpl()
+        normalised_ontology = normaliser.normalize(intAxioms, factory)
+        self.rTranslator = ReverseAxiomTranslator(translator, processed_owl_onto)
+
+        return normalised_ontology
+
+    def preprocess_ontology(self, ontology: Ontology):
+        """Preprocess the ontology to remove axioms that are not supported by the normalisation process."""
+        
+        tbox_axioms = ontology.owl_onto.getTBoxAxioms(Imports.fromBoolean(True))
+        new_tbox_axioms = HashSet()
+
+        for axiom in tbox_axioms:
+            axiom_as_str = axiom.toString()
+
+            if "UnionOf" in axiom_as_str:
+                continue
+            elif "MinCardinality" in axiom_as_str:
+                continue
+            elif "ComplementOf" in axiom_as_str:
+                continue
+            elif "AllValuesFrom" in axiom_as_str:
+                continue
+            elif "MaxCardinality" in axiom_as_str:
+                continue
+            elif "ExactCardinality" in axiom_as_str:
+                continue
+            elif "Annotation" in axiom_as_str:
+                continue
+            elif "ObjectHasSelf" in axiom_as_str:
+                continue
+            elif "urn:swrl" in axiom_as_str:
+                continue
+            elif "EquivalentObjectProperties" in axiom_as_str:
+                continue
+            elif "SymmetricObjectProperty" in axiom_as_str:
+                continue
+            elif "AsymmetricObjectProperty" in axiom_as_str:
+                continue
+            elif "ObjectOneOf" in axiom_as_str:
+                continue
+            else:
+                new_tbox_axioms.add(axiom)
+
+        processed_owl_onto = ontology.owl_manager.createOntology(new_tbox_axioms)
+        # NOTE: the returned object is `owlapi.OWLOntology` not `deeponto.onto.Ontology`
+        return processed_owl_onto
