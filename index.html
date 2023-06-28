@@ -1126,33 +1126,30 @@ pip<span class="w"> </span>install<span class="w"> </span>deeponto
 <p>One can git clone the repository without installing through PyPI and install the dependencies manually by:</p>
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </code></pre></div>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>The new version of <code>transformers</code> requires an additional argument <code>[torch]</code> (see <code>requirements.txt</code>); this feature will be introduced in the next release of DeepOnto.</p>
-</div>
 <h2 id="main-features">Main Features</h2>
 <!-- <p align="center">
   <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/deeponto.svg" height="500" style="width: 80%;">
 </p> -->
 
 <h3 id="ontology-processing">Ontology Processing</h3>
-<p>The base class of <span class="arithmatex">\(\textsf{DeepOnto}\)</span> is <a class="autorefs autorefs-internal" href="deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a>, which encapsulates and extends the features of the OWLAPI library for processing ontologies. See quick usage at <a href="https://krr-oxford.github.io/DeepOnto/ontology/">load an ontology</a>. Several essential modules that revolve around <a class="autorefs autorefs-internal" href="deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a> are then built to enhance ontology processing, including:</p>
+<p>The base class of <span class="arithmatex">\(\textsf{DeepOnto}\)</span> is <a class="autorefs autorefs-internal" href="deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a>, which serves as the main entry point for introducing the OWLAPI's features, such as accessing ontology entities, querying for ancestor/descendent (and parent/child) concepts, deleting entities, modifying axioms, and retrieving annotations. See quick usage at <a href="https://krr-oxford.github.io/DeepOnto/ontology/">load an ontology</a>. Along with these basic functionalities, several essential sub-modules are built to enhance the core module, including the following:</p>
 <ul>
 <li>
-<p><strong>Ontology Reasoning</strong>: Each instance of <span class="arithmatex">\(\textsf{DeepOnto}\)</span> has an<a class="autorefs autorefs-internal" href="deeponto/onto/reasoning/#deeponto.onto.ontology.OntologyReasoner"><code>OntologyReasoner</code></a> as its attribute, which handles all the reasoning activities about the ontology such as checking consistency and entailment.</p>
+<p><strong>Ontology Reasoning</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/reasoning/#deeponto.onto.ontology.OntologyReasoner"><code>OntologyReasoner</code></a>): Each instance of <span class="arithmatex">\(\textsf{DeepOnto}\)</span> has a reasoner as its attribute. It is used for conducting reasoning activities, such as obtaining inferred subsumers and subsumees, as well as checking entailment and consistency. </p>
 </li>
 <li>
-<p><strong>Ontology Pruning</strong>: This module aims to incorporate pruning algorithms for extracting a sub-ontology from an input ontology.</p>
+<p><strong>Ontology Pruning</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/pruning/#deeponto.onto.pruning.OntologyPruner"><code>OntologyPruner</code></a>): This sub-module aims to incorporate pruning algorithms for extracting a sub-ontology from an input ontology. We currently implement the one proposed in [2], which introduces subsumption axioms between the asserted (atomic or complex) parents and children of the class targeted for removal.</p>
 </li>
 <li>
-<p><strong>Ontology Verbalisation</strong>: The recursive ontology verbaliser originally proposed in [4] is implemented here as an essential module for briding ontologies and texts. See <a href="https://krr-oxford.github.io/DeepOnto/verbaliser">verbalising ontology concepts</a>.</p>
+<p><strong>Ontology Verbalisation</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/verbalisation/#deeponto.onto.verbalisation.OntologyVerbaliser"><code>OntologyVerbaliser</code></a>): The recursive concept verbaliser proposed in \cite{he2023ontolama} is implemented here, which can automatically transform a complex logical expression into a textual sentence based on entity names or labels available in the ontology. See <a href="https://krr-oxford.github.io/DeepOnto/verbaliser">verbalising ontology concepts</a>.</p>
 </li>
 <li>
-<p>We have a plan of releasing more modules to support ontology normalisation, ontology-to-graph transformation, and more.</p>
+<p><strong>Ontology Projection</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/projection/#deeponto.onto.projection.OntologyProjector"><code>OntologyProjector</code></a>): The projection algorithm, which is to transform an ontology's TBox into a set of RDF triples, is migrated from the mOWL library to here. Note that this approach is adopted in the OWL2Vec* ontology embeddings.</p>
+</li>
+<li>
+<p><strong>Ontology Normalisation</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/normalisation/#deeponto.onto.normalisation.OntologyNormaliser"><code>OntologyNormaliser</code></a>): The implemented <span class="arithmatex">\(\matchsc{EL}\)</span> normalisation is also modified from the mOWL library, which is used to transform TBox axioms into normalised forms to support, e.g., geometric ontology embeddings.</p>
 </li>
 </ul>
-<!-- - **Ontology Normalisation** (not ready):   -->
-
 <h3 id="tools-and-resources">Tools and Resources</h3>
 <p>Individual tools and resources are implemented based on the core ontology API. Currently, <span class="arithmatex">\(\textsf{DeepOnto}\)</span> supports the following:</p>
 <ul>

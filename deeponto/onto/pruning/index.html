@@ -581,8 +581,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#deeponto.onto.pruning.OntologyPruner.min_hierarchy_prune" class="md-nav__link">
-    min_hierarchy_prune()
+  <a href="#deeponto.onto.pruning.OntologyPruner.prune" class="md-nav__link">
+    prune()
   </a>
   
 </li>
@@ -1093,15 +1093,15 @@
 
 
 
-<h3 id="deeponto.onto.pruning.OntologyPruner.min_hierarchy_prune" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">min_hierarchy_prune</span><span class="p">(</span><span class="n">class_iris_to_be_removed</span><span class="p">)</span></code>
+<h3 id="deeponto.onto.pruning.OntologyPruner.prune" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">prune</span><span class="p">(</span><span class="n">class_iris_to_be_removed</span><span class="p">)</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Prune while applying minimum preservation of relevant hierarchy.</p>
+      <p>Apply ontology pruning while preserving the relevant hierarchy.</p>
 <div class="admonition credit">
 <p class="admonition-title">paper</p>
 <p>This refers to the ontology pruning algorithm introduced in the paper:
@@ -1165,13 +1165,8 @@ relevant hierarchy.</p>
 <span class="normal">68</span>
 <span class="normal">69</span>
 <span class="normal">70</span>
-<span class="normal">71</span>
-<span class="normal">72</span>
-<span class="normal">73</span>
-<span class="normal">74</span>
-<span class="normal">75</span>
-<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">min_hierarchy_prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iris_to_be_removed</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Prune while applying minimum preservation of relevant hierarchy.</span>
+<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">prune</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iris_to_be_removed</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Apply ontology pruning while preserving the relevant hierarchy.</span>
 
 <span class="sd">    !!! credit &quot;paper&quot;</span>
 
@@ -1200,11 +1195,6 @@ relevant hierarchy.</p>
         <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">cl_iri</span><span class="p">)</span>
         <span class="n">cl</span><span class="o">.</span><span class="n">accept</span><span class="p">(</span><span class="n">class_remover</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_manager</span><span class="o">.</span><span class="n">applyChanges</span><span class="p">(</span><span class="n">class_remover</span><span class="o">.</span><span class="n">getChanges</span><span class="p">())</span>
-
-    <span class="c1"># remove IRIs in dictionaries?</span>
-    <span class="c1"># TODO Test it</span>
-
-    <span class="bp">self</span><span class="o">.</span><span class="n">_pruning_applied</span> <span class="o">=</span> <span class="s2">&quot;min_hierarchy&quot;</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
