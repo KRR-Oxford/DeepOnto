@@ -103,7 +103,7 @@ pip install -r requirements.txt
 ## Main Features
 
 <p align="center">
-  <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/deeponto.svg" height="500" style="width: 60%;">
+  <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/deeponto.svg" height="500" style="width: 90%;">
   <p align="center">Figure: Illustration of DeepOnto's architecture.</p>
 </p>
 
