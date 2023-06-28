@@ -1127,9 +1127,9 @@ pip<span class="w"> </span>install<span class="w"> </span>deeponto
 <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </code></pre></div>
 <h2 id="main-features">Main Features</h2>
-<!-- <p align="center">
+<p align="center">
   <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/deeponto.svg" height="500" style="width: 80%;">
-</p> -->
+</p>
 
 <h3 id="ontology-processing">Ontology Processing</h3>
 <p>The base class of <span class="arithmatex">\(\textsf{DeepOnto}\)</span> is <a class="autorefs autorefs-internal" href="deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a>, which serves as the main entry point for introducing the OWLAPI's features, such as accessing ontology entities, querying for ancestor/descendent (and parent/child) concepts, deleting entities, modifying axioms, and retrieving annotations. See quick usage at <a href="https://krr-oxford.github.io/DeepOnto/ontology/">load an ontology</a>. Along with these basic functionalities, several essential sub-modules are built to enhance the core module, including the following:</p>
@@ -1147,11 +1147,11 @@ pip<span class="w"> </span>install<span class="w"> </span>deeponto
 <p><strong>Ontology Projection</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/projection/#deeponto.onto.projection.OntologyProjector"><code>OntologyProjector</code></a>): The projection algorithm, which is to transform an ontology's TBox into a set of RDF triples, is migrated from the mOWL library to here. Note that this approach is adopted in the OWL2Vec* ontology embeddings.</p>
 </li>
 <li>
-<p><strong>Ontology Normalisation</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/normalisation/#deeponto.onto.normalisation.OntologyNormaliser"><code>OntologyNormaliser</code></a>): The implemented <span class="arithmatex">\(\matchsc{EL}\)</span> normalisation is also modified from the mOWL library, which is used to transform TBox axioms into normalised forms to support, e.g., geometric ontology embeddings.</p>
+<p><strong>Ontology Normalisation</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/normalisation/#deeponto.onto.normalisation.OntologyNormaliser"><code>OntologyNormaliser</code></a>): The implemented <span class="arithmatex">\(\matchcal{EL}\)</span> normalisation is also modified from the mOWL library, which is used to transform TBox axioms into normalised forms to support, e.g., geometric ontology embeddings.</p>
 </li>
 </ul>
 <h3 id="tools-and-resources">Tools and Resources</h3>
-<p>Individual tools and resources are implemented based on the core ontology API. Currently, <span class="arithmatex">\(\textsf{DeepOnto}\)</span> supports the following:</p>
+<p>Individual tools and resources are implemented based on the core ontology processing module. Currently, <span class="arithmatex">\(\textsf{DeepOnto}\)</span> supports the following:</p>
 <ul>
 <li>
 <p><strong>BERTMap</strong> [1] is a BERT-based <em>ontology matching</em> (OM) system originally developed in <a href="https://github.com/KRR-Oxford/BERTMap">repo</a> but is now maintained in <span class="arithmatex">\(\textsf{DeepOnto}\)</span>. See <a href="https://krr-oxford.github.io/DeepOnto/bertmap/">ontology matching with BERTMap &amp; BERTMapLt</a>.</p>
