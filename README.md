@@ -104,6 +104,7 @@ pip install -r requirements.txt
 
 <p align="center">
   <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/deeponto.svg" height="500" style="width: 80%;">
+  <p align="center">Figure: Illustration of DeepOnto's architecture.</p>
 </p>
 
 ### Ontology Processing
