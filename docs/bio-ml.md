@@ -184,7 +184,7 @@ to_be_removed_class_iris = [
     "http://purl.obolibrary.org/obo/DOID_0060158",
     "http://purl.obolibrary.org/obo/DOID_9969"
 ]
-pruner.min_hierarchy_prune(to_be_removed_class_iris)
+pruner.prune(to_be_removed_class_iris)
 pruner.save_onto("doid.pruned.owl")  # save the pruned ontology locally
 ```
 

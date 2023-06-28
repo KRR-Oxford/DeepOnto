@@ -100,10 +100,6 @@ One can git clone the repository without installing through PyPI and install the
 pip install -r requirements.txt
 ```
 
-!!! Warning
-
-    The new version of `transformers` requires an additional argument `[torch]` (see `requirements.txt`); this feature will be introduced in the next release of DeepOnto.
-
 ## Main Features
 
 <!-- <p align="center">
@@ -112,17 +108,18 @@ pip install -r requirements.txt
 
 ### Ontology Processing
 
-The base class of $\textsf{DeepOnto}$ is [`Ontology`][deeponto.onto.Ontology], which encapsulates and extends the features of the OWLAPI library for processing ontologies. See quick usage at [load an ontology](https://krr-oxford.github.io/DeepOnto/ontology/). Several essential modules that revolve around [`Ontology`][deeponto.onto.Ontology] are then built to enhance ontology processing, including:
+The base class of $\textsf{DeepOnto}$ is [`Ontology`][deeponto.onto.Ontology], which serves as the main entry point for introducing the OWLAPI's features, such as accessing ontology entities, querying for ancestor/descendent (and parent/child) concepts, deleting entities, modifying axioms, and retrieving annotations. See quick usage at [load an ontology](https://krr-oxford.github.io/DeepOnto/ontology/). Along with these basic functionalities, several essential sub-modules are built to enhance the core module, including the following:
 
-- **Ontology Reasoning**: Each instance of $\textsf{DeepOnto}$ has an[`OntologyReasoner`][deeponto.onto.OntologyReasoner] as its attribute, which handles all the reasoning activities about the ontology such as checking consistency and entailment.
+- **Ontology Reasoning** ([`OntologyReasoner`][deeponto.onto.OntologyReasoner]): Each instance of $\textsf{DeepOnto}$ has a reasoner as its attribute. It is used for conducting reasoning activities, such as obtaining inferred subsumers and subsumees, as well as checking entailment and consistency. 
 
-- **Ontology Pruning**: This module aims to incorporate pruning algorithms for extracting a sub-ontology from an input ontology.
+- **Ontology Pruning** ([`OntologyPruner`][deeponto.onto.OntologyPruner]): This sub-module aims to incorporate pruning algorithms for extracting a sub-ontology from an input ontology. We currently implement the one proposed in [2], which introduces subsumption axioms between the asserted (atomic or complex) parents and children of the class targeted for removal.
 
-- **Ontology Verbalisation**: The recursive ontology verbaliser originally proposed in [4] is implemented here as an essential module for briding ontologies and texts. See [verbalising ontology concepts](https://krr-oxford.github.io/DeepOnto/verbaliser).
+- **Ontology Verbalisation** ([`OntologyVerbaliser`][deeponto.onto.OntologyVerbaliser]): The recursive concept verbaliser proposed in \cite{he2023ontolama} is implemented here, which can automatically transform a complex logical expression into a textual sentence based on entity names or labels available in the ontology. See [verbalising ontology concepts](https://krr-oxford.github.io/DeepOnto/verbaliser).
 
-- We have a plan of releasing more modules to support ontology normalisation, ontology-to-graph transformation, and more.
+- **Ontology Projection** ([`OntologyProjector`][deeponto.onto.OntologyProjector]): The projection algorithm, which is to transform an ontology's TBox into a set of RDF triples, is migrated from the mOWL library to here. Note that this approach is adopted in the OWL2Vec* ontology embeddings.
 
-<!-- - **Ontology Normalisation** (not ready):   -->
+- **Ontology Normalisation** ([`OntologyNormaliser`][deeponto.onto.OntologyNormaliser]): The implemented $\matchsc{EL}$ normalisation is also modified from the mOWL library, which is used to transform TBox axioms into normalised forms to support, e.g., geometric ontology embeddings.
+
 
 ### Tools and Resources
 

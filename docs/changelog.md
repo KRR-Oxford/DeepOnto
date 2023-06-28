@@ -9,9 +9,15 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased
 
+### Changed
+
+- [X] **Change** the name of pruning function in `deeponto.onto.OntologyPruner`.
+
+## v0.8.0 (2023 June)
+
 ### Added
 
-- [ ] **Add** the ontology normaliser at `deeponto.onto.OntologyNormaliser`.
+- [X] **Add** the ontology normaliser at `deeponto.onto.OntologyNormaliser`.
 - [X] **Add** the ontology projector at `deeponto.onto.OntologyProjector`.
 
 ### Changed

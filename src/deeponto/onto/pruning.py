@@ -39,8 +39,8 @@ class OntologyPruner:
         print(f"Save the pruned ontology file to {save_path}.")
         return self.onto.save_onto(save_path)
         
-    def min_hierarchy_prune(self, class_iris_to_be_removed: List[str]):
-        r"""Prune while applying minimum preservation of relevant hierarchy.
+    def prune(self, class_iris_to_be_removed: List[str]):
+        r"""Apply ontology pruning while preserving the relevant hierarchy.
 
         !!! credit "paper"
 
@@ -73,4 +73,4 @@ class OntologyPruner:
         # remove IRIs in dictionaries?
         # TODO Test it
         
-        self._pruning_applied = "min_hierarchy"
+        # self._pruning_applied = "min_hierarchy"
