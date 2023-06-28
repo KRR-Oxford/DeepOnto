@@ -102,9 +102,9 @@ pip install -r requirements.txt
 
 ## Main Features
 
-<!-- <p align="center">
+<p align="center">
   <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/deeponto.svg" height="500" style="width: 80%;">
-</p> -->
+</p>
 
 ### Ontology Processing
 
