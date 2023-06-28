@@ -118,12 +118,12 @@ The base class of $\textsf{DeepOnto}$ is [`Ontology`][deeponto.onto.Ontology], w
 
 - **Ontology Projection** ([`OntologyProjector`][deeponto.onto.OntologyProjector]): The projection algorithm, which is to transform an ontology's TBox into a set of RDF triples, is migrated from the mOWL library to here. Note that this approach is adopted in the OWL2Vec* ontology embeddings.
 
-- **Ontology Normalisation** ([`OntologyNormaliser`][deeponto.onto.OntologyNormaliser]): The implemented $\matchsc{EL}$ normalisation is also modified from the mOWL library, which is used to transform TBox axioms into normalised forms to support, e.g., geometric ontology embeddings.
+- **Ontology Normalisation** ([`OntologyNormaliser`][deeponto.onto.OntologyNormaliser]): The implemented $\matchcal{EL}$ normalisation is also modified from the mOWL library, which is used to transform TBox axioms into normalised forms to support, e.g., geometric ontology embeddings.
 
 
 ### Tools and Resources
 
-Individual tools and resources are implemented based on the core ontology API. Currently, $\textsf{DeepOnto}$ supports the following:
+Individual tools and resources are implemented based on the core ontology processing module. Currently, $\textsf{DeepOnto}$ supports the following:
 
 - **BERTMap** [1] is a BERT-based *ontology matching* (OM) system originally developed in [repo](https://github.com/KRR-Oxford/BERTMap) but is now maintained in $\textsf{DeepOnto}$. See [ontology matching with BERTMap & BERTMapLt](https://krr-oxford.github.io/DeepOnto/bertmap/).
 
