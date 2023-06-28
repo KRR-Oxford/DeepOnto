@@ -117,7 +117,7 @@ The base class of $\textsf{DeepOnto}$ is [`Ontology`][deeponto.onto.Ontology], w
 
 - **Ontology Verbalisation** ([`OntologyVerbaliser`][deeponto.onto.OntologyVerbaliser]): The recursive concept verbaliser proposed in \cite{he2023ontolama} is implemented here, which can automatically transform a complex logical expression into a textual sentence based on entity names or labels available in the ontology. See [verbalising ontology concepts](https://krr-oxford.github.io/DeepOnto/verbaliser).
 
-- **Ontology Projection** ([`OntologyProjector`][deeponto.onto.OntologyProjector]): The projection algorithm, which is to transform an ontology's TBox into a set of RDF triples, is migrated from the mOWL library to here. Note that this approach is adopted in the OWL2Vec* ontology embeddings.
+- **Ontology Projection** ([`OntologyProjector`][deeponto.onto.OntologyProjector]): The projection algorithm adopted in the OWL2Vec* ontology embeddings is implemented here, which is to transform an ontology's TBox into a set of RDF triples. The relevant code is modified from the mOWL library.
 
 - **Ontology Normalisation** ([`OntologyNormaliser`][deeponto.onto.OntologyNormaliser]): The implemented $\mathcal{EL}$ normalisation is also modified from the mOWL library, which is used to transform TBox axioms into normalised forms to support, e.g., geometric ontology embeddings.
 
