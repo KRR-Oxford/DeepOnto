@@ -13,6 +13,10 @@ Security in case of vulnerabilities. -->
 
 - [X] **Change** the name of pruning function in `deeponto.onto.OntologyPruner`.
 
+### Fixed
+
+- [X] **Fixe** the minor bug for the `f1` method in `deeponto.align.evaluation.AlignmentEvaluator`.
+
 ## v0.8.0 (2023 June)
 
 ### Added

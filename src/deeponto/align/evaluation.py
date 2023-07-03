@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional, Iterable, Tuple, List
+from typing import Tuple, List
 import math
 from .mapping import *
 
@@ -24,7 +24,7 @@ class AlignmentEvaluator:
         pass
 
     @staticmethod
-    def precision(prediction_mappings: List[EntityMapping], reference_mappings: Iterable[ReferenceMapping]) -> float:
+    def precision(prediction_mappings: List[EntityMapping], reference_mappings: List[ReferenceMapping]) -> float:
         r"""The percentage of correct predictions.
 
         $$P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}$$
@@ -34,7 +34,7 @@ class AlignmentEvaluator:
         return len(set(preds).intersection(set(refs))) / len(set(preds))
 
     @staticmethod
-    def recall(prediction_mappings: List[EntityMapping], reference_mappings: Iterable[ReferenceMapping]) -> float:
+    def recall(prediction_mappings: List[EntityMapping], reference_mappings: List[ReferenceMapping]) -> float:
         r"""The percentage of correct retrievals.
 
         $$R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}$$
@@ -46,8 +46,8 @@ class AlignmentEvaluator:
     @staticmethod
     def f1(
         prediction_mappings: List[EntityMapping],
-        reference_mappings: Iterable[ReferenceMapping],
-        null_reference_mappings: Optional[Iterable] = None,
+        reference_mappings: List[ReferenceMapping],
+        null_reference_mappings: List[ReferenceMapping] = [],
     ):
         r"""Compute the F1 score given the prediction and reference mappings.
 
