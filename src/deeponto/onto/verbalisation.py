@@ -144,7 +144,7 @@ class OntologyVerbaliser:
 
         raise RuntimeError("Input class expression is not in one of the supported types.")
 
-    def _verbalise_restriction(self, restriction_node: RangeNode, add_something: bool = True):
+    def _verbalise_restriction(self, restriction_node: RangeNode, add_something: bool = True, add_quantifier_word: bool = False):
         """Verbalise a (parsed) class expression in the form of existential or universal restriction."""
 
         try:
@@ -171,7 +171,11 @@ class OntologyVerbaliser:
         class_expression = restriction_node.children[1]
         class_expression = self.verbalise_class_expression(class_expression.text)
 
-        verbal = f"{object_property.verbal} {quantifier_word} {class_expression.verbal}"
+        # adding quantifier word or not
+        if add_quantifier_word:
+            verbal = f"{object_property.verbal} {quantifier_word} {class_expression.verbal}"
+        else:
+            verbal = f"{object_property.verbal} {class_expression.verbal}"
             
         verbal = verbal.lstrip()
         if add_something:

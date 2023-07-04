@@ -12,6 +12,7 @@ Security in case of vulnerabilities. -->
 ### Changed
 
 - [X] **Change** the name of pruning function in `deeponto.onto.OntologyPruner`.
+- [X] **Change** the verbalisation function by setting quantifier words as optional (by default not adding).
 
 ### Fixed
 
