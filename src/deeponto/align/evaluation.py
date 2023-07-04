@@ -103,7 +103,7 @@ class AlignmentEvaluator:
         for pred, cands in prediction_and_candidates:
             ordered_candidates = [c.to_tuple() for c in EntityMapping.sort_entity_mappings_by_score(cands)]
             if pred.to_tuple() in ordered_candidates:
-                rank = ordered_candidates.index(pred) + 1
+                rank = ordered_candidates.index(pred.to_tuple()) + 1
             else:
                 rank = math.inf
             sum_inverted_ranks += 1 / rank
