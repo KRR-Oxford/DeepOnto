@@ -1082,7 +1082,7 @@
 <span class="normal">32</span>
 <span class="normal">33</span>
 <span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">precision</span><span class="p">(</span><span class="n">prediction_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span> <span class="n">reference_mappings</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">precision</span><span class="p">(</span><span class="n">prediction_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span> <span class="n">reference_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The percentage of correct predictions.</span>
 
 <span class="sd">    $$P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}$$</span>
@@ -1126,7 +1126,7 @@
 <span class="normal">42</span>
 <span class="normal">43</span>
 <span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">recall</span><span class="p">(</span><span class="n">prediction_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span> <span class="n">reference_mappings</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">recall</span><span class="p">(</span><span class="n">prediction_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span> <span class="n">reference_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;The percentage of correct retrievals.</span>
 
 <span class="sd">    $$R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}$$</span>
@@ -1145,7 +1145,7 @@
 
 
 <h3 id="deeponto.align.evaluation.AlignmentEvaluator.f1" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">f1</span><span class="p">(</span><span class="n">prediction_mappings</span><span class="p">,</span> <span class="n">reference_mappings</span><span class="p">,</span> <span class="n">null_reference_mappings</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">f1</span><span class="p">(</span><span class="n">prediction_mappings</span><span class="p">,</span> <span class="n">reference_mappings</span><span class="p">,</span> <span class="n">null_reference_mappings</span><span class="o">=</span><span class="p">[])</span></code>
   
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
@@ -1194,8 +1194,8 @@ Specifically, both <span class="arithmatex">\(\mathcal{M}_{pred}\)</span> and <s
 <span class="normal">72</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">f1</span><span class="p">(</span>
     <span class="n">prediction_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span>
-    <span class="n">reference_mappings</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">],</span>
-    <span class="n">null_reference_mappings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Iterable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">reference_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">],</span>
+    <span class="n">null_reference_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the F1 score given the prediction and reference mappings.</span>
 
@@ -1327,7 +1327,7 @@ divided by the total number of input pairs.</p>
     <span class="k">for</span> <span class="n">pred</span><span class="p">,</span> <span class="n">cands</span> <span class="ow">in</span> <span class="n">prediction_and_candidates</span><span class="p">:</span>
         <span class="n">ordered_candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">EntityMapping</span><span class="o">.</span><span class="n">sort_entity_mappings_by_score</span><span class="p">(</span><span class="n">cands</span><span class="p">)]</span>
         <span class="k">if</span> <span class="n">pred</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="ow">in</span> <span class="n">ordered_candidates</span><span class="p">:</span>
-            <span class="n">rank</span> <span class="o">=</span> <span class="n">ordered_candidates</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">rank</span> <span class="o">=</span> <span class="n">ordered_candidates</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">pred</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">rank</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span>
         <span class="n">sum_inverted_ranks</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">rank</span>
