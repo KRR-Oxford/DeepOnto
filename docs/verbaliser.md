@@ -22,7 +22,7 @@ This rule-based verbaliser (found in [`OntologyVerbaliser`][deeponto.onto.verbal
 
 <p align="center">
     <img alt="verbalisation" src="../images/verbalisation.svg" width=50% height=auto>
-    <p align="center">Figure 1. Example taken from the OntoLAMA paper. </p>
+    <p align="center">Figure 1. Verbalising a complex concept recursively. </p>
 </p>
 
 </br>
