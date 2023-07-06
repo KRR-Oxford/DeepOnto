@@ -110,7 +110,7 @@ src_onto_file = "path_to_the_source_ontology.owl"
 tgt_onto_file = "path_to_the_target_ontology.owl" 
 
 config = BERTMapPipeline.load_bertmap_config(config_file)
-config.global_match.enabled = False
+config.global_matching.enabled = False
 src_onto = Ontology(src_onto_file)
 tgt_onto = Ontology(tgt_onto_file)
 
