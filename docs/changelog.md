@@ -13,10 +13,11 @@ Security in case of vulnerabilities. -->
 
 - [X] **Change** the name of pruning function in `deeponto.onto.OntologyPruner`.
 - [X] **Change** the verbalisation function by setting quantifier words as optional (by default not adding).
+- [X]  **Change** sibing retrieval from using reasoner to direct assertions.
 
 ### Fixed
 
-- [X] **Fixe** the minor bug for the `f1` method in `deeponto.align.evaluation.AlignmentEvaluator`.
+- [X] **Fix** the minor bug for the `f1` and `MRR` method in `deeponto.align.evaluation.AlignmentEvaluator`.
 
 ## v0.8.0 (2023 June)
 
