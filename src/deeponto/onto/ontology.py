@@ -414,7 +414,7 @@ class Ontology:
                     cl = self.get_owl_object_from_iri(cl_iri)
 
                 children = self.get_asserted_children(cl)
-                children_iris = [str(child.gerIRI()) for child in children if self.check_named_entity(child)]
+                children_iris = [str(child.getIRI()) for child in children if self.check_named_entity(child)]
                 self._multi_children_classes[cl_iri] = children_iris
 
                 if len(children_iris) > 1:
