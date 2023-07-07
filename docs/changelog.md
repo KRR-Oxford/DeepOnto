@@ -9,6 +9,10 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased
 
+...
+
+## v0.8.1 (2023 July)
+
 ### Changed
 
 - [X] **Change** the name of pruning function in `deeponto.onto.OntologyPruner`.
