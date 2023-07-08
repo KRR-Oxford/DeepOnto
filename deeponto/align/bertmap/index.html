@@ -6269,7 +6269,10 @@ a score <span class="arithmatex">\(\geq\)</span> <code>self.mapping_extension_th
 <span class="normal">261</span>
 <span class="normal">262</span>
 <span class="normal">263</span>
-<span class="normal">264</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">one_hop_extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tgt_class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pool_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
+<span class="normal">264</span>
+<span class="normal">265</span>
+<span class="normal">266</span>
+<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">one_hop_extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tgt_class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pool_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Extend mappings from a scored class pair $(c, c&#39;)$ by</span>
 <span class="sd">    searching from one-hop neighbors.</span>
 
@@ -6288,13 +6291,16 @@ a score <span class="arithmatex">\(\geq\)</span> <code>self.mapping_extension_th
 <span class="sd">        (List[EntityMapping]): A list of one-hop extended mappings.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="k">def</span> <span class="nf">get_iris</span><span class="p">(</span><span class="n">owl_objects</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">getIRI</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">owl_objects</span><span class="p">]</span>
+
     <span class="n">src_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">src_class_iri</span><span class="p">)</span>
-    <span class="n">src_class_parent_iris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">get_inferred_super_entities</span><span class="p">(</span><span class="n">src_class</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">src_class_children_iris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">get_inferred_sub_entities</span><span class="p">(</span><span class="n">src_class</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">src_class_parent_iris</span> <span class="o">=</span> <span class="n">get_iris</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">get_asserted_parents</span><span class="p">(</span><span class="n">src_class</span><span class="p">,</span> <span class="n">named_only</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">src_class_children_iris</span> <span class="o">=</span> <span class="n">get_iris</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">get_asserted_children</span><span class="p">(</span><span class="n">src_class</span><span class="p">,</span> <span class="n">named_only</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
     <span class="n">tgt_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">tgt_class_iri</span><span class="p">)</span>
-    <span class="n">tgt_class_parent_iris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">get_inferred_super_entities</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">tgt_class_children_iris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">get_inferred_sub_entities</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">tgt_class_parent_iris</span> <span class="o">=</span> <span class="n">get_iris</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">get_asserted_parents</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">,</span> <span class="n">named_only</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">tgt_class_children_iris</span> <span class="o">=</span> <span class="n">get_iris</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">get_asserted_children</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">,</span> <span class="n">named_only</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
 
     <span class="c1"># pair up parents and children, respectively; NOTE set() might not be necessary</span>
     <span class="n">parent_pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">src_class_parent_iris</span><span class="p">,</span> <span class="n">tgt_class_parent_iris</span><span class="p">)))</span>
@@ -6355,10 +6361,7 @@ a score <span class="arithmatex">\(\geq\)</span> <code>self.mapping_extension_th
 
       <details class="quote">
         <summary>Source code in <code>deeponto/align/bertmap/mapping_refinement.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">266</span>
-<span class="normal">267</span>
-<span class="normal">268</span>
-<span class="normal">269</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">269</span>
 <span class="normal">270</span>
 <span class="normal">271</span>
 <span class="normal">272</span>
@@ -6406,7 +6409,10 @@ a score <span class="arithmatex">\(\geq\)</span> <code>self.mapping_extension_th
 <span class="normal">314</span>
 <span class="normal">315</span>
 <span class="normal">316</span>
-<span class="normal">317</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mapping_repair</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mapping_repair</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Repair the filtered mappings with LogMap&#39;s debugger.</span>
 
 <span class="sd">    !!! note</span>
@@ -6482,10 +6488,7 @@ to be formatted as LogMap's input format.</p>
 
       <details class="quote">
         <summary>Source code in <code>deeponto/align/bertmap/mapping_refinement.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">319</span>
-<span class="normal">320</span>
-<span class="normal">321</span>
-<span class="normal">322</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">322</span>
 <span class="normal">323</span>
 <span class="normal">324</span>
 <span class="normal">325</span>
@@ -6503,7 +6506,10 @@ to be formatted as LogMap's input format.</p>
 <span class="normal">337</span>
 <span class="normal">338</span>
 <span class="normal">339</span>
-<span class="normal">340</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">logmap_repair_formatting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">logmap_repair_formatting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform the filtered mapping file into the LogMap format.</span>
 
 <span class="sd">    An auxiliary function of the mapping repair module which requires mappings</span>
