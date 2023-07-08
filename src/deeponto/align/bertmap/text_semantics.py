@@ -32,7 +32,7 @@ from deeponto.utils import FileUtils, DataUtils
 class AnnotationThesaurus:
     """A thesaurus class for synonyms and non-synonyms extracted from an ontology.
 
-    Some related definitions of arguements here:
+    Some related definitions of arguments here:
 
     - A `synonym_group` is a set of annotation phrases that are synonymous to each other;
     - The `transitivity` of synonyms means if A and B are synonymous and B and C are synonymous,
@@ -404,7 +404,7 @@ class CrossOntologyTextSemanticsCorpus:
     def synonym_sampling_from_mappings(self):
         r"""Sample synonyms from cross-ontology class mappings.
 
-        Arguements of this method are all class attributes.
+        Arguments of this method are all class attributes.
         See [`CrossOntologyTextSemanticsCorpus`][deeponto.align.bertmap.text_semantics.CrossOntologyTextSemanticsCorpus].
 
         According to the $\textsf{BERTMap}$ paper, **cross-ontology synonyms** are defined as label pairs
@@ -435,7 +435,7 @@ class CrossOntologyTextSemanticsCorpus:
     def nonsynonym_sampling_from_mappings(self, num_samples: int, max_iter: int = 5):
         r"""Sample non-synonyms from cross-ontology class mappings.
 
-        Arguements of this method are all class attributes.
+        Arguments of this method are all class attributes.
         See [`CrossOntologyTextSemanticsCorpus`][deeponto.align.bertmap.text_semantics.CrossOntologyTextSemanticsCorpus].
 
         According to the $\textsf{BERTMap}$ paper, **cross-ontology non-synonyms** are defined as label pairs
