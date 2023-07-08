@@ -11,10 +11,11 @@ Security in case of vulnerabilities. -->
 
 ...
 
-## v0.8.1 (2023 July)
+## v0.8.3 (2023 July)
 
 ### Changed
 
+- [X] **Change** the mapping extension from using reasoner to direct assertions.
 - [X] **Change** the name of pruning function in `deeponto.onto.OntologyPruner`.
 - [X] **Change** the verbalisation function by setting quantifier words as optional (by default not adding).
 - [X]  **Change** sibing retrieval from using reasoner to direct assertions.

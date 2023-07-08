@@ -237,37 +237,45 @@ class Ontology:
         else:
             raise ValueError(f"Unknown entity type {entity_type}.")
 
-    def get_asserted_parents(self, owl_object: OWLObject):
+    def get_asserted_parents(self, owl_object: OWLObject, named_only: bool = False):
         r"""Get all the asserted parents of a given owl object.
 
         Args:
             owl_object (OWLObject): An owl object that could have a parent.
+            named_only (bool): If `True`, return parents that are named classes.
         Returns:
             (Set[OWLObject]): The parent set of the given owl object.
         """
         entity_type = self.get_entity_type(owl_object)
         if entity_type == "Classes":
-            return set(EntitySearcher.getSuperClasses(owl_object, self.owl_onto))
+            parents = set(EntitySearcher.getSuperClasses(owl_object, self.owl_onto))
         elif entity_type.endswith("Properties"):
-            return set(EntitySearcher.getSuperProperties(owl_object, self.owl_onto))
+            parents = set(EntitySearcher.getSuperProperties(owl_object, self.owl_onto))
         else:
             raise ValueError(f"Unsupported entity type {entity_type}.")
+        if named_only:
+            parents = set([p for p in parents if self.check_named_entity(p)])
+        return parents
 
-    def get_asserted_children(self, owl_object: OWLObject):
+    def get_asserted_children(self, owl_object: OWLObject, named_only: bool = False):
         r"""Get all the asserted children of a given owl object.
 
         Args:
             owl_object (OWLObject): An owl object that could have a child.
+            named_only (bool): If `True`, return children that are named classes.
         Returns:
             (Set[OWLObject]): The children set of the given owl object.
         """
         entity_type = self.get_entity_type(owl_object)
         if entity_type == "Classes":
-            return set(EntitySearcher.getSubClasses(owl_object, self.owl_onto))
+            children = set(EntitySearcher.getSubClasses(owl_object, self.owl_onto))
         elif entity_type.endswith("Properties"):
-            return set(EntitySearcher.getSubProperties(owl_object, self.owl_onto))
+            children = set(EntitySearcher.getSubProperties(owl_object, self.owl_onto))
         else:
             raise ValueError(f"Unsupported entity type {entity_type}.")
+        if named_only:
+            children = set([c for c in children if self.check_named_entity(c)])
+        return children
 
     def get_asserted_complex_classes(self, gci_only: bool = False):
         """Get complex classes that occur in at least one of the ontology axioms.
