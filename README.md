@@ -39,6 +39,7 @@ limitations under the License.
 
 **News** :newspaper:
 
+- [X] Bug fixing for BERTMap (stuck at reasoning) and ontology alignment evaluation. (**v0.8.3**)
 - [X] Deploy `deeponto.onto.OntologyNormaliser` and `deeponto.onto.OntologyProjector` (**v0.8.0**).
 - [X] Upload Java dependencies directly and remove mowl from pip dependencies (**v0.7.5**).
 - [X] Deploy the `deeponto.subs.bertsubs` and `deeponto.onto.pruning` modules (**v0.7.0**).
