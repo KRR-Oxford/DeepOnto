@@ -158,7 +158,7 @@ Individual tools and resources are implemented based on the core ontology proces
 
 The preprint of our system paper for $\textsf{DeepOnto}$ is current available at [arxiv](https://arxiv.org/abs/2307.03067).
 
-- [0] *Yuan He, Jiaoyan Chen, Hang Dong, Ian Horrocks, Carlo Allocca, Taehun Kim, and Brahmananda Sapkota.* **DeepOnto: A Python Package for Ontology Engineering with Deep Learning.** arXiv preprint arXiv:2307.03067 (2023).
+*Yuan He, Jiaoyan Chen, Hang Dong, Ian Horrocks, Carlo Allocca, Taehun Kim, and Brahmananda Sapkota.* **DeepOnto: A Python Package for Ontology Engineering with Deep Learning.** arXiv preprint arXiv:2307.03067 (2023).
 
 ```
 @article{he2023deeponto,
