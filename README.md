@@ -156,7 +156,7 @@ Individual tools and resources are implemented based on the core ontology proces
 
 ## Citation
 
-The preprint of our system paper is current available at [arxiv](https://arxiv.org/abs/2307.03067)
+The preprint of our system paper is current available at [arxiv](https://arxiv.org/abs/2307.03067).
 
 ```
 @article{he2023deeponto,
