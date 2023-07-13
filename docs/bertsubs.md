@@ -5,11 +5,13 @@
     Paper for BERTSubs: [Contextual Semantic Embeddings for Ontology Subsumption Prediction (accepted by WWW Journal in 2023)](https://arxiv.org/abs/2202.09791).
 
     ```
-    @article{chen2022contextual,
-    title={Contextual semantic embeddings for ontology subsumption prediction},
-    author={Chen, Jiaoyan and He, Yuan and Geng, Yuxia and Jimenez-Ruiz, Ernesto and Dong, Hang and Horrocks, Ian},
-    journal={arXiv preprint arXiv:2202.09791},
-    year={2022}
+    @article{chen2023contextual,
+      title={Contextual semantic embeddings for ontology subsumption prediction},
+      author={Chen, Jiaoyan and He, Yuan and Geng, Yuxia and Jim{\'e}nez-Ruiz, Ernesto and Dong, Hang and Horrocks, Ian},
+      journal={World Wide Web},
+      pages={1--23},
+      year={2023},
+      publisher={Springer}
     }
     ```
 

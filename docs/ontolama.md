@@ -6,11 +6,20 @@
     [Language Model Analysis for Ontology Subsumption Inference (Findings of ACL 2023, to appear)](https://arxiv.org/abs/2302.06761).
 
     ```
-    @article{he2023language,
-    title={Language Model Analysis for Ontology Subsumption Inference},
-    author={He, Yuan and Chen, Jiaoyan and Jim{\'e}nez-Ruiz, Ernesto and Dong, Hang and Horrocks, Ian},
-    journal={arXiv preprint arXiv:2302.06761},
-    year={2023}
+    @inproceedings{he-etal-2023-language,
+        title = "Language Model Analysis for Ontology Subsumption Inference",
+        author = "He, Yuan  and
+        Chen, Jiaoyan  and
+        Jimenez-Ruiz, Ernesto  and
+        Dong, Hang  and
+        Horrocks, Ian",
+        booktitle = "Findings of the Association for Computational Linguistics: ACL 2023",
+        month = jul,
+        year = "2023",
+        address = "Toronto, Canada",
+        publisher = "Association for Computational Linguistics",
+        url = "https://aclanthology.org/2023.findings-acl.213",
+        pages = "3439--3453"
     }
     ```
 
