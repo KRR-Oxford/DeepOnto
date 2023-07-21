@@ -15,12 +15,6 @@
 import argparse
 import random
 from yacs.config import CfgNode
-
-import sys
-import os
-main_dir = os.getcwd().split("DeepOnto")[0] + "DeepOnto/src"
-sys.path.append(main_dir)
-
 from deeponto.onto import Ontology
 from deeponto.subs.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE_INTRA
 from deeponto.utils import FileUtils

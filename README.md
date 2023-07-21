@@ -93,12 +93,12 @@ Other dependencies are specified in `setup.cfg` and `requirements.txt` which are
 pip install deeponto
 ```
 
-### Use Git Repository
+### Install from Git Repository
 
-One can git clone the repository without installing through PyPI and install the dependencies manually by:
+To install the latest, probably unreleased version of deeponto, you can directly install from the repository. 
 
 ```bash
-pip install -r requirements.txt
+pip install git+https://github.com/KRR-Oxford/DeepOnto.git
 ```
 
 ## Main Features

@@ -12,12 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import sys
-
-main_dir = os.getcwd().split("DeepOnto")[0] + "DeepOnto/src"
-sys.path.append(main_dir)
-
 from deeponto.onto import Ontology
 from deeponto.align.bertmap import BERTMapPipeline, DEFAULT_CONFIG_FILE
 import click
