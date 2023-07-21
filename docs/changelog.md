@@ -9,7 +9,10 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased
 
-...
+### Fixed
+
+- [X] **Fix** BERTMap error and add corresponding warning when an input ontology has no sibling class group, related to Issue #10.
+- [X] **Fix** BERTMap error and add corresponding warning when an input ontology has some class with no label (annotation), related to Issue #10.
 
 ## v0.8.3 (2023 July)
 

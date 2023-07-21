@@ -19,6 +19,7 @@ import itertools
 import random
 import os
 from typing import List, Set, Tuple, Optional, Union
+import warnings
 
 from deeponto.onto import Ontology
 from deeponto.align.mapping import ReferenceMapping
@@ -249,6 +250,10 @@ class AnnotationThesaurus:
         """
         # intialise the sibling class groups
         self.onto.sibling_class_groups
+        
+        if not self.onto.sibling_class_groups:
+            warnings.warn("Skip hard negative sampling as no sibling class groups are defined.")
+            return []
 
         # flatten the disjointness groups into all pairs of hard neagtives
         nonsynonym_pool = []

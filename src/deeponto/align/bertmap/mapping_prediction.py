@@ -23,6 +23,7 @@ import itertools
 import torch
 import pandas as pd
 import enlighten
+import warnings
 
 
 from deeponto.align.mapping import EntityMapping
@@ -96,6 +97,11 @@ class MappingPredictor:
         the **average** score as the mapping score. Apply string matching before applying the
         BERT module to filter easy mappings (with scores $1.0$).
         """
+        
+        if not src_class_annotations or not tgt_class_annotations:
+            warnings.warn("Return zero score due to empty input class annotations...")
+            return 0.0
+        
         # apply string matching before applying the bert module
         prelim_score = self.edit_similarity_mapping_score(
             src_class_annotations,
@@ -121,6 +127,11 @@ class MappingPredictor:
         Compute the **normalised edit similarity** `(1 - normalised edit distance)` for each pair
         of src-tgt class annotations, and return the **maximum** score as the mapping score.
         """
+        
+        if not src_class_annotations or not tgt_class_annotations:
+            warnings.warn("Return zero score due to empty input class annotations...")
+            return 0.0
+        
         # edge case when src and tgt classes have an exact match of annotation
         if len(src_class_annotations.intersection(tgt_class_annotations)) > 0:
             return 1.0
