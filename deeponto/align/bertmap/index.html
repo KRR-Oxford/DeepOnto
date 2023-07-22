@@ -1745,7 +1745,22 @@ and then apply BERT matching.</li>
 <span class="normal">196</span>
 <span class="normal">197</span>
 <span class="normal">198</span>
-<span class="normal">199</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">CfgNode</span><span class="p">):</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">CfgNode</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the BERTMap or BERTMapLt model.</span>
 
 <span class="sd">    Args:</span>
@@ -1837,6 +1852,20 @@ and then apply BERT matching.</li>
 
     <span class="c1"># mapping predictions</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">global_matching_config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">global_matching</span>
+
+    <span class="c1"># build ignored class index for OAEI</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ignored_class_index</span> <span class="o">=</span> <span class="kc">None</span>  
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_matching_config</span><span class="o">.</span><span class="n">for_oaei</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ignored_class_index</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">src_class_iri</span><span class="p">,</span> <span class="n">src_class</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">owl_classes</span><span class="p">:</span>
+            <span class="n">use_in_alignment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">get_owl_object_annotations</span><span class="p">(</span><span class="n">src_class</span><span class="p">,</span> <span class="s2">&quot;http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">use_in_alignment</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">use_in_alignment</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ignored_class_index</span><span class="p">[</span><span class="n">src_class_iri</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">tgt_class_iri</span><span class="p">,</span> <span class="n">tgt_class</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl_classes</span><span class="p">:</span>
+            <span class="n">use_in_alignment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">get_owl_object_annotations</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">,</span> <span class="s2">&quot;http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">use_in_alignment</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">use_in_alignment</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ignored_class_index</span><span class="p">[</span><span class="n">tgt_class_iri</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+
     <span class="bp">self</span><span class="o">.</span><span class="n">mapping_predictor</span> <span class="o">=</span> <span class="n">MappingPredictor</span><span class="p">(</span>
         <span class="n">output_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span>
         <span class="n">tokenizer_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bert_config</span><span class="o">.</span><span class="n">pretrained_path</span><span class="p">,</span>
@@ -1848,7 +1877,8 @@ and then apply BERT matching.</li>
         <span class="n">batch_size_for_prediction</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">bert_config</span><span class="o">.</span><span class="n">batch_size_for_prediction</span><span class="p">,</span>
         <span class="n">logger</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="p">,</span>
         <span class="n">enlighten_manager</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enlighten_manager</span><span class="p">,</span>
-        <span class="n">enlighten_status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enlighten_status</span>
+        <span class="n">enlighten_status</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">enlighten_status</span><span class="p">,</span>
+        <span class="n">ignored_class_index</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ignored_class_index</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">mapping_refiner</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -1909,20 +1939,20 @@ a local data file.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/pipeline.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">203</span>
-<span class="normal">204</span>
-<span class="normal">205</span>
-<span class="normal">206</span>
-<span class="normal">207</span>
-<span class="normal">208</span>
-<span class="normal">209</span>
-<span class="normal">210</span>
-<span class="normal">211</span>
-<span class="normal">212</span>
-<span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span>
-<span class="normal">216</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_or_construct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">construct_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span>
+<span class="normal">223</span>
+<span class="normal">224</span>
+<span class="normal">225</span>
+<span class="normal">226</span>
+<span class="normal">227</span>
+<span class="normal">228</span>
+<span class="normal">229</span>
+<span class="normal">230</span>
+<span class="normal">231</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_or_construct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">construct_func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load existing data or construct a new one.</span>
 
 <span class="sd">    An auxlirary function that checks the existence of a data file and loads it if it exists.</span>
@@ -1960,22 +1990,7 @@ a local data file.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/pipeline.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">218</span>
-<span class="normal">219</span>
-<span class="normal">220</span>
-<span class="normal">221</span>
-<span class="normal">222</span>
-<span class="normal">223</span>
-<span class="normal">224</span>
-<span class="normal">225</span>
-<span class="normal">226</span>
-<span class="normal">227</span>
-<span class="normal">228</span>
-<span class="normal">229</span>
-<span class="normal">230</span>
-<span class="normal">231</span>
-<span class="normal">232</span>
-<span class="normal">233</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">233</span>
 <span class="normal">234</span>
 <span class="normal">235</span>
 <span class="normal">236</span>
@@ -1983,7 +1998,22 @@ a local data file.</p>
 <span class="normal">238</span>
 <span class="normal">239</span>
 <span class="normal">240</span>
-<span class="normal">241</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_text_semantics_corpora</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">241</span>
+<span class="normal">242</span>
+<span class="normal">243</span>
+<span class="normal">244</span>
+<span class="normal">245</span>
+<span class="normal">246</span>
+<span class="normal">247</span>
+<span class="normal">248</span>
+<span class="normal">249</span>
+<span class="normal">250</span>
+<span class="normal">251</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span>
+<span class="normal">256</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_text_semantics_corpora</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load or construct text semantics corpora.</span>
 
 <span class="sd">    See [`TextSemanticsCorpora`][deeponto.align.bertmap.text_semantics.TextSemanticsCorpora].</span>
@@ -2035,22 +2065,7 @@ a local data file.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/pipeline.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">243</span>
-<span class="normal">244</span>
-<span class="normal">245</span>
-<span class="normal">246</span>
-<span class="normal">247</span>
-<span class="normal">248</span>
-<span class="normal">249</span>
-<span class="normal">250</span>
-<span class="normal">251</span>
-<span class="normal">252</span>
-<span class="normal">253</span>
-<span class="normal">254</span>
-<span class="normal">255</span>
-<span class="normal">256</span>
-<span class="normal">257</span>
-<span class="normal">258</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">258</span>
 <span class="normal">259</span>
 <span class="normal">260</span>
 <span class="normal">261</span>
@@ -2059,7 +2074,22 @@ a local data file.</p>
 <span class="normal">264</span>
 <span class="normal">265</span>
 <span class="normal">266</span>
-<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_finetune_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">267</span>
+<span class="normal">268</span>
+<span class="normal">269</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span>
+<span class="normal">282</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_finetune_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Load or construct fine-tuning data from text semantics corpora.</span>
 
 <span class="sd">    Steps of constructing fine-tuning data from text semantics:</span>
@@ -2112,22 +2142,7 @@ a local data file.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/pipeline.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">269</span>
-<span class="normal">270</span>
-<span class="normal">271</span>
-<span class="normal">272</span>
-<span class="normal">273</span>
-<span class="normal">274</span>
-<span class="normal">275</span>
-<span class="normal">276</span>
-<span class="normal">277</span>
-<span class="normal">278</span>
-<span class="normal">279</span>
-<span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
-<span class="normal">283</span>
-<span class="normal">284</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">284</span>
 <span class="normal">285</span>
 <span class="normal">286</span>
 <span class="normal">287</span>
@@ -2137,7 +2152,22 @@ a local data file.</p>
 <span class="normal">291</span>
 <span class="normal">292</span>
 <span class="normal">293</span>
-<span class="normal">294</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_bert_synonym_classifier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">294</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span>
+<span class="normal">298</span>
+<span class="normal">299</span>
+<span class="normal">300</span>
+<span class="normal">301</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span>
+<span class="normal">307</span>
+<span class="normal">308</span>
+<span class="normal">309</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_bert_synonym_classifier</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the BERT model from a pre-trained or a local checkpoint.</span>
 
 <span class="sd">    - If loaded from pre-trained, it means to start training from a pre-trained model such as `bert-uncased`.</span>
@@ -2186,28 +2216,28 @@ a local data file.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/pipeline.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">296</span>
-<span class="normal">297</span>
-<span class="normal">298</span>
-<span class="normal">299</span>
-<span class="normal">300</span>
-<span class="normal">301</span>
-<span class="normal">302</span>
-<span class="normal">303</span>
-<span class="normal">304</span>
-<span class="normal">305</span>
-<span class="normal">306</span>
-<span class="normal">307</span>
-<span class="normal">308</span>
-<span class="normal">309</span>
-<span class="normal">310</span>
-<span class="normal">311</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">311</span>
 <span class="normal">312</span>
 <span class="normal">313</span>
 <span class="normal">314</span>
 <span class="normal">315</span>
 <span class="normal">316</span>
-<span class="normal">317</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_best_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span>
+<span class="normal">332</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_best_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find the best checkpoint by searching for trainer states in each checkpoint file.&quot;&quot;&quot;</span>
     <span class="n">best_checkpoint</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
 
@@ -2257,17 +2287,17 @@ is not provided, use the default configuration.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/pipeline.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">319</span>
-<span class="normal">320</span>
-<span class="normal">321</span>
-<span class="normal">322</span>
-<span class="normal">323</span>
-<span class="normal">324</span>
-<span class="normal">325</span>
-<span class="normal">326</span>
-<span class="normal">327</span>
-<span class="normal">328</span>
-<span class="normal">329</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span>
+<span class="normal">337</span>
+<span class="normal">338</span>
+<span class="normal">339</span>
+<span class="normal">340</span>
+<span class="normal">341</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">load_bertmap_config</span><span class="p">(</span><span class="n">config_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load the BERTMap configuration in `.yaml`. If the file</span>
 <span class="sd">    is not provided, use the default configuration.</span>
@@ -2305,11 +2335,11 @@ is not provided, use the default configuration.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/pipeline.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">331</span>
-<span class="normal">332</span>
-<span class="normal">333</span>
-<span class="normal">334</span>
-<span class="normal">335</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">save_bertmap_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">CfgNode</span><span class="p">,</span> <span class="n">config_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save the BERTMap configuration in `.yaml`.&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">config_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">c</span><span class="p">:</span>
@@ -4705,7 +4735,8 @@ and its summary) in the specified directory.</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/align/bertmap/bert_classifier.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 50</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 49</span>
+<span class="normal"> 50</span>
 <span class="normal"> 51</span>
 <span class="normal"> 52</span>
 <span class="normal"> 53</span>
@@ -4789,8 +4820,7 @@ and its summary) in the specified directory.</p>
 <span class="normal">131</span>
 <span class="normal">132</span>
 <span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">loaded_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -4908,11 +4938,11 @@ and its summary) in the specified directory.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/bert_classifier.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
+<span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resume_from_checkpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="normal">140</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resume_from_checkpoint</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Start training the BERT model.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">eval_mode</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Training cannot be started in `eval` mode.&quot;</span><span class="p">)</span>
@@ -4940,14 +4970,14 @@ and its summary) in the specified directory.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/bert_classifier.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">142</span>
+<span class="normal">143</span>
 <span class="normal">144</span>
 <span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">149</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;To eval mode.&quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The BERT model is set to eval mode for making predictions.&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
@@ -4979,14 +5009,14 @@ and its summary) in the specified directory.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/bert_classifier.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">152</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">151</span>
+<span class="normal">152</span>
 <span class="normal">153</span>
 <span class="normal">154</span>
 <span class="normal">155</span>
 <span class="normal">156</span>
 <span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sent_pairs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]):</span>
+<span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sent_pairs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Run prediction pipeline for synonym classification.</span>
 
 <span class="sd">    Return the `softmax` probailities of predicting pairs as synonyms (`index=1`).</span>
@@ -5017,7 +5047,8 @@ and its summary) in the specified directory.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/bert_classifier.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">161</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">160</span>
+<span class="normal">161</span>
 <span class="normal">162</span>
 <span class="normal">163</span>
 <span class="normal">164</span>
@@ -5032,8 +5063,7 @@ and its summary) in the specified directory.</p>
 <span class="normal">173</span>
 <span class="normal">174</span>
 <span class="normal">175</span>
-<span class="normal">176</span>
-<span class="normal">177</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
+<span class="normal">176</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]],</span> <span class="n">split</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dataset</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Load the list of `(annotation1, annotation2, label)` samples into a `datasets.Dataset`.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">iterate</span><span class="p">():</span>
@@ -5075,7 +5105,8 @@ This function is called only when the BERT model is about to make predictions (<
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/bert_classifier.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">178</span>
+<span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
 <span class="normal">182</span>
@@ -5086,8 +5117,7 @@ This function is called only when the BERT model is about to make predictions (<
 <span class="normal">187</span>
 <span class="normal">188</span>
 <span class="normal">189</span>
-<span class="normal">190</span>
-<span class="normal">191</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">process_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sent_pairs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]):</span>
+<span class="normal">190</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">process_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sent_pairs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Process input sentence pairs for the BERT model.</span>
 
 <span class="sd">    Transform the sentences into BERT input embeddings and load them into the device.</span>
@@ -5127,14 +5157,14 @@ This function is called only when the BERT model is about to make predictions (<
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/bert_classifier.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">193</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">192</span>
+<span class="normal">193</span>
 <span class="normal">194</span>
 <span class="normal">195</span>
 <span class="normal">196</span>
 <span class="normal">197</span>
 <span class="normal">198</span>
-<span class="normal">199</span>
-<span class="normal">200</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">199</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">compute_metrics</span><span class="p">(</span><span class="n">pred</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add more evaluation metrics into the training log.&quot;&quot;&quot;</span>
     <span class="c1"># TODO: currently only accuracy is added, will expect more in the future if needed</span>
@@ -5169,7 +5199,8 @@ This function is called only when the BERT model is about to make predictions (<
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/bert_classifier.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">202</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">201</span>
+<span class="normal">202</span>
 <span class="normal">203</span>
 <span class="normal">204</span>
 <span class="normal">205</span>
@@ -5181,8 +5212,7 @@ This function is called only when the BERT model is about to make predictions (<
 <span class="normal">211</span>
 <span class="normal">212</span>
 <span class="normal">213</span>
-<span class="normal">214</span>
-<span class="normal">215</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">214</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">get_device</span><span class="p">(</span><span class="n">device_num</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get a device (GPU or CPU) for the torch model&quot;&quot;&quot;</span>
     <span class="c1"># If there&#39;s a GPU available...</span>
@@ -5223,13 +5253,13 @@ This function is called only when the BERT model is about to make predictions (<
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/bert_classifier.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">217</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">216</span>
+<span class="normal">217</span>
 <span class="normal">218</span>
 <span class="normal">219</span>
 <span class="normal">220</span>
 <span class="normal">221</span>
-<span class="normal">222</span>
-<span class="normal">223</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">222</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">set_seed</span><span class="p">(</span><span class="n">seed_val</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">888</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set random seed for reproducible results.&quot;&quot;&quot;</span>
     <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed_val</span><span class="p">)</span>
@@ -5281,7 +5311,7 @@ This function is called only when the BERT model is about to make predictions (<
 
 
 <h2 id="deeponto.align.bertmap.mapping_prediction.MappingPredictor" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">MappingPredictor</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">tokenizer_path</span><span class="p">,</span> <span class="n">src_annotation_index</span><span class="p">,</span> <span class="n">tgt_annotation_index</span><span class="p">,</span> <span class="n">bert_synonym_classifier</span><span class="p">,</span> <span class="n">num_raw_candidates</span><span class="p">,</span> <span class="n">num_best_predictions</span><span class="p">,</span> <span class="n">batch_size_for_prediction</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">enlighten_manager</span><span class="p">,</span> <span class="n">enlighten_status</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">MappingPredictor</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">tokenizer_path</span><span class="p">,</span> <span class="n">src_annotation_index</span><span class="p">,</span> <span class="n">tgt_annotation_index</span><span class="p">,</span> <span class="n">bert_synonym_classifier</span><span class="p">,</span> <span class="n">num_raw_candidates</span><span class="p">,</span> <span class="n">num_best_predictions</span><span class="p">,</span> <span class="n">batch_size_for_prediction</span><span class="p">,</span> <span class="n">logger</span><span class="p">,</span> <span class="n">enlighten_manager</span><span class="p">,</span> <span class="n">enlighten_status</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h2>
 
@@ -5391,13 +5421,23 @@ This function is called only when the BERT model is about to make predictions (<
             </div>
           </td>
         </tr>
+        <tr>
+          <td><code>ignored_class_index</code></td>
+          <td>
+                <code>dict</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>OAEI arguemnt, a dictionary that stores the <code>(class_iri, used_in_alignment)</code> pairs.</p>
+            </div>
+          </td>
+        </tr>
     </tbody>
   </table>
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/align/bertmap/mapping_prediction.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
-<span class="normal">54</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">54</span>
 <span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
@@ -5429,7 +5469,12 @@ This function is called only when the BERT model is about to make predictions (<
 <span class="normal">83</span>
 <span class="normal">84</span>
 <span class="normal">85</span>
-<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">tokenizer_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -5442,6 +5487,7 @@ This function is called only when the BERT model is about to make predictions (<
     <span class="n">logger</span><span class="p">:</span> <span class="n">Logger</span><span class="p">,</span>
     <span class="n">enlighten_manager</span><span class="p">:</span> <span class="n">enlighten</span><span class="o">.</span><span class="n">Manager</span><span class="p">,</span>
     <span class="n">enlighten_status</span><span class="p">:</span> <span class="n">enlighten</span><span class="o">.</span><span class="n">StatusBar</span><span class="p">,</span>
+    <span class="n">ignored_class_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">enlighten_manager</span> <span class="o">=</span> <span class="n">enlighten_manager</span>
@@ -5461,6 +5507,9 @@ This function is called only when the BERT model is about to make predictions (<
     <span class="bp">self</span><span class="o">.</span><span class="n">num_best_predictions</span> <span class="o">=</span> <span class="n">num_best_predictions</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">batch_size_for_prediction</span> <span class="o">=</span> <span class="n">batch_size_for_prediction</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">=</span> <span class="n">output_path</span>
+
+    <span class="c1"># for the OAEI, adding in check for classes that are not used in alignment</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ignored_class_index</span> <span class="o">=</span> <span class="n">ignored_class_index</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">init_class_mapping</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">,</span> <span class="n">score</span><span class="p">:</span> <span class="n">EntityMapping</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">tail</span><span class="p">,</span> <span class="s2">&quot;&lt;EquivalentTo&gt;&quot;</span><span class="p">,</span> <span class="n">score</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -5499,12 +5548,7 @@ BERT module to filter easy mappings (with scores <span class="arithmatex">\(1.0\
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/mapping_prediction.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 88</span>
-<span class="normal"> 89</span>
-<span class="normal"> 90</span>
-<span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
 <span class="normal"> 94</span>
 <span class="normal"> 95</span>
 <span class="normal"> 96</span>
@@ -5528,7 +5572,12 @@ BERT module to filter easy mappings (with scores <span class="arithmatex">\(1.0\
 <span class="normal">114</span>
 <span class="normal">115</span>
 <span class="normal">116</span>
-<span class="normal">117</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">bert_mapping_score</span><span class="p">(</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">bert_mapping_score</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">src_class_annotations</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">tgt_class_annotations</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -5587,12 +5636,7 @@ of src-tgt class annotations, and return the <strong>maximum</strong> score as t
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/mapping_prediction.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">124</span>
 <span class="normal">125</span>
 <span class="normal">126</span>
 <span class="normal">127</span>
@@ -5611,7 +5655,12 @@ of src-tgt class annotations, and return the <strong>maximum</strong> score as t
 <span class="normal">140</span>
 <span class="normal">141</span>
 <span class="normal">142</span>
-<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">edit_similarity_mapping_score</span><span class="p">(</span>
     <span class="n">src_class_annotations</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">tgt_class_annotations</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
@@ -5677,12 +5726,7 @@ get <span class="arithmatex">\(N\)</span> best scored mappings for a source onto
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/mapping_prediction.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">150</span>
 <span class="normal">151</span>
 <span class="normal">152</span>
 <span class="normal">153</span>
@@ -5803,7 +5847,17 @@ get <span class="arithmatex">\(N\)</span> best scored mappings for a source onto
 <span class="normal">268</span>
 <span class="normal">269</span>
 <span class="normal">270</span>
-<span class="normal">271</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mapping_prediction_for_src_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">]:</span>
+<span class="normal">271</span>
+<span class="normal">272</span>
+<span class="normal">273</span>
+<span class="normal">274</span>
+<span class="normal">275</span>
+<span class="normal">276</span>
+<span class="normal">277</span>
+<span class="normal">278</span>
+<span class="normal">279</span>
+<span class="normal">280</span>
+<span class="normal">281</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mapping_prediction_for_src_class</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">]:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Predict $N$ best scored mappings for a source ontology class, where</span>
 <span class="sd">    $N$ is specified in `self.num_best_predictions`.</span>
 
@@ -5824,8 +5878,13 @@ get <span class="arithmatex">\(N\)</span> best scored mappings for a source onto
     <span class="n">src_class_annotations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_annotation_index</span><span class="p">[</span><span class="n">src_class_iri</span><span class="p">]</span>
     <span class="c1"># previously wrongly put tokenizer again !!!</span>
     <span class="n">tgt_class_candidates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_inverted_annotation_index</span><span class="o">.</span><span class="n">idf_select</span><span class="p">(</span>
-        <span class="nb">list</span><span class="p">(</span><span class="n">src_class_annotations</span><span class="p">),</span> <span class="n">pool_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_raw_candidates</span>
+        <span class="nb">list</span><span class="p">(</span><span class="n">src_class_annotations</span><span class="p">),</span> <span class="n">pool_size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tgt_annotation_index</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
     <span class="p">)</span>  <span class="c1"># [(tgt_class_iri, idf_score)]</span>
+    <span class="c1"># if some classes are set to be ignored, remove them from the candidates</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignored_class_index</span><span class="p">:</span>
+        <span class="n">tgt_class_candidates</span> <span class="o">=</span> <span class="p">[(</span><span class="n">iri</span><span class="p">,</span> <span class="n">idf_score</span><span class="p">)</span> <span class="k">for</span> <span class="n">iri</span><span class="p">,</span> <span class="n">idf_score</span> <span class="ow">in</span> <span class="n">tgt_class_candidates</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignored_class_index</span><span class="p">[</span><span class="n">iri</span><span class="p">]]</span>
+    <span class="c1"># select a truncated number of candidates</span>
+    <span class="n">tgt_class_candidates</span> <span class="o">=</span> <span class="n">tgt_class_candidates</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">num_raw_candidates</span><span class="p">]</span>
     <span class="n">best_scored_mappings</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="c1"># for string matching: save time if already found string-matched candidates</span>
@@ -5956,17 +6015,7 @@ bar keeps track of the number of source ontology classes that have been matched.
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/mapping_prediction.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">273</span>
-<span class="normal">274</span>
-<span class="normal">275</span>
-<span class="normal">276</span>
-<span class="normal">277</span>
-<span class="normal">278</span>
-<span class="normal">279</span>
-<span class="normal">280</span>
-<span class="normal">281</span>
-<span class="normal">282</span>
-<span class="normal">283</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">283</span>
 <span class="normal">284</span>
 <span class="normal">285</span>
 <span class="normal">286</span>
@@ -5998,7 +6047,23 @@ bar keeps track of the number of source ontology classes that have been matched.
 <span class="normal">312</span>
 <span class="normal">313</span>
 <span class="normal">314</span>
-<span class="normal">315</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mapping_prediction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">315</span>
+<span class="normal">316</span>
+<span class="normal">317</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span>
+<span class="normal">321</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span>
+<span class="normal">325</span>
+<span class="normal">326</span>
+<span class="normal">327</span>
+<span class="normal">328</span>
+<span class="normal">329</span>
+<span class="normal">330</span>
+<span class="normal">331</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mapping_prediction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Apply global matching for each class in the source ontology.</span>
 
 <span class="sd">    See [`mapping_prediction_for_src_class`][deeponto.align.bertmap.mapping_prediction.MappingPredictor.mapping_prediction_for_src_class].</span>
@@ -6022,8 +6087,14 @@ bar keeps track of the number of source ontology classes that have been matched.
     <span class="bp">self</span><span class="o">.</span><span class="n">enlighten_status</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">demo</span><span class="o">=</span><span class="s2">&quot;Mapping Prediction&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">src_class_iri</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_annotation_index</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="c1"># skip computed classes</span>
         <span class="k">if</span> <span class="n">src_class_iri</span> <span class="ow">in</span> <span class="n">mapping_index</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Class </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] Skip matching </span><span class="si">{</span><span class="n">src_class_iri</span><span class="si">}</span><span class="s2"> as already computed.&quot;</span><span class="p">)</span>
+            <span class="n">progress_bar</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+            <span class="k">continue</span>
+        <span class="c1"># for OAEI</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignored_class_index</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignored_class_index</span><span class="p">[</span><span class="n">src_class_iri</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Class </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">] Skip matching </span><span class="si">{</span><span class="n">src_class_iri</span><span class="si">}</span><span class="s2"> as marked as not used in alignment.&quot;</span><span class="p">)</span>
             <span class="n">progress_bar</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
             <span class="k">continue</span>
         <span class="n">mappings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapping_prediction_for_src_class</span><span class="p">(</span><span class="n">src_class_iri</span><span class="p">)</span>
@@ -6192,7 +6263,8 @@ All the attributes of this class are supposed to be passed from <code>BERTMapPip
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/align/bertmap/mapping_refinement.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
+<span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
 <span class="normal">56</span>
@@ -6234,8 +6306,7 @@ All the attributes of this class are supposed to be passed from <code>BERTMapPip
 <span class="normal">92</span>
 <span class="normal">93</span>
 <span class="normal">94</span>
-<span class="normal">95</span>
-<span class="normal">96</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">95</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">output_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
@@ -6355,7 +6426,8 @@ total number of filtered mappings (this bar is purely for logging purpose).</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/mapping_refinement.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 97</span>
+<span class="normal"> 98</span>
 <span class="normal"> 99</span>
 <span class="normal">100</span>
 <span class="normal">101</span>
@@ -6459,8 +6531,7 @@ total number of filtered mappings (this bar is purely for logging purpose).</p>
 <span class="normal">199</span>
 <span class="normal">200</span>
 <span class="normal">201</span>
-<span class="normal">202</span>
-<span class="normal">203</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mapping_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+<span class="normal">202</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mapping_extension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Iterative mapping extension based on the locality principle.</span>
 
 <span class="sd">    For each class pair $(c, c&#39;)$ (scored in the global matching phase) with score </span>
@@ -6677,7 +6748,8 @@ a score <span class="arithmatex">\(\geq\)</span> <code>self.mapping_extension_th
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/mapping_refinement.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">205</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">204</span>
+<span class="normal">205</span>
 <span class="normal">206</span>
 <span class="normal">207</span>
 <span class="normal">208</span>
@@ -6738,8 +6810,7 @@ a score <span class="arithmatex">\(\geq\)</span> <code>self.mapping_extension_th
 <span class="normal">263</span>
 <span class="normal">264</span>
 <span class="normal">265</span>
-<span class="normal">266</span>
-<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">one_hop_extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tgt_class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pool_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
+<span class="normal">266</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">one_hop_extend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">src_class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">tgt_class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pool_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Extend mappings from a scored class pair $(c, c&#39;)$ by</span>
 <span class="sd">    searching from one-hop neighbors.</span>
 
@@ -6829,7 +6900,8 @@ a score <span class="arithmatex">\(\geq\)</span> <code>self.mapping_extension_th
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/mapping_refinement.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">269</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">268</span>
+<span class="normal">269</span>
 <span class="normal">270</span>
 <span class="normal">271</span>
 <span class="normal">272</span>
@@ -6879,8 +6951,7 @@ a score <span class="arithmatex">\(\geq\)</span> <code>self.mapping_extension_th
 <span class="normal">316</span>
 <span class="normal">317</span>
 <span class="normal">318</span>
-<span class="normal">319</span>
-<span class="normal">320</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mapping_repair</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">319</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mapping_repair</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Repair the filtered mappings with LogMap&#39;s debugger.</span>
 
 <span class="sd">    !!! note</span>
@@ -6957,7 +7028,8 @@ to be formatted as LogMap's input format.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/mapping_refinement.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">322</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">321</span>
+<span class="normal">322</span>
 <span class="normal">323</span>
 <span class="normal">324</span>
 <span class="normal">325</span>
@@ -6977,8 +7049,7 @@ to be formatted as LogMap's input format.</p>
 <span class="normal">339</span>
 <span class="normal">340</span>
 <span class="normal">341</span>
-<span class="normal">342</span>
-<span class="normal">343</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">logmap_repair_formatting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">logmap_repair_formatting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform the filtered mapping file into the LogMap format.</span>
 
 <span class="sd">    An auxiliary function of the mapping repair module which requires mappings</span>

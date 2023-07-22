@@ -363,6 +363,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    Added
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#fixed" class="md-nav__link">
     Fixed
   </a>
@@ -410,7 +417,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added" class="md-nav__link">
+  <a href="#added_1" class="md-nav__link">
     Added
   </a>
   
@@ -464,7 +471,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_1" class="md-nav__link">
+  <a href="#added_2" class="md-nav__link">
     Added
   </a>
   
@@ -498,7 +505,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_2" class="md-nav__link">
+  <a href="#added_3" class="md-nav__link">
     Added
   </a>
   
@@ -1153,6 +1160,10 @@ Fixed for any bug fixes.
 Security in case of vulnerabilities. -->
 
 <h2 id="unreleased">Unreleased</h2>
+<h3 id="added">Added</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> specific check of <code>use_in_alignment</code> annotation in BERTMap for the OAEI.</li>
+</ul>
 <h3 id="fixed">Fixed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> BERTMap error and add corresponding warning when an input ontology has no sibling class group, related to Issue #10.</li>
@@ -1171,7 +1182,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> the minor bug for the <code>f1</code> and <code>MRR</code> method in <code>deeponto.align.evaluation.AlignmentEvaluator</code>.</li>
 </ul>
 <h2 id="v080-2023-june">v0.8.0 (2023 June)</h2>
-<h3 id="added">Added</h3>
+<h3 id="added_1">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the ontology normaliser at <code>deeponto.onto.OntologyNormaliser</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the ontology projector at <code>deeponto.onto.OntologyProjector</code>.</li>
@@ -1191,7 +1202,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> BERTMap's non-synonym sampling when the class labels are not available using the try-catch block.</li>
 </ul>
 <h2 id="v070-2023-april">v0.7.0 (2023 April)</h2>
-<h3 id="added_1">Added</h3>
+<h3 id="added_2">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the BERTSubs module at <code>deeponto.subs.bertsubs</code>; its inter-ontology setting is also imported at <code>deeponto.align.bertsubs</code>.</li>
 </ul>
@@ -1206,7 +1217,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> the function <code>check_deprecated</code> at <code>deeponto.onto.Ontology</code> by adding a check for the <span class="arithmatex">\(\texttt{owl:deprecated}\)</span> annotation property -- if this property does not exist in the current ontology, return <code>False</code> (not deprecated).</li>
 </ul>
 <h2 id="v061-2023-april">v0.6.1 (2023 April)</h2>
-<h3 id="added_2">Added</h3>
+<h3 id="added_3">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method <code>remove_axiom</code> for removing an axiom from the ontology at <code>deeponto.onto.Ontology</code> (note that the counterpart <code>add_axiom</code> has already been available).</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method <code>check_named_entity</code> for checking if an entity is named at <code>deeponto.onto.Ontology</code>.</li>
@@ -1250,7 +1261,7 @@ Security in case of vulnerabilities. -->
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 21, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 22, 2023</span>
       
         <br>
         Created:
