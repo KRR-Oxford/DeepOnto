@@ -9,6 +9,10 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased
 
+
+### Added
+
+- [X] **Add** specific check of `use_in_alignment` annotation in BERTMap for the OAEI.
 ### Fixed
 
 - [X] **Fix** BERTMap error and add corresponding warning when an input ontology has no sibling class group, related to Issue #10.
