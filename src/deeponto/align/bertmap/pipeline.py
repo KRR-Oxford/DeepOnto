@@ -164,7 +164,7 @@ class BERTMapPipeline:
         # build ignored class index for OAEI
         self.ignored_class_index = None  
         if self.global_matching_config.for_oaei:
-            self.ignored_class_index = defaultdict(False)
+            self.ignored_class_index = defaultdict(lambda: False)
             for src_class_iri, src_class in self.src_onto.owl_classes:
                 use_in_alignment = self.src_onto.get_owl_object_annotations(src_class, "http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment")
                 if use_in_alignment and str(use_in_alignment[0]).lower() == "false":
