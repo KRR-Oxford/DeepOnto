@@ -165,11 +165,11 @@ class BERTMapPipeline:
         self.ignored_class_index = None  
         if self.global_matching_config.for_oaei:
             self.ignored_class_index = defaultdict(lambda: False)
-            for src_class_iri, src_class in self.src_onto.owl_classes:
+            for src_class_iri, src_class in self.src_onto.owl_classes.items():
                 use_in_alignment = self.src_onto.get_owl_object_annotations(src_class, "http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment")
                 if use_in_alignment and str(use_in_alignment[0]).lower() == "false":
                     self.ignored_class_index[src_class_iri] = True
-            for tgt_class_iri, tgt_class in self.tgt_onto.owl_classes:
+            for tgt_class_iri, tgt_class in self.tgt_onto.owl_classes.items():
                 use_in_alignment = self.tgt_onto.get_owl_object_annotations(tgt_class, "http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment")
                 if use_in_alignment and str(use_in_alignment[0]).lower() == "false":
                     self.ignored_class_index[tgt_class_iri] = True
