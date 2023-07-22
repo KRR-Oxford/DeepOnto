@@ -25,8 +25,7 @@ import enlighten
 
 from deeponto.align.mapping import EntityMapping
 from deeponto.onto import Ontology
-from deeponto.utils import FileUtils, Tokenizer
-from deeponto.utils.decorators import paper
+from deeponto.utils import FileUtils
 from deeponto.align.logmap import run_logmap_repair
 from .mapping_prediction import MappingPredictor
 

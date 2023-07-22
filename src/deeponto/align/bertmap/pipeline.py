@@ -19,12 +19,12 @@ from yacs.config import CfgNode
 import os
 import random
 import enlighten
+from collections import defaultdict
 # import transformers
 
 from deeponto.align.mapping import ReferenceMapping
 from deeponto.onto import Ontology
-from deeponto.utils.decorators import paper
-from deeponto.utils import FileUtils, Tokenizer
+from deeponto.utils import FileUtils
 from deeponto.utils.logging import create_logger
 from .text_semantics import TextSemanticsCorpora
 from .bert_classifier import BERTSynonymClassifier
@@ -160,6 +160,20 @@ class BERTMapPipeline:
 
         # mapping predictions
         self.global_matching_config = self.config.global_matching
+        
+        # build ignored class index for OAEI
+        self.ignored_class_index = None  
+        if self.global_matching_config.for_oaei:
+            self.ignored_class_index = defaultdict(False)
+            for src_class_iri, src_class in self.src_onto.owl_classes:
+                use_in_alignment = self.src_onto.get_owl_object_annotations(src_class, "http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment")
+                if use_in_alignment and str(use_in_alignment[0]).lower() == "false":
+                    self.ignored_class_index[src_class_iri] = True
+            for tgt_class_iri, tgt_class in self.tgt_onto.owl_classes:
+                use_in_alignment = self.tgt_onto.get_owl_object_annotations(tgt_class, "http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment")
+                if use_in_alignment and str(use_in_alignment[0]).lower() == "false":
+                    self.ignored_class_index[tgt_class_iri] = True
+                    
         self.mapping_predictor = MappingPredictor(
             output_path=self.output_path,
             tokenizer_path=self.bert_config.pretrained_path,
@@ -171,7 +185,8 @@ class BERTMapPipeline:
             batch_size_for_prediction=self.bert_config.batch_size_for_prediction,
             logger=self.logger,
             enlighten_manager=self.enlighten_manager,
-            enlighten_status=self.enlighten_status
+            enlighten_status=self.enlighten_status,
+            ignored_class_index=self.ignored_class_index,
         )
         self.mapping_refiner = None
 

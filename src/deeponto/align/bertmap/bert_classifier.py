@@ -20,8 +20,7 @@ from sklearn.metrics import accuracy_score
 import numpy as np
 import random
 
-from deeponto.utils import Tokenizer, FileUtils
-from deeponto.utils.decorators import paper
+from deeponto.utils import Tokenizer
 
 # @paper(
 #     "BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)",

@@ -53,3 +53,4 @@ global_matching:
   num_best_predictions: 10  # the number of best scored mappings preserved in the raw output mappings
   mapping_extension_threshold: 0.9  # \kappa
   mapping_filtered_threshold: 0.9995 # \lambda
+  for_oaei: false

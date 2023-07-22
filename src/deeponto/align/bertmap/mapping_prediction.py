@@ -14,7 +14,7 @@
 
 from __future__ import annotations
 
-from typing import Optional, List, Set, Tuple
+from typing import Optional, List, Set
 from yacs.config import CfgNode
 import os
 from textdistance import levenshtein
@@ -48,6 +48,7 @@ class MappingPredictor:
         num_raw_candidates (int): The maximum number of selected target class candidates for a source class.
         num_best_predictions (int): The maximum number of best scored mappings presevred for a source class.
         batch_size_for_prediction (int): The batch size of class annotation pairs for computing synonym scores.
+        ignored_class_index (dict): OAEI arguemnt, a dictionary that stores the `(class_iri, used_in_alignment)` pairs.
     """
 
     def __init__(
@@ -63,6 +64,7 @@ class MappingPredictor:
         logger: Logger,
         enlighten_manager: enlighten.Manager,
         enlighten_status: enlighten.StatusBar,
+        ignored_class_index: Optional[dict] = None,
     ):
         self.logger = logger
         self.enlighten_manager = enlighten_manager
@@ -82,6 +84,9 @@ class MappingPredictor:
         self.num_best_predictions = num_best_predictions
         self.batch_size_for_prediction = batch_size_for_prediction
         self.output_path = output_path
+        
+        # for the OAEI, adding in check for classes that are not used in alignment
+        self.ignored_class_index = ignored_class_index
 
         self.init_class_mapping = lambda head, tail, score: EntityMapping(head, tail, "<EquivalentTo>", score)
 
@@ -163,8 +168,13 @@ class MappingPredictor:
         src_class_annotations = self.src_annotation_index[src_class_iri]
         # previously wrongly put tokenizer again !!!
         tgt_class_candidates = self.tgt_inverted_annotation_index.idf_select(
-            list(src_class_annotations), pool_size=self.num_raw_candidates
+            list(src_class_annotations), pool_size=len(self.tgt_annotation_index.keys())
         )  # [(tgt_class_iri, idf_score)]
+        # if some classes are set to be ignored, remove them from the candidates
+        if self.ignored_class_index:
+            tgt_class_candidates = [(iri, idf_score) for iri, idf_score in tgt_class_candidates if not self.ignored_class_index[iri]]
+        # select a truncated number of candidates
+        tgt_class_candidates = tgt_class_candidates[:self.num_raw_candidates]
         best_scored_mappings = []
 
         # for string matching: save time if already found string-matched candidates
@@ -294,8 +304,14 @@ class MappingPredictor:
         self.enlighten_status.update(demo="Mapping Prediction")
 
         for i, src_class_iri in enumerate(self.src_annotation_index.keys()):
+            # skip computed classes
             if src_class_iri in mapping_index.keys():
                 self.logger.info(f"[Class {i}] Skip matching {src_class_iri} as already computed.")
+                progress_bar.update()
+                continue
+            # for OAEI
+            if self.ignored_class_index and self.ignored_class_index[src_class_iri]:
+                self.logger.info(f"[Class {i}] Skip matching {src_class_iri} as marked as not used in alignment.")
                 progress_bar.update()
                 continue
             mappings = self.mapping_prediction_for_src_class(src_class_iri)
