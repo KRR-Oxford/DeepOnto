@@ -27,9 +27,9 @@ It also gives the tutorial for how to apply the [OM dataset construction approac
 $\textsf{Bio-ML}$ incorporates **five** ontology pairs for both equivalence and subsumption ontology matching, two of them are based on **Mondo** and three of them are based on **UMLS**. These datasets are constructed with the following steps:
 
 - **Ontology Preprocessing**: Checking ontology integrity, removing deprecated or redundant classes.
-- **Ontology Pruning**: Obtaining a sub-ontology subject to a list of preserved class IRIs. For Mondo ontologies, classes are preserved based on the **reference mappings**; For UMLS ontologies, classes are preserved based on the **semantic types** (see [Ontology Pruning][#ontology-pruning]).
-- **Subsumption Mapping Construction**: Reference subsumption mappings are constructed from the reference equivalence mappings, subject to target class deletion, i.e., if an equivalence mapping is used for constructing a subsumption mapping, its target ontology class will be removed to enforce direct subsumption matching (see [Ontology Pruning][#subsumption-mapping-construction]). 
-- **Candidate Mapping Generation**: To evaluate an OM system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping using different heuristics (see [Ontology Pruning][#candidate-mapping-generation]).
+- **Ontology Pruning**: Obtaining a sub-ontology subject to a list of preserved class IRIs. For Mondo ontologies, classes are preserved based on the **reference mappings**; For UMLS ontologies, classes are preserved based on the **semantic types** (see [Ontology Pruning](#ontology-pruning)).
+- **Subsumption Mapping Construction**: Reference subsumption mappings are constructed from the reference equivalence mappings, subject to target class deletion, i.e., if an equivalence mapping is used for constructing a subsumption mapping, its target ontology class will be removed to enforce direct subsumption matching (see [Ontology Pruning](#subsumption-mapping-construction)). 
+- **Candidate Mapping Generation**: To evaluate an OM system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping using different heuristics (see [Ontology Pruning](#candidate-mapping-generation)).
 - **Locality Module Enrichment** (NEW!):  
 
 These datasets are constructed using the approaches described in [OM Dataset Consturction](#om-dataset-construction).
