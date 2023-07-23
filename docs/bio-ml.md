@@ -75,7 +75,25 @@ train_refs = ReferenceMapping.read_table_mappings(f"{data_dir}/refs_equiv/train.
 results = AlignmentEvaluator.f1(preds, refs, null_reference_mappings=train_refs)
 ```
 
-As for the OAEI 2023 version, some predicted mappings could involve classes that are marked as **not used in alignment**
+As for the OAEI 2023 version, some predicted mappings could involve classes that are marked as **not used in alignment**. Therefore, we need to filter out those mappings before evaluation.
+
+```python
+from deeponto.onto import Ontology
+from deeponto.align.oaei import *
+
+# load the source and target ontologies and  
+# extract classes that are marked as not used in alignment
+src_onto = Ontology("src_onto_file")
+tgt_onto = Ontology("tgt_onto_file")
+ignored_class_index = get_ignored_class_index(src_onto)
+ignored_class_index.update(get_ignored_class_index(tgt_onto))
+
+# filter the predicted mappigns
+preds = remove_ignored_mappings(preds, ignored_class_index)
+
+# then compute the results
+results = AlignmentEvaluator.f1(preds, refs, ...)
+```
 
 
 However, the global matching evaluation is not enough as:

@@ -31,7 +31,7 @@ def get_ignored_class_index(onto: Ontology):
             ignored_class_index[class_iri] = True
     return ignored_class_index
 
-def filter_mappings(mappings: List[EntityMapping], ignored_class_index: dict):
+def remove_ignored_mappings(mappings: List[EntityMapping], ignored_class_index: dict):
     """Filter prediction mappings that involve classes to be ignored.
     """
     results = []
