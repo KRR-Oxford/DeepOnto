@@ -13,6 +13,7 @@ Security in case of vulnerabilities. -->
 ### Added
 
 - [X] **Add** specific check of `use_in_alignment` annotation in BERTMap for the OAEI.
+- [X] **Add** OAEI utilities at `deeponto.align.oaei`.
 ### Fixed
 
 - [X] **Fix** BERTMap error and add corresponding warning when an input ontology has no sibling class group, related to Issue #10.
