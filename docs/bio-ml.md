@@ -1,4 +1,4 @@
-# Bio-ML Sepecifications
+# Bio-ML Specifications
 
 !!! credit "paper"
 
