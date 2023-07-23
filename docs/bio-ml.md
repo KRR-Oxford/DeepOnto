@@ -30,11 +30,9 @@ $\textsf{Bio-ML}$ incorporates **five** ontology pairs for both equivalence and 
 - **Ontology Pruning**: Obtaining a sub-ontology subject to a list of preserved class IRIs. For Mondo ontologies, classes are preserved based on the **reference mappings**; For UMLS ontologies, classes are preserved based on the **semantic types** (see [Ontology Pruning](#ontology-pruning)).
 - **Subsumption Mapping Construction**: Reference subsumption mappings are constructed from the reference equivalence mappings, subject to target class deletion, i.e., if an equivalence mapping is used for constructing a subsumption mapping, its target ontology class will be removed to enforce direct subsumption matching (see [Ontology Pruning](#subsumption-mapping-construction)). 
 - **Candidate Mapping Generation**: To evaluate an OM system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping using different heuristics (see [Ontology Pruning](#candidate-mapping-generation)).
-- **Locality Module Enrichment** (NEW!):  
+- **Locality Module Enrichment** (NEW!): In the OAEI 2023 version, we enrich the pruned ontologies with classes that serve as context (and marked as **not used in alignment**) for the existing classes, using the **locality module** technique ([code](https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java)). OM systems can utilise these additional classes as auxiliary information while omitting them in the alignment process; the final evaluation will omit these additional classes as well.
 
-These datasets are constructed using the approaches described in [OM Dataset Consturction](#om-dataset-construction).
-
-
+## Links
 
 - **Dataset Download** (CC BY 4.0 International):
     - **OAEI 2023**: to be released
@@ -46,6 +44,8 @@ These datasets are constructed using the approaches described in [OM Dataset Con
 
 
 ## Evaluation Protocol
+
+
 
 ### Global Matching
 
