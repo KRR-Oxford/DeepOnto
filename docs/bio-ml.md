@@ -30,7 +30,7 @@ $\textsf{Bio-ML}$ incorporates **five** ontology pairs for both equivalence and 
 - **Ontology Pruning**: Obtaining a sub-ontology subject to a list of preserved class IRIs. For Mondo ontologies, classes are preserved based on the **reference mappings**; For UMLS ontologies, classes are preserved based on the **semantic types** (see [Ontology Pruning](#ontology-pruning)).
 - **Subsumption Mapping Construction**: Reference subsumption mappings are constructed from the reference equivalence mappings, subject to target class deletion, i.e., if an equivalence mapping is used for constructing a subsumption mapping, its target ontology class will be removed to enforce direct subsumption matching (see [Ontology Pruning](#subsumption-mapping-construction)). 
 - **Candidate Mapping Generation**: To evaluate an OM system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping using different heuristics (see [Ontology Pruning](#candidate-mapping-generation)).
-- **Locality Module Enrichment** (NEW!): In the OAEI 2023 version, we enrich the pruned ontologies with classes that serve as context (and marked as **not used in alignment**) for the existing classes, using the **locality module** technique ([code](https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java)). OM systems can utilise these additional classes as auxiliary information while omitting them in the alignment process; the final evaluation will omit these additional classes as well.
+- **Locality Module Enrichment** (NEW :star2:): In the OAEI 2023 version, we enrich the pruned ontologies with classes that serve as context (and marked as **not used in alignment**) for the existing classes, using the **locality module** technique ([code](https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java)). OM systems can utilise these additional classes as auxiliary information while omitting them in the alignment process; the final evaluation will omit these additional classes as well.
 
 ## Links
 
@@ -43,13 +43,55 @@ $\textsf{Bio-ML}$ incorporates **five** ontology pairs for both equivalence and 
 - **Official OAEI Page**: *<https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html>*
 
 
-## Evaluation Protocol
+## Evaluation Framework
 
-
-
+Our evaluation protocol concerns two scenarios for OM: **global matching** for overall assessment and **local ranking** for partial assessment.
 ### Global Matching
 
+As an overall assessment, given a **complete** set of reference mappings, an OM system is expected to compute a set of *true* mappings and compare against the reference mappings using Precision, Recall, and F-score metrics. With $\textsf{DeepOnto}$, the evaluation can be performed using the following code. 
+
+```python
+from deeponto.align.evaluation import AlignmentEvaluator
+from deeponto.align.mapping import ReferenceMapping, EntityMapping
+
+# load predicted mappings and reference mappings
+preds = EntityMapping.read_table_mappings(f"{experiment_dir}/bertmap/match/repaired_mappings.tsv")
+refs = ReferenceMapping.read_table_mappings(f"{data_dir}/refs_equiv/full.tsv")
+# compute the precision, recall and F-score metrics
+results = AlignmentEvaluator.f1(preds, refs)
+print(results)
+```
+
+`#!console Output:`
+:   &#32;
+    ```python
+    {'P': 0.887, 'R': 0.879, 'F1': 0.883}
+    ```
+
+For the semi-supervised setting where a set of training mappings is provided, the training set should also be loaded and set as **ignored** (neither positive nor negative) during evaluation:
+
+```python
+train_refs = ReferenceMapping.read_table_mappings(f"{data_dir}/refs_equiv/train.tsv")
+results = AlignmentEvaluator.f1(preds, refs, null_reference_mappings=train_refs)
+```
+
+As for the OAEI 2023 version, some predicted mappings could involve classes that are marked as **not used in alignment**
+
+
+However, the global matching evaluation is not enough as:
+
+- The scores will be biased towards high-precision, low-recall OM systems if the set of reference mappings is incomplete. 
+- For efficient OM system development and debugging, an intermediate evaluation is required.
+
+Therefore, the ranking-based evaluation protocol is present as follows.
+
 ### Local Ranking
+
+An OM system is also expected to **distinguish the reference mapping** among a set of candidate mappings and the performance can be reflected in Hits@K and MRR metrics. 
+
+!!! warning 
+
+    The reference subsumption mappings are inherently incomplete, so only the ranking metircs are adopted in evaluating system performance in subsumption matching.
 
 ## OAEI 2022 Version
 ### Data Statistics

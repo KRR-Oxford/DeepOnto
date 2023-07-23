@@ -65,6 +65,7 @@ nav:
           - LogMap: deeponto/align/logmap/index.md
           - BERTSubs (Inter): deeponto/align/bertsubs/index.md
           - Evaluation: deeponto/align/evaluation.md
+          - OAEI Utilities: deeponto/align/oaei.md
         - Subsumption Inference:
           - BERTSubs (Intra): deeponto/subs/bertsubs/index.md
         - Language Model Probing:
