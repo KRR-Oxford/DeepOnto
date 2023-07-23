@@ -50,11 +50,13 @@ Our evaluation protocol concerns two scenarios for OM: **global matching** for o
 
 As an overall assessment, given a **complete** set of reference mappings, an OM system is expected to compute a set of *true* mappings and compare against the reference mappings using Precision, Recall, and F-score metrics. With $\textsf{DeepOnto}$, the evaluation can be performed using the following code. 
 
+> Download a <a href="../assets/example_reference_mappings.tsv" download>small fragment</a> to see the format of the prediction and reference mapping files. 
+
 ```python
 from deeponto.align.evaluation import AlignmentEvaluator
 from deeponto.align.mapping import ReferenceMapping, EntityMapping
 
-# load predicted mappings and reference mappings
+# load prediction mappings and reference mappings
 preds = EntityMapping.read_table_mappings(f"{experiment_dir}/bertmap/match/repaired_mappings.tsv")
 refs = ReferenceMapping.read_table_mappings(f"{data_dir}/refs_equiv/full.tsv")
 # compute the precision, recall and F-score metrics
@@ -75,7 +77,7 @@ train_refs = ReferenceMapping.read_table_mappings(f"{data_dir}/refs_equiv/train.
 results = AlignmentEvaluator.f1(preds, refs, null_reference_mappings=train_refs)
 ```
 
-As for the OAEI 2023 version, some predicted mappings could involve classes that are marked as **not used in alignment**. Therefore, we need to filter out those mappings before evaluation.
+As for the OAEI 2023 version, some prediction mappings could involve classes that are marked as **not used in alignment**. Therefore, we need to filter out those mappings before evaluation.
 
 ```python
 from deeponto.onto import Ontology
@@ -88,13 +90,12 @@ tgt_onto = Ontology("tgt_onto_file")
 ignored_class_index = get_ignored_class_index(src_onto)
 ignored_class_index.update(get_ignored_class_index(tgt_onto))
 
-# filter the predicted mappigns
+# filter the prediction mappigns
 preds = remove_ignored_mappings(preds, ignored_class_index)
 
 # then compute the results
 results = AlignmentEvaluator.f1(preds, refs, ...)
 ```
-
 
 However, the global matching evaluation is not enough as:
 
@@ -112,7 +113,6 @@ An OM system is also expected to **distinguish the reference mapping** among a s
     The reference subsumption mappings are inherently incomplete, so only the ranking metircs are adopted in evaluating system performance in subsumption matching.
 
 ## OAEI 2022 Version
-### Data Statistics
 
 Statistics for the equivalence matching set-ups. In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance*"*, and *"Neoplastic Process"* in UMLS, respectively.
 
