@@ -733,8 +733,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#deeponto.align.oaei.filter_mappings" class="md-nav__link">
-    filter_mappings()
+  <a href="#deeponto.align.oaei.remove_ignored_mappings" class="md-nav__link">
+    remove_ignored_mappings()
   </a>
   
 </li>
@@ -1056,8 +1056,8 @@
 
 
 
-<h2 id="deeponto.align.oaei.filter_mappings" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">filter_mappings</span><span class="p">(</span><span class="n">mappings</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="p">)</span></code>
+<h2 id="deeponto.align.oaei.remove_ignored_mappings" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">remove_ignored_mappings</span><span class="p">(</span><span class="n">mappings</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1076,7 +1076,7 @@
 <span class="normal">39</span>
 <span class="normal">40</span>
 <span class="normal">41</span>
-<span class="normal">42</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">filter_mappings</span><span class="p">(</span><span class="n">mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span> <span class="n">ignored_class_index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="normal">42</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">remove_ignored_mappings</span><span class="p">(</span><span class="n">mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span> <span class="n">ignored_class_index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter prediction mappings that involve classes to be ignored.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>

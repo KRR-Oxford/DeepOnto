@@ -1149,7 +1149,23 @@
 <div class="highlight"><pre><span></span><code><span class="n">train_refs</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/refs_equiv/train.tsv&quot;</span><span class="p">)</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">,</span> <span class="n">null_reference_mappings</span><span class="o">=</span><span class="n">train_refs</span><span class="p">)</span>
 </code></pre></div>
-<p>As for the OAEI 2023 version, some predicted mappings could involve classes that are marked as <strong>not used in alignment</strong></p>
+<p>As for the OAEI 2023 version, some predicted mappings could involve classes that are marked as <strong>not used in alignment</strong>. Therefore, we need to filter out those mappings before evaluation.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
+<span class="kn">from</span> <span class="nn">deeponto.align.oaei</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c1"># load the source and target ontologies and  </span>
+<span class="c1"># extract classes that are marked as not used in alignment</span>
+<span class="n">src_onto</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;src_onto_file&quot;</span><span class="p">)</span>
+<span class="n">tgt_onto</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;tgt_onto_file&quot;</span><span class="p">)</span>
+<span class="n">ignored_class_index</span> <span class="o">=</span> <span class="n">get_ignored_class_index</span><span class="p">(</span><span class="n">src_onto</span><span class="p">)</span>
+<span class="n">ignored_class_index</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">get_ignored_class_index</span><span class="p">(</span><span class="n">tgt_onto</span><span class="p">))</span>
+
+<span class="c1"># filter the predicted mappigns</span>
+<span class="n">preds</span> <span class="o">=</span> <span class="n">remove_ignored_mappings</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="p">)</span>
+
+<span class="c1"># then compute the results</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</code></pre></div>
 <p>However, the global matching evaluation is not enough as:</p>
 <ul>
 <li>The scores will be biased towards high-precision, low-recall OM systems if the set of reference mappings is incomplete. </li>
