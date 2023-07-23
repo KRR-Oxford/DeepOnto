@@ -6,31 +6,31 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="DeepOnto aims to provide implemented deep learning models and an evaluation platform for various ontology engineering purposes.">
-      
       
         <meta name="author" content="Yuan He (KRR-Oxford)">
       
       
-        <link rel="canonical" href="https://krr-oxford.github.io/DeepOnto/">
+        <link rel="canonical" href="https://krr-oxford.github.io/DeepOnto/deeponto/align/oaei/">
       
       
+        <link rel="prev" href="../evaluation/">
       
-        <link rel="next" href="ontology/">
       
-      <link rel="icon" href="images/favicon_package/favicon.ico">
+        <link rel="next" href="../../subs/bertsubs/">
+      
+      <link rel="icon" href="../../../images/favicon_package/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.19">
     
     
       
-        <title>DeepOnto - DeepOnto</title>
+        <title>OAEI Utilities - DeepOnto</title>
       
     
     
-      <link rel="stylesheet" href="assets/stylesheets/main.eebd395e.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.eebd395e.min.css">
       
         
-        <link rel="stylesheet" href="assets/stylesheets/palette.ecc896b0.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ecc896b0.min.css">
       
       
 
@@ -46,11 +46,11 @@
       
     
     
-      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="stylesheets/extra.css">
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#about" class="md-skip">
+        <a href="#deeponto.align.oaei.get_ignored_class_index" class="md-skip">
           Skip to content
         </a>
       
@@ -91,9 +91,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="." title="DeepOnto" class="md-header__button md-logo" aria-label="DeepOnto" data-md-component="logo">
+    <a href="../../.." title="DeepOnto" class="md-header__button md-logo" aria-label="DeepOnto" data-md-component="logo">
       
-  <img src="images/favicon_package/safari-pinned-tab.svg" alt="logo">
+  <img src="../../../images/favicon_package/safari-pinned-tab.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              DeepOnto
+              OAEI Utilities
             
           </span>
         </div>
@@ -223,14 +223,14 @@
   <!-- Site title -->
   <label class="md-nav__title" for="__drawer">
     <a
-      href="."
+      href="../../.."
       title="DeepOnto"
       class="md-nav__button md-logo"
       aria-label="DeepOnto"
       data-md-component="logo"
     >
       
-  <img src="images/favicon_package/safari-pinned-tab.svg" alt="logo">
+  <img src="../../../images/favicon_package/safari-pinned-tab.svg" alt="logo">
 
     </a>
     <!-- DeepOnto -->
@@ -260,18 +260,16 @@
 
   
   
-    
-  
   
     
       
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_1" >
       
       
       
@@ -280,7 +278,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="true">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_1_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_1">
           <span class="md-nav__icon md-icon"></span>
           GET STARTED
@@ -291,137 +289,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Introduction
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="." class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
         Introduction
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#about" class="md-nav__link">
-    About
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    Installation
-  </a>
-  
-    <nav class="md-nav" aria-label="Installation">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#owlapi" class="md-nav__link">
-    OWLAPI
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#pytorch" class="md-nav__link">
-    Pytorch
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#install-from-pypi" class="md-nav__link">
-    Install from PyPI
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#install-from-git-repository" class="md-nav__link">
-    Install from Git Repository
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#main-features" class="md-nav__link">
-    Main Features
-  </a>
-  
-    <nav class="md-nav" aria-label="Main Features">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ontology-processing" class="md-nav__link">
-    Ontology Processing
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#tools-and-resources" class="md-nav__link">
-    Tools and Resources
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#license" class="md-nav__link">
-    License
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#citation" class="md-nav__link">
-    Citation
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#relevant-publications" class="md-nav__link">
-    Relevant Publications
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -433,7 +305,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ontology/" class="md-nav__link">
+      <a href="../../../ontology/" class="md-nav__link">
         Load an ontology
       </a>
     </li>
@@ -447,7 +319,7 @@
   
   
     <li class="md-nav__item">
-      <a href="changelog/" class="md-nav__link">
+      <a href="../../../changelog/" class="md-nav__link">
         Changelog
       </a>
     </li>
@@ -498,7 +370,7 @@
   
   
     <li class="md-nav__item">
-      <a href="verbaliser/" class="md-nav__link">
+      <a href="../../../verbaliser/" class="md-nav__link">
         Verbalise ontology concepts
       </a>
     </li>
@@ -512,7 +384,7 @@
   
   
     <li class="md-nav__item">
-      <a href="bertmap/" class="md-nav__link">
+      <a href="../../../bertmap/" class="md-nav__link">
         Ontology matching with BERTMap & BERTMapLt
       </a>
     </li>
@@ -526,7 +398,7 @@
   
   
     <li class="md-nav__item">
-      <a href="bio-ml/" class="md-nav__link">
+      <a href="../../../bio-ml/" class="md-nav__link">
         Bio-ML specifications
       </a>
     </li>
@@ -540,7 +412,7 @@
   
   
     <li class="md-nav__item">
-      <a href="bertsubs/" class="md-nav__link">
+      <a href="../../../bertsubs/" class="md-nav__link">
         Subsumption inference with BERTSubs
       </a>
     </li>
@@ -554,7 +426,7 @@
   
   
     <li class="md-nav__item">
-      <a href="ontolama/" class="md-nav__link">
+      <a href="../../../ontolama/" class="md-nav__link">
         OntoLAMA specifications
       </a>
     </li>
@@ -574,16 +446,18 @@
 
   
   
+    
+  
   
     
       
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
       
       
       
@@ -592,7 +466,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
           PACKAGE REFERENCE
@@ -632,7 +506,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/onto/ontology/" class="md-nav__link">
+      <a href="../../onto/ontology/" class="md-nav__link">
         Ontology
       </a>
     </li>
@@ -646,7 +520,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/onto/reasoning/" class="md-nav__link">
+      <a href="../../onto/reasoning/" class="md-nav__link">
         Reasoning
       </a>
     </li>
@@ -660,7 +534,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/onto/pruning/" class="md-nav__link">
+      <a href="../../onto/pruning/" class="md-nav__link">
         Pruning
       </a>
     </li>
@@ -674,7 +548,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/onto/verbalisation/" class="md-nav__link">
+      <a href="../../onto/verbalisation/" class="md-nav__link">
         Verbalisation
       </a>
     </li>
@@ -688,7 +562,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/onto/projection/" class="md-nav__link">
+      <a href="../../onto/projection/" class="md-nav__link">
         Projection
       </a>
     </li>
@@ -702,7 +576,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/onto/normalisation/" class="md-nav__link">
+      <a href="../../onto/normalisation/" class="md-nav__link">
         Normalisation
       </a>
     </li>
@@ -721,14 +595,16 @@
               
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
       
       
       
@@ -737,7 +613,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
         <label class="md-nav__title" for="__nav_3_2">
           <span class="md-nav__icon md-icon"></span>
           Ontology Alignment
@@ -750,7 +626,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/align/mapping/" class="md-nav__link">
+      <a href="../mapping/" class="md-nav__link">
         Mapping
       </a>
     </li>
@@ -764,7 +640,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/align/bertmap/" class="md-nav__link">
+      <a href="../bertmap/" class="md-nav__link">
         BERTMap
       </a>
     </li>
@@ -778,7 +654,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/align/logmap/" class="md-nav__link">
+      <a href="../logmap/" class="md-nav__link">
         LogMap
       </a>
     </li>
@@ -792,7 +668,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/align/bertsubs/" class="md-nav__link">
+      <a href="../bertsubs/" class="md-nav__link">
         BERTSubs (Inter)
       </a>
     </li>
@@ -806,7 +682,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/align/evaluation/" class="md-nav__link">
+      <a href="../evaluation/" class="md-nav__link">
         Evaluation
       </a>
     </li>
@@ -818,11 +694,55 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="deeponto/align/oaei/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          OAEI Utilities
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         OAEI Utilities
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#deeponto.align.oaei.get_ignored_class_index" class="md-nav__link">
+    get_ignored_class_index()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deeponto.align.oaei.filter_mappings" class="md-nav__link">
+    filter_mappings()
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -868,7 +788,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/subs/bertsubs/" class="md-nav__link">
+      <a href="../../subs/bertsubs/" class="md-nav__link">
         BERTSubs (Intra)
       </a>
     </li>
@@ -916,7 +836,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/probe/ontolama/" class="md-nav__link">
+      <a href="../../probe/ontolama/" class="md-nav__link">
         OntoLAMA
       </a>
     </li>
@@ -964,7 +884,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/utils/text_utils/" class="md-nav__link">
+      <a href="../../utils/text_utils/" class="md-nav__link">
         Text Utilities
       </a>
     </li>
@@ -978,7 +898,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/utils/file_utils/" class="md-nav__link">
+      <a href="../../utils/file_utils/" class="md-nav__link">
         File Utilities
       </a>
     </li>
@@ -992,7 +912,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/utils/logging/" class="md-nav__link">
+      <a href="../../utils/logging/" class="md-nav__link">
         Logging
       </a>
     </li>
@@ -1006,7 +926,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/utils/data_utils/" class="md-nav__link">
+      <a href="../../utils/data_utils/" class="md-nav__link">
         Data Utilities
       </a>
     </li>
@@ -1020,7 +940,7 @@
   
   
     <li class="md-nav__item">
-      <a href="deeponto/utils/decorators/" class="md-nav__link">
+      <a href="../../utils/decorators/" class="md-nav__link">
         Decorators
       </a>
     </li>
@@ -1060,188 +980,135 @@
   
 
 
-  <h1>Introduction</h1>
+  <h1>OAEI Utilities</h1>
 
-<style>
-  .md-typeset h1,
-  .md-content__button {
-    display: none;
-  }
-</style>
+<p>This page concerns utility functions used in the OAEI.</p>
 
-<!-- BEGIN INCLUDE ../README.md -->
-<!---
-Copyright 2021 Yuan He (KRR-Oxford). All rights reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+<div class="doc doc-object doc-module">
 
-    http://www.apache.org/licenses/LICENSE-2.0
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--->
 
-<p align="center">
-  <a href="https://krr-oxford.github.io/DeepOnto/">
-    <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/icon.svg">
-  </a>
-</p>
+  <div class="doc doc-contents first">
 
-<p align="center">
-    <a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/LICENSE">
-        <img alt="license" src="https://img.shields.io/github/license/KRR-Oxford/DeepOnto">
-    </a>
-    <a href="https://krr-oxford.github.io/DeepOnto/">
-        <img alt="docs" src="https://img.shields.io/badge/website-online-informational">
-    </a>
-    <a href="https://pypi.org/project/deeponto/">
-        <img alt="pypi" src="https://img.shields.io/pypi/v/deeponto">
-    </a>
-</p>
+  
 
-<p align="center">
-  A package for ontology engineering with deep learning. 
-</p>
+  <div class="doc doc-children">
 
-<p><strong>News</strong> <img alt="📰" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@14.1.2/assets/svg/1f4f0.svg" title=":newspaper:" /></p>
-<ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> OAEI preparation and bug fixing. (<strong>unreleased</strong>)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Bug fixing for BERTMap (stuck at reasoning) and ontology alignment evaluation. (<strong>v0.8.3</strong>)</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Deploy <code>deeponto.onto.OntologyNormaliser</code> and <code>deeponto.onto.OntologyProjector</code> (<strong>v0.8.0</strong>).</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Upload Java dependencies directly and remove mowl from pip dependencies (<strong>v0.7.5</strong>).</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Deploy the <code>deeponto.subs.bertsubs</code> and <code>deeponto.onto.pruning</code> modules (<strong>v0.7.0</strong>).</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Deploy the <code>deeponto.probe.ontolama</code> and <code>deeponto.onto.verbalisation</code> modules (<strong>v0.6.0</strong>). </li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Rebuild the whole package based on the OWLAPI; remove owlready2 from the essential dependencies (from <strong>v0.5.x</strong>). </li>
-</ul>
-<p>The complete changelog is available at: <a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/docs/changelog.md">repository</a> or <a href="https://krr-oxford.github.io/DeepOnto/changelog/">website</a>.</p>
-<h2 id="about">About</h2>
-<p><span class="arithmatex">\(\textsf{DeepOnto}\)</span> aims to provide tools for implementing deep learning models, constructing resources, and conducting evaluation
-for various ontology engineering purposes.</p>
-<ul>
-<li><strong>Documentation</strong>: <em><a href="https://krr-oxford.github.io/DeepOnto/">https://krr-oxford.github.io/DeepOnto/</a></em>.</li>
-<li><strong>Github Repository</strong>: <em><a href="https://github.com/KRR-Oxford/DeepOnto">https://github.com/KRR-Oxford/DeepOnto</a></em>. </li>
-<li><strong>PyPI</strong>: <em><a href="https://pypi.org/project/deeponto/">https://pypi.org/project/deeponto/</a></em>. </li>
-</ul>
-<h2 id="installation">Installation</h2>
-<h3 id="owlapi">OWLAPI</h3>
-<p><span class="arithmatex">\(\textsf{DeepOnto}\)</span> relies on <a href="http://owlapi.sourceforge.net/">OWLAPI</a> version 4 (written in Java) for ontologies. </p>
-<p>We follow what has been implemented in <a href="https://mowl.readthedocs.io/en/latest/index.html">mOWL</a> that uses <a href="https://jpype.readthedocs.io/en/latest/">JPype</a> to bridge Python and Java Virtual Machine (JVM). </p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>In the previous releases, the OWLAPI integration only worked on Mac OS and Linux.
-The system restriction should be lifted now, please make a query if the incompatibility still exists.</p>
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="deeponto.align.oaei.get_ignored_class_index" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_ignored_class_index</span><span class="p">(</span><span class="n">onto</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Get an index for filtering classes that are marked as not used in alignment.</p>
+<p>This is indicated by the special class annotation <code>use_in_alignment</code> with the following IRI: 
+    http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/deeponto/align/oaei.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
+<span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_ignored_class_index</span><span class="p">(</span><span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get an index for filtering classes that are marked as not used in alignment.</span>
+
+<span class="sd">    This is indicated by the special class annotation `use_in_alignment` with the following IRI: </span>
+<span class="sd">        http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">ignored_class_index</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">class_iri</span><span class="p">,</span> <span class="n">class_obj</span> <span class="ow">in</span> <span class="n">onto</span><span class="o">.</span><span class="n">owl_classes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">use_in_alignment</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_annotations</span><span class="p">(</span><span class="n">class_obj</span><span class="p">,</span> <span class="s2">&quot;http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">use_in_alignment</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">use_in_alignment</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
+            <span class="n">ignored_class_index</span><span class="p">[</span><span class="n">class_iri</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="n">ignored_class_index</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
 </div>
-<h3 id="pytorch">Pytorch</h3>
-<p><span class="arithmatex">\(\textsf{DeepOnto}\)</span> relies on <a href="https://pytorch.org/">Pytorch</a> for deep learning framework.</p>
-<p>Configure Pytorch installation with CUDA support using, for example:</p>
-<div class="highlight"><pre><span></span><code>pip3<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>torchvision<span class="w"> </span>torchaudio<span class="w"> </span>--extra-index-url<span class="w"> </span>https://download.pytorch.org/whl/cu116
-</code></pre></div>
-<p>Basic usage of Ontology does not rely on GPUs, but for efficient deep learning model training, please make sure
-<code>torch.cuda.is_available()</code> returns <code>True</code>.</p>
-<h3 id="install-from-pypi">Install from PyPI</h3>
-<p>Other dependencies are specified in <code>setup.cfg</code> and <code>requirements.txt</code> which are supposed to be installed along with <code>deeponto</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># requiring Python&gt;=3.8</span>
-pip<span class="w"> </span>install<span class="w"> </span>deeponto
-</code></pre></div>
-<h3 id="install-from-git-repository">Install from Git Repository</h3>
-<p>To install the latest, probably unreleased version of deeponto, you can directly install from the repository. </p>
-<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/KRR-Oxford/DeepOnto.git
-</code></pre></div>
-<h2 id="main-features">Main Features</h2>
-<p align="center">
-  <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/deeponto.svg" height="500" style="width: 90%;">
-  <p align="center">Figure: Illustration of DeepOnto's architecture.</p>
-</p>
 
-<h3 id="ontology-processing">Ontology Processing</h3>
-<p>The base class of <span class="arithmatex">\(\textsf{DeepOnto}\)</span> is <a class="autorefs autorefs-internal" href="deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a>, which serves as the main entry point for introducing the OWLAPI's features, such as accessing ontology entities, querying for ancestor/descendent (and parent/child) concepts, deleting entities, modifying axioms, and retrieving annotations. See quick usage at <a href="https://krr-oxford.github.io/DeepOnto/ontology/">load an ontology</a>. Along with these basic functionalities, several essential sub-modules are built to enhance the core module, including the following:</p>
-<ul>
-<li>
-<p><strong>Ontology Reasoning</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/reasoning/#deeponto.onto.ontology.OntologyReasoner"><code>OntologyReasoner</code></a>): Each instance of <span class="arithmatex">\(\textsf{DeepOnto}\)</span> has a reasoner as its attribute. It is used for conducting reasoning activities, such as obtaining inferred subsumers and subsumees, as well as checking entailment and consistency. </p>
-</li>
-<li>
-<p><strong>Ontology Pruning</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/pruning/#deeponto.onto.pruning.OntologyPruner"><code>OntologyPruner</code></a>): This sub-module aims to incorporate pruning algorithms for extracting a sub-ontology from an input ontology. We currently implement the one proposed in [2], which introduces subsumption axioms between the asserted (atomic or complex) parents and children of the class targeted for removal.</p>
-</li>
-<li>
-<p><strong>Ontology Verbalisation</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/verbalisation/#deeponto.onto.verbalisation.OntologyVerbaliser"><code>OntologyVerbaliser</code></a>): The recursive concept verbaliser proposed in \cite{he2023ontolama} is implemented here, which can automatically transform a complex logical expression into a textual sentence based on entity names or labels available in the ontology. See <a href="https://krr-oxford.github.io/DeepOnto/verbaliser">verbalising ontology concepts</a>.</p>
-</li>
-<li>
-<p><strong>Ontology Projection</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/projection/#deeponto.onto.projection.OntologyProjector"><code>OntologyProjector</code></a>): The projection algorithm adopted in the OWL2Vec* ontology embeddings is implemented here, which is to transform an ontology's TBox into a set of RDF triples. The relevant code is modified from the mOWL library.</p>
-</li>
-<li>
-<p><strong>Ontology Normalisation</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/normalisation/#deeponto.onto.normalisation.OntologyNormaliser"><code>OntologyNormaliser</code></a>): The implemented <span class="arithmatex">\(\mathcal{EL}\)</span> normalisation is also modified from the mOWL library, which is used to transform TBox axioms into normalised forms to support, e.g., geometric ontology embeddings.</p>
-</li>
-</ul>
-<h3 id="tools-and-resources">Tools and Resources</h3>
-<p>Individual tools and resources are implemented based on the core ontology processing module. Currently, <span class="arithmatex">\(\textsf{DeepOnto}\)</span> supports the following:</p>
-<ul>
-<li>
-<p><strong>BERTMap</strong> [1] is a BERT-based <em>ontology matching</em> (OM) system originally developed in <a href="https://github.com/KRR-Oxford/BERTMap">repo</a> but is now maintained in <span class="arithmatex">\(\textsf{DeepOnto}\)</span>. See <a href="https://krr-oxford.github.io/DeepOnto/bertmap/">ontology matching with BERTMap &amp; BERTMapLt</a>.</p>
-</li>
-<li>
-<p><strong>Bio-ML</strong> [2] is an OM resource that has been used in the <a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/">Bio-ML track of the OAEI</a>. See <a href="https://krr-oxford.github.io/DeepOnto/bio-ml/">bio-ML specifications</a>.</p>
-</li>
-<li>
-<p><strong>BERTSubs</strong> [3] is a system for ontology subsumption prediction. We have transformed its original <a href="https://gitlab.com/chen00217/bert_subsumption">experimental code</a> into this project. See <a href="https://krr-oxford.github.io/DeepOnto/bertsubs/">subsumption prediction with BERTSubs</a>.</p>
-</li>
-<li>
-<p><strong>OntoLAMA</strong> [4] is a set of language model probing datasets for ontology subsumption inference. See <a href="https://krr-oxford.github.io/DeepOnto/ontolama">OntoLAMA specifications</a> for the use of the datasets and the prompt-based probing approach.</p>
-</li>
-</ul>
-<h2 id="license">License</h2>
-<div class="admonition license">
-<p class="admonition-title">License</p>
-<p>Copyright 2021-2023 Yuan He.
-Copyright 2023 Yuan He, Jiaoyan Chen.
-All rights reserved.</p>
-<p>Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at <em><a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></em></p>
-<p>Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.</p>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="deeponto.align.oaei.filter_mappings" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">filter_mappings</span><span class="p">(</span><span class="n">mappings</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Filter prediction mappings that involve classes to be ignored.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/deeponto/align/oaei.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">filter_mappings</span><span class="p">(</span><span class="n">mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span> <span class="n">ignored_class_index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter prediction mappings that involve classes to be ignored.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mappings</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ignored_class_index</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">head</span><span class="p">]</span> <span class="ow">or</span> <span class="n">ignored_class_index</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">tail</span><span class="p">]:</span>
+            <span class="k">continue</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
 </div>
-<h2 id="citation">Citation</h2>
-<p>The preprint of our system paper for <span class="arithmatex">\(\textsf{DeepOnto}\)</span> is current available at <a href="https://arxiv.org/abs/2307.03067">arxiv</a>.</p>
-<p><em>Yuan He, Jiaoyan Chen, Hang Dong, Ian Horrocks, Carlo Allocca, Taehun Kim, and Brahmananda Sapkota.</em> <strong>DeepOnto: A Python Package for Ontology Engineering with Deep Learning.</strong> arXiv preprint arXiv:2307.03067 (2023).</p>
-<div class="highlight"><pre><span></span><code>@article{he2023deeponto,
-  title={DeepOnto: A Python Package for Ontology Engineering with Deep Learning},
-  author={He, Yuan and Chen, Jiaoyan and Dong, Hang and Horrocks, Ian and Allocca, Carlo and Kim, Taehun and Sapkota, Brahmananda},
-  journal={arXiv preprint arXiv:2307.03067},
-  year={2023}
-}
-</code></pre></div>
-<h2 id="relevant-publications">Relevant Publications</h2>
-<ul>
-<li>[1] <em>Yuan He‚ Jiaoyan Chen‚ Denvar Antonyrajah and Ian Horrocks.</em> <strong>BERTMap: A BERT−Based Ontology Alignment System</strong>. In Proceedings of 36th AAAI Conference on Artificial Intelligence (AAAI-2022). /<a href="https://arxiv.org/abs/2112.02682">arxiv</a>/ /<a href="https://ojs.aaai.org/index.php/AAAI/article/view/20510">aaai</a>/  <a name="bertmap_paper"></a></li>
-<li>[2] <em>Yuan He‚ Jiaoyan Chen‚ Hang Dong, Ernesto Jiménez-Ruiz, Ali Hadian and Ian Horrocks.</em> <strong>Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching</strong>. The 21st International Semantic Web Conference (ISWC-2022, <strong>Best Resource Paper Candidate</strong>). /<a href="https://arxiv.org/abs/2205.03447">arxiv</a>/ /<a href="https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33">iswc</a>/  <a name="bioml_paper"></a></li>
-<li>[3] <em>Jiaoyan Chen, Yuan He, Yuxia Geng, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.</em> <strong>Contextual Semantic Embeddings for Ontology Subsumption Prediction</strong>. World Wide Web Journal （WWWJ-2023). /<a href="https://arxiv.org/abs/2202.09791">arxiv</a>/ /<a href="https://link.springer.com/article/10.1007/s11280-023-01169-9">wwwj</a>/  <a name="bertsubs_paper"></a></li>
-<li>[4] <em>Yuan He‚ Jiaoyan Chen, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.</em> <strong>Language Model Analysis for Ontology Subsumption Inference</strong>. Findings of the Association for Computational Linguistics (ACL-2023). /<a href="https://arxiv.org/abs/2302.06761">arxiv</a>/ /<a href="https://aclanthology.org/2023.findings-acl.213/">acl</a>/ <a name="ontolama_paper"></a></li>
-</ul>
-<hr />
-<p>Please report any bugs or queries by raising a GitHub issue or sending emails to the maintainers (Yuan He or Jiaoyan Chen) through:</p>
-<blockquote>
-<p>first_name.last_name@cs.ox.ac.uk</p>
-</blockquote>
-<!-- END INCLUDE -->
+
+
+
+  </div>
+
+  </div>
+
+</div>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 24, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 23, 2023</span>
       
         <br>
         Created:
-        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">January 11, 2023</span>
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 23, 2023</span>
       
     
   </small>
@@ -1346,13 +1213,13 @@ limitations under the License.</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.sections", "toc.integrate", "navigation.top", "header.autohide", "toc.follow", "content.code.copy"], "search": "assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.sections", "toc.integrate", "navigation.top", "header.autohide", "toc.follow", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="assets/javascripts/bundle.220ee61c.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.220ee61c.min.js"></script>
       
         
-          <script src="javascripts/mathjax.js"></script>
+          <script src="../../../javascripts/mathjax.js"></script>
         
       
         

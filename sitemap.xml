@@ -51,6 +51,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://krr-oxford.github.io/DeepOnto/deeponto/align/oaei/</loc>
+         <lastmod>2023-07-23</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/align/bertmap/</loc>
          <lastmod>2023-07-23</lastmod>
          <changefreq>daily</changefreq>

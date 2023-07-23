@@ -448,11 +448,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#evaluation-protocol" class="md-nav__link">
-    Evaluation Protocol
+  <a href="#evaluation-framework" class="md-nav__link">
+    Evaluation Framework
   </a>
   
-    <nav class="md-nav" aria-label="Evaluation Protocol">
+    <nav class="md-nav" aria-label="Evaluation Framework">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -497,7 +497,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#evaluation-framework" class="md-nav__link">
+  <a href="#evaluation-framework_1" class="md-nav__link">
     Evaluation Framework
   </a>
   
@@ -838,6 +838,20 @@
 
             
           
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeponto/align/oaei/" class="md-nav__link">
+        OAEI Utilities
+      </a>
+    </li>
+  
+
+            
+          
         </ul>
       </nav>
     </li>
@@ -1094,7 +1108,7 @@
 <li><strong>Ontology Pruning</strong>: Obtaining a sub-ontology subject to a list of preserved class IRIs. For Mondo ontologies, classes are preserved based on the <strong>reference mappings</strong>; For UMLS ontologies, classes are preserved based on the <strong>semantic types</strong> (see <a href="#ontology-pruning">Ontology Pruning</a>).</li>
 <li><strong>Subsumption Mapping Construction</strong>: Reference subsumption mappings are constructed from the reference equivalence mappings, subject to target class deletion, i.e., if an equivalence mapping is used for constructing a subsumption mapping, its target ontology class will be removed to enforce direct subsumption matching (see <a href="#subsumption-mapping-construction">Ontology Pruning</a>). </li>
 <li><strong>Candidate Mapping Generation</strong>: To evaluate an OM system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping using different heuristics (see <a href="#candidate-mapping-generation">Ontology Pruning</a>).</li>
-<li><strong>Locality Module Enrichment</strong> (NEW!): In the OAEI 2023 version, we enrich the pruned ontologies with classes that serve as context (and marked as <strong>not used in alignment</strong>) for the existing classes, using the <strong>locality module</strong> technique (<a href="https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java">code</a>). OM systems can utilise these additional classes as auxiliary information while omitting them in the alignment process; the final evaluation will omit these additional classes as well.</li>
+<li><strong>Locality Module Enrichment</strong> (NEW <img alt="🌟" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@14.1.2/assets/svg/1f31f.svg" title=":star2:" />): In the OAEI 2023 version, we enrich the pruned ontologies with classes that serve as context (and marked as <strong>not used in alignment</strong>) for the existing classes, using the <strong>locality module</strong> technique (<a href="https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java">code</a>). OM systems can utilise these additional classes as auxiliary information while omitting them in the alignment process; the final evaluation will omit these additional classes as well.</li>
 </ul>
 <h2 id="links">Links</h2>
 <ul>
@@ -1111,9 +1125,43 @@
 <li><strong>Resource Paper</strong>: <em><a href="https://arxiv.org/abs/2205.03447">https://arxiv.org/abs/2205.03447</a></em> (arxiv version)</li>
 <li><strong>Official OAEI Page</strong>: <em><a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html">https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html</a></em></li>
 </ul>
-<h2 id="evaluation-protocol">Evaluation Protocol</h2>
+<h2 id="evaluation-framework">Evaluation Framework</h2>
+<p>Our evaluation protocol concerns two scenarios for OM: <strong>global matching</strong> for overall assessment and <strong>local ranking</strong> for partial assessment.</p>
 <h3 id="global-matching">Global Matching</h3>
+<p>As an overall assessment, given a <strong>complete</strong> set of reference mappings, an OM system is expected to compute a set of <em>true</em> mappings and compare against the reference mappings using Precision, Recall, and F-score metrics. With <span class="arithmatex">\(\textsf{DeepOnto}\)</span>, the evaluation can be performed using the following code. </p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.align.evaluation</span> <span class="kn">import</span> <span class="n">AlignmentEvaluator</span>
+<span class="kn">from</span> <span class="nn">deeponto.align.mapping</span> <span class="kn">import</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="n">EntityMapping</span>
+
+<span class="c1"># load predicted mappings and reference mappings</span>
+<span class="n">preds</span> <span class="o">=</span> <span class="n">EntityMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">experiment_dir</span><span class="si">}</span><span class="s2">/bertmap/match/repaired_mappings.tsv&quot;</span><span class="p">)</span>
+<span class="n">refs</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/refs_equiv/full.tsv&quot;</span><span class="p">)</span>
+<span class="c1"># compute the precision, recall and F-score metrics</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+</code></pre></div>
+<dl>
+<dt><code class="highlight"><span class="go">Output:</span></code></dt>
+<dd>&#32;
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="s1">&#39;P&#39;</span><span class="p">:</span> <span class="mf">0.887</span><span class="p">,</span> <span class="s1">&#39;R&#39;</span><span class="p">:</span> <span class="mf">0.879</span><span class="p">,</span> <span class="s1">&#39;F1&#39;</span><span class="p">:</span> <span class="mf">0.883</span><span class="p">}</span>
+</code></pre></div></dd>
+</dl>
+<p>For the semi-supervised setting where a set of training mappings is provided, the training set should also be loaded and set as <strong>ignored</strong> (neither positive nor negative) during evaluation:</p>
+<div class="highlight"><pre><span></span><code><span class="n">train_refs</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/refs_equiv/train.tsv&quot;</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">,</span> <span class="n">null_reference_mappings</span><span class="o">=</span><span class="n">train_refs</span><span class="p">)</span>
+</code></pre></div>
+<p>As for the OAEI 2023 version, some predicted mappings could involve classes that are marked as <strong>not used in alignment</strong></p>
+<p>However, the global matching evaluation is not enough as:</p>
+<ul>
+<li>The scores will be biased towards high-precision, low-recall OM systems if the set of reference mappings is incomplete. </li>
+<li>For efficient OM system development and debugging, an intermediate evaluation is required.</li>
+</ul>
+<p>Therefore, the ranking-based evaluation protocol is present as follows.</p>
 <h3 id="local-ranking">Local Ranking</h3>
+<p>An OM system is also expected to <strong>distinguish the reference mapping</strong> among a set of candidate mappings and the performance can be reflected in Hits@K and MRR metrics. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The reference subsumption mappings are inherently incomplete, so only the ranking metircs are adopted in evaluating system performance in subsumption matching.</p>
+</div>
 <h2 id="oaei-2022-version">OAEI 2022 Version</h2>
 <h3 id="data-statistics">Data Statistics</h3>
 <p>Statistics for the equivalence matching set-ups. In the <strong>Category</strong> column, <em>"Disease"</em> indicates that the Mondo data are mainly about disease concepts, while <em>"Body"</em>, <em>"Pharm"</em>, and <em>"Neoplas"</em> denote semantic types of <em>"Body Part, Organ, or Organ Components"</em>, <em>"Pharmacologic Substance</em>"<em>, and </em>"Neoplastic Process"* in UMLS, respectively.</p>
@@ -1196,7 +1244,7 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
   <img alt="deeponto" src="../images/largebiomeddata.svg" height="600" style="width: 100%;">
 </p>
 
-<h3 id="evaluation-framework">Evaluation Framework</h3>
+<h3 id="evaluation-framework_1">Evaluation Framework</h3>
 <p>Each OM pair in <span class="arithmatex">\(\textsf{Bio-ML}\)</span> consists of an equivalence matching track and a subsumption matching track. Each track considers two perspectives for evaluation, <strong>global matching</strong> and <strong>local ranking</strong>, each of which has two data split settings, <strong>unsupervised</strong> and <strong>semi-supervised</strong>.</p>
 <h4 id="local-ranking_1">Local Ranking</h4>
 <p>Local ranking aims to examine an OM model's ability to distinguish a correct mapping out of several challenging negatives. The model should assign a high score (thus a high ranking) to the correct mapping. The overall results are evaluated using <span class="arithmatex">\(Hits@K\)</span> and <span class="arithmatex">\(MRR\)</span>.</p>
