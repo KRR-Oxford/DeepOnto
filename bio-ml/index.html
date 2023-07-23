@@ -434,37 +434,51 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#bio-ml" class="md-nav__link">
-    Bio-ML
+  <a href="#about" class="md-nav__link">
+    About
   </a>
   
-    <nav class="md-nav" aria-label="Bio-ML">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#evaluation-protocol" class="md-nav__link">
+    Evaluation Protocol
+  </a>
+  
+    <nav class="md-nav" aria-label="Evaluation Protocol">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#data-statistics" class="md-nav__link">
-    Data Statistics
-  </a>
-  
-    <nav class="md-nav" aria-label="Data Statistics">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#equivalence-matching" class="md-nav__link">
-    Equivalence Matching
+  <a href="#global-matching" class="md-nav__link">
+    Global Matching
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#subsumption-matching" class="md-nav__link">
-    Subsumption Matching
+  <a href="#local-ranking" class="md-nav__link">
+    Local Ranking
   </a>
   
 </li>
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#oaei-2022-version" class="md-nav__link">
+    OAEI 2022 Version
+  </a>
+  
+    <nav class="md-nav" aria-label="OAEI 2022 Version">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-statistics" class="md-nav__link">
+    Data Statistics
+  </a>
   
 </li>
         
@@ -484,14 +498,14 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#local-ranking" class="md-nav__link">
+  <a href="#local-ranking_1" class="md-nav__link">
     Local Ranking
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#global-matching" class="md-nav__link">
+  <a href="#global-matching_1" class="md-nav__link">
     Global Matching
   </a>
   
@@ -508,36 +522,23 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#om-dataset-construction" class="md-nav__link">
-    OM Dataset Construction
-  </a>
-  
-    <nav class="md-nav" aria-label="OM Dataset Construction">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
   <a href="#ontology-pruning" class="md-nav__link">
     Ontology Pruning
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
+      
+        <li class="md-nav__item">
   <a href="#subsumption-mapping-construction" class="md-nav__link">
     Subsumption Mapping Construction
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#negative-candidate-mapping-generation" class="md-nav__link">
-    Negative Candidate Mapping Generation
+      
+        <li class="md-nav__item">
+  <a href="#candidate-mapping-generation" class="md-nav__link">
+    Candidate Mapping Generation
   </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1079,18 +1080,37 @@
 </div>
 <p>This page provides detailed <a href="#bio-ml">instructions</a> for using <span class="arithmatex">\(\textsf{Bio-ML}\)</span>.</p>
 <p>It also gives the tutorial for how to apply the <a href="#om-dataset-construction">OM dataset construction approaches</a> as proposed in the <span class="arithmatex">\(\textsf{Bio-ML}\)</span>,  which can be applied to other ontologies.</p>
-<h2 id="bio-ml">Bio-ML</h2>
-<p>The <span class="arithmatex">\(\textsf{Bio-ML}\)</span> dataset provides <strong>five</strong> ontology pairs for both equivalence and subsumption ontology matching. These OM pairs are constructed using the approaches described in the <a href="#om-dataset-construction">OM construction section</a>.</p>
+<h2 id="about">About</h2>
+<p><span class="arithmatex">\(\textsf{Bio-ML}\)</span> incorporates <strong>five</strong> ontology pairs for both equivalence and subsumption ontology matching, two of them are based on <strong>Mondo</strong> and three of them are based on <strong>UMLS</strong>. These datasets are constructed with the following steps:</p>
 <ul>
-<li><strong>Download link</strong>: <em><a href="https://doi.org/10.5281/zenodo.6510086">https://doi.org/10.5281/zenodo.6510086</a></em> (CC BY 4.0 International).</li>
-<li><strong>Resource Paper</strong>: <em><a href="https://arxiv.org/abs/2205.03447">https://arxiv.org/abs/2205.03447</a></em>.</li>
-<li><strong>OAEI Track</strong>: <em><a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/">https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/</a></em>. </li>
+<li><strong>Ontology Preprocessing</strong>: Checking ontology integrity, removing deprecated or redundant classes.</li>
+<li><strong>Ontology Pruning</strong>: Obtaining a sub-ontology subject to a list of preserved class IRIs. For Mondo ontologies, classes are preserved based on the <strong>reference mappings</strong>; For UMLS ontologies, classes are preserved based on the <strong>semantic types</strong> (see [Ontology Pruning][#ontology-pruning]).</li>
+<li><strong>Subsumption Mapping Construction</strong>: Reference subsumption mappings are constructed from the reference equivalence mappings, subject to target class deletion, i.e., if an equivalence mapping is used for constructing a subsumption mapping, its target ontology class will be removed to enforce direct subsumption matching (see [Ontology Pruning][#subsumption-mapping-construction]). </li>
+<li><strong>Candidate Mapping Generation</strong>: To evaluate an OM system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping using different heuristics (see [Ontology Pruning][#candidate-mapping-generation]).</li>
+<li><strong>Locality Module Enrichment</strong> (NEW!):  </li>
 </ul>
+<p>These datasets are constructed using the approaches described in <a href="#om-dataset-construction">OM Dataset Consturction</a>.</p>
+<ul>
+<li>
+<p><strong>Dataset Download</strong> (CC BY 4.0 International):</p>
+<ul>
+<li><strong>OAEI 2023</strong>: to be released</li>
+<li><strong>OAEI 2022</strong>: <a href="https://zenodo.org/record/6946466">https://zenodo.org/record/6946466</a></li>
+</ul>
+</li>
+<li>
+<p><strong>Instructions of Use</strong>: <em><a href="https://krr-oxford.github.io/DeepOnto/bio-ml/">https://krr-oxford.github.io/DeepOnto/bio-ml/</a></em> (this page)</p>
+</li>
+<li><strong>Resource Paper</strong>: <em><a href="https://arxiv.org/abs/2205.03447">https://arxiv.org/abs/2205.03447</a></em> (arxiv version)</li>
+<li><strong>Official OAEI Page</strong>: <em><a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html">https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html</a></em></li>
+</ul>
+<h2 id="evaluation-protocol">Evaluation Protocol</h2>
+<h3 id="global-matching">Global Matching</h3>
+<h3 id="local-ranking">Local Ranking</h3>
+<h2 id="oaei-2022-version">OAEI 2022 Version</h2>
 <h3 id="data-statistics">Data Statistics</h3>
-<!-- tabs:start -->
-
-<h4 id="equivalence-matching"><strong>Equivalence Matching</strong></h4>
 <p>Statistics for the equivalence matching set-ups. In the <strong>Category</strong> column, <em>"Disease"</em> indicates that the Mondo data are mainly about disease concepts, while <em>"Body"</em>, <em>"Pharm"</em>, and <em>"Neoplas"</em> denote semantic types of <em>"Body Part, Organ, or Organ Components"</em>, <em>"Pharmacologic Substance</em>"<em>, and </em>"Neoplastic Process"* in UMLS, respectively.</p>
+<p>Note that each subsumption matching task is constructed from an equivalence matching task subject to target side class deletion, therefore <code>#TgtCls (subs)</code> is different with <code>#TgtCls</code>.</p>
 <p><center>
 <small></p>
 <table>
@@ -1099,10 +1119,11 @@
 <th>Source</th>
 <th align="center">Task</th>
 <th align="center">Category</th>
-<th align="center">#Classes</th>
-<th align="center">#RefMaps (equiv)</th>
-<th align="center">#Annot.</th>
-<th align="center">AvgDepths</th>
+<th align="center">#SrcCls</th>
+<th align="center">#TgtCls</th>
+<th align="center">#TgtCls (subs)</th>
+<th align="center">#Ref (equiv)</th>
+<th align="center">#Ref (subs)</th>
 </tr>
 </thead>
 <tbody>
@@ -1110,107 +1131,56 @@
 <td>Mondo</td>
 <td align="center">OMIM-ORDO</td>
 <td align="center">Disease</td>
-<td align="center">9,642-8,838</td>
+<td align="center">9,642</td>
+<td align="center">8,838</td>
+<td align="center">8,735</td>
 <td align="center">3,721</td>
-<td align="center">34K-34K</td>
-<td align="center">1.44-1.63</td>
-</tr>
-<tr>
-<td>Mondo</td>
-<td align="center">NCIT-DOID</td>
-<td align="center">Disease</td>
-<td align="center">6,835-8,848</td>
-<td align="center">4,684</td>
-<td align="center">80K-38K</td>
-<td align="center">2.04-6.85</td>
-</tr>
-<tr>
-<td>UMLS</td>
-<td align="center">SNOMED-FMA</td>
-<td align="center">Body</td>
-<td align="center">24,182-64,726</td>
-<td align="center">7,256</td>
-<td align="center">39K-711K</td>
-<td align="center">1.86-9.32</td>
-</tr>
-<tr>
-<td>UMLS</td>
-<td align="center">SNOMED-NCIT</td>
-<td align="center">Pharm</td>
-<td align="center">16,045-15,250</td>
-<td align="center">5,803</td>
-<td align="center">19K-220K</td>
-<td align="center">1.09-3.26</td>
-</tr>
-<tr>
-<td>UMLS</td>
-<td align="center">SNOMED-NCIT</td>
-<td align="center">Neoplas</td>
-<td align="center">11,271-13,956</td>
-<td align="center">3,804</td>
-<td align="center">23K-182K</td>
-<td align="center">1.15-1.68</td>
-</tr>
-</tbody>
-</table>
-<p></small>
-</center></p>
-<h4 id="subsumption-matching"><strong>Subsumption Matching</strong></h4>
-<p>Statistics for the subsumption matching set-ups. Note that each subsumption matching task is constructed from an equivalence matching task subject to target side class deletion.</p>
-<p><center>
-<small></p>
-<table>
-<thead>
-<tr>
-<th>Source</th>
-<th align="center">Task</th>
-<th align="center">Category</th>
-<th align="center">#Classes</th>
-<th align="center">#RefMaps (subs)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Mondo</td>
-<td align="center">OMIM-ORDO</td>
-<td align="center">Disease</td>
-<td align="center">9,642-8,735</td>
 <td align="center">103</td>
 </tr>
 <tr>
 <td>Mondo</td>
 <td align="center">NCIT-DOID</td>
 <td align="center">Disease</td>
-<td align="center">6,835-5,113</td>
+<td align="center">6,835</td>
+<td align="center">8,448</td>
+<td align="center">5,113</td>
+<td align="center">4,684</td>
 <td align="center">3,339</td>
 </tr>
 <tr>
 <td>UMLS</td>
 <td align="center">SNOMED-FMA</td>
 <td align="center">Body</td>
-<td align="center">24,182-59,567</td>
+<td align="center">24,182</td>
+<td align="center">64,726</td>
+<td align="center">59,567</td>
+<td align="center">7,256</td>
 <td align="center">5,506</td>
 </tr>
 <tr>
 <td>UMLS</td>
 <td align="center">SNOMED-NCIT</td>
 <td align="center">Pharm</td>
-<td align="center">16,045-12,462</td>
+<td align="center">16,045</td>
+<td align="center">15,250</td>
+<td align="center">12,462</td>
+<td align="center">5,803</td>
 <td align="center">4,225</td>
 </tr>
 <tr>
 <td>UMLS</td>
 <td align="center">SNOMED-NCIT</td>
 <td align="center">Neoplas</td>
-<td align="center">11,271-13,790</td>
+<td align="center">11,271</td>
+<td align="center">13,956</td>
+<td align="center">13,790</td>
+<td align="center">3,804</td>
 <td align="center">213</td>
 </tr>
 </tbody>
 </table>
 <p></small>
 </center></p>
-<!-- tabs:end -->
-
 <h3 id="file-structure">File Structure</h3>
 <p>The downloaded datasets include <code>Mondo.zip</code> and <code>UMLS.zip</code> for resources constructed from Mondo and UMLS, respectively.
 Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equiv_match</code>, and <code>subs_match</code>, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. Detailed structure is presented in the following figure. </p>
@@ -1221,7 +1191,7 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
 
 <h3 id="evaluation-framework">Evaluation Framework</h3>
 <p>Each OM pair in <span class="arithmatex">\(\textsf{Bio-ML}\)</span> consists of an equivalence matching track and a subsumption matching track. Each track considers two perspectives for evaluation, <strong>global matching</strong> and <strong>local ranking</strong>, each of which has two data split settings, <strong>unsupervised</strong> and <strong>semi-supervised</strong>.</p>
-<h4 id="local-ranking">Local Ranking</h4>
+<h4 id="local-ranking_1">Local Ranking</h4>
 <p>Local ranking aims to examine an OM model's ability to distinguish a correct mapping out of several challenging negatives. The model should assign a high score (thus a high ranking) to the correct mapping. The overall results are evaluated using <span class="arithmatex">\(Hits@K\)</span> and <span class="arithmatex">\(MRR\)</span>.</p>
 <p>In <span class="arithmatex">\(\textsf{Bio-ML}\)</span>, candidate mappings are generated for each reference mapping in the test set. As shown in the <a href="#file-structure">file structure</a>, each task setting contains a <code>test.cands.tsv</code> file with each entry a reference mapping and its corresponding target class candidates -- which can be combined with the source reference class to form the candidate mappings. </p>
 <blockquote>
@@ -1252,7 +1222,7 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
 <dt><code>semi_supervised</code></dt>
 <dd><code>test.cands.tsv</code> in <code>refs/semi_supervised</code> referes to candidate mappings generated from <code>refs/semi_supervised/test.tsv</code> and <code>refs/semi_supervised/train+val.tsv</code> is ensured to be excluded from candidate mappings generated from candidates.</dd>
 </dl>
-<h4 id="global-matching">Global Matching</h4>
+<h4 id="global-matching_1">Global Matching</h4>
 <p>Global matching aims to examine the overall OM performance by comparing the output mappings with the reference mappings using <span class="arithmatex">\(Precision\)</span>, <span class="arithmatex">\(Recall\)</span>, and <span class="arithmatex">\(F1\)</span>.</p>
 <p>For each OM pair, a <code>refs/full.tsv</code> file is provided for the full set of reference mappings; the columns of this <code>.tsv</code> file have the headings <code>"SrcEntity"</code>, <code>"TgtEntity"</code>, <code>"Score"</code> standing for the source reference class, target reference class, and the score (automatically set to <span class="arithmatex">\(1.0\)</span> for reference mappings). </p>
 <blockquote>
@@ -1276,10 +1246,9 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
   - This feature is supported in the code <a class="autorefs autorefs-internal" href="../deeponto/align/evaluation/#deeponto.align.evaluation.AlignmentEvaluator.f1">here</a> where the arguement <code>null_reference_mappings</code> is for inputting the reference mappings that should be ignored.</p>
 <p>Since the subsumption mappings are inherently incomplete, we suggest apply <strong>only local ranking for evaluating subsumption matching</strong>.</p>
 </div>
-<h2 id="om-dataset-construction">OM Dataset Construction</h2>
-<h3 id="ontology-pruning">Ontology Pruning</h3>
-<p>In order to obtain scalable OM pairs, the <strong>ontology pruning</strong> algorithm proposed in the <span class="arithmatex">\(\textsf{Bio-ML}\)</span> paper can be used to truncate a large-scale ontology according to certain criteria such as the <strong>semantic type</strong>. The pruning function aims to remove unwanted ontology classes while preserving the relevant hierarchy. Specifically, for each class <span class="arithmatex">\(c\)</span> to be removed, subsumption axioms will be created between the parents of <span class="arithmatex">\(c\)</span> and the children of <span class="arithmatex">\(c'\)</span>. Following this is the removal of all axioms related to the unwanted classes.</p>
-<p>Once obtaining the list of class IRIs to be removed, apply the ontology pruning following the code below:</p>
+<h2 id="ontology-pruning">Ontology Pruning</h2>
+<p>In order to obtain scalable OM pairs, the <strong>ontology pruning</strong> algorithm proposed in the <span class="arithmatex">\(\textsf{Bio-ML}\)</span> paper can be used to truncate a large-scale ontology according to certain criteria such as being involved in a <strong>reference mapping</strong> or being associated with certain <strong>semantic type</strong>. The pruning function aims to remove unwanted ontology classes while preserving the relevant hierarchy. Specifically, for each class <span class="arithmatex">\(c\)</span> to be removed, subsumption axioms will be created between the parents of <span class="arithmatex">\(c\)</span> and the children of <span class="arithmatex">\(c'\)</span>. Following this is the removal of all axioms related to the unwanted classes.</p>
+<p>Once obtaining a list of class IRIs to be removed, apply the ontology pruning following the code below:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">OntologyPruner</span>
 
 <span class="n">doid</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;doid.owl&quot;</span><span class="p">)</span>
@@ -1291,8 +1260,8 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
 <span class="n">pruner</span><span class="o">.</span><span class="n">prune</span><span class="p">(</span><span class="n">to_be_removed_class_iris</span><span class="p">)</span>
 <span class="n">pruner</span><span class="o">.</span><span class="n">save_onto</span><span class="p">(</span><span class="s2">&quot;doid.pruned.owl&quot;</span><span class="p">)</span>  <span class="c1"># save the pruned ontology locally</span>
 </code></pre></div>
-<h3 id="subsumption-mapping-construction">Subsumption Mapping Construction</h3>
-<p>It is often that OM datasets include equivalence matching but <strong>not</strong> subsumption matching. However, it is possible to create a subsumption matching task from each equivalence matching task. Given a list of <strong>equivalence reference mappings</strong> (see <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.ReferenceMapping.read_table_mappings">how to load from a local file</a>) in the form of <span class="arithmatex">\(\{(c, c') | c \equiv c' \}\)</span>, the reference subsumption mappings can be created by searching for the <strong>subsumers</strong> of <span class="arithmatex">\(c'\)</span>, then yielding <span class="arithmatex">\(\{(c, c'') | c \equiv c', c' \sqsubseteq c'' \}\)</span>. We have implemented a <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.SubsFromEquivMappingGenerator">subsumption mapping generator</a> for this purpose:</p>
+<h2 id="subsumption-mapping-construction">Subsumption Mapping Construction</h2>
+<p>It is often that OM datasets include equivalence matching but <strong>not</strong> subsumption matching. However, it is possible to create a subsumption matching task from an equivalence matching task. Given a list of <strong>equivalence reference mappings</strong> (see <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.ReferenceMapping.read_table_mappings">how to load from a local file</a>) in the form of <span class="arithmatex">\(\{(c, c') | c \equiv c' \}\)</span>, the reference subsumption mappings can be created by searching for the <strong>subsumers</strong> of <span class="arithmatex">\(c'\)</span>, then yielding <span class="arithmatex">\(\{(c, c'') | c \equiv c', c' \sqsubseteq c'' \}\)</span>. We have implemented a <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.SubsFromEquivMappingGenerator">subsumption mapping generator</a> for this purpose:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
 <span class="kn">from</span> <span class="nn">deeponto.align.mapping</span> <span class="kn">import</span> <span class="n">SubsFromEquivMappingGenerator</span><span class="p">,</span> <span class="n">ReferenceMapping</span>
 
@@ -1327,7 +1296,7 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
 </code></pre></div></dd>
 </dl>
 <p>The <code>subs_generation_ratio</code> parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The <code>delete_used_equiv_tgt_class</code> determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If it is set to <code class="highlight"><span class="kc">True</span></code>, then the target side of an (<strong>used</strong>) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes which can be accessed as <code>subs_generator.used_equiv_tgt_class_iris</code>.</p>
-<h3 id="negative-candidate-mapping-generation">Negative Candidate Mapping Generation</h3>
+<h2 id="candidate-mapping-generation">Candidate Mapping Generation</h2>
 <p>In order to examine an OM model's ability to distinguish the correct mapping among a set of challenging negative candidates, we can apply the <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator">negative canddiate mapping generation</a> algorithm as proposed in the paper, which utilises the <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator.idf_sample"><code>idf_sample</code></a> to generate candidates ambiguious at the textual level (similar naming), and <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator.neighbour_sample"><code>neighbour_sample</code></a> to generate candidates ambiguious at the structural level (e.g., siblings). The algorithm makes sure that <strong>none</strong> of the reference mappings will be added as a negative candidate, and for the subsumption case, the algorithm also takes care of <strong>excluding the ancestors</strong> because they are correct subsumptions.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
 <span class="kn">from</span> <span class="nn">deeponto.align.mapping</span> <span class="kn">import</span> <span class="n">NegativeCandidateMappingGenerator</span><span class="p">,</span> <span class="n">ReferenceMapping</span>
@@ -1351,7 +1320,7 @@ Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equi
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 28, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 23, 2023</span>
       
         <br>
         Created:
