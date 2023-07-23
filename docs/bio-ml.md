@@ -16,12 +16,6 @@
     }
     ```
 
-
-This page provides detailed [instructions](#bio-ml) for using $\textsf{Bio-ML}$.
-
-It also gives the tutorial for how to apply the [OM dataset construction approaches](#om-dataset-construction) as proposed in the $\textsf{Bio-ML}$,  which can be applied to other ontologies.
-
-
 ## About
 
 $\textsf{Bio-ML}$ incorporates **five** ontology pairs for both equivalence and subsumption ontology matching, two of them are based on **Mondo** and three of them are based on **UMLS**. These datasets are constructed with the following steps:
