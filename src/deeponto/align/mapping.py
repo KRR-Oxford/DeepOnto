@@ -116,7 +116,7 @@ class EntityMapping:
     @staticmethod
     def read_table_mappings(
         table_of_mappings_file: str,
-        threshold: Optional[float] = 0.0,
+        threshold: Optional[float] = None,
         relation: str = DEFAULT_REL,
         is_reference: bool = False,
     ) -> List[EntityMapping]:
@@ -143,7 +143,8 @@ class EntityMapping:
             if is_reference:
                 entity_mappings.append(ReferenceMapping(dp["SrcEntity"], dp["TgtEntity"], relation))
             else:
-                if dp["Score"] >= threshold:
+                # allow `None` for threshold
+                if not threshold or dp["Score"] >= threshold:
                     entity_mappings.append(EntityMapping(dp["SrcEntity"], dp["TgtEntity"], relation, dp["Score"]))
         return entity_mappings
 
