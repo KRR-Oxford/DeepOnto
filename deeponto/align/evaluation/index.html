@@ -1249,7 +1249,7 @@ Specifically, both <span class="arithmatex">\(\mathcal{M}_{pred}\)</span> and <s
 
 
 <h3 id="deeponto.align.evaluation.AlignmentEvaluator.hits_at_K" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">hits_at_K</span><span class="p">(</span><span class="n">prediction_and_candidates</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">hits_at_K</span><span class="p">(</span><span class="n">reference_and_candidates</span><span class="p">,</span> <span class="n">K</span><span class="p">)</span></code>
   
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
@@ -1260,14 +1260,16 @@ Specifically, both <span class="arithmatex">\(\mathcal{M}_{pred}\)</span> and <s
 
   <div class="doc doc-contents ">
   
-      <p>Compute <span class="arithmatex">\(Hits@K\)</span> for a list of <code>(prediction_mapping, candidate_mappings)</code> pair.</p>
-<p>It is computed as the number of a <code>prediction_mapping</code> existed in the first <span class="arithmatex">\(K\)</span> ranked <code>candidate_mappings</code>,
+      <p>Compute <span class="arithmatex">\(Hits@K\)</span> for a list of <code>(reference_mapping, candidate_mappings)</code> pair.</p>
+<p>It is computed as the number of a <code>reference_mapping</code> existed in the first <span class="arithmatex">\(K\)</span> ranked <code>candidate_mappings</code>,
 divided by the total number of input pairs.</p>
 <div class="arithmatex">\[Hits@K = \sum_i^N \mathbb{I}_{rank_i \leq k} / N\]</div>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/evaluation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">80</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
 <span class="normal">81</span>
 <span class="normal">82</span>
 <span class="normal">83</span>
@@ -1279,23 +1281,21 @@ divided by the total number of input pairs.</p>
 <span class="normal">89</span>
 <span class="normal">90</span>
 <span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">hits_at_K</span><span class="p">(</span><span class="n">prediction_and_candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">]]],</span> <span class="n">K</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute $Hits@K$ for a list of `(prediction_mapping, candidate_mappings)` pair.</span>
+<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span> <span class="nf">hits_at_K</span><span class="p">(</span><span class="n">reference_and_candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">]]],</span> <span class="n">K</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute $Hits@K$ for a list of `(reference_mapping, candidate_mappings)` pair.</span>
 
-<span class="sd">    It is computed as the number of a `prediction_mapping` existed in the first $K$ ranked `candidate_mappings`,</span>
+<span class="sd">    It is computed as the number of a `reference_mapping` existed in the first $K$ ranked `candidate_mappings`,</span>
 <span class="sd">    divided by the total number of input pairs.</span>
 
 <span class="sd">    $$Hits@K = \sum_i^N \mathbb{I}_{rank_i \leq k} / N$$</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">n_hits</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">pred</span><span class="p">,</span> <span class="n">cands</span> <span class="ow">in</span> <span class="n">prediction_and_candidates</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">pred</span><span class="p">,</span> <span class="n">cands</span> <span class="ow">in</span> <span class="n">reference_and_candidates</span><span class="p">:</span>
         <span class="n">ordered_candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">EntityMapping</span><span class="o">.</span><span class="n">sort_entity_mappings_by_score</span><span class="p">(</span><span class="n">cands</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">K</span><span class="p">)]</span>
         <span class="k">if</span> <span class="n">pred</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="ow">in</span> <span class="n">ordered_candidates</span><span class="p">:</span>
             <span class="n">n_hits</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">return</span> <span class="n">n_hits</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">prediction_and_candidates</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">n_hits</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">reference_and_candidates</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -1308,7 +1308,7 @@ divided by the total number of input pairs.</p>
 
 
 <h3 id="deeponto.align.evaluation.AlignmentEvaluator.mean_reciprocal_rank" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">mean_reciprocal_rank</span><span class="p">(</span><span class="n">prediction_and_candidates</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">mean_reciprocal_rank</span><span class="p">(</span><span class="n">reference_and_candidates</span><span class="p">)</span></code>
   
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
@@ -1319,12 +1319,14 @@ divided by the total number of input pairs.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Compute <span class="arithmatex">\(MRR\)</span> for a list of <code>(prediction_mapping, candidate_mappings)</code> pair.</p>
+      <p>Compute <span class="arithmatex">\(MRR\)</span> for a list of <code>(reference_mapping, candidate_mappings)</code> pair.</p>
 <div class="arithmatex">\[MRR = \sum_i^N rank_i^{-1} / N\]</div>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/evaluation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 96</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
 <span class="normal"> 97</span>
 <span class="normal"> 98</span>
 <span class="normal"> 99</span>
@@ -1336,23 +1338,21 @@ divided by the total number of input pairs.</p>
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">mean_reciprocal_rank</span><span class="p">(</span><span class="n">prediction_and_candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">]]]):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute $MRR$ for a list of `(prediction_mapping, candidate_mappings)` pair.</span>
+<span class="normal">108</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="k">def</span> <span class="nf">mean_reciprocal_rank</span><span class="p">(</span><span class="n">reference_and_candidates</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">]]]):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute $MRR$ for a list of `(reference_mapping, candidate_mappings)` pair.</span>
 
 <span class="sd">    $$MRR = \sum_i^N rank_i^{-1} / N$$</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sum_inverted_ranks</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">pred</span><span class="p">,</span> <span class="n">cands</span> <span class="ow">in</span> <span class="n">prediction_and_candidates</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">pred</span><span class="p">,</span> <span class="n">cands</span> <span class="ow">in</span> <span class="n">reference_and_candidates</span><span class="p">:</span>
         <span class="n">ordered_candidates</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">EntityMapping</span><span class="o">.</span><span class="n">sort_entity_mappings_by_score</span><span class="p">(</span><span class="n">cands</span><span class="p">)]</span>
         <span class="k">if</span> <span class="n">pred</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="ow">in</span> <span class="n">ordered_candidates</span><span class="p">:</span>
             <span class="n">rank</span> <span class="o">=</span> <span class="n">ordered_candidates</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">pred</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">rank</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span>
         <span class="n">sum_inverted_ranks</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">rank</span>
-    <span class="k">return</span> <span class="n">sum_inverted_ranks</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">prediction_and_candidates</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sum_inverted_ranks</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">reference_and_candidates</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
