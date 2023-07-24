@@ -75,36 +75,34 @@ class AlignmentEvaluator:
     ###                       [Eval Case 2]: Hits@K & MRR                          ###
     ##################################################################################
 
-    # TODO: check below algorithms after full deployment
-
     @staticmethod
-    def hits_at_K(prediction_and_candidates: List[Tuple[EntityMapping, List[EntityMapping]]], K: int):
-        r"""Compute $Hits@K$ for a list of `(prediction_mapping, candidate_mappings)` pair.
+    def hits_at_K(reference_and_candidates: List[Tuple[ReferenceMapping, List[EntityMapping]]], K: int):
+        r"""Compute $Hits@K$ for a list of `(reference_mapping, candidate_mappings)` pair.
 
-        It is computed as the number of a `prediction_mapping` existed in the first $K$ ranked `candidate_mappings`,
+        It is computed as the number of a `reference_mapping` existed in the first $K$ ranked `candidate_mappings`,
         divided by the total number of input pairs.
 
         $$Hits@K = \sum_i^N \mathbb{I}_{rank_i \leq k} / N$$
         """
         n_hits = 0
-        for pred, cands in prediction_and_candidates:
+        for pred, cands in reference_and_candidates:
             ordered_candidates = [c.to_tuple() for c in EntityMapping.sort_entity_mappings_by_score(cands, k=K)]
             if pred.to_tuple() in ordered_candidates:
                 n_hits += 1
-        return n_hits / len(prediction_and_candidates)
+        return n_hits / len(reference_and_candidates)
 
     @staticmethod
-    def mean_reciprocal_rank(prediction_and_candidates: List[Tuple[EntityMapping, List[EntityMapping]]]):
-        r"""Compute $MRR$ for a list of `(prediction_mapping, candidate_mappings)` pair.
+    def mean_reciprocal_rank(reference_and_candidates: List[Tuple[ReferenceMapping, List[EntityMapping]]]):
+        r"""Compute $MRR$ for a list of `(reference_mapping, candidate_mappings)` pair.
 
         $$MRR = \sum_i^N rank_i^{-1} / N$$
         """
         sum_inverted_ranks = 0
-        for pred, cands in prediction_and_candidates:
+        for pred, cands in reference_and_candidates:
             ordered_candidates = [c.to_tuple() for c in EntityMapping.sort_entity_mappings_by_score(cands)]
             if pred.to_tuple() in ordered_candidates:
                 rank = ordered_candidates.index(pred.to_tuple()) + 1
             else:
                 rank = math.inf
             sum_inverted_ranks += 1 / rank
-        return sum_inverted_ranks / len(prediction_and_candidates)
+        return sum_inverted_ranks / len(reference_and_candidates)
