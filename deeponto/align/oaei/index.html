@@ -739,6 +739,27 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#deeponto.align.oaei.matching_eval" class="md-nav__link">
+    matching_eval()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deeponto.align.oaei.read_candidate_mappings" class="md-nav__link">
+    read_candidate_mappings()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deeponto.align.oaei.ranking_eval" class="md-nav__link">
+    ranking_eval()
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1017,31 +1038,35 @@
   <div class="doc doc-contents ">
   
       <p>Get an index for filtering classes that are marked as not used in alignment.</p>
-<p>This is indicated by the special class annotation <code>use_in_alignment</code> with the following IRI: 
+<p>This is indicated by the special class annotation <code>use_in_alignment</code> with the following IRI:
     http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/oaei.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span>
-<span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
 <span class="normal">31</span>
-<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_ignored_class_index</span><span class="p">(</span><span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span>
+<span class="normal">38</span>
+<span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_ignored_class_index</span><span class="p">(</span><span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get an index for filtering classes that are marked as not used in alignment.</span>
 
-<span class="sd">    This is indicated by the special class annotation `use_in_alignment` with the following IRI: </span>
+<span class="sd">    This is indicated by the special class annotation `use_in_alignment` with the following IRI:</span>
 <span class="sd">        http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ignored_class_index</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">False</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">class_iri</span><span class="p">,</span> <span class="n">class_obj</span> <span class="ow">in</span> <span class="n">onto</span><span class="o">.</span><span class="n">owl_classes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">use_in_alignment</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_annotations</span><span class="p">(</span><span class="n">class_obj</span><span class="p">,</span> <span class="s2">&quot;http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment&quot;</span><span class="p">)</span>
+        <span class="n">use_in_alignment</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_annotations</span><span class="p">(</span>
+            <span class="n">class_obj</span><span class="p">,</span> <span class="s2">&quot;http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment&quot;</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">use_in_alignment</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">use_in_alignment</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
             <span class="n">ignored_class_index</span><span class="p">[</span><span class="n">class_iri</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="n">ignored_class_index</span>
@@ -1068,22 +1093,227 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/oaei.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span>
-<span class="normal">40</span>
-<span class="normal">41</span>
-<span class="normal">42</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">remove_ignored_mappings</span><span class="p">(</span><span class="n">mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span> <span class="n">ignored_class_index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter prediction mappings that involve classes to be ignored.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">remove_ignored_mappings</span><span class="p">(</span><span class="n">mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span> <span class="n">ignored_class_index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter prediction mappings that involve classes to be ignored.&quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mappings</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">ignored_class_index</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">head</span><span class="p">]</span> <span class="ow">or</span> <span class="n">ignored_class_index</span><span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">tail</span><span class="p">]:</span>
             <span class="k">continue</span>
         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="deeponto.align.oaei.matching_eval" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">matching_eval</span><span class="p">(</span><span class="n">pred_maps_file</span><span class="p">,</span> <span class="n">ref_maps_file</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="p">,</span> <span class="n">pred_maps_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Conduct <strong>global matching</strong> evaluation for the prediction mappings against the
+reference mappings.</p>
+<p>The prediction mappings are formatted the same as <code>full.tsv</code> (the full reference mappings),
+with three columns: <code>"SrcEntity"</code>, <code>"TgtEntity"</code>, and <code>"Score"</code>, indicating the source
+class IRI, the target class IRI, and the corresponding mapping score.</p>
+<p>An <code>ignored_class_index</code> needs to be constructed for omitting prediction mappings
+that involve a class marked as <strong>not used in alignment</strong>.</p>
+<p>Use the following code to obtain such index for both the source and target ontologies:</p>
+<div class="highlight"><pre><span></span><code><span class="n">ignored_class_index</span> <span class="o">=</span> <span class="n">get_ignored_class_index</span><span class="p">(</span><span class="n">src_onto</span><span class="p">)</span>
+<span class="n">ignored_class_index</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">get_ignored_class_index</span><span class="p">(</span><span class="n">tgt_onto</span><span class="p">))</span>
+</code></pre></div>
+
+          <details class="quote">
+            <summary>Source code in <code>src/deeponto/align/oaei.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span>
+<span class="normal">68</span>
+<span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">matching_eval</span><span class="p">(</span>
+    <span class="n">pred_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ref_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">pred_maps_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Conduct **global matching** evaluation for the prediction mappings against the</span>
+<span class="sd">    reference mappings.</span>
+
+<span class="sd">    The prediction mappings are formatted the same as `full.tsv` (the full reference mappings),</span>
+<span class="sd">    with three columns: `&quot;SrcEntity&quot;`, `&quot;TgtEntity&quot;`, and `&quot;Score&quot;`, indicating the source</span>
+<span class="sd">    class IRI, the target class IRI, and the corresponding mapping score.</span>
+
+<span class="sd">    An `ignored_class_index` needs to be constructed for omitting prediction mappings</span>
+<span class="sd">    that involve a class marked as **not used in alignment**.</span>
+
+<span class="sd">    Use the following code to obtain such index for both the source and target ontologies:</span>
+
+<span class="sd">    ```python</span>
+<span class="sd">    ignored_class_index = get_ignored_class_index(src_onto)</span>
+<span class="sd">    ignored_class_index.update(get_ignored_class_index(tgt_onto))</span>
+<span class="sd">    ```</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">refs</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">ref_maps_file</span><span class="p">,</span> <span class="n">relation</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">EntityMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">pred_maps_file</span><span class="p">,</span> <span class="n">relation</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">pred_maps_threshold</span><span class="p">)</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="n">remove_ignored_mappings</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="deeponto.align.oaei.read_candidate_mappings" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">read_candidate_mappings</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">,</span> <span class="n">has_score</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Load scored or already ranked candidate mappings.</p>
+<p>The predicted candidate mappings are formatted the same as <code>test.cands.tsv</code>, with three columns:
+<code>"SrcEntity"</code>, <code>"TgtEntity"</code>, and <code>"TgtCandidates"</code>, indicating the source reference class IRI, the
+target reference class IRI, and a list of tuples in the form of <code>(target_candidate_class_IRI, score)</code>.
+The scores are optional if the candidate mappings have been ranked.</p>
+<p>This method loads the candidate mappings in this format and parse them into the inputs of <a class="autorefs autorefs-internal" href="../evaluation/#deeponto.align.evaluation.AlignmentEvaluator.mean_reciprocal_rank"><code>mean_reciprocal_rank</code></a>
+and [<code>hits_at_K</code>][[<code>mean_reciprocal_rank</code>][deeponto.align.evaluation.AlignmentEvaluator.hits_at_K].</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/deeponto/align/oaei.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_candidate_mappings</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">has_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Load scored or already ranked candidate mappings.</span>
+
+<span class="sd">    The predicted candidate mappings are formatted the same as `test.cands.tsv`, with three columns:</span>
+<span class="sd">    `&quot;SrcEntity&quot;`, `&quot;TgtEntity&quot;`, and `&quot;TgtCandidates&quot;`, indicating the source reference class IRI, the</span>
+<span class="sd">    target reference class IRI, and a list of tuples in the form of `(target_candidate_class_IRI, score)`.</span>
+<span class="sd">    The scores are optional if the candidate mappings have been ranked.</span>
+
+<span class="sd">    This method loads the candidate mappings in this format and parse them into the inputs of [`mean_reciprocal_rank`][deeponto.align.evaluation.AlignmentEvaluator.mean_reciprocal_rank]</span>
+<span class="sd">    and [`hits_at_K`][[`mean_reciprocal_rank`][deeponto.align.evaluation.AlignmentEvaluator.hits_at_K].</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">all_cand_maps</span> <span class="o">=</span> <span class="n">FileUtils</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">formatted</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">src_ref_class</span><span class="p">,</span> <span class="n">tgt_ref_class</span><span class="p">,</span> <span class="n">tgt_cands</span> <span class="ow">in</span> <span class="n">all_cand_maps</span><span class="p">:</span>
+        <span class="n">ref_map</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="p">(</span><span class="n">src_ref_class</span><span class="p">,</span> <span class="n">tgt_ref_class</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">)</span>
+        <span class="n">tgt_cands</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">tgt_cands</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">has_score</span><span class="p">:</span>
+            <span class="n">cand_maps</span> <span class="o">=</span> <span class="p">[</span><span class="n">EntityMapping</span><span class="p">(</span><span class="n">src_ref_class</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">tgt_cands</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Input candidate mappings do not have a score, assume default rank in descending order.&quot;</span><span class="p">)</span>
+            <span class="n">cand_maps</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">EntityMapping</span><span class="p">(</span><span class="n">src_ref_class</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tgt_cands</span><span class="p">)</span> <span class="o">-</span> <span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">tgt_cands</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tgt_cands</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="n">cand_maps</span> <span class="o">=</span> <span class="n">EntityMapping</span><span class="o">.</span><span class="n">sort_entity_mappings_by_score</span><span class="p">(</span><span class="n">cand_maps</span><span class="p">)</span>
+        <span class="n">formatted</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ref_map</span><span class="p">,</span> <span class="n">cand_maps</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">formatted</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="deeponto.align.oaei.ranking_eval" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">ranking_eval</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">,</span> <span class="n">has_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">Ks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Conduct <strong>local ranking</strong> evaluation for the scored or ranked candidate mappings.</p>
+<p>See <a class="autorefs autorefs-internal" href="#deeponto.align.oaei.read_candidate_mappings"><code>read_candidate_mappings</code></a> for the file format and loading.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/deeponto/align/oaei.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ranking_eval</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">has_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">Ks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Conduct **local ranking** evaluation for the scored or ranked candidate mappings.</span>
+
+<span class="sd">    See [`read_candidate_mappings`][deeponto.align.oaei.read_candidate_mappings] for the file format and loading.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">formatted_cand_maps</span> <span class="o">=</span> <span class="n">read_candidate_mappings</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">,</span> <span class="n">has_score</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;MRR&quot;</span><span class="p">:</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">mean_reciprocal_rank</span><span class="p">(</span><span class="n">formatted_cand_maps</span><span class="p">)}</span>
+    <span class="k">for</span> <span class="n">K</span> <span class="ow">in</span> <span class="n">Ks</span><span class="p">:</span>
+        <span class="n">results</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Hits@</span><span class="si">{</span><span class="n">K</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">hits_at_K</span><span class="p">(</span><span class="n">formatted_cand_maps</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">results</span>
 </code></pre></div></td></tr></table></div>
           </details>
