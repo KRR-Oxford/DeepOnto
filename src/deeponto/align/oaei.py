@@ -59,7 +59,11 @@ def remove_ignored_mappings(mappings: List[EntityMapping], ignored_class_index: 
 
 
 def matching_eval(
-    pred_maps_file: str, ref_maps_file: str, ignored_class_index: dict, pred_maps_threshold: Optional[float] = None
+    pred_maps_file: str,
+    ref_maps_file: str,
+    null_ref_maps_file: Optional[str] = None,
+    ignored_class_index: Optional[dict] = None,
+    pred_maps_threshold: Optional[float] = None,
 ):
     r"""Conduct **global matching** evaluation for the prediction mappings against the
     reference mappings.
@@ -80,8 +84,10 @@ def matching_eval(
     """
     refs = ReferenceMapping.read_table_mappings(ref_maps_file, relation="=")
     preds = EntityMapping.read_table_mappings(pred_maps_file, relation="=", threshold=pred_maps_threshold)
-    preds = remove_ignored_mappings(preds, ignored_class_index)
-    results = AlignmentEvaluator.f1(preds, refs)
+    if ignored_class_index:
+        preds = remove_ignored_mappings(preds, ignored_class_index)
+    null_refs = ReferenceMapping.read_table_mappings(null_ref_maps_file, relation="=") if null_ref_maps_file else []
+    results = AlignmentEvaluator.f1(preds, refs, null_reference_mappings=null_refs)
     return results
 
 
