@@ -1120,7 +1120,7 @@
 
 
 <h2 id="deeponto.align.oaei.matching_eval" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">matching_eval</span><span class="p">(</span><span class="n">pred_maps_file</span><span class="p">,</span> <span class="n">ref_maps_file</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="p">,</span> <span class="n">pred_maps_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">matching_eval</span><span class="p">(</span><span class="n">pred_maps_file</span><span class="p">,</span> <span class="n">ref_maps_file</span><span class="p">,</span> <span class="n">null_ref_maps_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">pred_maps_threshold</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1165,8 +1165,18 @@ that involve a class marked as <strong>not used in alignment</strong>.</p>
 <span class="normal">82</span>
 <span class="normal">83</span>
 <span class="normal">84</span>
-<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">matching_eval</span><span class="p">(</span>
-    <span class="n">pred_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ref_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">pred_maps_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="normal">85</span>
+<span class="normal">86</span>
+<span class="normal">87</span>
+<span class="normal">88</span>
+<span class="normal">89</span>
+<span class="normal">90</span>
+<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">matching_eval</span><span class="p">(</span>
+    <span class="n">pred_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">ref_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">null_ref_maps_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">ignored_class_index</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">pred_maps_threshold</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Conduct **global matching** evaluation for the prediction mappings against the</span>
 <span class="sd">    reference mappings.</span>
@@ -1187,8 +1197,10 @@ that involve a class marked as <strong>not used in alignment</strong>.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">refs</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">ref_maps_file</span><span class="p">,</span> <span class="n">relation</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">)</span>
     <span class="n">preds</span> <span class="o">=</span> <span class="n">EntityMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">pred_maps_file</span><span class="p">,</span> <span class="n">relation</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">pred_maps_threshold</span><span class="p">)</span>
-    <span class="n">preds</span> <span class="o">=</span> <span class="n">remove_ignored_mappings</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="p">)</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ignored_class_index</span><span class="p">:</span>
+        <span class="n">preds</span> <span class="o">=</span> <span class="n">remove_ignored_mappings</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="p">)</span>
+    <span class="n">null_refs</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="n">null_ref_maps_file</span><span class="p">,</span> <span class="n">relation</span><span class="o">=</span><span class="s2">&quot;=&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">null_ref_maps_file</span> <span class="k">else</span> <span class="p">[]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">,</span> <span class="n">null_reference_mappings</span><span class="o">=</span><span class="n">null_refs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">results</span>
 </code></pre></div></td></tr></table></div>
           </details>
@@ -1219,13 +1231,7 @@ and [<code>hits_at_K</code>][[<code>mean_reciprocal_rank</code>][deeponto.align.
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/oaei.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 99</span>
 <span class="normal">100</span>
 <span class="normal">101</span>
 <span class="normal">102</span>
@@ -1245,7 +1251,13 @@ and [<code>hits_at_K</code>][[<code>mean_reciprocal_rank</code>][deeponto.align.
 <span class="normal">116</span>
 <span class="normal">117</span>
 <span class="normal">118</span>
-<span class="normal">119</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_candidate_mappings</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">has_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span>
+<span class="normal">123</span>
+<span class="normal">124</span>
+<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_candidate_mappings</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">has_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Load scored or already ranked candidate mappings.</span>
 
 <span class="sd">    The predicted candidate mappings are formatted the same as `test.cands.tsv`, with three columns:</span>
@@ -1296,16 +1308,16 @@ and [<code>hits_at_K</code>][[<code>mean_reciprocal_rank</code>][deeponto.align.
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/oaei.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
 <span class="normal">129</span>
 <span class="normal">130</span>
-<span class="normal">131</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ranking_eval</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">has_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">Ks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]):</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ranking_eval</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">has_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">Ks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Conduct **local ranking** evaluation for the scored or ranked candidate mappings.</span>
 
 <span class="sd">    See [`read_candidate_mappings`][deeponto.align.oaei.read_candidate_mappings] for the file format and loading.</span>
