@@ -128,13 +128,13 @@ The base class of $\textsf{DeepOnto}$ is [`Ontology`][deeponto.onto.Ontology], w
 
 Individual tools and resources are implemented based on the core ontology processing module. Currently, $\textsf{DeepOnto}$ supports the following:
 
-- **BERTMap** [1] is a BERT-based *ontology matching* (OM) system originally developed in [repo](https://github.com/KRR-Oxford/BERTMap) but is now maintained in $\textsf{DeepOnto}$. See [ontology matching with BERTMap & BERTMapLt](https://krr-oxford.github.io/DeepOnto/bertmap/).
+- **BERTMap** [1] is a BERT-based *ontology matching* (OM) system originally developed in [repo](https://github.com/KRR-Oxford/BERTMap) but is now maintained in $\textsf{DeepOnto}$. See [Ontology Matching with BERTMap & BERTMapLt](https://krr-oxford.github.io/DeepOnto/bertmap/).
 
-- **Bio-ML** [2] is an OM resource that has been used in the [Bio-ML track of the OAEI](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/). See [bio-ML specifications](https://krr-oxford.github.io/DeepOnto/bio-ml/).
+- **Bio-ML** [2] is an OM resource that has been used in the [Bio-ML track of the OAEI](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/). See [Bio-ML: A Comprehensive Documentation](https://krr-oxford.github.io/DeepOnto/bio-ml/).
 
-- **BERTSubs** [3] is a system for ontology subsumption prediction. We have transformed its original [experimental code](https://gitlab.com/chen00217/bert_subsumption) into this project. See [subsumption prediction with BERTSubs](https://krr-oxford.github.io/DeepOnto/bertsubs/).
+- **BERTSubs** [3] is a system for ontology subsumption prediction. We have transformed its original [experimental code](https://gitlab.com/chen00217/bert_subsumption) into this project. See [Subsumption Inference with BERTSubs](https://krr-oxford.github.io/DeepOnto/bertsubs/).
 
-- **OntoLAMA** [4] is a set of language model probing datasets for ontology subsumption inference. See [OntoLAMA specifications](https://krr-oxford.github.io/DeepOnto/ontolama) for the use of the datasets and the prompt-based probing approach.
+- **OntoLAMA** [4] is a set of language model probing datasets for ontology subsumption inference. See [OntoLAMA: Dataset Overview & Usage Guide](https://krr-oxford.github.io/DeepOnto/ontolama) for the use of the datasets and the prompt-based probing approach.
 
 
 ## License
