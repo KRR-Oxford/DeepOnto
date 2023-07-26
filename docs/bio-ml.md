@@ -210,7 +210,7 @@ The downloaded datasets (from Zenodo) include `Mondo.zip` and `UMLS.zip` for res
 
 <br/>
 <p align="center">
-  <img alt="deeponto" src="../images/bio-ml-oaei-2022" height="420" style="width: 70%;">
+  <img alt="deeponto" src="../images/bio-ml-oaei-2022.svg" height="420" style="width: 70%;">
 </p>
 
 ## Ontology Pruning
