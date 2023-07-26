@@ -147,6 +147,10 @@ ranking_eval("scored.test.cands.tsv")
 
 ## Bio-ML OAEI 2023
 
+The 2023 version has made several changes compared to the previous version...
+
+(to be updated)
+
 Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the pruned input ontologies are augmented with **structural and logical context** based on their original versions (available at `raw_data`). The added ontology classes are marked as **not used in alignment** through the annotation property `use_in_alignment` with a value of `false`. OM systems can choose to use these classes for enhanced training or heuristics while ommitting them in mapping prediction. The final evaluation also ensures that mappings that involve the additional classes are **excluded from the metric computation** (see [Evaluation Framework](#evaluation-framework)). 
 
 In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance*"*, and *"Neoplastic Process"* in UMLS, respectively. 
@@ -166,6 +170,15 @@ The changes compared to the previous version (see [Bio-ML OAEI 2022](#bio-ml-oae
 
 </small>
 </center>
+
+The file structure for the download datasets (from Zenodo) is simplified this year to accommodate the changes.
+
+Detailed structure is presented in the following figure (not yet available). 
+
+<br/>
+<p align="center">
+  <img alt="deeponto" src="../images/bio-ml-oaei-2023" height="420" style="width: 70%;">
+</p>
 
 ## Special Sub-Track for LLMs
 
@@ -197,7 +210,7 @@ The downloaded datasets (from Zenodo) include `Mondo.zip` and `UMLS.zip` for res
 
 <br/>
 <p align="center">
-  <img alt="deeponto" src="../images/largebiomeddata.svg" height="420" style="width: 70%;">
+  <img alt="deeponto" src="../images/bio-ml-oaei-2022" height="420" style="width: 70%;">
 </p>
 
 ## Ontology Pruning
