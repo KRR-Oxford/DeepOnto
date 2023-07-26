@@ -39,7 +39,7 @@ limitations under the License.
 
 **News** :newspaper:
 
-- [ ] OAEI preparation and bug fixing. (**unreleased**)
+- [X] Deploy OAEI utilities at `deeponto.align.oaei` for scripts at the sub-repository [OAEI-Bio-ML](https://github.com/KRR-Oxford/OAEI-Bio-ML) as well as bug fixing. (**v0.8.4**)
 - [X] Bug fixing for BERTMap (stuck at reasoning) and ontology alignment evaluation. (**v0.8.3**)
 - [X] Deploy `deeponto.onto.OntologyNormaliser` and `deeponto.onto.OntologyProjector` (**v0.8.0**).
 - [X] Upload Java dependencies directly and remove mowl from pip dependencies (**v0.7.5**).

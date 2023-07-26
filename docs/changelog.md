@@ -7,9 +7,11 @@ Removed for now removed features.
 Fixed for any bug fixes.
 Security in case of vulnerabilities. -->
 
-## Unreleased
 
+## Unreleased 
 
+...
+## v0.8.4 (2023 July)
 ### Added
 
 - [X] **Add** specific check of `use_in_alignment` annotation in BERTMap for the OAEI.

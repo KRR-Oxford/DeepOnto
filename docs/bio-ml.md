@@ -25,7 +25,7 @@ $\textsf{Bio-ML}$ incorporates **five** ontology pairs for both equivalence and 
 - **Subsumption Mapping Construction**: Reference subsumption mappings are constructed from the reference equivalence mappings, subject to target class deletion, i.e., if an equivalence mapping is used for constructing a subsumption mapping, its target ontology class will be removed to enforce direct subsumption matching (see [Ontology Pruning](#subsumption-mapping-construction)). 
 - **Candidate Mapping Generation**: To evaluate an OM system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping using different heuristics (see [Ontology Pruning](#candidate-mapping-generation)).
 - **Locality Module Enrichment** (NEW :star2:): In the OAEI 2023 version, we enrich the pruned ontologies with classes that serve as context (and marked as **not used in alignment**) for the existing classes, using the **locality module** technique ([code](https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java)). OM systems can utilise these additional classes as auxiliary information while omitting them in the alignment process; the final evaluation will omit these additional classes as well.
-- **Special Sub-Track for Large Language Models** (NEW :star2:): In the OAEI 2023 version, we introduce a special sub-track for Large Language Model (LLM)-based OM systems by extracting small but challenging subsets from NCIT-DOID and SNOMED-FMA (Body) datasets. See [Special Sub-track for LLMs](#special-sub-track-for-llms) for detail.
+- **Bio-LLM: A Special Sub-Track for Large Language Models** (NEW :star2:): In the OAEI 2023 version, we introduce a special sub-track for Large Language Model (LLM)-based OM systems by extracting small but challenging subsets from NCIT-DOID and SNOMED-FMA (Body) datasets. See [Bio-LLM OAEI 2023](#bio-llm-oaei-2023) for detail.
 
 ## Links
 
@@ -180,7 +180,7 @@ Detailed structure is presented in the following figure (not yet available).
   <img alt="deeponto" src="../images/bio-ml-oaei-2023" height="420" style="width: 70%;">
 </p>
 
-## Special Sub-Track for LLMs
+## Bio-LLM OAEI 2023
 
 As Large Language Models (LLMs) are trending in the deep learning community, we formulate a special sub-track for LLM-based OM systems. For efficient and insightful evaluation, we select two small yet representative subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets, each consisting of 50 **matched** and 50 **unmatched** class pairs. 
 
