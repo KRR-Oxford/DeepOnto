@@ -51,8 +51,7 @@ The complete changelog is available at: [repository](https://github.com/KRR-Oxfo
 
 ## About
 
-$\textsf{DeepOnto}$ aims to provide tools for implementing deep learning models, constructing resources, and conducting evaluation
-for various ontology engineering purposes.
+$\textsf{DeepOnto}$ aims to provide building blocks for implementing deep learning models, constructing resources, and conducting evaluation for various ontology engineering purposes.
 
 - **Documentation**: *<https://krr-oxford.github.io/DeepOnto/>*.
 - **Github Repository**: *<https://github.com/KRR-Oxford/DeepOnto>*. 
