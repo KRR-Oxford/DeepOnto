@@ -147,14 +147,35 @@ ranking_eval("scored.test.cands.tsv")
 
 ## Bio-ML OAEI 2023
 
+Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the pruned input ontologies are augmented with **structural and logical context** based on their original versions (available at `raw_data`). The added ontology classes are marked as **not used in alignment** through the annotation property `use_in_alignment` with a value of `false`. OM systems can choose to use these classes for enhanced training or heuristics while ommitting them in mapping prediction. The final evaluation also ensures that mappings that involve the additional classes are **excluded from the metric computation** (see [Evaluation Framework](#evaluation-framework)). 
+
+The changes compared to the previous version (see [Bio-ML OAEI 2022](#bio-ml-oaei-2022)) are reflected in the `+` numbers of ontology classes. 
+
+<center>
+<small>
+
+| Source | Task        | Category | #SrcCls | #TgtCls | #TgtCls (subs) | #Ref (equiv) | #Ref (subs)  |
+|--------|:-----------:|:--------:|:-------:|:-------:|:--------------:|:------------:|:------------:|
+| Mondo  | OMIM-ORDO   | Disease  | 9,648 (+6)      | 9,275 (+437)    | 9,271 (+536) | 3,721 | 103   |
+| Mondo  | NCIT-DOID   | Disease  | 15,762 (+8,927) | 8,465 (+17)     | 5,722 (+609) | 4,684 | 3,339 | 
+| UMLS   | SNOMED-FMA  |Body | 34,418 (+10,236)|88,955 (+24,229)|88,648 (+20,081)| 7,256  | 5,506    |
+| UMLS   | SNOMED-NCIT |Pharm| 29,500 (+13,455)|22,136 (+6,886) |20,113 (+7,651) | 5,803  | 4,225    |
+| UMLS   | SNOMED-NCIT | Neoplas  | 22,971 (+11,700) | 20,247 (+6291) | 20,113 (+6,323) | 3,804 | 213|
+
+</small>
+</center>
 
 ## Special Sub-Track for LLMs
 
+As Large Language Models (LLMs) are trending in the deep learning community, we formulate a special sub-track for LLM-based OM systems. For efficient and insightful evaluation, we select two small yet representative subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets, each consisting of 50 **matched** and 50 **unmatched** class pairs. 
+
+We have evaluated some LLMs with several settings and submit a poster paper. The dataset will be released when the paper review is finished.
+
 ## Bio-ML OAEI 2022
 
-Statistics for the equivalence matching set-ups. In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance*"*, and *"Neoplastic Process"* in UMLS, respectively.
+Below demonstrates the data statistics for the original Bio-ML used in the OAEI 2022. In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance*"*, and *"Neoplastic Process"* in UMLS, respectively. 
 
-Note that each subsumption matching task is constructed from an equivalence matching task subject to target side class deletion, therefore `#TgtCls (subs)` is different with `#TgtCls`.
+> Note that each subsumption matching task is constructed from an equivalence matching task subject to target side class deletion, therefore `#TgtCls (subs)` is different with `#TgtCls`.
 
 <center>
 <small>
@@ -177,53 +198,8 @@ Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`,
 
 <br/>
 <p align="center">
-  <img alt="deeponto" src="../images/largebiomeddata.svg" height="600" style="width: 100%;">
+  <img alt="deeponto" src="../images/largebiomeddata.svg" height="420" style="width: 70%;">
 </p>
-
-### Evaluation Framework
-
-Each OM pair in $\textsf{Bio-ML}$ consists of an equivalence matching track and a subsumption matching track. Each track considers two perspectives for evaluation, **global matching** and **local ranking**, each of which has two data split settings, **unsupervised** and **semi-supervised**.
-
-#### Local Ranking
-
-Local ranking aims to examine an OM model's ability to distinguish a correct mapping out of several challenging negatives. The model should assign a high score (thus a high ranking) to the correct mapping. The overall results are evaluated using $Hits@K$ and $MRR$.
-
-In $\textsf{Bio-ML}$, candidate mappings are generated for each reference mapping in the test set. As shown in the [file structure](#file-structure), each task setting contains a `test.cands.tsv` file with each entry a reference mapping and its corresponding target class candidates -- which can be combined with the source reference class to form the candidate mappings. 
-
-> Download a <a href="../assets/example_candidate_mappings.tsv" download>small fragment</a>.
-
-A `test.cands.tsv` can be loaded with the following code:
-
-```python
-from deeponto.utils import FileUtils
-df = FileUtils.read_table("test.cands.tsv")
-```
-
-The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a reference mapping. The `"TgtCandidates"` column stores a sequence of target candidate class IRIs (**including the correct one**) used for ranking, which can be accessed by the built-in `eval` function as:
-
-```python
-# get the first sample's candidates
-eval(df.loc[0]["TgtCandidates"])
-```
-
-`#!console Output:`
-:   &#32;
-    ```python
-    ('http://purl.obolibrary.org/obo/DOID_0110279',
-     'http://purl.obolibrary.org/obo/DOID_3185',
-     'http://purl.obolibrary.org/obo/DOID_7008',
-     ...)
-    ```
-
-An OM model is expected to compute a score (or a relative ranking) for each candidate class in `"TgtCandidates"` -- to decide how likely it can be matched with the source reference class. In the ideal case, the reference target class (as in `"TgtEntity"`) should be ranked first.
-
-The candidate mappings were separately generated w.r.t. the tesing data (`test.tsv`) in each data split.
-
-`unsupervised`
-:   `test.cands.tsv` in `refs/unsupervised` refers to candidate mappings generated from `refs/unsupervised/  test.tsv` and `refs/unsupervised/val.tsv` is ensured to be excluded from candidates.
-
-`semi_supervised`
-:  `test.cands.tsv` in `refs/semi_supervised` referes to candidate mappings generated from `refs/semi_supervised/test.tsv` and `refs/semi_supervised/train+val.tsv` is ensured to be excluded from candidate mappings generated from candidates.
 
 ## Ontology Pruning
 
