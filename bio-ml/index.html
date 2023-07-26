@@ -1181,6 +1181,8 @@
 <p>If matching scores are not available, the target candidate classes should be <strong>sorted</strong> in descending order and saved in a list, the <a class="autorefs autorefs-internal" href="../deeponto/align/oaei/#deeponto.align.oaei.ranking_eval"><code>ranking_eval</code></a> function will compute scores according to the sorted list.</p>
 </div>
 <h2 id="bio-ml-oaei-2023">Bio-ML OAEI 2023</h2>
+<p>The 2023 version has made several changes compared to the previous version...</p>
+<p>(to be updated)</p>
 <p>Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the pruned input ontologies are augmented with <strong>structural and logical context</strong> based on their original versions (available at <code>raw_data</code>). The added ontology classes are marked as <strong>not used in alignment</strong> through the annotation property <code>use_in_alignment</code> with a value of <code>false</code>. OM systems can choose to use these classes for enhanced training or heuristics while ommitting them in mapping prediction. The final evaluation also ensures that mappings that involve the additional classes are <strong>excluded from the metric computation</strong> (see <a href="#evaluation-framework">Evaluation Framework</a>). </p>
 <p>In the <strong>Category</strong> column, <em>"Disease"</em> indicates that the Mondo data are mainly about disease concepts, while <em>"Body"</em>, <em>"Pharm"</em>, and <em>"Neoplas"</em> denote semantic types of <em>"Body Part, Organ, or Organ Components"</em>, <em>"Pharmacologic Substance</em>"<em>, and </em>"Neoplastic Process"* in UMLS, respectively. </p>
 <p>The changes compared to the previous version (see <a href="#bio-ml-oaei-2022">Bio-ML OAEI 2022</a>) are reflected in the <code>+</code> numbers of ontology classes. </p>
@@ -1254,6 +1256,13 @@
 </table>
 <p></small>
 </center></p>
+<p>The file structure for the download datasets (from Zenodo) is simplified this year to accommodate the changes.</p>
+<p>Detailed structure is presented in the following figure (not yet available). </p>
+<p><br/></p>
+<p align="center">
+  <img alt="deeponto" src="../images/bio-ml-oaei-2023" height="420" style="width: 70%;">
+</p>
+
 <h2 id="special-sub-track-for-llms">Special Sub-Track for LLMs</h2>
 <p>As Large Language Models (LLMs) are trending in the deep learning community, we formulate a special sub-track for LLM-based OM systems. For efficient and insightful evaluation, we select two small yet representative subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets, each consisting of 50 <strong>matched</strong> and 50 <strong>unmatched</strong> class pairs. </p>
 <p>We have evaluated some LLMs with several settings and submit a poster paper. The dataset will be released when the paper review is finished.</p>
@@ -1333,7 +1342,7 @@
 <p>The downloaded datasets (from Zenodo) include <code>Mondo.zip</code> and <code>UMLS.zip</code> for resources constructed from Mondo and UMLS, respectively. Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equiv_match</code>, and <code>subs_match</code>, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. Detailed structure is presented in the following figure. </p>
 <p><br/></p>
 <p align="center">
-  <img alt="deeponto" src="../images/largebiomeddata.svg" height="420" style="width: 70%;">
+  <img alt="deeponto" src="../images/bio-ml-oaei-2022" height="420" style="width: 70%;">
 </p>
 
 <h2 id="ontology-pruning">Ontology Pruning</h2>
