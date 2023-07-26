@@ -184,7 +184,7 @@ Detailed structure is presented in the following figure (not yet available).
 
 As Large Language Models (LLMs) are trending in the deep learning community, we formulate a special sub-track for LLM-based OM systems. For efficient and insightful evaluation, we select two small yet representative subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets, each consisting of 50 **matched** and 50 **unmatched** class pairs. 
 
-We have evaluated some LLMs with several settings and submit a poster paper. The dataset will be released when the paper review is finished.
+We have evaluated some LLMs with several settings and submit a poster paper. The results and more detail about this track will be released when the paper review is finished.
 
 ## Bio-ML OAEI 2022
 

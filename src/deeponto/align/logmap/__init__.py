@@ -32,7 +32,7 @@ def run_logmap_repair(
     # run jar command
     print(f"Run the repair module of LogMap from {logmap_path}.")
     repair_command = (
-        f"java -jar {logmap_path}/logmap-matcher-4.0.jar DEBUGGER "
+        f"java -Xms1g -Xmx10g -DentityExpansionLimit=100000000 -jar {logmap_path}/logmap-matcher-4.0.jar DEBUGGER "
         + f"file:{src_onto_path} file:{tgt_onto_path} TXT {mapping_file_path}"
         + f" {output_path} false true"
     )
