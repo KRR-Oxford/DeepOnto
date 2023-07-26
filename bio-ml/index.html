@@ -1191,7 +1191,7 @@
 </code></pre></div>
 <div class="admonition tips">
 <p class="admonition-title">Tips</p>
-<p>If matching scores are not available, the target candidate classes should be <strong>sorted</strong> in descending order and saved in a list, the <code>ranking_eval</code> function will compute scores according to the sorted list.</p>
+<p>If matching scores are not available, the target candidate classes should be <strong>sorted</strong> in descending order and saved in a list, the <a class="autorefs autorefs-internal" href="../deeponto/align/oaei/#deeponto.align.oaei.ranking_eval"><code>ranking_eval</code></a> function will compute scores according to the sorted list.</p>
 </div>
 <h2 id="bio-ml-oaei-2023">Bio-ML OAEI 2023</h2>
 <p>Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the pruned input ontologies are augmented with <strong>structural and logical context</strong> based on their original versions (available at <code>raw_data</code>). The added ontology classes are marked as <strong>not used in alignment</strong> through the annotation property <code>use_in_alignment</code> with a value of <code>false</code>. OM systems can choose to use these classes for enhanced training or heuristics while ommitting them in mapping prediction. The final evaluation also ensures that mappings that involve the additional classes are <strong>excluded from the metric computation</strong> (see <a href="#evaluation-framework">Evaluation Framework</a>). </p>
