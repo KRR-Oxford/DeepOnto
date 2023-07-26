@@ -143,7 +143,7 @@ ranking_eval("scored.test.cands.tsv")
 
 !!! tips
 
-    If matching scores are not available, the target candidate classes should be **sorted** in descending order and saved in a list, the `ranking_eval` function will compute scores according to the sorted list.
+    If matching scores are not available, the target candidate classes should be **sorted** in descending order and saved in a list, the [`ranking_eval`][deeponto.align.oaei.ranking_eval] function will compute scores according to the sorted list.
 
 ## Bio-ML OAEI 2023
 
