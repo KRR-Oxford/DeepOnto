@@ -45,7 +45,7 @@ Our evaluation protocol concerns two scenarios for OM: **global matching** for o
 
 As an overall assessment, given a **complete** set of reference mappings, an OM system is expected to compute a set of *true* mappings and compare against the reference mappings using Precision, Recall, and F-score metrics. With $\textsf{DeepOnto}$, the evaluation can be performed using the following code. 
 
-> Download a <a href="../assets/example_reference_mappings.tsv" download>small fragment</a> to see the format of the prediction and reference mapping files. 
+> Download a <a href="../assets/example_reference_mappings.tsv" download>small fragment</a> to see the format of the prediction and reference mapping files. The three columns, `"SrcEntity"`, `"TgtEntity"`, and `"Score"` refer to the source class IRI, the target class IRI, and the matching score.
 
 ```python
 from deeponto.align.evaluation import AlignmentEvaluator
@@ -110,6 +110,40 @@ An OM system is also expected to **distinguish the reference mapping** among a s
 !!! warning 
 
     The reference subsumption mappings are inherently incomplete, so only the ranking metircs are adopted in evaluating system performance in subsumption matching.
+
+> Download a <a href="../assets/example_candidate_mappings.tsv" download>small fragment</a> to see the format of the reference mapping and its candidate mappings. The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a **reference mapping**. The `"TgtCandidates"` column stores a sequence of target candidate class IRIs (**including the correct one**) used for ranking, which can be accessed by the built-in Python function `eval`.
+
+With $\textsf{DeepOnto}$, the evaluation can be performed as follows. First, an OM system needs to assign a score to each target candidate class and save the results as a list of tuples `(tgt_cand_class_iri, matching_score)`. 
+
+```python
+from deeponto.utils import FileUtils
+import pandas as pd
+
+test_candidate_mappings = FileUtils.read_table("test.cands.tsv").values.to_list()
+ranking_results = []
+for src_ref_class, tgt_ref_class, tgt_cands in test_candidate_mappings:
+    tgt_cands = eval(tgt_cands)  # transform string into list or sequence
+    scored_cands = []
+    for tgt_cand in tgt_cands:
+        # assign a score to each candidate with an OM system
+        ...
+        scored_cands.append((tgt_cand, matching_score))
+    ranking_results.append((src_ref_class, tgt_ref_class, scored_cands))
+# save the scored candidate mappings in the same format as the original `test.cands.tsv`
+pd.DataFrame(ranking_results, columns=["SrcEntity", "TgtEntity", "TgtCandidates"]).to_csv("scored.test.cands.tsv", sep="\t", index=False)
+```
+
+Then, the ranking evaluation results can be obtained by:
+
+```python
+from deeponto.align.oaei import *
+
+ranking_eval("scored.test.cands.tsv")
+```
+
+!!! tips
+
+    If matching scores are not available, the target candidate classes should be **sorted** in descending order and saved in a list, the `ranking_eval` function will compute scores according to the sorted list.
 
 ## Bio-ML OAEI 2023
 
@@ -190,42 +224,6 @@ The candidate mappings were separately generated w.r.t. the tesing data (`test.t
 
 `semi_supervised`
 :  `test.cands.tsv` in `refs/semi_supervised` referes to candidate mappings generated from `refs/semi_supervised/test.tsv` and `refs/semi_supervised/train+val.tsv` is ensured to be excluded from candidate mappings generated from candidates.
-  
-#### Global Matching
-
-Global matching aims to examine the overall OM performance by comparing the output mappings with the reference mappings using $Precision$, $Recall$, and $F1$.
-
-For each OM pair, a `refs/full.tsv` file is provided for the full set of reference mappings; the columns of this `.tsv` file have the headings `"SrcEntity"`, `"TgtEntity"`, `"Score"` standing for the source reference class, target reference class, and the score (automatically set to $1.0$ for reference mappings). 
-
-> Download a <a href="../assets/example_reference_mappings.tsv" download>small fragment</a>.
-
-
-A reference mapping file such as `refs/full.tsv` can be loaded using:
-
-```python
-from deeponto.align.mapping import ReferenceMapping
-refs = ReferenceMapping.read_table_mappings("refs/full.tsv")
-```
-
-Reference mappings in `full.tsv` are further divided into different splits for training (semi-supervised), validation, and testing.
-
-`unsupervised`
-:  `val.tsv` and `test.tsv` are provided in `refs/unsupervised` for validation ($10\%$) and testing ($90\%$), respectively.
-
-`semi-supervised`
-:  `train.tsv`, `val.tsv`, `train+val.tsv` and `test.tsv` are provided in `refs/semi_supervised` for training ($20\%$), validation ($10\%$), merged training and validation file for evaluation, and testing ($70\%$), respectively.
-  
-
-!!! tip
-
-    When computing the scores (P, R, F1), mappings that are not in the testing set should be **ignored by substraction from both system output and reference mappings**. 
-      - i.e., when evaluating on `unsupervised/test.tsv`, `unsupervised/val.tsv` should be ignored; when evaluating on `semi_supervised/test.tsv`, `semi_supervised/train+val.tsv` should be ignored. 
-      - This feature is supported in the code [here][deeponto.align.evaluation.AlignmentEvaluator.f1] where the arguement `null_reference_mappings` is for inputting the reference mappings that should be ignored.
-
-    Since the subsumption mappings are inherently incomplete, we suggest apply **only local ranking for evaluating subsumption matching**.
-
-
-
 
 ## Ontology Pruning
 
