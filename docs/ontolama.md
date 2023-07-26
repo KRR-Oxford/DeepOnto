@@ -1,4 +1,4 @@
-# OntoLAMA Specifications
+# OntoLAMA: Dataset Overview & Usage Guide
 
 !!! credit "paper"
 

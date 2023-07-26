@@ -1,4 +1,4 @@
-# Bio-ML Specifications
+# Bio-ML: A Comprehensive Documentation
 
 !!! credit "paper"
 
@@ -25,6 +25,7 @@ $\textsf{Bio-ML}$ incorporates **five** ontology pairs for both equivalence and 
 - **Subsumption Mapping Construction**: Reference subsumption mappings are constructed from the reference equivalence mappings, subject to target class deletion, i.e., if an equivalence mapping is used for constructing a subsumption mapping, its target ontology class will be removed to enforce direct subsumption matching (see [Ontology Pruning](#subsumption-mapping-construction)). 
 - **Candidate Mapping Generation**: To evaluate an OM system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping using different heuristics (see [Ontology Pruning](#candidate-mapping-generation)).
 - **Locality Module Enrichment** (NEW :star2:): In the OAEI 2023 version, we enrich the pruned ontologies with classes that serve as context (and marked as **not used in alignment**) for the existing classes, using the **locality module** technique ([code](https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java)). OM systems can utilise these additional classes as auxiliary information while omitting them in the alignment process; the final evaluation will omit these additional classes as well.
+- **Special Sub-Track for Large Language Models** (NEW :star2:): In the OAEI 2023 version, we introduce a special sub-track for Large Language Model (LLM)-based OM systems by extracting small but challenging subsets from NCIT-DOID and SNOMED-FMA (Body) datasets. See [Special Sub-track for LLMs](#special-sub-track-for-llms) for detail.
 
 ## Links
 
@@ -32,8 +33,8 @@ $\textsf{Bio-ML}$ incorporates **five** ontology pairs for both equivalence and 
     - **OAEI 2023**: to be released
     - **OAEI 2022**: <https://zenodo.org/record/6946466>
 
-- **Instructions of Use**: *<https://krr-oxford.github.io/DeepOnto/bio-ml/>* (this page)
-- **Resource Paper**: *<https://arxiv.org/abs/2205.03447>* (arxiv version)
+- **Detailed Documentation**: *<https://krr-oxford.github.io/DeepOnto/bio-ml/>* (this page)
+- **Resource Paper**: *<https://arxiv.org/abs/2205.03447>* (arXiv version)
 - **Official OAEI Page**: *<https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html>*
 
 
@@ -91,7 +92,11 @@ preds = remove_ignored_mappings(preds, ignored_class_index)
 results = AlignmentEvaluator.f1(preds, refs, ...)
 ```
 
-However, the global matching evaluation is not enough as:
+!!! tips
+
+    We have encapsulated above features in the [`matching_eval`][deeponto.align.oaei.matching_eval] function in the OAEI utilities.
+
+However,
 
 - The scores will be biased towards high-precision, low-recall OM systems if the set of reference mappings is incomplete. 
 - For efficient OM system development and debugging, an intermediate evaluation is required.
@@ -106,7 +111,12 @@ An OM system is also expected to **distinguish the reference mapping** among a s
 
     The reference subsumption mappings are inherently incomplete, so only the ranking metircs are adopted in evaluating system performance in subsumption matching.
 
-## OAEI 2022 Version
+## Bio-ML OAEI 2023
+
+
+## Special Sub-Track for LLMs
+
+## Bio-ML OAEI 2022
 
 Statistics for the equivalence matching set-ups. In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance*"*, and *"Neoplastic Process"* in UMLS, respectively.
 

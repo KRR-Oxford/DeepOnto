@@ -43,14 +43,14 @@ extra:
 nav:
     - GET STARTED: 
       - Introduction: index.md
-      - Load an ontology: ontology.md  # basic usage of ontologies, ontology pruning, etc.
+      - Load an Ontology: ontology.md  # basic usage of ontologies, ontology pruning, etc.
       - Changelog: changelog.md
     - TUTORIALS:
-      - Verbalise ontology concepts: verbaliser.md
-      - Ontology matching with BERTMap & BERTMapLt: bertmap.md
-      - Bio-ML specifications: bio-ml.md
-      - Subsumption inference with BERTSubs: bertsubs.md
-      - OntoLAMA specifications: ontolama.md
+      - Verbalise Complex Ontology Concepts: verbaliser.md
+      - Ontology Matching with BERTMap Family: bertmap.md
+      - "Bio-ML: A Comprehensive Documentation": bio-ml.md
+      - Subsumption Inference with BERTSubs: bertsubs.md
+      - "OntoLAMA: Dataset Overview & Usage Guide": ontolama.md
     - PACKAGE REFERENCE:
         - Ontology Processing: 
           - Ontology: deeponto/onto/ontology.md
