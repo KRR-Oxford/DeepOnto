@@ -3,7 +3,7 @@
 !!! credit "paper"
 
     Paper for OntoLAMA:
-    [Language Model Analysis for Ontology Subsumption Inference (Findings of ACL 2023, to appear)](https://arxiv.org/abs/2302.06761).
+    [Language Model Analysis for Ontology Subsumption Inference (Findings of ACL 2023)](https://aclanthology.org/2023.findings-acl.213).
 
     ```
     @inproceedings{he-etal-2023-language,
