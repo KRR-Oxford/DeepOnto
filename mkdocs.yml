@@ -50,7 +50,7 @@ nav:
       - Ontology Matching with BERTMap Family: bertmap.md
       - "Bio-ML: A Comprehensive Documentation": bio-ml.md
       - Subsumption Inference with BERTSubs: bertsubs.md
-      - "OntoLAMA: Dataset Overview & Usage Guide": ontolama.md
+      - "OntoLAMA: Dataset Overview and Usage Guide": ontolama.md
     - PACKAGE REFERENCE:
         - Ontology Processing: 
           - Ontology: deeponto/onto/ontology.md

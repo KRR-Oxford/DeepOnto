@@ -1,4 +1,4 @@
-# OntoLAMA: Dataset Overview & Usage Guide
+# OntoLAMA: Dataset Overview and Usage Guide
 
 !!! credit "paper"
 
