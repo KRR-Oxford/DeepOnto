@@ -2499,7 +2499,8 @@ target classes that have been <strong>used to create a subsumption mapping</stro
 <span class="normal">323</span>
 <span class="normal">324</span>
 <span class="normal">325</span>
-<span class="normal">326</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">online_construction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">326</span>
+<span class="normal">327</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">online_construction</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;An **online** algorithm for constructing subsumption mappings from gold standard equivalence mappings.</span>
 
 <span class="sd">    Let $t$ denote the boolean value that indicates if the target class involved in an equivalence mapping</span>
@@ -2528,7 +2529,8 @@ target classes that have been <strong>used to create a subsumption mapping</stro
 
         <span class="c1"># construct subsumption pairs by matching the source class and the target class&#39;s parents</span>
         <span class="n">tgt_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">tgt_class_iri</span><span class="p">)</span>
-        <span class="n">tgt_class_parent_iris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">get_inferred_super_entities</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># tgt_class_parent_iris = self.tgt_onto.reasoner.get_inferred_super_entities(tgt_class, direct=True)</span>
+        <span class="n">tgt_class_parent_iris</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getIRI</span><span class="p">())</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">get_asserted_parents</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">,</span> <span class="n">named_only</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
         <span class="k">for</span> <span class="n">parent_iri</span> <span class="ow">in</span> <span class="n">tgt_class_parent_iris</span><span class="p">:</span>
             <span class="c1"># skip this parent if it is marked as &quot;used&quot;</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">delete_used_equiv_tgt_class</span> <span class="ow">and</span> <span class="n">used_equivs</span><span class="p">[</span><span class="n">parent_iri</span><span class="p">]:</span>
@@ -2580,10 +2582,10 @@ target classes that have been <strong>used to create a subsumption mapping</stro
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/mapping.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">328</span>
-<span class="normal">329</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">329</span>
 <span class="normal">330</span>
-<span class="normal">331</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_subs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">331</span>
+<span class="normal">332</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_subs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save the constructed subsumption mappings (in tuples) to a local `.tsv` file.&quot;&quot;&quot;</span>
     <span class="n">subs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">subs_from_equivs</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SrcEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;TgtEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;Score&quot;</span><span class="p">])</span>
     <span class="n">subs_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -2625,8 +2627,7 @@ according to the target side.</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/align/mapping.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">349</span>
-<span class="normal">350</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">350</span>
 <span class="normal">351</span>
 <span class="normal">352</span>
 <span class="normal">353</span>
@@ -2665,7 +2666,8 @@ according to the target side.</p>
 <span class="normal">386</span>
 <span class="normal">387</span>
 <span class="normal">388</span>
-<span class="normal">389</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">389</span>
+<span class="normal">390</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
     <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
@@ -2790,8 +2792,7 @@ sampling strategy.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/mapping.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">392</span>
-<span class="normal">393</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">393</span>
 <span class="normal">394</span>
 <span class="normal">395</span>
 <span class="normal">396</span>
@@ -2853,7 +2854,8 @@ sampling strategy.</p>
 <span class="normal">452</span>
 <span class="normal">453</span>
 <span class="normal">454</span>
-<span class="normal">455</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mixed_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_class_mapping</span><span class="p">:</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="o">**</span><span class="n">strategy2nums</span><span class="p">):</span>
+<span class="normal">455</span>
+<span class="normal">456</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mixed_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_class_mapping</span><span class="p">:</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="o">**</span><span class="n">strategy2nums</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A mixed sampling approach that combines several sampling strategies.</span>
 
 <span class="sd">    As introduced in the Bio-ML paper, this mixed approach guarantees that the number of samples for each</span>
@@ -2986,8 +2988,7 @@ candidate mappings <span class="arithmatex">\(\{(c, c'_{cand})\}\)</span>.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/mapping.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">457</span>
-<span class="normal">458</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">458</span>
 <span class="normal">459</span>
 <span class="normal">460</span>
 <span class="normal">461</span>
@@ -3002,7 +3003,8 @@ candidate mappings <span class="arithmatex">\(\{(c, c'_{cand})\}\)</span>.</p>
 <span class="normal">470</span>
 <span class="normal">471</span>
 <span class="normal">472</span>
-<span class="normal">473</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">random_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_class_mapping</span><span class="p">:</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="normal">473</span>
+<span class="normal">474</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">random_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_class_mapping</span><span class="p">:</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;**Randomly** sample a set of target class candidates $c&#39;_{cand}$ for a given reference mapping $(c, c&#39;)$.</span>
 
 <span class="sd">    The sampled candidate classes will be combined with the source reference class $c$ to get a set of</span>
@@ -3089,8 +3091,7 @@ to get a set of candidate mappings <span class="arithmatex">\(\{(c, c'_{cand})\}
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/mapping.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">475</span>
-<span class="normal">476</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">476</span>
 <span class="normal">477</span>
 <span class="normal">478</span>
 <span class="normal">479</span>
@@ -3113,7 +3114,8 @@ to get a set of candidate mappings <span class="arithmatex">\(\{(c, c'_{cand})\}
 <span class="normal">496</span>
 <span class="normal">497</span>
 <span class="normal">498</span>
-<span class="normal">499</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">idf_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_class_mapping</span><span class="p">:</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="normal">499</span>
+<span class="normal">500</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">idf_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_class_mapping</span><span class="p">:</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Sample a set of target class candidates $c&#39;_{cand}$ for a given reference mapping $(c, c&#39;)$ based on the $idf$ scores</span>
 <span class="sd">    w.r.t. the inverted annotation index (sub-word level).</span>
 
@@ -3209,8 +3211,7 @@ to get a set of candidate mappings <span class="arithmatex">\(\{(c, c'_{cand})\}
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/mapping.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">501</span>
-<span class="normal">502</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">502</span>
 <span class="normal">503</span>
 <span class="normal">504</span>
 <span class="normal">505</span>
@@ -3251,7 +3252,8 @@ to get a set of candidate mappings <span class="arithmatex">\(\{(c, c'_{cand})\}
 <span class="normal">540</span>
 <span class="normal">541</span>
 <span class="normal">542</span>
-<span class="normal">543</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">neighbour_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_class_mapping</span><span class="p">:</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="normal">543</span>
+<span class="normal">544</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">neighbour_sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference_class_mapping</span><span class="p">:</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="n">num_candidates</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Sample a set of target class candidates $c&#39;_{cand}$ for a given reference mapping $(c, c&#39;)$ based on the **subsumption</span>
 <span class="sd">    hierarchy**.</span>
 

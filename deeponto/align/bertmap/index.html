@@ -6965,7 +6965,8 @@ a score <span class="arithmatex">\(\geq\)</span> <code>self.mapping_extension_th
 <span class="normal">316</span>
 <span class="normal">317</span>
 <span class="normal">318</span>
-<span class="normal">319</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mapping_repair</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">319</span>
+<span class="normal">320</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">mapping_repair</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Repair the filtered mappings with LogMap&#39;s debugger.</span>
 
 <span class="sd">    !!! note</span>
@@ -7003,6 +7004,7 @@ a score <span class="arithmatex">\(\geq\)</span> <code>self.mapping_extension_th
         <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl_path</span><span class="p">,</span>
         <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logmap_repair_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;filtered_mappings_for_LogMap_repair.txt&quot;</span><span class="p">),</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logmap_repair_path</span><span class="p">,</span>
+        <span class="n">Ontology</span><span class="o">.</span><span class="n">get_max_jvm_memory</span><span class="p">()</span>
     <span class="p">)</span>
 
     <span class="c1"># create table mappings from LogMap repair outputs</span>
@@ -7042,8 +7044,7 @@ to be formatted as LogMap's input format.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/mapping_refinement.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">321</span>
-<span class="normal">322</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">322</span>
 <span class="normal">323</span>
 <span class="normal">324</span>
 <span class="normal">325</span>
@@ -7063,7 +7064,8 @@ to be formatted as LogMap's input format.</p>
 <span class="normal">339</span>
 <span class="normal">340</span>
 <span class="normal">341</span>
-<span class="normal">342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">logmap_repair_formatting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">342</span>
+<span class="normal">343</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">logmap_repair_formatting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform the filtered mapping file into the LogMap format.</span>
 
 <span class="sd">    An auxiliary function of the mapping repair module which requires mappings</span>
