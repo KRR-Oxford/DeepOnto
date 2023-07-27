@@ -145,7 +145,7 @@ ranking_eval("scored.test.cands.tsv")
 
     If matching scores are not available, the target candidate classes should be **sorted** in descending order and saved in a list, the [`ranking_eval`][deeponto.align.oaei.ranking_eval] function will compute scores according to the sorted list.
 
-## Bio-ML OAEI 2023
+## OAEI Bio-ML 2023
 
 The 2023 version has made several changes towards the previous version...
 
@@ -180,13 +180,13 @@ Detailed structure is presented in the following figure (not yet available).
   <img alt="deeponto" src="../images/bio-ml-oaei-2023" height="420" style="width: 70%;">
 </p>
 
-## Bio-LLM OAEI 2023
+## OAEI Bio-LLM 2023
 
 As Large Language Models (LLMs) are trending in the AI community, we formulate a special sub-track for evaluating LLM-based OM systems. For efficient and insightful evaluation, we select two small yet representative subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets, each consisting of 50 **matched** and 50 **unmatched** class pairs. 
 
 We have evaluated some LLMs with several settings and submit a poster paper. The results and more detail about this track will be released when the paper review is finished.
 
-## Bio-ML OAEI 2022
+## OAEI Bio-ML 2022
 
 Below demonstrates the data statistics for the original Bio-ML used in the OAEI 2022. In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance*"*, and *"Neoplastic Process"* in UMLS, respectively. 
 
