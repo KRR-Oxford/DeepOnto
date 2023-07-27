@@ -23,6 +23,7 @@ from pathlib import Path
 import pandas as pd
 import xml.etree.ElementTree as ET
 import subprocess
+import warnings
 
 
 class FileUtils:
@@ -137,12 +138,13 @@ class FileUtils:
         return ref_mappings, ignored_mappings
 
     @staticmethod
-    def run_jar(jar_command: str, timeout=36000):
+    def run_jar(jar_command: str, timeout=3600):
         """Run jar command using subprocess."""
         print(f"Run jar command with timeout: {timeout}s.")
         proc = subprocess.Popen(jar_command.split(" "))
         try:
             _, _ = proc.communicate(timeout=timeout)
         except subprocess.TimeoutExpired:
+            warnings.warn("kill the jar process as timed out")
             proc.kill()
             _, _ = proc.communicate()
