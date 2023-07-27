@@ -175,7 +175,7 @@ class Ontology:
     def get_max_jvm_memory():
         """Get the maximum heap size assigned to the JVM."""
         if jpype.isJVMStarted():
-            return str(Runtime.getRuntime().maxMemory() / (1024 * 1024 * 1024)) + "g"
+            return int(Runtime.getRuntime().maxMemory())
         else:
             raise RuntimeError("Cannot retrieve JVM memory as it is not started.")
 
