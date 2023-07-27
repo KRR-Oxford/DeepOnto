@@ -303,6 +303,7 @@ class MappingRefiner:
             self.tgt_onto.owl_path,
             os.path.join(self.logmap_repair_path, f"filtered_mappings_for_LogMap_repair.txt"),
             self.logmap_repair_path,
+            Ontology.get_max_jvm_memory()
         )
 
         # create table mappings from LogMap repair outputs

@@ -16,25 +16,25 @@ import os
 
 
 def run_logmap_repair(
-    src_onto_path: str, tgt_onto_path: str, mapping_file_path: str, output_path: str
+    src_onto_path: str, tgt_onto_path: str, mapping_file_path: str, output_path: str, max_jvm_memory: str = "10g"
 ):
     """Run the repair module of LogMap with `java -jar`."""
-    
+
     # find logmap directory
     logmap_path = os.path.dirname(__file__)
-    
+
     # obtain absolute paths
     src_onto_path = os.path.abspath(src_onto_path)
     tgt_onto_path = os.path.abspath(tgt_onto_path)
     mapping_file_path = os.path.abspath(mapping_file_path)
     output_path = os.path.abspath(output_path)
-    
+
     # run jar command
     print(f"Run the repair module of LogMap from {logmap_path}.")
     repair_command = (
-        f"java -Xms1g -Xmx10g -DentityExpansionLimit=100000000 -jar {logmap_path}/logmap-matcher-4.0.jar DEBUGGER "
+        f"java -Xms500m -Xmx{max_jvm_memory} -DentityExpansionLimit=100000000 -jar {logmap_path}/logmap-matcher-4.0.jar DEBUGGER "
         + f"file:{src_onto_path} file:{tgt_onto_path} TXT {mapping_file_path}"
-        + f" {output_path} false true"
+        + f" {output_path} true false"
     )
     print(f"The jar command is:\n{repair_command}.")
     FileUtils.run_jar(repair_command)

@@ -34,7 +34,7 @@ if not jpype.isJVMStarted():
     init_jvm(memory)
 
 from java.io import File  # type: ignore
-from java.util import Collections  # type: ignore
+from java.lang import Runtime  # type: ignore
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
 from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLNamedIndividual, OWLAxiom, AddAxiom, RemoveAxiom, AxiomType  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory  # type: ignore
@@ -170,6 +170,14 @@ class Ontology:
 
     def __str__(self) -> str:
         return FileUtils.print_dict(self.info)
+
+    @staticmethod
+    def get_max_jvm_memory():
+        """Get the maximum heap size assigned to the JVM."""
+        if jpype.isJVMStarted():
+            return str(Runtime.getRuntime().maxMemory() / (1024 * 1024 * 1024)) + "g"
+        else:
+            raise RuntimeError("Cannot retrieve JVM memory as it is not started.")
 
     def get_owl_objects(self, entity_type: str):
         """Get an index of `OWLObject` of certain type from the ontology.
@@ -344,7 +352,6 @@ class Ontology:
 
         annotations = []
         for annotation in EntitySearcher.getAnnotations(owl_object, self.owl_onto, annotation_property):
-
             annotation = annotation.getValue()
             # boolean that indicates whether the annotation's language is of interest
             fit_language = False
@@ -395,7 +402,7 @@ class Ontology:
         if not OWL_DEPRECATED in self.owl_annotation_properties.keys():
             # return False if owl:deprecated is not defined in this ontology
             return False
-            
+
         deprecated = self.get_owl_object_annotations(owl_object, annotation_property_iri=OWL_DEPRECATED)
         if deprecated and (list(deprecated)[0] == "true" or list(deprecated)[0] == "True"):
             return True
@@ -409,13 +416,11 @@ class Ontology:
         NOTE that only groups with size > 1 will be considered
         """
         if not self._sibling_class_groups:
-
             self._multi_children_classes = dict()
             self._sibling_class_groups = []
             all_class_iris = list(self.owl_classes.keys()) + [OWL_THING]  # including the root node
 
             for cl_iri in all_class_iris:
-
                 if cl_iri == OWL_THING:
                     cl = self.OWLThing
                 else:
@@ -504,7 +509,7 @@ class Ontology:
         print(f"[{str(result)}] Adding the axiom {str(owl_axiom)} into the ontology.")
         if return_undo:
             return change.reverseChange()
-        
+
     def remove_axiom(self, owl_axiom: OWLAxiom, return_undo: bool = True):
         """Remove an axiom from the current ontology.
 

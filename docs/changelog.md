@@ -10,7 +10,10 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased 
 
-...
+### Changed 
+
+- [X] **Change** the LogMap debugger memory options for BERTMap's mapping repair.
+
 ## v0.8.4 (2023 July)
 ### Added
 
