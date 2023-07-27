@@ -147,11 +147,11 @@ ranking_eval("scored.test.cands.tsv")
 
 ## Bio-ML OAEI 2023
 
-The 2023 version has made several changes compared to the previous version...
+The 2023 version has made several changes towards the previous version...
 
 (to be updated)
 
-Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the pruned input ontologies are augmented with **structural and logical context** based on their original versions (available at `raw_data`). The added ontology classes are marked as **not used in alignment** through the annotation property `use_in_alignment` with a value of `false`. OM systems can choose to use these classes for enhanced training or heuristics while ommitting them in mapping prediction. The final evaluation also ensures that mappings that involve the additional classes are **excluded from the metric computation** (see [Evaluation Framework](#evaluation-framework)). 
+Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are extended to the modualarizations of their pruned versions used in 2022 (available at `raw_data`), through which **structural and logical contexts** are added and the input ontologies become closer to the original ontologies. The ensure the completeness of the reference mappings, the added ontology classes are marked as **not used in alignment** through the annotation property `use_in_alignment` with a value of `false`. OM systems can choose to use these classes for enhancement but do not need to consider them for final output mappings. Even they are considered for the final output mappings, our evaluation will ensure that they are **excluded in the metric computation** (see [Evaluation Framework](#evaluation-framework)). 
 
 In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance*"*, and *"Neoplastic Process"* in UMLS, respectively. 
 
@@ -182,7 +182,7 @@ Detailed structure is presented in the following figure (not yet available).
 
 ## Bio-LLM OAEI 2023
 
-As Large Language Models (LLMs) are trending in the deep learning community, we formulate a special sub-track for LLM-based OM systems. For efficient and insightful evaluation, we select two small yet representative subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets, each consisting of 50 **matched** and 50 **unmatched** class pairs. 
+As Large Language Models (LLMs) are trending in the AI community, we formulate a special sub-track for evaluating LLM-based OM systems. For efficient and insightful evaluation, we select two small yet representative subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets, each consisting of 50 **matched** and 50 **unmatched** class pairs. 
 
 We have evaluated some LLMs with several settings and submit a poster paper. The results and more detail about this track will be released when the paper review is finished.
 
