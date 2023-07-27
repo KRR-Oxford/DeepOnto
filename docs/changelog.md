@@ -13,6 +13,7 @@ Security in case of vulnerabilities. -->
 ### Changed 
 
 - [X] **Change** the LogMap debugger memory options for BERTMap's mapping repair.
+- [X] **Change** the default jar command timeout to 10 hours.
 
 ## v0.8.4 (2023 July)
 ### Added
