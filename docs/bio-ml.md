@@ -25,13 +25,13 @@ $\textsf{Bio-ML}$ incorporates **five** ontology pairs for both equivalence and 
 - **Subsumption Mapping Construction**: Reference subsumption mappings are constructed from the reference equivalence mappings, subject to target class deletion, i.e., if an equivalence mapping is used for constructing a subsumption mapping, its target ontology class will be removed to enforce direct subsumption matching (see [Subsumption Mapping Construction](#subsumption-mapping-construction)). 
 - **Candidate Mapping Generation**: To evaluate an OM system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping using different heuristics (see [Candidate Mapping Generation](#candidate-mapping-generation)).
 - **Locality Module Enrichment** (NEW :star2:): In the OAEI 2023 version, we enrich the pruned ontologies with classes that serve as context (and marked as **not used in alignment**) for the existing classes, using the **locality module** technique ([code](https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java)). OM systems can utilise these additional classes as auxiliary information while omitting them in the alignment process; the final evaluation will omit these additional classes as well.
-- **Bio-LLM: A Special Sub-Track for Large Language Models** (NEW :star2:): In the OAEI 2023 version, we introduce a special sub-track for Large Language Model (LLM)-based OM systems by extracting small but challenging subsets from NCIT-DOID and SNOMED-FMA (Body) datasets. See [Bio-LLM OAEI 2023](#bio-llm-oaei-2023) for detail.
+- **Bio-LLM: A Special Sub-Track for Large Language Models** (NEW :star2:): In the OAEI 2023 version, we introduce a special sub-track for Large Language Model (LLM)-based OM systems by extracting small but challenging subsets from NCIT-DOID and SNOMED-FMA (Body) datasets. See [OAEI Bio-LLM 2023](#oaei-bio-llm-2023) for detail.
 
 ## Links
 
 - **Dataset Download** (CC BY 4.0 International):
-    - **OAEI 2023**: to be released
-    - **OAEI 2022**: <https://zenodo.org/record/6946466>
+    - **OAEI 2022**: <https://zenodo.org/record/6946466> (see [OAEI Bio-ML 2022](#oaei-bio-ml-2022))
+    - **OAEI 2023** (NEW :star2:): to be released (see [OAEI Bio-ML 2023](#oaei-bio-ml-2023))
 
 - **Detailed Documentation**: *<https://krr-oxford.github.io/DeepOnto/bio-ml/>* (this page)
 - **Resource Paper**: *<https://arxiv.org/abs/2205.03447>* (arXiv version)
