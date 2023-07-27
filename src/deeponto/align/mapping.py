@@ -295,7 +295,8 @@ class SubsFromEquivMappingGenerator:
 
             # construct subsumption pairs by matching the source class and the target class's parents
             tgt_class = self.tgt_onto.get_owl_object_from_iri(tgt_class_iri)
-            tgt_class_parent_iris = self.tgt_onto.reasoner.get_inferred_super_entities(tgt_class, direct=True)
+            # tgt_class_parent_iris = self.tgt_onto.reasoner.get_inferred_super_entities(tgt_class, direct=True)
+            tgt_class_parent_iris = [str(p.getIRI()) for p in self.tgt_onto.get_asserted_parents(tgt_class, named_only=True)]
             for parent_iri in tgt_class_parent_iris:
                 # skip this parent if it is marked as "used"
                 if self.delete_used_equiv_tgt_class and used_equivs[parent_iri]:
