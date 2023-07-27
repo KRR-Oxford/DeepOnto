@@ -139,8 +139,8 @@ class FileUtils:
     @staticmethod
     def run_jar(jar_command: str, timeout=36000):
         """Run jar command using subprocess."""
-        proc = subprocess.Popen(jar_command.split(" "))
         print(f"Run jar command with timeout: {timeout}s.")
+        proc = subprocess.Popen(jar_command.split(" "))
         try:
             _, _ = proc.communicate(timeout=timeout)
         except subprocess.TimeoutExpired:
