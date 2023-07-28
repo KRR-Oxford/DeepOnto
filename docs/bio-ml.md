@@ -364,16 +364,27 @@ In the **Category** column, *"Disease"* indicates that the Mondo data are mainly
 </small>
 </center>
 
-The file structure for the download datasets (from Zenodo) is also simplified this year to accommodate the changes. Detailed structure is presented in the following figure. 
+The file structure for the download datasets (from Zenodo) is also simplified this year to accommodate the changes. Detailed structure is presented in the following figure.
 
 <br/>
 <p align="center">
   <img alt="deeponto" src="../images/bio-ml-oaei-2023" height="420" style="width: 70%;">
 </p>
 
+Remarks on this figure:
+- For equivalence matching, the global matching evaluation should be performed on `refs_equiv/full.tsv` in the unsupervised setting and on `refs_equiv/test.tsv` with `refs_equiv/train.tsv` set to null reference mappings in the semi-supervised setting. The local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` for both settings.
+- For subsumption matching, the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` and the training mapping set `refs_subs/train.tsv` is optional.
+- The `test.cands.tsv` file in the Bio-LLM sub-track is different from the main track ones. See [OAEI Bio-LLM 2023](#oaei-bio-llm-2023) for more information and how to evaluate on it.
+
+
 ## OAEI Bio-LLM 2023
 
-As Large Language Models (LLMs) are trending in the AI community, we formulate a special sub-track for evaluating LLM-based OM systems. For efficient and insightful evaluation, we select two small yet representative subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets, each consisting of 50 **matched** and 50 **unmatched** class pairs. 
+As Large Language Models (LLMs) are trending in the AI community, we formulate a special sub-track for evaluating LLM-based OM systems. However, evaluating LLMs with the current OM datasets can be time and resource intensive. To yield insightful results prior to full implementation, we leverage two challenging subsets extracted from the NCIT-DOID and the SNOMED-FMA (Body) equivalence matching datasets.
 
-We have evaluated some LLMs with several settings and submitted a poster paper. The results and more detail about this track will be released when the paper review is finished.
+For each original dataset, we first randomly select 50 **matched** concept pairs from ground truth mappings, but **excluding pairs that can be aligned** with direct string matching (i.e., having at least one shared label) to restrict the efficacy of conventional lexical matching. Next, with a fixed source ontology class, we further select 99 unmatched target ontology classes, thus forming a total of 100 candidate mappings (inclusive of the ground truth mapping). This selection is guided by the sub-word inverted index-based idf scores as in the BERTMap paper (see [BERTMap tutorial](../bertmap) for more details), which are capable of producing target ontology concepts lexically akin to the fixed source concept. We finally randomly choose 50 source concepts that **do not have a matched target concept** according to the ground truth mappings, and create 100 candidate mappings for each. Therefore, each subset comprises 50 source ontology concepts with a match and 50 without. Each concept is associated with 100 candidate mappings, culminating in a total extraction of 10,000, i.e., (50+50)*100, concept pairs.
+
+### Evaluation 
+
+From all the 10,000 concept pairs in a given subset, the OM system is expected to predict the true mappings, which can be compared against the 50 available ground truth mappings using 
+Precision, Recall, and F-score. Given that each source concept is associated with 100 candidate mappings, we can calculate ranking-based metrics based on their scores. Specifically, we calculate Hits@1$^{+}$ for the 50 matched source concepts, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The MRR$^{+}$ score is also computed for these matched source concepts, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. For the 50 unmatched source concepts, we compute Hits@1$^{-}$, considering a hit when the top-ranked candidate mapping is deemed as a negative mapping by the model.
 
