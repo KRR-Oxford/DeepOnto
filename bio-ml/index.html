@@ -1224,6 +1224,7 @@
 <span class="c1"># load prediction mappings and reference mappings</span>
 <span class="n">preds</span> <span class="o">=</span> <span class="n">EntityMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">experiment_dir</span><span class="si">}</span><span class="s2">/bertmap/match/repaired_mappings.tsv&quot;</span><span class="p">)</span>
 <span class="n">refs</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/refs_equiv/full.tsv&quot;</span><span class="p">)</span>
+
 <span class="c1"># compute the precision, recall and F-score metrics</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
@@ -1234,7 +1235,7 @@
 <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="s1">&#39;P&#39;</span><span class="p">:</span> <span class="mf">0.887</span><span class="p">,</span> <span class="s1">&#39;R&#39;</span><span class="p">:</span> <span class="mf">0.879</span><span class="p">,</span> <span class="s1">&#39;F1&#39;</span><span class="p">:</span> <span class="mf">0.883</span><span class="p">}</span>
 </code></pre></div></dd>
 </dl>
-<p>For the semi-supervised setting where a set of training mappings is provided, the training set should also be loaded and set as <strong>null</strong> (neither positive nor negative) with <code>null_reference_mappings</code> during evaluation:</p>
+<p>For the semi-supervised setting where a small set of training mappings is provided, the training set should also be loaded and set as <strong>null</strong> (neither positive nor negative) with <code>null_reference_mappings</code> during evaluation:</p>
 <div class="highlight"><pre><span></span><code><span class="n">train_refs</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/refs_equiv/train.tsv&quot;</span><span class="p">)</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">,</span> <span class="n">null_reference_mappings</span><span class="o">=</span><span class="n">train_refs</span><span class="p">)</span>
 </code></pre></div>
@@ -1294,8 +1295,18 @@
 <p>Then, the ranking evaluation results can be obtained by:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.align.oaei</span> <span class="kn">import</span> <span class="o">*</span>
 
-<span class="n">ranking_eval</span><span class="p">(</span><span class="s2">&quot;scored.test.cands.tsv&quot;</span><span class="p">)</span>
+<span class="c1"># If `has_score` is False, assume default ranking (see tips below)</span>
+<span class="n">ranking_eval</span><span class="p">(</span><span class="s2">&quot;scored.test.cands.tsv&quot;</span><span class="p">,</span> <span class="n">has_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">Ks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
 </code></pre></div>
+<dl>
+<dt><code class="highlight"><span class="go">Output:</span></code></dt>
+<dd>&#32;
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="s1">&#39;MRR&#39;</span><span class="p">:</span> <span class="mf">0.9586373098280843</span><span class="p">,</span>
+ <span class="s1">&#39;Hits@1&#39;</span><span class="p">:</span> <span class="mf">0.9371951219512196</span><span class="p">,</span>
+ <span class="s1">&#39;Hits@5&#39;</span><span class="p">:</span> <span class="mf">0.9820121951219513</span><span class="p">,</span>
+ <span class="s1">&#39;Hits@10&#39;</span><span class="p">:</span> <span class="mf">0.9878048780487805</span><span class="p">}</span>
+</code></pre></div></dd>
+</dl>
 <div class="admonition tips">
 <p class="admonition-title">Tips</p>
 <p>If matching scores are not available, the target candidate classes should be <strong>sorted</strong> in descending order and saved in a list, the <a class="autorefs autorefs-internal" href="../deeponto/align/oaei/#deeponto.align.oaei.ranking_eval"><code>ranking_eval</code></a> function will compute scores according to the sorted list.</p>
