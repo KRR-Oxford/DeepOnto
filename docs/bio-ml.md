@@ -197,6 +197,7 @@ from deeponto.align.mapping import ReferenceMapping, EntityMapping
 # load prediction mappings and reference mappings
 preds = EntityMapping.read_table_mappings(f"{experiment_dir}/bertmap/match/repaired_mappings.tsv")
 refs = ReferenceMapping.read_table_mappings(f"{data_dir}/refs_equiv/full.tsv")
+
 # compute the precision, recall and F-score metrics
 results = AlignmentEvaluator.f1(preds, refs)
 print(results)
@@ -208,7 +209,7 @@ print(results)
     {'P': 0.887, 'R': 0.879, 'F1': 0.883}
     ```
 
-For the semi-supervised setting where a set of training mappings is provided, the training set should also be loaded and set as **null** (neither positive nor negative) with `null_reference_mappings` during evaluation:
+For the semi-supervised setting where a small set of training mappings is provided, the training set should also be loaded and set as **null** (neither positive nor negative) with `null_reference_mappings` during evaluation:
 
 ```python
 train_refs = ReferenceMapping.read_table_mappings(f"{data_dir}/refs_equiv/train.tsv")
@@ -281,8 +282,18 @@ Then, the ranking evaluation results can be obtained by:
 ```python
 from deeponto.align.oaei import *
 
-ranking_eval("scored.test.cands.tsv")
+# If `has_score` is False, assume default ranking (see tips below)
+ranking_eval("scored.test.cands.tsv", has_score=True, Ks=[1, 5, 10])
 ```
+
+`#!console Output:`
+:   &#32;
+    ```python
+    {'MRR': 0.9586373098280843,
+     'Hits@1': 0.9371951219512196,
+     'Hits@5': 0.9820121951219513,
+     'Hits@10': 0.9878048780487805}
+    ```
 
 !!! tips
 
