@@ -397,10 +397,26 @@ Remarks on this figure:
 
 As Large Language Models (LLMs) are trending in the AI community, we formulate a special sub-track for evaluating LLM-based OM systems. However, evaluating LLMs with the current OM datasets can be time and resource intensive. To yield insightful results prior to full implementation, we leverage two challenging subsets extracted from the NCIT-DOID and the SNOMED-FMA (Body) equivalence matching datasets.
 
-For each original dataset, we first randomly select 50 **matched** concept pairs from ground truth mappings, but **excluding pairs that can be aligned** with direct string matching (i.e., having at least one shared label) to restrict the efficacy of conventional lexical matching. Next, with a fixed source ontology class, we further select 99 unmatched target ontology classes, thus forming a total of 100 candidate mappings (inclusive of the ground truth mapping). This selection is guided by the sub-word inverted index-based idf scores as in the BERTMap paper (see [BERTMap tutorial](../bertmap) for more details), which are capable of producing target ontology concepts lexically akin to the fixed source concept. We finally randomly choose 50 source concepts that **do not have a matched target concept** according to the ground truth mappings, and create 100 candidate mappings for each. Therefore, each subset comprises 50 source ontology concepts with a match and 50 without. Each concept is associated with 100 candidate mappings, culminating in a total extraction of 10,000, i.e., (50+50)*100, concept pairs.
+For each original dataset, we first randomly select 50 **matched** class pairs from ground truth mappings, but **excluding pairs that can be aligned** with direct string matching (i.e., having at least one shared label) to restrict the efficacy of conventional lexical matching. Next, with a fixed source ontology class, we further select 99 unmatched target ontology classes, thus forming a total of 100 candidate mappings (inclusive of the ground truth mapping). This selection is guided by the sub-word inverted index-based idf scores as in the BERTMap paper (see [BERTMap tutorial](../bertmap) for more details), which are capable of producing target ontology classes lexically akin to the fixed source class. We finally randomly choose 50 source classes that **do not have a matched target class** according to the ground truth mappings, and create 100 candidate mappings for each. Therefore, each subset comprises 50 source ontology classes with a match and 50 without. Each class is associated with 100 candidate mappings, culminating in a total extraction of 10,000, i.e., (50+50)*100, class pairs.
 
 ### Evaluation 
 
-From all the 10,000 concept pairs in a given subset, the OM system is expected to predict the true mappings, which can be compared against the 50 available ground truth mappings using 
-Precision, Recall, and F-score. Given that each source concept is associated with 100 candidate mappings, we can calculate ranking-based metrics based on their scores. Specifically, we calculate Hits@1$^{+}$ for the 50 matched source concepts, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The MRR$^{+}$ score is also computed for these matched source concepts, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. For the 50 unmatched source concepts, we compute Hits@1$^{-}$, considering a hit when the top-ranked candidate mapping is deemed as a negative mapping by the model.
+#### Matching
+
+From all the 10,000 class pairs in a given subset, the OM system is expected to predict the true mappings among them, which can be compared against the 50 available ground truth mappings using 
+Precision, Recall, and F-score. 
+
+Using the same notations as in main track [evaluation framework](#evaluation-framework), the prediction mappings $\mathcal{M}_{pred}$ is the number of class pairs an OM system predicts as **true mappings**, and the reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. Then, the same formulas for Precision, Recall, and F-score can be applied.
+
+#### Ranking
+
+Given that each source class is associated with 100 candidate mappings, we can calculate ranking-based metrics based on their scores. Specifically, we calculate Hits@1$^{+}$ for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The MRR$^{+}$ score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. For the 50 unmatched source classes, we compute Hits@1$^{-}$, considering a hit when the top-ranked candidate mapping is deemed as a negative mapping by the model.
+
+The formulas for the mentioned metrics are:
+
+$$
+Hits@1$^{+} = \sum_{c \in \mathcal{C}_{matched}} \mathbb{I}_{rank_{c' where c' \equiv c} = 1},
+Hits@1$^{-} = \sum_{c \in \mathcal{C}_{unmatched}} \mathbb{I}_{rank_{c'} = 1},
+$$
+
 
