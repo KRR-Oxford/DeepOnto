@@ -330,17 +330,25 @@ The datasets, which can be downloaded from Zenodo, include `Mondo.zip` and `UMLS
 
 ## OAEI Bio-ML 2023
 
-The 2023 version has made several changes towards the previous version...
+For the OAEI 2023 version, we implemented several updates, including:
 
-(to be updated)
+- **Locality Module Enrichment**: In response to the loss of ontology context due to [pruning](#ontology-pruning), we used the locality module technique (access the [code](https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java)) to enrich pruned ontologies with logical modules that provide context for existing classes. To ensure the completeness of reference mappings, the new classes added are annotated as **not used in alignment** with the annotation property `use_in_alignment` set to `false`. While these supplemental classes can be used by OM systems as auxiliary information, they can be excluded from the alignment process. Even they are considered in the final output mappings, our evaluation will ensure that they are **excluded in the metric computation** (see [Evaluation Framework](#evaluation-framework)). 
 
-locality module counters the effect of target class deletion (No #TgtCls(Subs)).
+- **Simplified Task Settings**: For each of the five OM pairs, we simplified the task settings to the following:
+  - **Equivalence Matching**: 
+    - **Unsupervised**: We cancelled the validation mapping set, and the full reference mapping set available at `{task_name}/refs_equiv/full.tsv` is used for global matching evaluation.
+    - **Semi-supervised**: The validation mapping set is incorporated into the training set (rendering train-val splitting optional), and the test mapping set available at `{task_name}/refs_equiv/test.tsv` is used for global matching evaluation.
+    - **Local Ranking**: Both unsupervised and semi-supervised settings use the same set of candidate mappings found at `{task_name}/refs_equiv/test.cands.tsv` for local ranking evaluation.
+  - **Subsumption Matching**:
+    - **Target Ontology**: In the OAEI 2022 version, the target ontology for subsumption matching is different from the one for equivalence matching due to **target class deletion**. However, as the locality modules counteracts such deletion process, we use the same target ontology for both types of matching.
+    - **Unsupervised**: We removed the unsupervised setting since the subsumption matching task did not attract enough participation.
+    - **Semi-supervised**: The validation mapping set is merged into the training set (rendering train-val splitting optional). We conduct a local ranking evaluation (global matching is not applicable for subsumption matching) for candidate mappings available at `{task_name}/refs_subs/test.cands.tsv`. 
 
-Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are extended to the modularization of their pruned versions used in 2022 (available at `raw_data`), through which **structural and logical contexts** are added and the input ontologies become closer to the original ontologies. To ensure the completeness of the original reference mappings, the added ontology classes are marked as **not used in alignment** through the annotation property `use_in_alignment` with a value of `false`. OM systems can choose to use these classes for enhancement but do not need to consider them for final output mappings. Even they are considered for the final output mappings, our evaluation will ensure that they are **excluded in the metric computation** (see [Evaluation Framework](#evaluation-framework)). 
+- **Bio-LLM: A Special Sub-Track for Large Language Models**: We introduced a unique sub-track for Large Language Model (LLM)-based OM systems. We extracted small but challenging subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets for this purpose (refer to [OAEI Bio-LLM 2023](#oaei-bio-llm-2023)).
+
+Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are enriched with locaility modules compared to the pruned versions used in OAEI 2022. The augmented structural and logical contexts make these ontologies more similar to their original versions without any processing (available at `raw_data`). The changes compared to the previous version (see [Bio-ML OAEI 2022](#bio-ml-oaei-2022)) are reflected in the `+` numbers of ontology classes. 
 
 In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance"*, and *"Neoplastic Process"* in UMLS, respectively. 
-
-The changes compared to the previous version (see [Bio-ML OAEI 2022](#bio-ml-oaei-2022)) are reflected in the `+` numbers of ontology classes. 
 
 <center>
 <small>
@@ -356,9 +364,7 @@ The changes compared to the previous version (see [Bio-ML OAEI 2022](#bio-ml-oae
 </small>
 </center>
 
-The file structure for the download datasets (from Zenodo) is simplified this year to accommodate the changes.
-
-Detailed structure is presented in the following figure (not yet available). 
+The file structure for the download datasets (from Zenodo) is also simplified this year to accommodate the changes. Detailed structure is presented in the following figure. 
 
 <br/>
 <p align="center">
