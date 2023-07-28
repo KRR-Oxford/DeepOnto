@@ -243,13 +243,13 @@ Note that each subsumption matching task is constructed from an equivalence matc
 <center>
 <small>
 
-| Source | Task        | Category | #SrcCls | #TgtCls | #TgtCls (subs) | #Ref (equiv) | #Ref (subs) |
-|--------|:-----------:|:--------:|:-------:|:-------:|:--------------:|:------------:|:-----------:|
-| Mondo  | OMIM-ORDO   | Disease  | 9,642   | 8,838   | 8,735          | 3,721        | 103         |
-| Mondo  | NCIT-DOID   | Disease  | 6,835   | 8,448   | 5,113          | 4,684        | 3,339       | 
-| UMLS   | SNOMED-FMA  | Body     | 24,182  | 64,726  | 59,567         | 7,256        | 5,506       |
-| UMLS   | SNOMED-NCIT | Pharm    | 16,045  | 15,250  | 12,462         | 5,803        | 4,225       |
-| UMLS   | SNOMED-NCIT | Neoplas  | 11,271  | 13,956  | 13,790         | 3,804        | 213         |
+| Source | Task        | Category | #SrcCls | #TgtCls | #TgtCls($\subs$)|#Ref($\equiv$)|#Ref($\subs$)|
+|--------|:-----------:|:--------:|:-------:|:-------:|:---------------:|:------------:|:-----------:|
+| Mondo  | OMIM-ORDO   | Disease  | 9,642   | 8,838   | 8,735           | 3,721        | 103         |
+| Mondo  | NCIT-DOID   | Disease  | 6,835   | 8,448   | 5,113           | 4,686        | 3,339       | 
+| UMLS   | SNOMED-FMA  | Body     | 24,182  | 64,726  | 59,567          | 7,256        | 5,506       |
+| UMLS   | SNOMED-NCIT | Pharm    | 16,045  | 15,250  | 12,462          | 5,803        | 4,225       |
+| UMLS   | SNOMED-NCIT | Neoplas  | 11,271  | 13,956  | 13,790          | 3,804        | 213         |
 
 </small>
 </center>
@@ -268,6 +268,8 @@ The 2023 version has made several changes towards the previous version...
 
 (to be updated)
 
+locality module counter the efffect of target class deletion (No #TgtCls(Subs)).
+
 Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are extended to the modualarizations of their pruned versions used in 2022 (available at `raw_data`), through which **structural and logical contexts** are added and the input ontologies become closer to the original ontologies. To ensure the completeness of the original reference mappings, the added ontology classes are marked as **not used in alignment** through the annotation property `use_in_alignment` with a value of `false`. OM systems can choose to use these classes for enhancement but do not need to consider them for final output mappings. Even they are considered for the final output mappings, our evaluation will ensure that they are **excluded in the metric computation** (see [Evaluation Framework](#evaluation-framework)). 
 
 In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance*"*, and *"Neoplastic Process"* in UMLS, respectively. 
@@ -277,13 +279,13 @@ The changes compared to the previous version (see [Bio-ML OAEI 2022](#bio-ml-oae
 <center>
 <small>
 
-| Source | Task        | Category | #SrcCls | #TgtCls | #TgtCls (subs) | #Ref (equiv) | #Ref (subs)  |
-|--------|:-----------:|:--------:|:-------:|:-------:|:--------------:|:------------:|:------------:|
-| Mondo  | OMIM-ORDO   | Disease  | 9,648 (+6)      | 9,275 (+437)    | 9,271 (+536) | 3,721 | 103   |
-| Mondo  | NCIT-DOID   | Disease  | 15,762 (+8,927) | 8,465 (+17)     | 5,722 (+609) | 4,684 | 3,339 | 
-| UMLS   | SNOMED-FMA  |Body | 34,418 (+10,236)|88,955 (+24,229)|88,648 (+20,081)| 7,256  | 5,506    |
-| UMLS   | SNOMED-NCIT |Pharm| 29,500 (+13,455)|22,136 (+6,886) |20,113 (+7,651) | 5,803  | 4,225    |
-| UMLS   | SNOMED-NCIT | Neoplas  | 22,971 (+11,700) | 20,247 (+6291) | 20,113 (+6,323) | 3,804 | 213|
+| Source | Task        | Category | #SrcCls         | #TgtCls         | #Ref($\equiv$) | #Ref($\subs$)|
+|--------|:-----------:|:--------:|:----------------:|:---------------:|:-------------:|:------------:|
+| Mondo  | OMIM-ORDO   | Disease  | 9,648 (+6)      | 9,275 (+437)    | 3,721          | 103          |
+| Mondo  | NCIT-DOID   | Disease  | 15,762 (+8,927) | 8,465 (+17)     | 4,686          | 3,339        | 
+| UMLS   | SNOMED-FMA  | Body     | 34,418 (+10,236)| 88,955 (+24,229)| 7,256          | 5,506        |
+| UMLS   | SNOMED-NCIT | Pharm    | 29,500 (+13,455)| 22,136 (+6,886) | 5,803          | 4,225        |
+| UMLS   | SNOMED-NCIT | Neoplas  | 22,971 (+11,700)| 20,247 (+6291)  | 3,804          | 213          |
 
 </small>
 </center>
@@ -302,3 +304,4 @@ Detailed structure is presented in the following figure (not yet available).
 As Large Language Models (LLMs) are trending in the AI community, we formulate a special sub-track for evaluating LLM-based OM systems. For efficient and insightful evaluation, we select two small yet representative subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets, each consisting of 50 **matched** and 50 **unmatched** class pairs. 
 
 We have evaluated some LLMs with several settings and submit a poster paper. The results and more detail about this track will be released when the paper review is finished.
+
