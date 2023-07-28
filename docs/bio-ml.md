@@ -103,7 +103,7 @@ The `subs_generation_ratio` parameter determines at most how many subsumption ma
 
 ## Candidate Mapping Generation
 
-In order to examine an OM model's ability to distinguish the correct mapping among a set of challenging negative candidates, we can apply the [negative canddiate mapping generation][deeponto.align.mapping.NegativeCandidateMappingGenerator] algorithm as proposed in the paper, which utilises the [`idf_sample`][deeponto.align.mapping.NegativeCandidateMappingGenerator.idf_sample] to generate candidates ambiguious at the textual level (similar naming), and [`neighbour_sample`][deeponto.align.mapping.NegativeCandidateMappingGenerator.neighbour_sample] to generate candidates ambiguious at the structural level (e.g., siblings). The algorithm makes sure that **none** of the reference mappings will be added as a negative candidate, and for the subsumption case, the algorithm also takes care of **excluding the ancestors** because they are correct subsumptions.
+In order to examine an OM model's ability to distinguish the correct mapping among a set of challenging negative candidates, we can apply the [negative candiate mapping generation][deeponto.align.mapping.NegativeCandidateMappingGenerator] algorithm as proposed in the paper, which utilises the [`idf_sample`][deeponto.align.mapping.NegativeCandidateMappingGenerator.idf_sample] to generate candidates ambiguous at the textual level (similar naming), and [`neighbour_sample`][deeponto.align.mapping.NegativeCandidateMappingGenerator.neighbour_sample] to generate candidates ambiguous at the structural level (e.g., siblings). The algorithm makes sure that **none** of the reference mappings will be added as a negative candidate, and for the subsumption case, the algorithm also takes care of **excluding the ancestors** because they are correct subsumptions.
 
 ```python
 from deeponto.onto import Ontology
@@ -122,7 +122,7 @@ cand_generator = NegativeCandidateMappingGenerator(
 )
 ```
 
-Sampling using the *idf scores* is originally proposed in the BERTMap paper. The parameter `annotation_property_iris` specifies the list of annotation properties used for extracting the **names** or **aliases** of an ontology class. The parameter `tokenizer` refers to a pre-trained sub-word level tokenizer used to build the inverted annotation index. They have been well-explained in the [BERTMap tutorial](../bertmap).
+Sampling using the *idf scores* is originally proposed in the BERTMap paper. The parameter `annotation_property_iris` specifies the list of annotation properties used for extracting the **names** or **aliases** of an ontology class. The parameter `tokenizer` refers to a pre-trained sub-word level tokenizer used to build the inverted annotation index. They have been well explained in the [BERTMap tutorial](../bertmap).
 
 
 
@@ -153,7 +153,7 @@ print(results)
     {'P': 0.887, 'R': 0.879, 'F1': 0.883}
     ```
 
-For the semi-supervised setting where a set of training mappings is provided, the training set should also be loaded and set as **ignored** (neither positive nor negative) during evaluation:
+For the semi-supervised setting where a set of training mappings is provided, the training set should also be loaded and set as **null** (neither positive nor negative) with `null_reference_mappings` during evaluation:
 
 ```python
 train_refs = ReferenceMapping.read_table_mappings(f"{data_dir}/refs_equiv/train.tsv")
@@ -173,7 +173,7 @@ tgt_onto = Ontology("tgt_onto_file")
 ignored_class_index = get_ignored_class_index(src_onto)
 ignored_class_index.update(get_ignored_class_index(tgt_onto))
 
-# filter the prediction mappigns
+# filter the prediction mappings
 preds = remove_ignored_mappings(preds, ignored_class_index)
 
 # then compute the results
@@ -189,7 +189,7 @@ However,
 - The scores will be biased towards high-precision, low-recall OM systems if the set of reference mappings is incomplete. 
 - For efficient OM system development and debugging, an intermediate evaluation is required.
 
-Therefore, the ranking-based evaluation protocol is present as follows.
+Therefore, the ranking-based evaluation protocol is presented as follows.
 
 ### Local Ranking
 
@@ -197,7 +197,7 @@ An OM system is also expected to **distinguish the reference mapping** among a s
 
 !!! warning 
 
-    The reference subsumption mappings are inherently incomplete, so only the ranking metircs are adopted in evaluating system performance in subsumption matching.
+    The reference subsumption mappings are inherently incomplete, so only the ranking metrics are adopted in evaluating system performance in subsumption matching.
 
 > Download a <a href="../assets/example_candidate_mappings.tsv" download>small fragment</a> to see the format of the reference mapping and its candidate mappings. The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a **reference mapping**. The `"TgtCandidates"` column stores a sequence of target candidate class IRIs (**including the correct one**) used for ranking, which can be accessed by the built-in Python function `eval`.
 
@@ -236,7 +236,7 @@ ranking_eval("scored.test.cands.tsv")
 
 ## OAEI Bio-ML 2022
 
-Below demonstrates the data statistics for the original Bio-ML used in the OAEI 2022. In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance*"*, and *"Neoplastic Process"* in UMLS, respectively. 
+Below demonstrates the data statistics for the original Bio-ML used in the OAEI 2022. In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance"*, and *"Neoplastic Process"* in UMLS, respectively. 
 
 Note that each subsumption matching task is constructed from an equivalence matching task subject to **target ontology class deletion**, therefore `#TgtCls (subs)` is different with `#TgtCls`.
 
@@ -254,7 +254,7 @@ Note that each subsumption matching task is constructed from an equivalence matc
 </small>
 </center>
 
-The downloaded datasets (from Zenodo) include `Mondo.zip` and `UMLS.zip` for resources constructed from Mondo and UMLS, respectively. Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. Detailed structure is presented in the following figure. 
+The downloaded datasets (from Zenodo) include `Mondo.zip` and `UMLS.zip` for resources constructed from Mondo and UMLS, respectively. Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. The detailed structure is presented in the following figure. 
 
 <br/>
 <p align="center">
@@ -268,11 +268,11 @@ The 2023 version has made several changes towards the previous version...
 
 (to be updated)
 
-locality module counter the efffect of target class deletion (No #TgtCls(Subs)).
+locality module counters the effect of target class deletion (No #TgtCls(Subs)).
 
-Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are extended to the modualarizations of their pruned versions used in 2022 (available at `raw_data`), through which **structural and logical contexts** are added and the input ontologies become closer to the original ontologies. To ensure the completeness of the original reference mappings, the added ontology classes are marked as **not used in alignment** through the annotation property `use_in_alignment` with a value of `false`. OM systems can choose to use these classes for enhancement but do not need to consider them for final output mappings. Even they are considered for the final output mappings, our evaluation will ensure that they are **excluded in the metric computation** (see [Evaluation Framework](#evaluation-framework)). 
+Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are extended to the modularization of their pruned versions used in 2022 (available at `raw_data`), through which **structural and logical contexts** are added and the input ontologies become closer to the original ontologies. To ensure the completeness of the original reference mappings, the added ontology classes are marked as **not used in alignment** through the annotation property `use_in_alignment` with a value of `false`. OM systems can choose to use these classes for enhancement but do not need to consider them for final output mappings. Even they are considered for the final output mappings, our evaluation will ensure that they are **excluded in the metric computation** (see [Evaluation Framework](#evaluation-framework)). 
 
-In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance*"*, and *"Neoplastic Process"* in UMLS, respectively. 
+In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance"*, and *"Neoplastic Process"* in UMLS, respectively. 
 
 The changes compared to the previous version (see [Bio-ML OAEI 2022](#bio-ml-oaei-2022)) are reflected in the `+` numbers of ontology classes. 
 
@@ -303,5 +303,5 @@ Detailed structure is presented in the following figure (not yet available).
 
 As Large Language Models (LLMs) are trending in the AI community, we formulate a special sub-track for evaluating LLM-based OM systems. For efficient and insightful evaluation, we select two small yet representative subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets, each consisting of 50 **matched** and 50 **unmatched** class pairs. 
 
-We have evaluated some LLMs with several settings and submit a poster paper. The results and more detail about this track will be released when the paper review is finished.
+We have evaluated some LLMs with several settings and submitted a poster paper. The results and more detail about this track will be released when the paper review is finished.
 
