@@ -305,6 +305,12 @@ ranking_eval("scored.test.cands.tsv", has_score=True, Ks=[1, 5, 10])
      'Hits@10': 0.9878048780487805}
     ```
 
+The associated formulas for MRR and Hits@K are:
+
+$$MRR = \sum_i^N rank_i^{-1} / N, Hits@K = \sum_i^N \mathbb{I}_{rank_i \leq k} / N$$
+
+where $N$ is the number of reference mappings, $rank_i$ is the relative rank of the reference mapping among its candidate mappings.
+
 !!! tips
 
     If matching scores are not available, the target candidate classes should be **sorted** in descending order and saved in a list, the [`ranking_eval`][deeponto.align.oaei.ranking_eval] function will compute scores according to the sorted list.
