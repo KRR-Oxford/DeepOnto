@@ -1261,9 +1261,9 @@
 <th align="center">Category</th>
 <th align="center">#SrcCls</th>
 <th align="center">#TgtCls</th>
-<th align="center">#TgtCls (subs)</th>
-<th align="center">#Ref (equiv)</th>
-<th align="center">#Ref (subs)</th>
+<th align="center">#TgtCls(<span class="arithmatex">\(\subs\)</span>)</th>
+<th align="center">#Ref(<span class="arithmatex">\(\equiv\)</span>)</th>
+<th align="center">#Ref(<span class="arithmatex">\(\subs\)</span>)</th>
 </tr>
 </thead>
 <tbody>
@@ -1284,7 +1284,7 @@
 <td align="center">6,835</td>
 <td align="center">8,448</td>
 <td align="center">5,113</td>
-<td align="center">4,684</td>
+<td align="center">4,686</td>
 <td align="center">3,339</td>
 </tr>
 <tr>
@@ -1330,6 +1330,7 @@
 <h2 id="oaei-bio-ml-2023">OAEI Bio-ML 2023</h2>
 <p>The 2023 version has made several changes towards the previous version...</p>
 <p>(to be updated)</p>
+<p>locality module counter the efffect of target class deletion (No #TgtCls(Subs)).</p>
 <p>Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are extended to the modualarizations of their pruned versions used in 2022 (available at <code>raw_data</code>), through which <strong>structural and logical contexts</strong> are added and the input ontologies become closer to the original ontologies. To ensure the completeness of the original reference mappings, the added ontology classes are marked as <strong>not used in alignment</strong> through the annotation property <code>use_in_alignment</code> with a value of <code>false</code>. OM systems can choose to use these classes for enhancement but do not need to consider them for final output mappings. Even they are considered for the final output mappings, our evaluation will ensure that they are <strong>excluded in the metric computation</strong> (see <a href="#evaluation-framework">Evaluation Framework</a>). </p>
 <p>In the <strong>Category</strong> column, <em>"Disease"</em> indicates that the Mondo data are mainly about disease concepts, while <em>"Body"</em>, <em>"Pharm"</em>, and <em>"Neoplas"</em> denote semantic types of <em>"Body Part, Organ, or Organ Components"</em>, <em>"Pharmacologic Substance</em>"<em>, and </em>"Neoplastic Process"* in UMLS, respectively. </p>
 <p>The changes compared to the previous version (see <a href="#bio-ml-oaei-2022">Bio-ML OAEI 2022</a>) are reflected in the <code>+</code> numbers of ontology classes. </p>
@@ -1343,9 +1344,8 @@
 <th align="center">Category</th>
 <th align="center">#SrcCls</th>
 <th align="center">#TgtCls</th>
-<th align="center">#TgtCls (subs)</th>
-<th align="center">#Ref (equiv)</th>
-<th align="center">#Ref (subs)</th>
+<th align="center">#Ref(<span class="arithmatex">\(\equiv\)</span>)</th>
+<th align="center">#Ref(<span class="arithmatex">\(\subs\)</span>)</th>
 </tr>
 </thead>
 <tbody>
@@ -1355,7 +1355,6 @@
 <td align="center">Disease</td>
 <td align="center">9,648 (+6)</td>
 <td align="center">9,275 (+437)</td>
-<td align="center">9,271 (+536)</td>
 <td align="center">3,721</td>
 <td align="center">103</td>
 </tr>
@@ -1365,8 +1364,7 @@
 <td align="center">Disease</td>
 <td align="center">15,762 (+8,927)</td>
 <td align="center">8,465 (+17)</td>
-<td align="center">5,722 (+609)</td>
-<td align="center">4,684</td>
+<td align="center">4,686</td>
 <td align="center">3,339</td>
 </tr>
 <tr>
@@ -1375,7 +1373,6 @@
 <td align="center">Body</td>
 <td align="center">34,418 (+10,236)</td>
 <td align="center">88,955 (+24,229)</td>
-<td align="center">88,648 (+20,081)</td>
 <td align="center">7,256</td>
 <td align="center">5,506</td>
 </tr>
@@ -1385,7 +1382,6 @@
 <td align="center">Pharm</td>
 <td align="center">29,500 (+13,455)</td>
 <td align="center">22,136 (+6,886)</td>
-<td align="center">20,113 (+7,651)</td>
 <td align="center">5,803</td>
 <td align="center">4,225</td>
 </tr>
@@ -1395,7 +1391,6 @@
 <td align="center">Neoplas</td>
 <td align="center">22,971 (+11,700)</td>
 <td align="center">20,247 (+6291)</td>
-<td align="center">20,113 (+6,323)</td>
 <td align="center">3,804</td>
 <td align="center">213</td>
 </tr>
@@ -1419,7 +1414,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 27, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 28, 2023</span>
       
         <br>
         Created:
