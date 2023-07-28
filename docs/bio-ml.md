@@ -243,7 +243,7 @@ Note that each subsumption matching task is constructed from an equivalence matc
 <center>
 <small>
 
-| Source | Task        | Category | #SrcCls | #TgtCls | #TgtCls($\subs$)|#Ref($\equiv$)|#Ref($\subs$)|
+| Source | Task        | Category | #SrcCls | #TgtCls | #TgtCls($\sqsubseteq$)|#Ref($\equiv$)|#Ref($\sqsubseteq$) |
 |--------|:-----------:|:--------:|:-------:|:-------:|:---------------:|:------------:|:-----------:|
 | Mondo  | OMIM-ORDO   | Disease  | 9,642   | 8,838   | 8,735           | 3,721        | 103         |
 | Mondo  | NCIT-DOID   | Disease  | 6,835   | 8,448   | 5,113           | 4,686        | 3,339       | 
@@ -279,7 +279,7 @@ The changes compared to the previous version (see [Bio-ML OAEI 2022](#bio-ml-oae
 <center>
 <small>
 
-| Source | Task        | Category | #SrcCls         | #TgtCls         | #Ref($\equiv$) | #Ref($\subs$)|
+| Source | Task        | Category | #SrcCls         | #TgtCls         |#Ref($\equiv$)  |#Ref($\sqsubseteq$) |
 |--------|:-----------:|:--------:|:----------------:|:---------------:|:-------------:|:------------:|
 | Mondo  | OMIM-ORDO   | Disease  | 9,648 (+6)      | 9,275 (+437)    | 3,721          | 103          |
 | Mondo  | NCIT-DOID   | Disease  | 15,762 (+8,927) | 8,465 (+17)     | 4,686          | 3,339        | 
