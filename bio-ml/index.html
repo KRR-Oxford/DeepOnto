@@ -1391,12 +1391,34 @@
 </p>
 
 <h2 id="oaei-bio-ml-2023">OAEI Bio-ML 2023</h2>
-<p>The 2023 version has made several changes towards the previous version...</p>
-<p>(to be updated)</p>
-<p>locality module counters the effect of target class deletion (No #TgtCls(Subs)).</p>
-<p>Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are extended to the modularization of their pruned versions used in 2022 (available at <code>raw_data</code>), through which <strong>structural and logical contexts</strong> are added and the input ontologies become closer to the original ontologies. To ensure the completeness of the original reference mappings, the added ontology classes are marked as <strong>not used in alignment</strong> through the annotation property <code>use_in_alignment</code> with a value of <code>false</code>. OM systems can choose to use these classes for enhancement but do not need to consider them for final output mappings. Even they are considered for the final output mappings, our evaluation will ensure that they are <strong>excluded in the metric computation</strong> (see <a href="#evaluation-framework">Evaluation Framework</a>). </p>
+<p>For the OAEI 2023 version, we implemented several updates, including:</p>
+<ul>
+<li>
+<p><strong>Locality Module Enrichment</strong>: In response to the loss of ontology context due to <a href="#ontology-pruning">pruning</a>, we used the locality module technique (access the <a href="https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java">code</a>) to enrich pruned ontologies with logical modules that provide context for existing classes. To ensure the completeness of reference mappings, the new classes added are annotated as <strong>not used in alignment</strong> with the annotation property <code>use_in_alignment</code> set to <code>false</code>. While these supplemental classes can be used by OM systems as auxiliary information, they can be excluded from the alignment process. Even they are considered in the final output mappings, our evaluation will ensure that they are <strong>excluded in the metric computation</strong> (see <a href="#evaluation-framework">Evaluation Framework</a>). </p>
+</li>
+<li>
+<p><strong>Simplified Task Settings</strong>: For each of the five OM pairs, we simplified the task settings to the following:</p>
+</li>
+<li><strong>Equivalence Matching</strong>: <ul>
+<li><strong>Unsupervised</strong>: We cancelled the validation mapping set, and the full reference mapping set available at <code>{task_name}/refs_equiv/full.tsv</code> is used for global matching evaluation.</li>
+<li><strong>Semi-supervised</strong>: The validation mapping set is incorporated into the training set (rendering train-val splitting optional), and the test mapping set available at <code>{task_name}/refs_equiv/test.tsv</code> is used for global matching evaluation.</li>
+<li><strong>Local Ranking</strong>: Both unsupervised and semi-supervised settings use the same set of candidate mappings found at <code>{task_name}/refs_equiv/test.cands.tsv</code> for local ranking evaluation.</li>
+</ul>
+</li>
+<li>
+<p><strong>Subsumption Matching</strong>:</p>
+<ul>
+<li><strong>Target Ontology</strong>: In the OAEI 2022 version, the target ontology for subsumption matching is different from the one for equivalence matching due to <strong>target class deletion</strong>. However, as the locality modules counteracts such deletion process, we use the same target ontology for both types of matching.</li>
+<li><strong>Unsupervised</strong>: We removed the unsupervised setting since the subsumption matching task did not attract enough participation.</li>
+<li><strong>Semi-supervised</strong>: The validation mapping set is merged into the training set (rendering train-val splitting optional). We conduct a local ranking evaluation (global matching is not applicable for subsumption matching) for candidate mappings available at <code>{task_name}/refs_subs/test.cands.tsv</code>. </li>
+</ul>
+</li>
+<li>
+<p><strong>Bio-LLM: A Special Sub-Track for Large Language Models</strong>: We introduced a unique sub-track for Large Language Model (LLM)-based OM systems. We extracted small but challenging subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets for this purpose (refer to <a href="#oaei-bio-llm-2023">OAEI Bio-LLM 2023</a>).</p>
+</li>
+</ul>
+<p>Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are enriched with locaility modules compared to the pruned versions used in OAEI 2022. The augmented structural and logical contexts make these ontologies more similar to their original versions without any processing (available at <code>raw_data</code>). The changes compared to the previous version (see <a href="#bio-ml-oaei-2022">Bio-ML OAEI 2022</a>) are reflected in the <code>+</code> numbers of ontology classes. </p>
 <p>In the <strong>Category</strong> column, <em>"Disease"</em> indicates that the Mondo data are mainly about disease concepts, while <em>"Body"</em>, <em>"Pharm"</em>, and <em>"Neoplas"</em> denote semantic types of <em>"Body Part, Organ, or Organ Components"</em>, <em>"Pharmacologic Substance"</em>, and <em>"Neoplastic Process"</em> in UMLS, respectively. </p>
-<p>The changes compared to the previous version (see <a href="#bio-ml-oaei-2022">Bio-ML OAEI 2022</a>) are reflected in the <code>+</code> numbers of ontology classes. </p>
 <p><center>
 <small></p>
 <table>
@@ -1461,8 +1483,7 @@
 </table>
 <p></small>
 </center></p>
-<p>The file structure for the download datasets (from Zenodo) is simplified this year to accommodate the changes.</p>
-<p>Detailed structure is presented in the following figure (not yet available). </p>
+<p>The file structure for the download datasets (from Zenodo) is also simplified this year to accommodate the changes. Detailed structure is presented in the following figure. </p>
 <p><br/></p>
 <p align="center">
   <img alt="deeponto" src="../images/bio-ml-oaei-2023" height="420" style="width: 70%;">
