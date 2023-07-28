@@ -434,15 +434,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#about" class="md-nav__link">
-    About
+  <a href="#overview" class="md-nav__link">
+    Overview
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#links" class="md-nav__link">
-    Links
+  <a href="#useful-links" class="md-nav__link">
+    Useful Links
   </a>
   
 </li>
@@ -1066,54 +1066,69 @@
 }
 </code></pre></div>
 </div>
-<h2 id="about">About</h2>
-<p><span class="arithmatex">\(\textsf{Bio-ML}\)</span> incorporates <strong>five</strong> ontology pairs for both equivalence and subsumption ontology matching, two of them are based on <strong>Mondo</strong> and three of them are based on <strong>UMLS</strong>. These datasets are constructed with the following steps:</p>
+<h2 id="overview">Overview</h2>
+<p><span class="arithmatex">\(\textsf{Bio-ML}\)</span> is a comprehensive ontology matching (OM) dataset that includes five ontology pairs for both equivalence and subsumption ontology matching. Two of these pairs are based on the <strong>Mondo</strong> ontology, and the remaining three are based on the <strong>UMLS</strong> ontology. The construction of these datasets encompasses several steps:</p>
 <ul>
-<li><strong>Ontology Preprocessing</strong>: Checking ontology integrity, removing deprecated or redundant classes.</li>
-<li><strong>Ontology Pruning</strong>: Obtaining a sub-ontology subject to a list of preserved class IRIs. For Mondo ontologies, classes are preserved based on the <strong>reference mappings</strong>; For UMLS ontologies, classes are preserved based on the <strong>semantic types</strong> (see <a href="#ontology-pruning">Ontology Pruning</a>).</li>
-<li><strong>Subsumption Mapping Construction</strong>: Reference subsumption mappings are constructed from the reference equivalence mappings, subject to target class deletion, i.e., if an equivalence mapping is used for constructing a subsumption mapping, its target ontology class will be removed to enforce direct subsumption matching (see <a href="#subsumption-mapping-construction">Subsumption Mapping Construction</a>). </li>
-<li><strong>Candidate Mapping Generation</strong>: To evaluate an OM system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping using different heuristics (see <a href="#candidate-mapping-generation">Candidate Mapping Generation</a>).</li>
-<li><strong>Locality Module Enrichment</strong> (NEW <img alt="🌟" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@14.1.2/assets/svg/1f31f.svg" title=":star2:" />): In the OAEI 2023 version, we enrich the pruned ontologies with classes that serve as context (and marked as <strong>not used in alignment</strong>) for the existing classes, using the <strong>locality module</strong> technique (<a href="https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java">code</a>). OM systems can utilise these additional classes as auxiliary information while omitting them in the alignment process; the final evaluation will omit these additional classes as well.</li>
-<li><strong>Bio-LLM: A Special Sub-Track for Large Language Models</strong> (NEW <img alt="🌟" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@14.1.2/assets/svg/1f31f.svg" title=":star2:" />): In the OAEI 2023 version, we introduce a special sub-track for Large Language Model (LLM)-based OM systems by extracting small but challenging subsets from NCIT-DOID and SNOMED-FMA (Body) datasets. See <a href="#oaei-bio-llm-2023">OAEI Bio-LLM 2023</a> for detail.</li>
+<li><strong>Ontology Preprocessing</strong>: This phase involves verifying the integrity of the ontology and eliminating deprecated or superfluous classes.</li>
+<li><strong>Ontology Pruning</strong>: In this stage, a sub-ontology is obtained in accordance with a list of preserved class IRIs. For Mondo ontologies, class preservation is based on reference mappings, while for UMLS ontologies, it relies on semantic types (see <a href="#ontology-pruning">Ontology Pruning</a>).</li>
+<li><strong>Subsumption Mapping Construction</strong>: Reference subsumption mappings are built from reference equivalence mappings, subject to target class deletion. To clarify, if an equivalence mapping is utilised for constructing a subsumption mapping, its corresponding target ontology class will be discarded to enforce direct subsumption matching (see <a href="#subsumption-mapping-construction">Subsumption Mapping Construction</a>).</li>
+<li><strong>Candidate Mapping Generation</strong>: For the purpose of evaluating an Ontology Matching (OM) system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping by employing various heuristics (see <a href="#candidate-mapping-generation">Candidate Mapping Generation</a>).</li>
+<li><strong>Locality Module Enrichment</strong> (NEW <img alt="🌟" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@14.1.2/assets/svg/1f31f.svg" title=":star2:" />): Newly introduced in the OAEI 2023 version, the pruned ontologies are enriched with classes that serve as context (annotated as <strong>not used in alignment</strong>) for existing classes, leveraging the locality module technique (access the <a href="https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java">code</a>). OM systems can use these supplemental classes as auxiliary information while excluding them from the alignment process. These additional classes will also be omitted from the final evaluation. </li>
+<li><strong>Bio-LLM: A Special Sub-Track for Large Language Models</strong> (NEW <img alt="🌟" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@14.1.2/assets/svg/1f31f.svg" title=":star2:" />): Another addition to the OAEI 2023 version, we introduced a unique sub-track for Large Language Model (LLM)-based OM systems. This is achieved by extracting small but challenging subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets (see <a href="#oaei-bio-llm-2023">OAEI Bio-LLM 2023</a>).</li>
 </ul>
-<h2 id="links">Links</h2>
+<h2 id="useful-links">Useful Links</h2>
 <ul>
 <li>
-<p><strong>Dataset Download</strong> (CC BY 4.0 International):</p>
+<p><strong>Dataset Download</strong> (License: CC BY 4.0 International):</p>
 <ul>
-<li><strong>OAEI 2022</strong>: <a href="https://zenodo.org/record/6946466">https://zenodo.org/record/6946466</a> (see <a href="#oaei-bio-ml-2022">OAEI Bio-ML 2022</a>)</li>
-<li><strong>OAEI 2023</strong> (NEW <img alt="🌟" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@14.1.2/assets/svg/1f31f.svg" title=":star2:" />): to be released (see <a href="#oaei-bio-ml-2023">OAEI Bio-ML 2023</a>)</li>
+<li><strong>OAEI 2022</strong>: <a href="https://zenodo.org/record/6946466">https://zenodo.org/record/6946466</a> (see <a href="#oaei-bio-ml-2022">OAEI Bio-ML 2022</a> for detailed description).</li>
+<li><strong>OAEI 2023</strong>: <to-be-released> (see <a href="#oaei-bio-ml-2023">OAEI Bio-ML 2023</a> for detailed description).</li>
 </ul>
 </li>
 <li>
-<p><strong>Detailed Documentation</strong>: <em><a href="https://krr-oxford.github.io/DeepOnto/bio-ml/">https://krr-oxford.github.io/DeepOnto/bio-ml/</a></em> (this page)</p>
+<p><strong>Complete Documentation</strong>: <em><a href="https://krr-oxford.github.io/DeepOnto/bio-ml/">https://krr-oxford.github.io/DeepOnto/bio-ml/</a></em> (this page).</p>
 </li>
-<li><strong>Resource Paper</strong>: <em><a href="https://arxiv.org/abs/2205.03447">https://arxiv.org/abs/2205.03447</a></em> (arXiv version)</li>
-<li><strong>Official OAEI Page</strong>: <em><a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html">https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html</a></em></li>
+<li><strong>Reference Paper</strong>: <em><a href="https://arxiv.org/abs/2205.03447">https://arxiv.org/abs/2205.03447</a></em> (revised arXiv version).</li>
+<li><strong>Official OAEI Page</strong>: <em><a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html">https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html</a></em> (system participation and results).</li>
 </ul>
 <h2 id="ontology-pruning">Ontology Pruning</h2>
-<p>In order to obtain scalable OM pairs, the <strong>ontology pruning</strong> algorithm proposed in the <span class="arithmatex">\(\textsf{Bio-ML}\)</span> paper can be used to truncate a large-scale ontology according to certain criteria such as being involved in a <strong>reference mapping</strong> or being associated with certain <strong>semantic type</strong>. The pruning function aims to remove unwanted ontology classes while preserving the relevant hierarchy. Specifically, for each class <span class="arithmatex">\(c\)</span> to be removed, subsumption axioms will be created between the parents of <span class="arithmatex">\(c\)</span> and the children of <span class="arithmatex">\(c'\)</span>. Following this is the removal of all axioms related to the unwanted classes.</p>
-<p>Once obtaining a list of class IRIs to be removed, apply the ontology pruning following the code below:</p>
+<p>In order to derive scalable Ontology Matching (OM) pairs, the <strong>ontology pruning</strong> algorithm propoased in the <span class="arithmatex">\(\textsf{Bio-ML}\)</span> paper can be utilised. This algorithm is designed to trim a large-scale ontology based on certain criteria, such as involvement in a <strong>reference mapping</strong> or association with a particular <strong>semantic type</strong> (see <a href="https://github.com/KRR-Oxford/OAEI-Bio-ML/tree/main/data_scripts/umls_scripts">UMLS data scripts</a>). The primary goal of the pruning function is to discard irrelevant ontology classes whilst preserving the relevant hierarchical structure. </p>
+<p>More specifically, for each class, denoted as <span class="arithmatex">\(c\)</span>, that needs to be removed, subsumption axioms are created between the parent and child elements of <span class="arithmatex">\(c\)</span>. This step is followed by the removal of all axioms related to the unwanted classes.</p>
+<p>Once a list of class IRIs to be removed has been compiled, the ontology pruning can be executed using the following code:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">OntologyPruner</span>
 
+<span class="c1"># Load the DOID ontology</span>
 <span class="n">doid</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;doid.owl&quot;</span><span class="p">)</span>
+
+<span class="c1"># Initialise the ontology pruner</span>
 <span class="n">pruner</span> <span class="o">=</span> <span class="n">OntologyPruner</span><span class="p">(</span><span class="n">doid</span><span class="p">)</span>
+
+<span class="c1"># Specify the classes to be removed</span>
 <span class="n">to_be_removed_class_iris</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_0060158&quot;</span><span class="p">,</span>
     <span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_9969&quot;</span>
 <span class="p">]</span>
+
+<span class="c1"># Perform the pruning operation</span>
 <span class="n">pruner</span><span class="o">.</span><span class="n">prune</span><span class="p">(</span><span class="n">to_be_removed_class_iris</span><span class="p">)</span>
-<span class="n">pruner</span><span class="o">.</span><span class="n">save_onto</span><span class="p">(</span><span class="s2">&quot;doid.pruned.owl&quot;</span><span class="p">)</span>  <span class="c1"># save the pruned ontology locally</span>
+
+<span class="c1"># Save the pruned ontology locally</span>
+<span class="n">pruner</span><span class="o">.</span><span class="n">save_onto</span><span class="p">(</span><span class="s2">&quot;doid.pruned.owl&quot;</span><span class="p">)</span>  
 </code></pre></div>
 <h2 id="subsumption-mapping-construction">Subsumption Mapping Construction</h2>
-<p>It is often that OM datasets include equivalence matching but <strong>not</strong> subsumption matching. However, it is possible to create a subsumption matching task from an equivalence matching task. Given a list of <strong>equivalence reference mappings</strong> (see <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.ReferenceMapping.read_table_mappings">how to load from a local file</a>) in the form of <span class="arithmatex">\(\{(c, c') | c \equiv c' \}\)</span>, the reference subsumption mappings can be created by searching for the <strong>subsumers</strong> of <span class="arithmatex">\(c'\)</span>, then yielding <span class="arithmatex">\(\{(c, c'') | c \equiv c', c' \sqsubseteq c'' \}\)</span>. We have implemented a <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.SubsFromEquivMappingGenerator">subsumption mapping generator</a> for this purpose:</p>
+<p>Ontology Matching (OM) datasets often include equivalence matching, but <strong>not</strong> subsumption matching. However, it is feasible to create a subsumption matching task from an equivalence matching task. Given a list of <strong>reference equivalence mappings</strong>, which take the form of <span class="arithmatex">\({(c, c') | c \equiv c' }\)</span>, one can construct <strong>reference subsumption mappings</strong> by identifying the <strong>subsumers</strong> of <span class="arithmatex">\(c'\)</span> and producing <span class="arithmatex">\({(c, c'') | c \equiv c', c' \sqsubseteq c'' }\)</span>. We have developed a <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.SubsFromEquivMappingGenerator">subsumption mapping generator</a> for this purpose.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
 <span class="kn">from</span> <span class="nn">deeponto.align.mapping</span> <span class="kn">import</span> <span class="n">SubsFromEquivMappingGenerator</span><span class="p">,</span> <span class="n">ReferenceMapping</span>
 
-<span class="n">ncit</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;ncit.owl&quot;</span><span class="p">)</span>  <span class="c1"># load the NCIt ontology</span>
-<span class="n">doid</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;doid.owl&quot;</span><span class="p">)</span>  <span class="c1"># load the disease ontology</span>
-<span class="n">ncit2doid_equiv_mappings</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="s2">&quot;ncit2doid_equiv_mappings.tsv&quot;</span><span class="p">)</span>  <span class="c1"># with headings [&quot;SrcEntity&quot;, &quot;TgtEntity&quot;, &quot;Score&quot;]</span>
+<span class="c1"># Load the NCIT and DOID ontologies</span>
+<span class="n">ncit</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;ncit.owl&quot;</span><span class="p">)</span>
+<span class="n">doid</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;doid.owl&quot;</span><span class="p">)</span>
 
+<span class="c1"># Load the equivalence mappings</span>
+<span class="n">ncit2doid_equiv_mappings</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="s2">&quot;ncit2doid_equiv_mappings.tsv&quot;</span><span class="p">)</span>  <span class="c1"># The headings are [&quot;SrcEntity&quot;, &quot;TgtEntity&quot;, &quot;Score&quot;]</span>
+
+<span class="c1"># Initialise the subsumption mapping generator </span>
+<span class="c1"># and the mapping construction is automatically done</span>
 <span class="n">subs_generator</span> <span class="o">=</span> <span class="n">SubsFromEquivMappingGenerator</span><span class="p">(</span>
   <span class="n">ncit</span><span class="p">,</span> <span class="n">doid</span><span class="p">,</span> <span class="n">ncit2doid_equiv_mappings</span><span class="p">,</span> 
   <span class="n">subs_generation_ratio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">delete_used_equiv_tgt_class</span><span class="o">=</span><span class="kc">True</span>
@@ -1126,7 +1141,7 @@
 <span class="mi">3305</span> <span class="n">subsumption</span> <span class="n">mappings</span> <span class="n">are</span> <span class="n">created</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">end</span><span class="o">.</span>
 </code></pre></div></dd>
 </dl>
-<p>Get the generated subsumption mappings by:</p>
+<p>Retrieve the generated subsumption mappings with:</p>
 <div class="highlight"><pre><span></span><code><span class="n">subs_generator</span><span class="o">.</span><span class="n">subs_from_equivs</span>
 </code></pre></div>
 <dl>
@@ -1140,25 +1155,62 @@
   <span class="mf">1.0</span><span class="p">),</span> <span class="o">...</span><span class="p">]</span>
 </code></pre></div></dd>
 </dl>
-<p>The <code>subs_generation_ratio</code> parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The <code>delete_used_equiv_tgt_class</code> determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If it is set to <code class="highlight"><span class="kc">True</span></code>, then the target side of an (<strong>used</strong>) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes which can be accessed as <code>subs_generator.used_equiv_tgt_class_iris</code>.</p>
+<blockquote>
+<p>See a concrete data script for this process at <a href="https://github.com/KRR-Oxford/OAEI-Bio-ML/blob/main/data_scripts/generate_subs_maps.py"><code>OAEI-Bio-ML/data_scripts/generate_subs_maps.py</code></a>.</p>
+</blockquote>
+<p>The <code>subs_generation_ratio</code> parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The <code>delete_used_equiv_tgt_class</code> determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If it is set to <code class="highlight"><span class="kc">True</span></code>, then the target side of an (<strong>used</strong>) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">OntologyPruner</span>
+
+<span class="n">pruner</span> <span class="o">=</span> <span class="n">OntologyPruner</span><span class="p">(</span><span class="n">doid</span><span class="p">)</span>
+<span class="n">pruner</span><span class="o">.</span><span class="n">prune</span><span class="p">(</span><span class="n">subs_generator</span><span class="o">.</span><span class="n">used_equiv_tgt_class_iris</span><span class="p">)</span>
+<span class="n">pruner</span><span class="o">.</span><span class="n">save_onto</span><span class="p">(</span><span class="s2">&quot;doid.subs.owl&quot;</span><span class="p">)</span>
+</code></pre></div>
+<blockquote>
+<p>See a concrete data script for this process at <a href="https://github.com/KRR-Oxford/OAEI-Bio-ML/blob/main/data_scripts/generate_cand_maps.py"><code>OAEI-Bio-ML/data_scripts/generate_cand_maps.py</code></a>.</p>
+</blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In the OAEI 2023 version, the <strong>target class deletion</strong> is disabled as modularisation counteracts the effects of such deletion. For more details, refer to <a href="#oaei-bio-ml-2023">OAEI Bio-ML 2023</a>.</p>
+</div>
 <h2 id="candidate-mapping-generation">Candidate Mapping Generation</h2>
-<p>In order to examine an OM model's ability to distinguish the correct mapping among a set of challenging negative candidates, we can apply the <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator">negative canddiate mapping generation</a> algorithm as proposed in the paper, which utilises the <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator.idf_sample"><code>idf_sample</code></a> to generate candidates ambiguious at the textual level (similar naming), and <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator.neighbour_sample"><code>neighbour_sample</code></a> to generate candidates ambiguious at the structural level (e.g., siblings). The algorithm makes sure that <strong>none</strong> of the reference mappings will be added as a negative candidate, and for the subsumption case, the algorithm also takes care of <strong>excluding the ancestors</strong> because they are correct subsumptions.</p>
+<p>To evaluate an Ontology Matching (OM) model's capacity to identify correct mappings amid a pool of challenging negative candidates, we utilise the <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator">negative candidate mapping generation</a> algorithm as proposed in the Bio-ML paper. This algorithm uses <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator.idf_sample"><code>idf_sample</code></a> to generate candidates that are textually ambiguous (i.e., with similar naming), and <a class="autorefs autorefs-internal" href="../deeponto/align/mapping/#deeponto.align.mapping.NegativeCandidateMappingGenerator.neighbour_sample"><code>neighbour_sample</code></a> to generate candidates that are structurally ambiguous (e.g., siblings). The algorithm ensures that <strong>none</strong> of the reference mappings are added as negative candidates. Additionally, for subsumption cases, the algorithm carefully excludes <strong>ancestors</strong> as they are technically correct subsumptions.</p>
+<p>Use the following Python code to perform this operation:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
 <span class="kn">from</span> <span class="nn">deeponto.align.mapping</span> <span class="kn">import</span> <span class="n">NegativeCandidateMappingGenerator</span><span class="p">,</span> <span class="n">ReferenceMapping</span>
+<span class="kn">from</span> <span class="nn">deeponto.align.bertmap</span> <span class="kn">import</span> <span class="n">BERTMapPipeline</span>
 
-<span class="n">ncit</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;ncit.owl&quot;</span><span class="p">)</span>  <span class="c1"># load the NCIt ontology</span>
-<span class="n">doid</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;doid.owl&quot;</span><span class="p">)</span>  <span class="c1"># load the disease ontology</span>
-<span class="n">ncit2doid_equiv_mappings</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="s2">&quot;ncit2doid_equiv_mappings.tsv&quot;</span><span class="p">)</span>  <span class="c1"># with headings [&quot;SrcEntity&quot;, &quot;TgtEntity&quot;, &quot;Score&quot;]</span>
+<span class="c1"># Load the NCIT and DOID ontologies</span>
+<span class="n">ncit</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;ncit.owl&quot;</span><span class="p">)</span>
+<span class="n">doid</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;doid.owl&quot;</span><span class="p">)</span>
 
+<span class="c1"># Load the equivalence mappings</span>
+<span class="n">ncit2doid_equiv_mappings</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="s2">&quot;ncit2doid_equiv_mappings.tsv&quot;</span><span class="p">)</span>  <span class="c1"># The headings are [&quot;SrcEntity&quot;, &quot;TgtEntity&quot;, &quot;Score&quot;]</span>
+
+<span class="c1"># Load default config in BERTMap</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">BERTMapPipeline</span><span class="o">.</span><span class="n">load_bertmap_config</span><span class="p">()</span>
+
+<span class="c1"># Initialise the candidate mapping generator</span>
 <span class="n">cand_generator</span> <span class="o">=</span> <span class="n">NegativeCandidateMappingGenerator</span><span class="p">(</span>
   <span class="n">ncit</span><span class="p">,</span> <span class="n">doid</span><span class="p">,</span> <span class="n">ncit2doid_equiv_mappings</span><span class="p">,</span> 
-  <span class="n">annotation_property_iris</span> <span class="o">=</span> <span class="p">[</span><span class="o">...</span><span class="p">],</span>  <span class="c1"># used for idf sample</span>
-  <span class="n">tokenizer</span><span class="o">=</span><span class="n">Tokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>  <span class="c1"># used for idf sample</span>
-  <span class="n">max_hops</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="c1"># used for neighbour sample</span>
-  <span class="n">for_subsumptions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># set to False because the input mappings in this example are equivalence mappings</span>
+  <span class="n">annotation_property_iris</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">annotation_property_iris</span><span class="p">,</span>  <span class="c1"># Used for idf sample</span>
+  <span class="n">tokenizer</span><span class="o">=</span><span class="n">Tokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">bert</span><span class="o">.</span><span class="n">pretrained_path</span><span class="p">),</span>  <span class="c1"># Used for idf sample</span>
+  <span class="n">max_hops</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="c1"># Used for neighbour sample</span>
+  <span class="n">for_subsumptions</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Set to False because the input mappings in this example are equivalence mappings</span>
 <span class="p">)</span>
+
+<span class="c1"># Sample candidate mappings for each reference equivalence mapping</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">test_map</span> <span class="ow">in</span> <span class="n">ncit2doid_equiv_mappings</span><span class="p">:</span>
+    <span class="n">valid_tgts</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">neg_gen</span><span class="o">.</span><span class="n">mixed_sample</span><span class="p">(</span><span class="n">test_map</span><span class="p">,</span> <span class="n">idf</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">neighbour</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;STATS for </span><span class="si">{</span><span class="n">test_map</span><span class="si">}</span><span class="s2">:</span><span class="se">\n</span><span class="si">{</span><span class="n">stats</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">test_map</span><span class="o">.</span><span class="n">head</span><span class="p">,</span> <span class="n">test_map</span><span class="o">.</span><span class="n">tail</span><span class="p">,</span> <span class="n">valid_tgts</span><span class="p">))</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">results</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SrcEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;TgtEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;TgtCandidates&quot;</span><span class="p">])</span>
+<span class="n">results</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">result_path</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </code></pre></div>
-<p>Sampling using the <em>idf scores</em> is originally proposed in the BERTMap paper. The parameter <code>annotation_property_iris</code> specifies the list of annotation properties used for extracting the <strong>names</strong> or <strong>aliases</strong> of an ontology class. The parameter <code>tokenizer</code> refers to a pre-trained sub-word level tokenizer used to build the inverted annotation index. They have been well-explained in the <a href="../bertmap">BERTMap tutorial</a>.</p>
+<blockquote>
+<p>See a concrete data script for this process at <a href="https://github.com/KRR-Oxford/OAEI-Bio-ML/blob/main/data_scripts/generate_cand_maps.py"><code>OAEI-Bio-ML/data_scripts/generate_cand_maps.py</code></a>.</p>
+</blockquote>
+<p>The process of sampling using <em>idf scores</em> was originally proposed in the BERTMap paper. The <code>annotation_property_iris</code> parameter specifies the list of annotation properties used to extract the <strong>names</strong> or <strong>aliases</strong> of an ontology class. The <code>tokenizer</code> parameter refers to a pre-trained sub-word level tokenizer used to build the inverted annotation index. These aspects are thoroughly explained in the <a href="../bertmap">BERTMap tutorial</a>.</p>
 <h2 id="evaluation-framework">Evaluation Framework</h2>
 <p>Our evaluation protocol concerns two scenarios for OM: <strong>global matching</strong> for overall assessment and <strong>local ranking</strong> for partial assessment.</p>
 <h3 id="global-matching">Global Matching</h3>
@@ -1182,7 +1234,7 @@
 <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="s1">&#39;P&#39;</span><span class="p">:</span> <span class="mf">0.887</span><span class="p">,</span> <span class="s1">&#39;R&#39;</span><span class="p">:</span> <span class="mf">0.879</span><span class="p">,</span> <span class="s1">&#39;F1&#39;</span><span class="p">:</span> <span class="mf">0.883</span><span class="p">}</span>
 </code></pre></div></dd>
 </dl>
-<p>For the semi-supervised setting where a set of training mappings is provided, the training set should also be loaded and set as <strong>ignored</strong> (neither positive nor negative) during evaluation:</p>
+<p>For the semi-supervised setting where a set of training mappings is provided, the training set should also be loaded and set as <strong>null</strong> (neither positive nor negative) with <code>null_reference_mappings</code> during evaluation:</p>
 <div class="highlight"><pre><span></span><code><span class="n">train_refs</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/refs_equiv/train.tsv&quot;</span><span class="p">)</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">,</span> <span class="n">null_reference_mappings</span><span class="o">=</span><span class="n">train_refs</span><span class="p">)</span>
 </code></pre></div>
@@ -1197,7 +1249,7 @@
 <span class="n">ignored_class_index</span> <span class="o">=</span> <span class="n">get_ignored_class_index</span><span class="p">(</span><span class="n">src_onto</span><span class="p">)</span>
 <span class="n">ignored_class_index</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">get_ignored_class_index</span><span class="p">(</span><span class="n">tgt_onto</span><span class="p">))</span>
 
-<span class="c1"># filter the prediction mappigns</span>
+<span class="c1"># filter the prediction mappings</span>
 <span class="n">preds</span> <span class="o">=</span> <span class="n">remove_ignored_mappings</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">ignored_class_index</span><span class="p">)</span>
 
 <span class="c1"># then compute the results</span>
@@ -1212,12 +1264,12 @@
 <li>The scores will be biased towards high-precision, low-recall OM systems if the set of reference mappings is incomplete. </li>
 <li>For efficient OM system development and debugging, an intermediate evaluation is required.</li>
 </ul>
-<p>Therefore, the ranking-based evaluation protocol is present as follows.</p>
+<p>Therefore, the ranking-based evaluation protocol is presented as follows.</p>
 <h3 id="local-ranking">Local Ranking</h3>
 <p>An OM system is also expected to <strong>distinguish the reference mapping</strong> among a set of candidate mappings and the performance can be reflected in Hits@K and MRR metrics. </p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>The reference subsumption mappings are inherently incomplete, so only the ranking metircs are adopted in evaluating system performance in subsumption matching.</p>
+<p>The reference subsumption mappings are inherently incomplete, so only the ranking metrics are adopted in evaluating system performance in subsumption matching.</p>
 </div>
 <blockquote>
 <p>Download a <a href="../assets/example_candidate_mappings.tsv" download>small fragment</a> to see the format of the reference mapping and its candidate mappings. The <code>"SrcEntity"</code> and <code>"TgtEntity"</code> columns refer to the source class IRI and the target class IRI involved in a <strong>reference mapping</strong>. The <code>"TgtCandidates"</code> column stores a sequence of target candidate class IRIs (<strong>including the correct one</strong>) used for ranking, which can be accessed by the built-in Python function <code>eval</code>.</p>
@@ -1249,7 +1301,7 @@
 <p>If matching scores are not available, the target candidate classes should be <strong>sorted</strong> in descending order and saved in a list, the <a class="autorefs autorefs-internal" href="../deeponto/align/oaei/#deeponto.align.oaei.ranking_eval"><code>ranking_eval</code></a> function will compute scores according to the sorted list.</p>
 </div>
 <h2 id="oaei-bio-ml-2022">OAEI Bio-ML 2022</h2>
-<p>Below demonstrates the data statistics for the original Bio-ML used in the OAEI 2022. In the <strong>Category</strong> column, <em>"Disease"</em> indicates that the Mondo data are mainly about disease concepts, while <em>"Body"</em>, <em>"Pharm"</em>, and <em>"Neoplas"</em> denote semantic types of <em>"Body Part, Organ, or Organ Components"</em>, <em>"Pharmacologic Substance</em>"<em>, and </em>"Neoplastic Process"* in UMLS, respectively. </p>
+<p>Below demonstrates the data statistics for the original Bio-ML used in the OAEI 2022. In the <strong>Category</strong> column, <em>"Disease"</em> indicates that the Mondo data are mainly about disease concepts, while <em>"Body"</em>, <em>"Pharm"</em>, and <em>"Neoplas"</em> denote semantic types of <em>"Body Part, Organ, or Organ Components"</em>, <em>"Pharmacologic Substance"</em>, and <em>"Neoplastic Process"</em> in UMLS, respectively. </p>
 <p>Note that each subsumption matching task is constructed from an equivalence matching task subject to <strong>target ontology class deletion</strong>, therefore <code>#TgtCls (subs)</code> is different with <code>#TgtCls</code>.</p>
 <p><center>
 <small></p>
@@ -1321,7 +1373,7 @@
 </table>
 <p></small>
 </center></p>
-<p>The downloaded datasets (from Zenodo) include <code>Mondo.zip</code> and <code>UMLS.zip</code> for resources constructed from Mondo and UMLS, respectively. Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equiv_match</code>, and <code>subs_match</code>, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. Detailed structure is presented in the following figure. </p>
+<p>The downloaded datasets (from Zenodo) include <code>Mondo.zip</code> and <code>UMLS.zip</code> for resources constructed from Mondo and UMLS, respectively. Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equiv_match</code>, and <code>subs_match</code>, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. The detailed structure is presented in the following figure. </p>
 <p><br/></p>
 <p align="center">
   <img alt="deeponto" src="../images/bio-ml-oaei-2022.svg" height="420" style="width: 70%;">
@@ -1330,9 +1382,9 @@
 <h2 id="oaei-bio-ml-2023">OAEI Bio-ML 2023</h2>
 <p>The 2023 version has made several changes towards the previous version...</p>
 <p>(to be updated)</p>
-<p>locality module counter the efffect of target class deletion (No #TgtCls(Subs)).</p>
-<p>Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are extended to the modualarizations of their pruned versions used in 2022 (available at <code>raw_data</code>), through which <strong>structural and logical contexts</strong> are added and the input ontologies become closer to the original ontologies. To ensure the completeness of the original reference mappings, the added ontology classes are marked as <strong>not used in alignment</strong> through the annotation property <code>use_in_alignment</code> with a value of <code>false</code>. OM systems can choose to use these classes for enhancement but do not need to consider them for final output mappings. Even they are considered for the final output mappings, our evaluation will ensure that they are <strong>excluded in the metric computation</strong> (see <a href="#evaluation-framework">Evaluation Framework</a>). </p>
-<p>In the <strong>Category</strong> column, <em>"Disease"</em> indicates that the Mondo data are mainly about disease concepts, while <em>"Body"</em>, <em>"Pharm"</em>, and <em>"Neoplas"</em> denote semantic types of <em>"Body Part, Organ, or Organ Components"</em>, <em>"Pharmacologic Substance</em>"<em>, and </em>"Neoplastic Process"* in UMLS, respectively. </p>
+<p>locality module counters the effect of target class deletion (No #TgtCls(Subs)).</p>
+<p>Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are extended to the modularization of their pruned versions used in 2022 (available at <code>raw_data</code>), through which <strong>structural and logical contexts</strong> are added and the input ontologies become closer to the original ontologies. To ensure the completeness of the original reference mappings, the added ontology classes are marked as <strong>not used in alignment</strong> through the annotation property <code>use_in_alignment</code> with a value of <code>false</code>. OM systems can choose to use these classes for enhancement but do not need to consider them for final output mappings. Even they are considered for the final output mappings, our evaluation will ensure that they are <strong>excluded in the metric computation</strong> (see <a href="#evaluation-framework">Evaluation Framework</a>). </p>
+<p>In the <strong>Category</strong> column, <em>"Disease"</em> indicates that the Mondo data are mainly about disease concepts, while <em>"Body"</em>, <em>"Pharm"</em>, and <em>"Neoplas"</em> denote semantic types of <em>"Body Part, Organ, or Organ Components"</em>, <em>"Pharmacologic Substance"</em>, and <em>"Neoplastic Process"</em> in UMLS, respectively. </p>
 <p>The changes compared to the previous version (see <a href="#bio-ml-oaei-2022">Bio-ML OAEI 2022</a>) are reflected in the <code>+</code> numbers of ontology classes. </p>
 <p><center>
 <small></p>
@@ -1407,7 +1459,7 @@
 
 <h2 id="oaei-bio-llm-2023">OAEI Bio-LLM 2023</h2>
 <p>As Large Language Models (LLMs) are trending in the AI community, we formulate a special sub-track for evaluating LLM-based OM systems. For efficient and insightful evaluation, we select two small yet representative subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets, each consisting of 50 <strong>matched</strong> and 50 <strong>unmatched</strong> class pairs. </p>
-<p>We have evaluated some LLMs with several settings and submit a poster paper. The results and more detail about this track will be released when the paper review is finished.</p>
+<p>We have evaluated some LLMs with several settings and submitted a poster paper. The results and more detail about this track will be released when the paper review is finished.</p>
 
   <hr>
 <div class="md-source-file">
