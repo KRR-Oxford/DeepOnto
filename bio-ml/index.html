@@ -1242,9 +1242,9 @@
 <span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </code></pre></div>
-<p>The associated formulas for Precision, Recall and F-score are:
-<span class="arithmatex">\(<span class="arithmatex">\(P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}, R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}, F_1 = \frac{2 P R}{P + R}\)</span>\)</span>
-where <span class="arithmatex">\(\mathcal{M}_{pred}\)</span> and <span class="arithmatex">\(\mathcal{M}_{ref}\)</span> denote the prediction mappings and reference mappings, respectively.</p>
+<p>The associated formulas for Precision, Recall and F-score are:</p>
+<div class="arithmatex">\[P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}, R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}, F_1 = \frac{2 P R}{P + R}\]</div>
+<p>where <span class="arithmatex">\(\mathcal{M}_{pred}\)</span> and <span class="arithmatex">\(\mathcal{M}_{ref}\)</span> denote the prediction mappings and reference mappings, respectively.</p>
 <dl>
 <dt><code class="highlight"><span class="go">Output:</span></code></dt>
 <dd>&#32;
@@ -1255,6 +1255,8 @@ where <span class="arithmatex">\(\mathcal{M}_{pred}\)</span> and <span class="ar
 <div class="highlight"><pre><span></span><code><span class="n">train_refs</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="o">.</span><span class="n">read_table_mappings</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/refs_equiv/train.tsv&quot;</span><span class="p">)</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">,</span> <span class="n">null_reference_mappings</span><span class="o">=</span><span class="n">train_refs</span><span class="p">)</span>
 </code></pre></div>
+<p>When null reference mappings are involved, the formulas of Precision and Recall become:</p>
+<div class="arithmatex">\[P = \frac{|(\mathcal{M}_{pred} \cap \mathcal{M}_{ref}) - \mathcal{M}_{null}|}{|\mathcal{M}_{pred} - \mathcal{M}_{null} |}, R = \frac{|(\mathcal{M}_{pred} \cap \mathcal{M}_{ref}) - \mathcal{M}_{null}|}{|\mathcal{M}_{ref} - \mathcal{M}_{null}|}\]</div>
 <p>As for the OAEI 2023 version, some prediction mappings could involve classes that are marked as <strong>not used in alignment</strong>. Therefore, we need to filter out those mappings before evaluation.</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
 <span class="kn">from</span> <span class="nn">deeponto.align.oaei</span> <span class="kn">import</span> <span class="o">*</span>
