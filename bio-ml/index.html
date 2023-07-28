@@ -1312,8 +1312,8 @@
 <p>If matching scores are not available, the target candidate classes should be <strong>sorted</strong> in descending order and saved in a list, the <a class="autorefs autorefs-internal" href="../deeponto/align/oaei/#deeponto.align.oaei.ranking_eval"><code>ranking_eval</code></a> function will compute scores according to the sorted list.</p>
 </div>
 <h2 id="oaei-bio-ml-2022">OAEI Bio-ML 2022</h2>
-<p>Below demonstrates the data statistics for the original Bio-ML used in the OAEI 2022. In the <strong>Category</strong> column, <em>"Disease"</em> indicates that the Mondo data are mainly about disease concepts, while <em>"Body"</em>, <em>"Pharm"</em>, and <em>"Neoplas"</em> denote semantic types of <em>"Body Part, Organ, or Organ Components"</em>, <em>"Pharmacologic Substance"</em>, and <em>"Neoplastic Process"</em> in UMLS, respectively. </p>
-<p>Note that each subsumption matching task is constructed from an equivalence matching task subject to <strong>target ontology class deletion</strong>, therefore <code>#TgtCls (subs)</code> is different with <code>#TgtCls</code>.</p>
+<p>Below is a table showing the data statistics for the original Bio-ML used in OAEI 2022. In the <strong>Category</strong> column, <em>"Disease"</em> indicates that the data from Mondo mainly covers disease concepts, while <em>"Body"</em>, <em>"Pharm"</em>, and <em>"Neoplas"</em> denote semantic types of <em>"Body Part, Organ, or Organ Components"</em>, <em>"Pharmacologic Substance"</em>, and <em>"Neoplastic Process"</em> in UMLS, respectively. </p>
+<p>Note that each subsumption matching task is constructed from an equivalence matching task subject to <strong>target ontology class deletion</strong>, therefore <code>#TgtCls (subs)</code> differs from <code>#TgtCls</code>.</p>
 <p><center>
 <small></p>
 <table>
@@ -1384,7 +1384,7 @@
 </table>
 <p></small>
 </center></p>
-<p>The downloaded datasets (from Zenodo) include <code>Mondo.zip</code> and <code>UMLS.zip</code> for resources constructed from Mondo and UMLS, respectively. Each <code>.zip</code> file has three folders: <code>raw_data</code>, <code>equiv_match</code>, and <code>subs_match</code>, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. The detailed structure is presented in the following figure. </p>
+<p>The datasets, which can be downloaded from Zenodo, include <code>Mondo.zip</code> and <code>UMLS.zip</code> for resources constructed from Mondo and UMLS, respectively. Each <code>.zip</code> file contains three folders: <code>raw_data</code>, <code>equiv_match</code>, and <code>subs_match</code>, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. The detailed file structure is illustrated in the figure below.</p>
 <p><br/></p>
 <p align="center">
   <img alt="deeponto" src="../images/bio-ml-oaei-2022.svg" height="420" style="width: 70%;">
