@@ -25,7 +25,7 @@
 
 This page provides an overview of the $\textsf{OntoLAMA}$ datasets, how to use them, and the related probing approach introduced in the research paper.
 
-## About
+## Overview
 
 $\textsf{OntoLAMA}$ is a set of language model (LM) probing datasets for ontology subsumption inference. The work follows the "LMs-as-KBs" literature but focuses on conceptualised knowledge extracted from formalised KBs such as the OWL ontologies. Specifically, the subsumption inference (SI) task is introduced and formulated in the Natural Language Inference (NLI) style, where the sub-concept and the super-concept involved in a subsumption axiom are verbalised and fitted into a template to form the premise and hypothesis, respectively. The sampled axioms are verified through ontology reasoning. The SI task is further divided into Atomic SI and Complex SI where the former involves only atomic named concepts and the latter involves both atomic and complex concepts. Real-world ontologies of different scales and domains are used for constructing OntoLAMA and in total there are **four** Atomic SI datasets and **two** Complex SI datasets.
 
