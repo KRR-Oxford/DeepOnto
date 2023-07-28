@@ -1325,6 +1325,9 @@
  <span class="s1">&#39;Hits@10&#39;</span><span class="p">:</span> <span class="mf">0.9878048780487805</span><span class="p">}</span>
 </code></pre></div></dd>
 </dl>
+<p>The associated formulas for MRR and Hits@K are:</p>
+<div class="arithmatex">\[MRR = \sum_i^N rank_i^{-1} / N, Hits@K = \sum_i^N \mathbb{I}_{rank_i \leq k} / N\]</div>
+<p>where <span class="arithmatex">\(N\)</span> is the number of reference mappings, <span class="arithmatex">\(rank_i\)</span> is the relative rank of the reference mapping among its candidate mappings.</p>
 <div class="admonition tips">
 <p class="admonition-title">Tips</p>
 <p>If matching scores are not available, the target candidate classes should be <strong>sorted</strong> in descending order and saved in a list, the <a class="autorefs autorefs-internal" href="../deeponto/align/oaei/#deeponto.align.oaei.ranking_eval"><code>ranking_eval</code></a> function will compute scores according to the sorted list.</p>
