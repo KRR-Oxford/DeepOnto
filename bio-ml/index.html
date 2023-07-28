@@ -1242,6 +1242,13 @@
 <span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
 </code></pre></div>
+<p>The associated formulas for Precision, Recall and F-score are:
+$$
+P = \frac{|\mathcal{M}<em>{pred} \cap \mathcal{M}</em>{ref}|}{|\mathcal{M}<em>{pred}|},
+R = \frac{|\mathcal{M}</em>{pred} \cap \mathcal{M}<em>{ref}|}{|\mathcal{M}</em>{ref}|},
+F_1 = \frac{2 P R}{P + R}
+$$
+where <span class="arithmatex">\(\mathcal{M}_{pred}\)</span> and <span class="arithmatex">\(\mathcal{M}_{ref}\)</span> denote the prediction mappings and reference mappings, respectively.</p>
 <dl>
 <dt><code class="highlight"><span class="go">Output:</span></code></dt>
 <dd>&#32;
