@@ -16,59 +16,75 @@
     }
     ```
 
-## About
+## Overview
 
-$\textsf{Bio-ML}$ incorporates **five** ontology pairs for both equivalence and subsumption ontology matching, two of them are based on **Mondo** and three of them are based on **UMLS**. These datasets are constructed with the following steps:
+$\textsf{Bio-ML}$ is a comprehensive ontology matching (OM) dataset that includes five ontology pairs for both equivalence and subsumption ontology matching. Two of these pairs are based on the **Mondo** ontology, and the remaining three are based on the **UMLS** ontology. The construction of these datasets encompasses several steps:
 
-- **Ontology Preprocessing**: Checking ontology integrity, removing deprecated or redundant classes.
-- **Ontology Pruning**: Obtaining a sub-ontology subject to a list of preserved class IRIs. For Mondo ontologies, classes are preserved based on the **reference mappings**; For UMLS ontologies, classes are preserved based on the **semantic types** (see [Ontology Pruning](#ontology-pruning)).
-- **Subsumption Mapping Construction**: Reference subsumption mappings are constructed from the reference equivalence mappings, subject to target class deletion, i.e., if an equivalence mapping is used for constructing a subsumption mapping, its target ontology class will be removed to enforce direct subsumption matching (see [Subsumption Mapping Construction](#subsumption-mapping-construction)). 
-- **Candidate Mapping Generation**: To evaluate an OM system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping using different heuristics (see [Candidate Mapping Generation](#candidate-mapping-generation)).
-- **Locality Module Enrichment** (NEW :star2:): In the OAEI 2023 version, we enrich the pruned ontologies with classes that serve as context (and marked as **not used in alignment**) for the existing classes, using the **locality module** technique ([code](https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java)). OM systems can utilise these additional classes as auxiliary information while omitting them in the alignment process; the final evaluation will omit these additional classes as well.
-- **Bio-LLM: A Special Sub-Track for Large Language Models** (NEW :star2:): In the OAEI 2023 version, we introduce a special sub-track for Large Language Model (LLM)-based OM systems by extracting small but challenging subsets from NCIT-DOID and SNOMED-FMA (Body) datasets. See [OAEI Bio-LLM 2023](#oaei-bio-llm-2023) for detail.
+- **Ontology Preprocessing**: This phase involves verifying the integrity of the ontology and eliminating deprecated or superfluous classes.
+- **Ontology Pruning**: In this stage, a sub-ontology is obtained in accordance with a list of preserved class IRIs. For Mondo ontologies, class preservation is based on reference mappings, while for UMLS ontologies, it relies on semantic types (see [Ontology Pruning](#ontology-pruning)).
+- **Subsumption Mapping Construction**: Reference subsumption mappings are built from reference equivalence mappings, subject to target class deletion. To clarify, if an equivalence mapping is utilised for constructing a subsumption mapping, its corresponding target ontology class will be discarded to enforce direct subsumption matching (see [Subsumption Mapping Construction](#subsumption-mapping-construction)).
+- **Candidate Mapping Generation**: For the purpose of evaluating an Ontology Matching (OM) system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping by employing various heuristics (see [Candidate Mapping Generation](#candidate-mapping-generation)).
+- **Locality Module Enrichment** (NEW :star2:): Newly introduced in the OAEI 2023 version, the pruned ontologies are enriched with classes that serve as context (annotated as **not used in alignment**) for existing classes, leveraging the locality module technique (access the [code](https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java)). OM systems can use these supplemental classes as auxiliary information while excluding them from the alignment process. These additional classes will also be omitted from the final evaluation. 
+- **Bio-LLM: A Special Sub-Track for Large Language Models** (NEW :star2:): Another addition to the OAEI 2023 version, we introduced a unique sub-track for Large Language Model (LLM)-based OM systems. This is achieved by extracting small but challenging subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets (see [OAEI Bio-LLM 2023](#oaei-bio-llm-2023)).
 
-## Links
+## Useful Links
 
-- **Dataset Download** (CC BY 4.0 International):
-    - **OAEI 2022**: <https://zenodo.org/record/6946466> (see [OAEI Bio-ML 2022](#oaei-bio-ml-2022))
-    - **OAEI 2023** (NEW :star2:): to be released (see [OAEI Bio-ML 2023](#oaei-bio-ml-2023))
+- **Dataset Download** (License: CC BY 4.0 International):
+    - **OAEI 2022**: <https://zenodo.org/record/6946466> (see [OAEI Bio-ML 2022](#oaei-bio-ml-2022) for detailed description).
+    - **OAEI 2023**: <to-be-released> (see [OAEI Bio-ML 2023](#oaei-bio-ml-2023) for detailed description).
 
-- **Detailed Documentation**: *<https://krr-oxford.github.io/DeepOnto/bio-ml/>* (this page)
-- **Resource Paper**: *<https://arxiv.org/abs/2205.03447>* (arXiv version)
-- **Official OAEI Page**: *<https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html>*
+- **Complete Documentation**: *<https://krr-oxford.github.io/DeepOnto/bio-ml/>* (this page).
+- **Reference Paper**: *<https://arxiv.org/abs/2205.03447>* (revised arXiv version).
+- **Official OAEI Page**: *<https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html>* (system participation and results).
 
 
 ## Ontology Pruning
 
-In order to obtain scalable OM pairs, the **ontology pruning** algorithm proposed in the $\textsf{Bio-ML}$ paper can be used to truncate a large-scale ontology according to certain criteria such as being involved in a **reference mapping** or being associated with certain **semantic type**. The pruning function aims to remove unwanted ontology classes while preserving the relevant hierarchy. Specifically, for each class $c$ to be removed, subsumption axioms will be created between the parents of $c$ and the children of $c'$. Following this is the removal of all axioms related to the unwanted classes.
+In order to derive scalable Ontology Matching (OM) pairs, the **ontology pruning** algorithm propoased in the $\textsf{Bio-ML}$ paper can be utilised. This algorithm is designed to trim a large-scale ontology based on certain criteria, such as involvement in a **reference mapping** or association with a particular **semantic type** (see [UMLS data scripts](https://github.com/KRR-Oxford/OAEI-Bio-ML/tree/main/data_scripts/umls_scripts)). The primary goal of the pruning function is to discard irrelevant ontology classes whilst preserving the relevant hierarchical structure. 
 
-Once obtaining a list of class IRIs to be removed, apply the ontology pruning following the code below:
+More specifically, for each class, denoted as $c$, that needs to be removed, subsumption axioms are created between the parent and child elements of $c$. This step is followed by the removal of all axioms related to the unwanted classes.
+
+Once a list of class IRIs to be removed has been compiled, the ontology pruning can be executed using the following code:
 
 ```python
 from deeponto.onto import Ontology, OntologyPruner
 
+# Load the DOID ontology
 doid = Ontology("doid.owl")
+
+# Initialise the ontology pruner
 pruner = OntologyPruner(doid)
+
+# Specify the classes to be removed
 to_be_removed_class_iris = [
     "http://purl.obolibrary.org/obo/DOID_0060158",
     "http://purl.obolibrary.org/obo/DOID_9969"
 ]
+
+# Perform the pruning operation
 pruner.prune(to_be_removed_class_iris)
-pruner.save_onto("doid.pruned.owl")  # save the pruned ontology locally
+
+# Save the pruned ontology locally
+pruner.save_onto("doid.pruned.owl")  
 ```
 
 ## Subsumption Mapping Construction
 
-It is often that OM datasets include equivalence matching but **not** subsumption matching. However, it is possible to create a subsumption matching task from an equivalence matching task. Given a list of **equivalence reference mappings** (see [how to load from a local file][deeponto.align.mapping.ReferenceMapping.read_table_mappings]) in the form of $\{(c, c') | c \equiv c' \}$, the reference subsumption mappings can be created by searching for the **subsumers** of $c'$, then yielding $\{(c, c'') | c \equiv c', c' \sqsubseteq c'' \}$. We have implemented a [subsumption mapping generator][deeponto.align.mapping.SubsFromEquivMappingGenerator] for this purpose:
+Ontology Matching (OM) datasets often include equivalence matching, but **not** subsumption matching. However, it is feasible to create a subsumption matching task from an equivalence matching task. Given a list of **reference equivalence mappings**, which take the form of ${(c, c') | c \equiv c' }$, one can construct **reference subsumption mappings** by identifying the **subsumers** of $c'$ and producing ${(c, c'') | c \equiv c', c' \sqsubseteq c'' }$. We have developed a [subsumption mapping generator][deeponto.align.mapping.SubsFromEquivMappingGenerator] for this purpose.
 
 ```python
 from deeponto.onto import Ontology
 from deeponto.align.mapping import SubsFromEquivMappingGenerator, ReferenceMapping
 
-ncit = Ontology("ncit.owl")  # load the NCIt ontology
-doid = Ontology("doid.owl")  # load the disease ontology
-ncit2doid_equiv_mappings = ReferenceMapping.read_table_mappings("ncit2doid_equiv_mappings.tsv")  # with headings ["SrcEntity", "TgtEntity", "Score"]
+# Load the NCIT and DOID ontologies
+ncit = Ontology("ncit.owl")
+doid = Ontology("doid.owl")
 
+# Load the equivalence mappings
+ncit2doid_equiv_mappings = ReferenceMapping.read_table_mappings("ncit2doid_equiv_mappings.tsv")  # The headings are ["SrcEntity", "TgtEntity", "Score"]
+
+# Initialise the subsumption mapping generator 
+# and the mapping construction is automatically done
 subs_generator = SubsFromEquivMappingGenerator(
   ncit, doid, ncit2doid_equiv_mappings, 
   subs_generation_ratio=1, delete_used_equiv_tgt_class=True
@@ -82,7 +98,7 @@ subs_generator = SubsFromEquivMappingGenerator(
     3305 subsumption mappings are created in the end.
     ```
 
-Get the generated subsumption mappings by:
+Retrieve the generated subsumption mappings with:
 
 ```python
 subs_generator.subs_from_equivs
@@ -99,30 +115,69 @@ subs_generator.subs_from_equivs
       1.0), ...]
     ```
 
-The `subs_generation_ratio` parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The `delete_used_equiv_tgt_class` determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If it is set to `#!python True`, then the target side of an (**used**) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes which can be accessed as `subs_generator.used_equiv_tgt_class_iris`.
+> See a concrete data script for this process at [`OAEI-Bio-ML/data_scripts/generate_subs_maps.py`](https://github.com/KRR-Oxford/OAEI-Bio-ML/blob/main/data_scripts/generate_subs_maps.py).
+
+
+The `subs_generation_ratio` parameter determines at most how many subsumption mappings can be generated from an equivalence mapping. The `delete_used_equiv_tgt_class` determines whether or not to sabotage equivalence mappings used for creating at least one subsumption mappings. If it is set to `#!python True`, then the target side of an (**used**) equivalence mapping will be marked as deleted from the target ontology. Then, apply ontology pruning to the list of to-be-deleted target ontology classes:
+
+```python
+from deeponto.onto import OntologyPruner
+
+pruner = OntologyPruner(doid)
+pruner.prune(subs_generator.used_equiv_tgt_class_iris)
+pruner.save_onto("doid.subs.owl")
+```
+
+> See a concrete data script for this process at [`OAEI-Bio-ML/data_scripts/generate_cand_maps.py`](https://github.com/KRR-Oxford/OAEI-Bio-ML/blob/main/data_scripts/generate_cand_maps.py).
+
+!!! note
+
+    In the OAEI 2023 version, the **target class deletion** is disabled as modularisation counteracts the effects of such deletion. For more details, refer to [OAEI Bio-ML 2023](#oaei-bio-ml-2023).
+
 
 ## Candidate Mapping Generation
 
-In order to examine an OM model's ability to distinguish the correct mapping among a set of challenging negative candidates, we can apply the [negative candidate mapping generation][deeponto.align.mapping.NegativeCandidateMappingGenerator] algorithm as proposed in the paper, which utilises the [`idf_sample`][deeponto.align.mapping.NegativeCandidateMappingGenerator.idf_sample] to generate candidates ambiguous at the textual level (similar naming), and [`neighbour_sample`][deeponto.align.mapping.NegativeCandidateMappingGenerator.neighbour_sample] to generate candidates ambiguous at the structural level (e.g., siblings). The algorithm makes sure that **none** of the reference mappings will be added as a negative candidate, and for the subsumption case, the algorithm also takes care of **excluding the ancestors** because they are correct subsumptions.
+To evaluate an Ontology Matching (OM) model's capacity to identify correct mappings amid a pool of challenging negative candidates, we utilise the [negative candidate mapping generation][deeponto.align.mapping.NegativeCandidateMappingGenerator] algorithm as proposed in the Bio-ML paper. This algorithm uses [`idf_sample`][deeponto.align.mapping.NegativeCandidateMappingGenerator.idf_sample] to generate candidates that are textually ambiguous (i.e., with similar naming), and [`neighbour_sample`][deeponto.align.mapping.NegativeCandidateMappingGenerator.neighbour_sample] to generate candidates that are structurally ambiguous (e.g., siblings). The algorithm ensures that **none** of the reference mappings are added as negative candidates. Additionally, for subsumption cases, the algorithm carefully excludes **ancestors** as they are technically correct subsumptions.
+
+Use the following Python code to perform this operation:
 
 ```python
 from deeponto.onto import Ontology
 from deeponto.align.mapping import NegativeCandidateMappingGenerator, ReferenceMapping
+from deeponto.align.bertmap import BERTMapPipeline
 
-ncit = Ontology("ncit.owl")  # load the NCIt ontology
-doid = Ontology("doid.owl")  # load the disease ontology
-ncit2doid_equiv_mappings = ReferenceMapping.read_table_mappings("ncit2doid_equiv_mappings.tsv")  # with headings ["SrcEntity", "TgtEntity", "Score"]
+# Load the NCIT and DOID ontologies
+ncit = Ontology("ncit.owl")
+doid = Ontology("doid.owl")
 
+# Load the equivalence mappings
+ncit2doid_equiv_mappings = ReferenceMapping.read_table_mappings("ncit2doid_equiv_mappings.tsv")  # The headings are ["SrcEntity", "TgtEntity", "Score"]
+
+# Load default config in BERTMap
+config = BERTMapPipeline.load_bertmap_config()
+
+# Initialise the candidate mapping generator
 cand_generator = NegativeCandidateMappingGenerator(
   ncit, doid, ncit2doid_equiv_mappings, 
-  annotation_property_iris = [...],  # used for idf sample
-  tokenizer=Tokenizer.from_pretrained(...),  # used for idf sample
-  max_hops=5, # used for neighbour sample
-  for_subsumptions=False,  # set to False because the input mappings in this example are equivalence mappings
+  annotation_property_iris = config.annotation_property_iris,  # Used for idf sample
+  tokenizer=Tokenizer.from_pretrained(config.bert.pretrained_path),  # Used for idf sample
+  max_hops=5, # Used for neighbour sample
+  for_subsumptions=False,  # Set to False because the input mappings in this example are equivalence mappings
 )
+
+# Sample candidate mappings for each reference equivalence mapping
+results = []
+for test_map in ncit2doid_equiv_mappings:
+    valid_tgts, stats = neg_gen.mixed_sample(test_map, idf=50, neighbour=50)
+    print(f"STATS for {test_map}:\n{stats}")
+    results.append((test_map.head, test_map.tail, valid_tgts))
+results = pd.DataFrame(results, columns=["SrcEntity", "TgtEntity", "TgtCandidates"])
+results.to_csv(result_path, sep="\t", index=False)
 ```
 
-Sampling using the *idf scores* is originally proposed in the BERTMap paper. The parameter `annotation_property_iris` specifies the list of annotation properties used for extracting the **names** or **aliases** of an ontology class. The parameter `tokenizer` refers to a pre-trained sub-word level tokenizer used to build the inverted annotation index. They have been well explained in the [BERTMap tutorial](../bertmap).
+> See a concrete data script for this process at [`OAEI-Bio-ML/data_scripts/generate_cand_maps.py`](https://github.com/KRR-Oxford/OAEI-Bio-ML/blob/main/data_scripts/generate_cand_maps.py).
+
+The process of sampling using *idf scores* was originally proposed in the BERTMap paper. The `annotation_property_iris` parameter specifies the list of annotation properties used to extract the **names** or **aliases** of an ontology class. The `tokenizer` parameter refers to a pre-trained sub-word level tokenizer used to build the inverted annotation index. These aspects are thoroughly explained in the [BERTMap tutorial](../bertmap).
 
 
 
