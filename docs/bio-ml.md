@@ -27,11 +27,11 @@ $\textsf{Bio-ML}$ is a comprehensive ontology matching (OM) dataset that include
 - **Locality Module Enrichment** (NEW :star2:): Newly introduced in the OAEI 2023 version, the pruned ontologies are enriched with classes that serve as context (annotated as **not used in alignment**) for existing classes, leveraging the locality module technique (access the [code](https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java)). OM systems can use these supplemental classes as auxiliary information while excluding them from the alignment process. These additional classes will also be omitted from the final evaluation. 
 - **Bio-LLM: A Special Sub-Track for Large Language Models** (NEW :star2:): Another addition to the OAEI 2023 version, we introduced a unique sub-track for Large Language Model (LLM)-based OM systems. This is achieved by extracting small but challenging subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets (see [OAEI Bio-LLM 2023](#oaei-bio-llm-2023)).
 
-## Useful Links
+## Important Links
 
 - **Dataset Download** (License: CC BY 4.0 International):
-    - **OAEI 2022**: <https://zenodo.org/record/6946466> (see [OAEI Bio-ML 2022](#oaei-bio-ml-2022) for detailed description).
-    - **OAEI 2023**: <to-be-released> (see [OAEI Bio-ML 2023](#oaei-bio-ml-2023) for detailed description).
+    - **OAEI 2022**: <https://doi.org/10.5281/zenodo.6946466> (see [OAEI Bio-ML 2022](#oaei-bio-ml-2022) for detailed description).
+    - **OAEI 2023**: <https://doi.org/10.5281/zenodo.8193375> (see [OAEI Bio-ML 2023](#oaei-bio-ml-2023) for detailed description).
 
 - **Complete Documentation**: *<https://krr-oxford.github.io/DeepOnto/bio-ml/>* (this page).
 - **Reference Paper**: *<https://arxiv.org/abs/2205.03447>* (revised arXiv version).
