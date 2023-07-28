@@ -302,9 +302,9 @@ ranking_eval("scored.test.cands.tsv", has_score=True, Ks=[1, 5, 10])
 
 ## OAEI Bio-ML 2022
 
-Below demonstrates the data statistics for the original Bio-ML used in the OAEI 2022. In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance"*, and *"Neoplastic Process"* in UMLS, respectively. 
+Below is a table showing the data statistics for the original Bio-ML used in OAEI 2022. In the **Category** column, *"Disease"* indicates that the data from Mondo mainly covers disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance"*, and *"Neoplastic Process"* in UMLS, respectively. 
 
-Note that each subsumption matching task is constructed from an equivalence matching task subject to **target ontology class deletion**, therefore `#TgtCls (subs)` is different with `#TgtCls`.
+Note that each subsumption matching task is constructed from an equivalence matching task subject to **target ontology class deletion**, therefore `#TgtCls (subs)` differs from `#TgtCls`.
 
 <center>
 <small>
@@ -320,7 +320,7 @@ Note that each subsumption matching task is constructed from an equivalence matc
 </small>
 </center>
 
-The downloaded datasets (from Zenodo) include `Mondo.zip` and `UMLS.zip` for resources constructed from Mondo and UMLS, respectively. Each `.zip` file has three folders: `raw_data`, `equiv_match`, and `subs_match`, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. The detailed structure is presented in the following figure. 
+The datasets, which can be downloaded from Zenodo, include `Mondo.zip` and `UMLS.zip` for resources constructed from Mondo and UMLS, respectively. Each `.zip` file contains three folders: `raw_data`, `equiv_match`, and `subs_match`, corresponding to the raw source ontologies, data for equivalence matching, and data for subsumption matching, respectively. The detailed file structure is illustrated in the figure below.
 
 <br/>
 <p align="center">
