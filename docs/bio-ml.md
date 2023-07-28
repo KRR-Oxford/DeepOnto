@@ -203,6 +203,14 @@ results = AlignmentEvaluator.f1(preds, refs)
 print(results)
 ```
 
+The associated formulas for Precision, Recall and F-score are:
+$$
+P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|},
+R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|},
+F_1 = \frac{2 P R}{P + R}
+$$
+where $\mathcal{M}_{pred}$ and $\mathcal{M}_{ref}$ denote the prediction mappings and reference mappings, respectively.
+
 `#!console Output:`
 :   &#32;
     ```python
