@@ -204,7 +204,9 @@ print(results)
 ```
 
 The associated formulas for Precision, Recall and F-score are:
+
 $$P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}, R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}, F_1 = \frac{2 P R}{P + R}$$
+
 where $\mathcal{M}_{pred}$ and $\mathcal{M}_{ref}$ denote the prediction mappings and reference mappings, respectively.
 
 `#!console Output:`
@@ -219,6 +221,10 @@ For the semi-supervised setting where a small set of training mappings is provid
 train_refs = ReferenceMapping.read_table_mappings(f"{data_dir}/refs_equiv/train.tsv")
 results = AlignmentEvaluator.f1(preds, refs, null_reference_mappings=train_refs)
 ```
+
+When null reference mappings are involved, the formulas of Precision and Recall become:
+
+$$P = \frac{|(\mathcal{M}_{pred} \cap \mathcal{M}_{ref}) - \mathcal{M}_{null}|}{|\mathcal{M}_{pred} - \mathcal{M}_{null} |}, R = \frac{|(\mathcal{M}_{pred} \cap \mathcal{M}_{ref}) - \mathcal{M}_{null}|}{|\mathcal{M}_{ref} - \mathcal{M}_{null}|}$$
 
 As for the OAEI 2023 version, some prediction mappings could involve classes that are marked as **not used in alignment**. Therefore, we need to filter out those mappings before evaluation.
 
