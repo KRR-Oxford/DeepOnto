@@ -418,7 +418,7 @@ The formulas for the mentioned metrics are:
 
 $$
 Hits@1^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c_{tgt}} = 1},
-Hits@1^{-} = \sum_{(c_{src}, c_{null})} \in \mathcal{M}_{unref} \mathbb{I}_{rank_{c_{null}} = 1},
+Hits@1^{-} = \sum_{(c_{src}, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{rank_{c_{null}} = 1},
 MRR^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} rank_{c_{tgt}}^{-1} / 50
 $$
 
