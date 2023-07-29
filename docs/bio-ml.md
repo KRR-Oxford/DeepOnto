@@ -384,7 +384,7 @@ The file structure for the download datasets (from Zenodo) is also simplified th
 
 <br/>
 <p align="center">
-  <img alt="deeponto" src="../images/bio-ml-oaei-2023" height="420" style="width: 70%;">
+  <img alt="deeponto" src="../images/bio-ml-oaei-2023.svg" height="420" style="width: 70%;">
 </p>
 
 Remarks on this figure:
@@ -410,13 +410,15 @@ Using the same notations as in main track [evaluation framework](#evaluation-fra
 
 #### Ranking
 
-Given that each source class is associated with 100 candidate mappings, we can calculate ranking-based metrics based on their scores. Specifically, we calculate Hits@1$^{+}$ for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The MRR$^{+}$ score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. For the 50 unmatched source classes, we compute Hits@1$^{-}$, considering a hit when the top-ranked candidate mapping is deemed as a negative mapping by the model.
+Given that each source class is associated with 100 candidate mappings, we can calculate ranking-based metrics based on their scores. Specifically, we calculate Hits@1$^{+}$ for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The MRR$^{+}$ score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. For the 50 unmatched source classes, we compute Hits@1$^{-}$, considering a hit when the top-ranked candidate mapping is deemed as a negative mapping by the model. In other words, $Hits@1^{-}$ counts a hit if all the candidate mappings are predicted as false mappings.
 
 The formulas for the mentioned metrics are:
 
 $$
-Hits@1^{+} = \sum_{c \in \mathcal{C}_{matched}} \mathbb{I}_{rank_{c' \equiv c} = 1},
-Hits@1^{-} = \sum_{c \in \mathcal{C}_{unmatched}} \mathbb{I}_{rank_{c' \not\equiv c} = 1},
+Hits@1^{+} = \sum_{(c,c') \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c'} = 1},
+Hits@1^{-} = \sum_{c \in \mathcal{C}_{unmatched}} \mathbb{I}_{rank_{unmatched} = 1},
+MRR^{+} = \sum_{c \in \mathcal{C}_{matched}} rank_{c' \equiv c}^{-1} / 50
 $$
 
+where $\mathcal{M}_{ref}$ and $\mathcal{C}_{unmatched}$ refer to the set of 50 reference mappings and the set of 50 source classes that do not have a match, repectively; $rank_{c'}$ is the relative rank of the matched target class $c'$ among the candidate classes, $rank_{unmatched}$ is the relative rank of any unmatched target class among the candidate classes. 
 
