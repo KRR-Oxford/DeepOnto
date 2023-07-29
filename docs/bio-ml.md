@@ -388,9 +388,9 @@ The file structure for the download datasets (from Zenodo) is also simplified th
 </p>
 
 Remarks on this figure:
-- For equivalence matching, the global matching evaluation should be performed on `refs_equiv/full.tsv` in the unsupervised setting and on `refs_equiv/test.tsv` with `refs_equiv/train.tsv` set to null reference mappings in the semi-supervised setting. The local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` for both settings.
-- For subsumption matching, the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` and the training mapping set `refs_subs/train.tsv` is optional.
-- The `test.cands.tsv` file in the Bio-LLM sub-track is different from the main track ones. See [OAEI Bio-LLM 2023](#oaei-bio-llm-2023) for more information and how to evaluate on it.
+- (1) For equivalence matching, testing of the global matching evaluation should be performed on `refs_equiv/full.tsv` in the unsupervised setting, and on `refs_equiv/test.tsv` (with `refs_equiv/train.tsv` set to null reference mappings) in the semi-supervised setting. Testing of the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` for both settings.
+- (2) For subsumption matching, the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` and the training mapping set `refs_subs/train.tsv` is optional.
+- (3) The `test.cands.tsv` file in the Bio-LLM sub-track is different from the main Bio-LM track ones. See [OAEI Bio-LLM 2023](#oaei-bio-llm-2023) for more information and how to evaluate on it.
 
 
 ## OAEI Bio-LLM 2023
