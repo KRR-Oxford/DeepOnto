@@ -415,8 +415,8 @@ Given that each source class is associated with 100 candidate mappings, we can c
 The formulas for the mentioned metrics are:
 
 $$
-Hits@1$^{+} = \sum_{c \in \mathcal{C}_{matched}} \mathbb{I}_{rank_{c' where c' \equiv c} = 1},
-Hits@1$^{-} = \sum_{c \in \mathcal{C}_{unmatched}} \mathbb{I}_{rank_{c'} = 1},
+Hits@1^{+} = \sum_{c \in \mathcal{C}_{matched}} \mathbb{I}_{rank_{c' \equiv c} = 1},
+Hits@1^{-} = \sum_{c \in \mathcal{C}_{unmatched}} \mathbb{I}_{rank_{c' \not\equiv c} = 1},
 $$
 
 
