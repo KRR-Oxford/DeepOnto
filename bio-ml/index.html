@@ -1546,8 +1546,8 @@ Precision, Recall, and F-score. </p>
 <p>Given that each source class is associated with 100 candidate mappings, we can calculate ranking-based metrics based on their scores. Specifically, we calculate Hits@1<span class="arithmatex">\(^{+}\)</span> for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The MRR<span class="arithmatex">\(^{+}\)</span> score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. For the 50 unmatched source classes, we compute Hits@1<span class="arithmatex">\(^{-}\)</span>, considering a hit when the top-ranked candidate mapping is deemed as a negative mapping by the model.</p>
 <p>The formulas for the mentioned metrics are:</p>
 <div class="arithmatex">\[
-Hits@1$^{+} = \sum_{c \in \mathcal{C}_{matched}} \mathbb{I}_{rank_{c' where c' \equiv c} = 1},
-Hits@1$^{-} = \sum_{c \in \mathcal{C}_{unmatched}} \mathbb{I}_{rank_{c'} = 1},
+Hits@1^{+} = \sum_{c \in \mathcal{C}_{matched}} \mathbb{I}_{rank_{c' \equiv c} = 1},
+Hits@1^{-} = \sum_{c \in \mathcal{C}_{unmatched}} \mathbb{I}_{rank_{c' \not\equiv c} = 1},
 \]</div>
 
   <hr>
@@ -1555,7 +1555,7 @@ Hits@1$^{-} = \sum_{c \in \mathcal{C}_{unmatched}} \mathbb{I}_{rank_{c'} = 1},
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 28, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 29, 2023</span>
       
         <br>
         Created:
