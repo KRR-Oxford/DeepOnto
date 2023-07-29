@@ -419,7 +419,9 @@ The formulas for the mentioned metrics are:
 $$
 Hits@1^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c_{tgt}} = 1},
 Hits@1^{-} = \sum_{(c_{src}, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{rank_{c_{null}} = 1},
-MRR^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} rank_{c_{tgt}}^{-1} / 50
+MRR^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} rank_{c_{tgt}}^{-1} / |\mathcal{M}_{ref}|
 $$
 
 where $rank_{c_{tgt}}$ is the relative rank of the matched target class, $rank_{c_{null}}$ is the relative rank of a target class that is seen as unmatched by the OM system.
+
+Note that $MRR^{-}$ cannot be defined as there is no unique rank for the null class $c_{null}$.
