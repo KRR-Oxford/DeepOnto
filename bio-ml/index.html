@@ -1544,13 +1544,14 @@ Precision, Recall, and F-score. </p>
 <p>Using the same notations as in main track <a href="#evaluation-framework">evaluation framework</a>, the prediction mappings <span class="arithmatex">\(\mathcal{M}_{pred}\)</span> is the number of class pairs an OM system predicts as <strong>true mappings</strong>, and the reference mappings <span class="arithmatex">\(\mathcal{M}_{ref}\)</span> refers to the 50 matched pairs. Then, the same formulas for Precision, Recall, and F-score can be applied.</p>
 <h4 id="ranking">Ranking</h4>
 <p>Given that each source class is associated with 100 candidate mappings, we can calculate ranking-based metrics based on their scores. Specifically, we calculate Hits@1<span class="arithmatex">\(^{+}\)</span> for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The MRR<span class="arithmatex">\(^{+}\)</span> score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. For the 50 unmatched source classes, we compute Hits@1<span class="arithmatex">\(^{-}\)</span>, considering a hit when the top-ranked candidate mapping is deemed as a negative mapping by the model. In other words, <span class="arithmatex">\(Hits@1^{-}\)</span> counts a hit if all the candidate mappings are predicted as false mappings.</p>
+<p>As mentioned above, the set of reference mappings <span class="arithmatex">\(\mathcal{M}_{ref}\)</span> refers to the 50 matched pairs. We assign each unmatched source class a null class which refers to any target class that does not have a match with the source class, and denote this set of <em>unreferenced</em> mappings as <span class="arithmatex">\(\mathcal{M}_{unref}\)</span>.</p>
 <p>The formulas for the mentioned metrics are:</p>
 <div class="arithmatex">\[
-Hits@1^{+} = \sum_{(c,c') \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c'} = 1},
-Hits@1^{-} = \sum_{c \in \mathcal{C}_{unmatched}} \mathbb{I}_{rank_{unmatched} = 1},
-MRR^{+} = \sum_{c \in \mathcal{C}_{matched}} rank_{c' \equiv c}^{-1} / 50
+Hits@1^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c_{tgt}} = 1},
+Hits@1^{-} = \sum_{(c_{src}, c_{null})} \in \mathcal{M}_{unref} \mathbb{I}_{rank_{c_{null}} = 1},
+MRR^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} rank_{c_{tgt}}^{-1} / 50
 \]</div>
-<p>where <span class="arithmatex">\(\mathcal{M}_{ref}\)</span> and <span class="arithmatex">\(\mathcal{C}_{unmatched}\)</span> refer to the set of 50 reference mappings and the set of 50 source classes that do not have a match, repectively; <span class="arithmatex">\(rank_{c'}\)</span> is the relative rank of the matched target class <span class="arithmatex">\(c'\)</span> among the candidate classes, <span class="arithmatex">\(rank_{unmatched}\)</span> is the relative rank of any unmatched target class among the candidate classes. </p>
+<p>where <span class="arithmatex">\(rank_{c_{tgt}}\)</span> is the relative rank of the matched target class, <span class="arithmatex">\(rank_{c_{null}}\)</span> is the relative rank of a target class that is seen as unmatched by the OM system.</p>
 
   <hr>
 <div class="md-source-file">
