@@ -412,7 +412,7 @@ Using the same notations as in main track [evaluation framework](#evaluation-fra
 
 Given that each source class is associated with 100 candidate mappings, we can calculate ranking-based metrics based on their scores. Specifically, we calculate Hits@1$^{+}$ for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The MRR$^{+}$ score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. For the 50 unmatched source classes, we compute Hits@1$^{-}$, considering a hit when the top-ranked candidate mapping is deemed as a negative mapping by the model. In other words, $Hits@1^{-}$ counts a hit if **all** the candidate mappings are predicted as false mappings.
 
-As mentioned above, the set of reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. We assign each unmatched source class a null class which refers to any target class that does not have a match with the source class, and denote this set of *unreferenced* mappings as $\mathcal{M}_{unref}$.
+As mentioned above, the set of reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. We assign each unmatched source class a null class $c_{null}$ which refers to any target class that does not have a match with the source class, and denote this set of *unreferenced* mappings as $\mathcal{M}_{unref}$.
 
 The formulas for the mentioned metrics are:
 
