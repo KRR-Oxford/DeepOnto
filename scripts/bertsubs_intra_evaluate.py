@@ -32,7 +32,8 @@ from deeponto.utils import FileUtils
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--onto_file', type=str, default='/home/jiaoyan/bertsubs_data/foodon-merged.0.4.8.owl')
-parser.add_argument('--label_property', type=str, default='http://www.w3.org/2000/01/rdf-schema#label,http://www.geneontology.org/formats/oboInOwl#hasExactSynonym')
+parser.add_argument('--label_property', type=str, default='http://www.w3.org/2000/01/rdf-schema#label,'
+                                                          'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym')
 parser.add_argument('--valid_ratio', type=float, default=0.05)
 parser.add_argument('--test_ratio', type=float, default=0.1)
 parser.add_argument('--test_max_neg_size', type=int, default=40)

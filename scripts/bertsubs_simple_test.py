@@ -46,7 +46,9 @@ config.train_subsumption_file = './helis2foodon/train_subsumptions.csv'  # optio
 config.valid_subsumption_file = './helis2foodon/valid_subsumptions.csv'  # optional
 config.test_subsumption_file = './helis2foodon/test_subsumptions.csv'
 config.src_label_property = ['http://www.w3.org/2000/01/rdf-schema#label']
-config.tgt_label_property = ['http://www.w3.org/2000/01/rdf-schema#label', 'http://www.geneontology.org/formats/oboInOwl#hasSynonym', 'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym']
+config.tgt_label_property = ['http://www.w3.org/2000/01/rdf-schema#label',
+                             'http://www.geneontology.org/formats/oboInOwl#hasSynonym',
+                             'http://www.geneontology.org/formats/oboInOwl#hasExactSynonym']
 config.test_type = 'evaluation'
 config.subsumption_type = 'named_class'  # named_class, restriction
 config.prompt.prompt_type = 'path'  # isolated, traversal, path
