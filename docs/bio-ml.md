@@ -205,7 +205,7 @@ print(results)
 
 The associated formulas for Precision, Recall and F-score are:
 
-$$P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}, R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}, F_1 = \frac{2 P R}{P + R}$$
+$$P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}, \ \ R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}, \ \ F_1 = \frac{2 P R}{P + R}$$
 
 where $\mathcal{M}_{pred}$ and $\mathcal{M}_{ref}$ denote the prediction mappings and reference mappings, respectively.
 
@@ -224,7 +224,7 @@ results = AlignmentEvaluator.f1(preds, refs, null_reference_mappings=train_refs)
 
 When null reference mappings are involved, the formulas of Precision and Recall become:
 
-$$P = \frac{|(\mathcal{M}_{pred} \cap \mathcal{M}_{ref}) - \mathcal{M}_{null}|}{|\mathcal{M}_{pred} - \mathcal{M}_{null} |}, R = \frac{|(\mathcal{M}_{pred} \cap \mathcal{M}_{ref}) - \mathcal{M}_{null}|}{|\mathcal{M}_{ref} - \mathcal{M}_{null}|}$$
+$$P = \frac{|(\mathcal{M}_{pred} \cap \mathcal{M}_{ref}) - \mathcal{M}_{null}|}{|\mathcal{M}_{pred} - \mathcal{M}_{null} |}, \ \ R = \frac{|(\mathcal{M}_{pred} \cap \mathcal{M}_{ref}) - \mathcal{M}_{null}|}{|\mathcal{M}_{ref} - \mathcal{M}_{null}|}$$
 
 As for the OAEI 2023 version, some prediction mappings could involve classes that are marked as **not used in alignment**. Therefore, we need to filter out those mappings before evaluation.
 
@@ -307,9 +307,9 @@ ranking_eval("scored.test.cands.tsv", has_score=True, Ks=[1, 5, 10])
 
 The associated formulas for MRR and Hits@K are:
 
-$$MRR = \sum_i^N rank_i^{-1} / N, Hits@K = \sum_i^N \mathbb{I}_{rank_i \leq k} / N$$
+$$MRR = \sum_i^N rank_i^{-1} / N, \ \ Hits@K = \sum_i^N \mathbb{I}_{rank_i \leq k} / N$$
 
-where $N$ is the number of reference mappings, $rank_i$ is the relative rank of the reference mapping among its candidate mappings.
+where $N$ is the number of reference mappings used for testing, $rank_i$ is the relative rank of the reference mapping among its candidate mappings.
 
 !!! tips
 
@@ -388,9 +388,9 @@ The file structure for the download datasets (from Zenodo) is also simplified th
 </p>
 
 Remarks on this figure:
-- (1) For equivalence matching, testing of the global matching evaluation should be performed on `refs_equiv/full.tsv` in the unsupervised setting, and on `refs_equiv/test.tsv` (with `refs_equiv/train.tsv` set to null reference mappings) in the semi-supervised setting. Testing of the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` for both settings.
-- (2) For subsumption matching, the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` and the training mapping set `refs_subs/train.tsv` is optional.
-- (3) The `test.cands.tsv` file in the Bio-LLM sub-track is different from the main Bio-LM track ones. See [OAEI Bio-LLM 2023](#oaei-bio-llm-2023) for more information and how to evaluate on it.
+1. For equivalence matching, testing of the global matching evaluation should be performed on `refs_equiv/full.tsv` in the unsupervised setting, and on `refs_equiv/test.tsv` (with `refs_equiv/train.tsv` set to null reference mappings) in the semi-supervised setting. Testing of the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` for both settings.
+2. For subsumption matching, the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` and the training mapping set `refs_subs/train.tsv` is optional.
+3. The `test.cands.tsv` file in the Bio-LLM sub-track is different from the main Bio-LM track ones. See [OAEI Bio-LLM 2023](#oaei-bio-llm-2023) for more information and how to evaluate on it.
 
 
 ## OAEI Bio-LLM 2023
@@ -406,25 +406,38 @@ For each original dataset, we first randomly select 50 **matched** class pairs f
 From all the 10,000 class pairs in a given subset, the OM system is expected to predict the true mappings among them, which can be compared against the 50 available ground truth mappings using 
 Precision, Recall, and F-score. 
 
-We use the same formulas in main track [evaluation framework](#evaluation-framework) to calculate Precision, Recall, and F-score.
-The prediction mappings $\mathcal{M}_{pred}$ is the class pairs an OM system predicts as **true mappings**, and the reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. 
+We use the same formulas in main track [evaluation framework](#evaluation-framework) to calculate Precision, Recall, and F-score. The prediction mappings $\mathcal{M}_{pred}$ is the class pairs an OM system predicts as **true mappings**, and the reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. 
+
+$$P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}, \ \ R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}, \ \ F_1 = \frac{2 P R}{P + R}$$
 
 #### Ranking
 
-Given that each source class is associated with 100 candidate mappings, we can calculate ranking-based metrics based on their scores. Specifically, we calculate Hits@1$^{+}$ for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The MRR$^{+}$ score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. For the 50 unmatched source classes, we compute Hits@1$^{-}$, considering a hit when the top-ranked candidate mapping is deemed as a negative mapping by the model. In other words, Hits@1$^{-}$ counts a hit if **all** the candidate mappings are predicted as false mappings.
+Given that each source class is associated with 100 candidate mappings, we can calculate ranking-based metrics based on their scores. Specifically, we calculate:
+
+- Hits@1$^{+}$ for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. 
+
+$$
+Hits@K^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c_{tgt}} \leq K} / |\mathcal{M}_{ref}|
+$$
+
+- The MRR$^{+}$ score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. 
+
+$$
+MRR^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} rank_{c_{tgt}}^{-1} / |\mathcal{M}_{ref}|
+$$
+
+- For the 50 unmatched source classes, we compute Hits@1$^{-}$, considering a hit when the top-ranked candidate mapping is deemed as a negative mapping by the model. In other words, Hits@1$^{-}$ counts a hit if **all** the candidate mappings are predicted as false mappings.
+
+$$
+Hits@1^{-} = \sum_{(c_{src}, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{rank_{c_{null}} = 1} / |\mathcal{M}_{unref}|,
+$$
 
 As mentioned above, the set of reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. We assign each unmatched source class a null class $c_{null}$ which refers to any target class that does not have a match with the source class, and denote this set of *unreferenced* mappings as $\mathcal{M}_{unref}$.
 
 The formulas for the mentioned metrics are:
 
 $$
-Hits@1^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c_{tgt}} = 1} / |\mathcal{M}_{ref}|,
-$$
-$$
 Hits@1^{-} = \sum_{(c_{src}, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{rank_{c_{null}} = 1} / |\mathcal{M}_{unref}|,
-$$
-$$
-MRR^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} rank_{c_{tgt}}^{-1} / |\mathcal{M}_{ref}|
 $$
 
 where $rank_{c_{tgt}}$ is the relative rank of the matched target class, $rank_{c_{null}}$ is the relative rank of a target class that is seen as unmatched by the OM system.
