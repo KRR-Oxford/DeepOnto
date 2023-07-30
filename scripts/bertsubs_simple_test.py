@@ -42,8 +42,8 @@ intra_pipeline = BERTSubsIntraPipeline(onto=onto, config=config)
 config = CfgNode(FileUtils.load_file(DEFAULT_CONFIG_FILE_INTER))
 config.src_onto_file = './helis2foodon/helis_v1.00.owl'
 config.tgt_onto_file = './helis2foodon/foodon-merged.0.4.8.subs.owl'
-config.train_subsumption_file = './helis2foodon/train_subsumptions.csv'
-config.valid_subsumption_file = './helis2foodon/valid_subsumptions.csv'
+config.train_subsumption_file = './helis2foodon/train_subsumptions.csv'  # optional
+config.valid_subsumption_file = './helis2foodon/valid_subsumptions.csv'  # optional
 config.test_subsumption_file = './helis2foodon/test_subsumptions.csv'
 config.test_type = 'evaluation'
 config.subsumption_type = 'named_class'  # named_class, restriction
