@@ -406,7 +406,8 @@ For each original dataset, we first randomly select 50 **matched** class pairs f
 From all the 10,000 class pairs in a given subset, the OM system is expected to predict the true mappings among them, which can be compared against the 50 available ground truth mappings using 
 Precision, Recall, and F-score. 
 
-Using the same notations as in main track [evaluation framework](#evaluation-framework), the prediction mappings $\mathcal{M}_{pred}$ is the number of class pairs an OM system predicts as **true mappings**, and the reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. Then, the same formulas for Precision, Recall, and F-score can be applied.
+We use the same formulas in main track [evaluation framework](#evaluation-framework) to calculate Precision, Recall, and F-score.
+The prediction mappings $\mathcal{M}_{pred}$ is the class pairs an OM system predicts as **true mappings**, and the reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. 
 
 #### Ranking
 
@@ -417,8 +418,12 @@ As mentioned above, the set of reference mappings $\mathcal{M}_{ref}$ refers to 
 The formulas for the mentioned metrics are:
 
 $$
-Hits@1^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c_{tgt}} = 1},
-Hits@1^{-} = \sum_{(c_{src}, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{rank_{c_{null}} = 1},
+Hits@1^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c_{tgt}} = 1} / |\mathcal{M}_{ref}|,
+$$
+$$
+Hits@1^{-} = \sum_{(c_{src}, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{rank_{c_{null}} = 1} / |\mathcal{M}_{unref}|,
+$$
+$$
 MRR^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} rank_{c_{tgt}}^{-1} / |\mathcal{M}_{ref}|
 $$
 
