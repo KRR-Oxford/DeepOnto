@@ -1561,9 +1561,9 @@ MRR = \sum_{(c, c') \in \mathcal{M}_{ref}} rank(c')^{-1} / |\mathcal{M}_{ref}|
 <li>For the 50 unmatched source classes, we compute the rejection rate (denoted as <span class="arithmatex">\(RR\)</span>), counting a successful rejection when <strong>all</strong> the candidate mappings are predicted as <strong>false mappings</strong>. We assign each unmatched source class a null class <span class="arithmatex">\(c_{null}\)</span> which refers to any target class that does not have a match with the source class, and denote this set of <em>unreferenced</em> mappings as <span class="arithmatex">\(\mathcal{M}_{unref}\)</span>.</li>
 </ul>
 <div class="arithmatex">\[
-RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{\forall d \in \mathcal{T}(c) f(c, d) = c \not\equiv d} / |\mathcal{M}_{unref}|
+RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{\forall d \in \mathcal{T}(c). f(c, d) = c \not\equiv d} / |\mathcal{M}_{unref}|
 \]</div>
-<p>where <span class="arithmatex">\(\mathcal{T}(\cdot)\)</span> returns the 100 target candidate classes for <span class="arithmatex">\(c\)</span>. </p>
+<p>where <span class="arithmatex">\(\mathcal{T}(\cdot)\)</span> returns the 100 target candidate classes for <span class="arithmatex">\(c\)</span>, <span class="arithmatex">\(f\)</span> is the mapping prediction function of an OM system.</p>
 
   <hr>
 <div class="md-source-file">
