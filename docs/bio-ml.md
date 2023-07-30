@@ -415,17 +415,21 @@ $$P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}, 
 Given that each source class is associated with 100 candidate mappings, we can compute ranking-based metrics based on their scores. Specifically, we calculate:
 
 - $Hits@1$ for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The corresponding formula is:
+
 $$
 Hits@K = \sum_{(c, c') \in \mathcal{M}_{ref}} \mathbb{I}_{rank(c') \leq K} / |\mathcal{M}_{ref}|
 $$
 
 - The $MRR$ score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. The corresponding formula is:
+
 $$
 MRR = \sum_{(c, c') \in \mathcal{M}_{ref}} rank(c')^{-1} / |\mathcal{M}_{ref}|
 $$
 
 - For the 50 unmatched source classes, we compute the rejection rate (denoted as $RR$), counting a successful rejection when **all** the candidate mappings are predicted as **false mappings**. We assign each unmatched source class a null class $c_{null}$ which refers to any target class that does not have a match with the source class, and denote this set of *unreferenced* mappings as $\mathcal{M}_{unref}$.
+
 $$
 RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{\forall d \in \mathcal{T}(c). f(c, d) = c \not\equiv d} / |\mathcal{M}_{unref}|
 $$
-where $\mathcal{T}(\cdot)$ returns the 100 target candidate classes for $c$, $f$ is the mapping prediction function of an OM system.
+
+&ensp;&ensp;where $\mathcal{T}(\cdot)$ returns the 100 target candidate classes for $c$, $f$ is the mapping prediction function of an OM system.
