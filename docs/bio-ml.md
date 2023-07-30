@@ -412,34 +412,26 @@ $$P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}, 
 
 #### Ranking
 
-Given that each source class is associated with 100 candidate mappings, we can calculate ranking-based metrics based on their scores. Specifically, we calculate:
+Given that each source class is associated with 100 candidate mappings, we can compute ranking-based metrics based on their scores. Specifically, we calculate:
 
-- Hits@1$^{+}$ for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. 
-
-$$
-Hits@K^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c_{tgt}} \leq K} / |\mathcal{M}_{ref}|
-$$
-
-- The MRR$^{+}$ score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. 
+- $Hits@1$ for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The corresponding formula is:
 
 $$
-MRR^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} rank_{c_{tgt}}^{-1} / |\mathcal{M}_{ref}|
+Hits@K = \sum_{(c, c') \in \mathcal{M}_{ref}} \mathbb{I}_{rank(c') \leq K} / |\mathcal{M}_{ref}|
 $$
 
-- For the 50 unmatched source classes, we compute Hits@1$^{-}$, considering a hit when the top-ranked candidate mapping is deemed as a negative mapping by the model. In other words, Hits@1$^{-}$ counts a hit if **all** the candidate mappings are predicted as false mappings.
+- The $MRR$ score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. The corresponding formula is:
 
 $$
-Hits@1^{-} = \sum_{(c_{src}, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{rank_{c_{null}} = 1} / |\mathcal{M}_{unref}|,
+MRR = \sum_{(c, c') \in \mathcal{M}_{ref}} rank(c')^{-1} / |\mathcal{M}_{ref}|
 $$
 
-As mentioned above, the set of reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. We assign each unmatched source class a null class $c_{null}$ which refers to any target class that does not have a match with the source class, and denote this set of *unreferenced* mappings as $\mathcal{M}_{unref}$.
-
-The formulas for the mentioned metrics are:
+- For the 50 unmatched source classes, we compute the rejection rate (denoted as $RR$), counting a successful rejection when **all** the candidate mappings are predicted as **false mappings**. We assign each unmatched source class a null class $c_{null}$ which refers to any target class that does not have a match with the source class, and denote this set of *unreferenced* mappings as $\mathcal{M}_{unref}$.
 
 $$
-Hits@1^{-} = \sum_{(c_{src}, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{rank_{c_{null}} = 1} / |\mathcal{M}_{unref}|,
+RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \forall d \in TgtCandidates(c) f(c \equiv d) = false  $$ / |\mathcal{M}_{unref}|,
 $$
 
-where $rank_{c_{tgt}}$ is the relative rank of the matched target class, $rank_{c_{null}}$ is the relative rank of a target class that is seen as unmatched by the OM system.
+% where $rank_{c_{tgt}}$ is the relative rank of the matched target class, $rank_{c_{null}}$ is the relative rank of a target class that is seen as unmatched by the OM system.
 
-Note that $MRR^{-}$ cannot be defined as there is no unique rank for the null class $c_{null}$.
+% Note that $MRR^{-}$ cannot be defined as there is no unique rank for the null class $c_{null}$.
