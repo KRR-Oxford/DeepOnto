@@ -429,9 +429,7 @@ $$
 - For the 50 unmatched source classes, we compute the rejection rate (denoted as $RR$), counting a successful rejection when **all** the candidate mappings are predicted as **false mappings**. We assign each unmatched source class a null class $c_{null}$ which refers to any target class that does not have a match with the source class, and denote this set of *unreferenced* mappings as $\mathcal{M}_{unref}$.
 
 $$
-RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \forall d \in TgtCandidates(c) f(c \equiv d) = false  $$ / |\mathcal{M}_{unref}|,
+RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \forall d \in \mathcal{T}(c) f(c, d) = c \not\equiv d / |\mathcal{M}_{unref}|
 $$
 
-% where $rank_{c_{tgt}}$ is the relative rank of the matched target class, $rank_{c_{null}}$ is the relative rank of a target class that is seen as unmatched by the OM system.
-
-% Note that $MRR^{-}$ cannot be defined as there is no unique rank for the null class $c_{null}$.
+where $\mathcal{T}(\cdot)$ returns the 100 target candidate classes for $c$. 
