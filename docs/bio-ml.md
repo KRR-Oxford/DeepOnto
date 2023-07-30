@@ -429,7 +429,7 @@ $$
 - For the 50 unmatched source classes, we compute the rejection rate (denoted as $RR$), counting a successful rejection when **all** the candidate mappings are predicted as **false mappings**. We assign each unmatched source class a null class $c_{null}$ which refers to any target class that does not have a match with the source class, and denote this set of *unreferenced* mappings as $\mathcal{M}_{unref}$.
 
 $$
-RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \forall d \in \mathcal{T}(c) f(c, d) = c \not\equiv d / |\mathcal{M}_{unref}|
+RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{\forall d \in \mathcal{T}(c) f(c, d) = c \not\equiv d} / |\mathcal{M}_{unref}|
 $$
 
 where $\mathcal{T}(\cdot)$ returns the 100 target candidate classes for $c$. 
