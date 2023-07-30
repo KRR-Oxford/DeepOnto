@@ -1546,26 +1546,24 @@ Precision, Recall, and F-score. </p>
 <h4 id="ranking">Ranking</h4>
 <p>Given that each source class is associated with 100 candidate mappings, we can compute ranking-based metrics based on their scores. Specifically, we calculate:</p>
 <ul>
-<li>
-<p><span class="arithmatex">\(Hits@1\)</span> for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The corresponding formula is:
-$$
-Hits@K = \sum_{(c, c') \in \mathcal{M}<em>{ref}} \mathbb{I}</em>{rank(c') \leq K} / |\mathcal{M}_{ref}|
-$$</p>
-</li>
-<li>
-<p>The <span class="arithmatex">\(MRR\)</span> score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. The corresponding formula is:
-$$
-MRR = \sum_{(c, c') \in \mathcal{M}<em>{ref}} rank(c')^{-1} / |\mathcal{M}</em>{ref}|
-$$</p>
-</li>
-<li>
-<p>For the 50 unmatched source classes, we compute the rejection rate (denoted as <span class="arithmatex">\(RR\)</span>), counting a successful rejection when <strong>all</strong> the candidate mappings are predicted as <strong>false mappings</strong>. We assign each unmatched source class a null class <span class="arithmatex">\(c_{null}\)</span> which refers to any target class that does not have a match with the source class, and denote this set of <em>unreferenced</em> mappings as <span class="arithmatex">\(\mathcal{M}_{unref}\)</span>.
-$$
-RR = \sum_{(c, c_{null}) \in \mathcal{M}<em>{unref}} \mathbb{I}</em>{\forall d \in \mathcal{T}(c). f(c, d) = c \not\equiv d} / |\mathcal{M}_{unref}|
-$$
-where <span class="arithmatex">\(\mathcal{T}(\cdot)\)</span> returns the 100 target candidate classes for <span class="arithmatex">\(c\)</span>, <span class="arithmatex">\(f\)</span> is the mapping prediction function of an OM system.</p>
-</li>
+<li><span class="arithmatex">\(Hits@1\)</span> for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The corresponding formula is:</li>
 </ul>
+<div class="arithmatex">\[
+Hits@K = \sum_{(c, c') \in \mathcal{M}_{ref}} \mathbb{I}_{rank(c') \leq K} / |\mathcal{M}_{ref}|
+\]</div>
+<ul>
+<li>The <span class="arithmatex">\(MRR\)</span> score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. The corresponding formula is:</li>
+</ul>
+<div class="arithmatex">\[
+MRR = \sum_{(c, c') \in \mathcal{M}_{ref}} rank(c')^{-1} / |\mathcal{M}_{ref}|
+\]</div>
+<ul>
+<li>For the 50 unmatched source classes, we compute the rejection rate (denoted as <span class="arithmatex">\(RR\)</span>), counting a successful rejection when <strong>all</strong> the candidate mappings are predicted as <strong>false mappings</strong>. We assign each unmatched source class a null class <span class="arithmatex">\(c_{null}\)</span> which refers to any target class that does not have a match with the source class, and denote this set of <em>unreferenced</em> mappings as <span class="arithmatex">\(\mathcal{M}_{unref}\)</span>.</li>
+</ul>
+<div class="arithmatex">\[
+RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{\forall d \in \mathcal{T}(c). f(c, d) = c \not\equiv d} / |\mathcal{M}_{unref}|
+\]</div>
+<p>&ensp;&ensp;where <span class="arithmatex">\(\mathcal{T}(\cdot)\)</span> returns the 100 target candidate classes for <span class="arithmatex">\(c\)</span>, <span class="arithmatex">\(f\)</span> is the mapping prediction function of an OM system.</p>
 
   <hr>
 <div class="md-source-file">
