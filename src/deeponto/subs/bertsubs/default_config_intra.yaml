@@ -18,9 +18,11 @@
 model: bertsubs (intra-ontology)
 
 onto_file: foodon.owl
+
+# More than one label properties can be added
 label_property:
   - http://www.w3.org/2000/01/rdf-schema#label
-  - http://www.geneontology.org/formats/oboInOwl#hasExactSynonym
+#  - http://www.geneontology.org/formats/oboInOwl#hasExactSynonym
 use_one_label: true # true: select only one label
 subsumption_type: named_class # named_class or restriction
 
