@@ -388,6 +388,7 @@ The file structure for the download datasets (from Zenodo) is also simplified th
 </p>
 
 Remarks on this figure:
+
 1. For equivalence matching, testing of the global matching evaluation should be performed on `refs_equiv/full.tsv` in the unsupervised setting, and on `refs_equiv/test.tsv` (with `refs_equiv/train.tsv` set to null reference mappings) in the semi-supervised setting. Testing of the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` for both settings.
 2. For subsumption matching, the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` and the training mapping set `refs_subs/train.tsv` is optional.
 3. The `test.cands.tsv` file in the Bio-LLM sub-track is different from the main Bio-LM track ones. See [OAEI Bio-LLM 2023](#oaei-bio-llm-2023) for more information and how to evaluate on it.
@@ -397,7 +398,7 @@ Remarks on this figure:
 
 As Large Language Models (LLMs) are trending in the AI community, we formulate a special sub-track for evaluating LLM-based OM systems. However, evaluating LLMs with the current OM datasets can be time and resource intensive. To yield insightful results prior to full implementation, we leverage two challenging subsets extracted from the NCIT-DOID and the SNOMED-FMA (Body) equivalence matching datasets.
 
-For each original dataset, we first randomly select 50 **matched** class pairs from ground truth mappings, but **excluding pairs that can be aligned** with direct string matching (i.e., having at least one shared label) to restrict the efficacy of conventional lexical matching. Next, with a fixed source ontology class, we further select 99 unmatched target ontology classes, thus forming a total of 100 candidate mappings (inclusive of the ground truth mapping). This selection is guided by the sub-word inverted index-based idf scores as in the BERTMap paper (see [BERTMap tutorial](../bertmap) for more details), which are capable of producing target ontology classes lexically akin to the fixed source class. We finally randomly choose 50 source classes that **do not have a matched target class** according to the ground truth mappings, and create 100 candidate mappings for each. Therefore, each subset comprises 50 source ontology classes with a match and 50 without. Each class is associated with 100 candidate mappings, culminating in a total extraction of 10,000, i.e., (50+50)*100, class pairs.
+For each original dataset, we first randomly select 50 **matched** class pairs from ground truth mappings, but **excluding pairs that can be aligned** with direct string matching (i.e., having at least one shared label) to restrict the efficacy of conventional lexical matching. Next, with a fixed source ontology class, we further select 99 negative target ontology classes, thus forming a total of 100 candidate mappings (inclusive of the ground truth mapping). This selection is guided by the sub-word inverted index-based idf scores as in the BERTMap paper (see [BERTMap tutorial](../bertmap) for more details), which are capable of producing target ontology classes lexically akin to the fixed source class. We finally randomly choose 50 source classes that **do not have a matched target class** according to the ground truth mappings, and create 100 candidate mappings using the inverted index for each. Therefore, each subset comprises 50 source ontology classes with a match and 50 without. Each class is associated with 100 candidate mappings, culminating in a total extraction of 10,000, i.e., (50+50)*100, class pairs.
 
 ### Evaluation 
 
@@ -416,20 +417,31 @@ Given that each source class is associated with 100 candidate mappings, we can c
 
 - $Hits@1$ for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The corresponding formula is:
 
-$$
-Hits@K = \sum_{(c, c') \in \mathcal{M}_{ref}} \mathbb{I}_{rank(c') \leq K} / |\mathcal{M}_{ref}|
-$$
+    $$
+    Hits@K = \sum_{(c, c') \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c'} \leq K} / |\mathcal{M}_{ref}|
+    $$
+
+    where $rank_{c'}$ is the predicted relative rank of $c'$ among its candidates, $\mathbb{I}_{rank_{c'} \leq K}$ is a binary indicator function that outputs 1 if the rank is less than or equal to $K$ and outputs 0 otherwise.
 
 - The $MRR$ score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. The corresponding formula is:
 
-$$
-MRR = \sum_{(c, c') \in \mathcal{M}_{ref}} rank(c')^{-1} / |\mathcal{M}_{ref}|
-$$
+    $$
+    MRR = \sum_{(c, c') \in \mathcal{M}_{ref}} rank_{c'}^{-1} / |\mathcal{M}_{ref}|
+    $$
 
-- For the 50 unmatched source classes, we compute the rejection rate (denoted as $RR$), counting a successful rejection when **all** the candidate mappings are predicted as **false mappings**. We assign each unmatched source class a null class $c_{null}$ which refers to any target class that does not have a match with the source class, and denote this set of *unreferenced* mappings as $\mathcal{M}_{unref}$.
+- For the 50 unmatched source classes, we compute the rejection rate (denoted as $RR$), counting a successful rejection when **all** the candidate mappings are predicted as **false mappings**. We assign each unmatched source class with a null class $c_{null}$, which refers to any target class that does not have a match with the source class, and denote this set of *unreferenced* mappings as $\mathcal{M}_{unref}$. 
 
-$$
-RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{\forall d \in \mathcal{T}(c). f(c, d) = c \not\equiv d} / |\mathcal{M}_{unref}|
-$$
+    $$
+    RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \prod_{d \in \mathcal{T}_c} (1 - \mathbb{I}_{c \equiv d})  / |\mathcal{M}_{unref}|
+    $$
 
-&ensp;&ensp;where $\mathcal{T}(\cdot)$ returns the 100 target candidate classes for $c$, $f$ is the mapping prediction function of an OM system.
+    where $\mathcal{T}_c$ is the set of target candidate classes for $c$, and $\mathbb{I}_{c \equiv d}$ is a binary indicator that outputs 1 if the OM system predicts a false mapping between $c$ and $d$, and outputs 0 otherwise. The product term in this equation returns 1 if all target candidate classes are predicted as unmatched, i.e., $\forall d \in \mathcal{T}_c.\mathbb{I}_{c \equiv d}=0$.
+
+
+To summarise, the Bio-LLM sub-track provides two representative OM subsets and adopts a range of evaluation metrics to gain meaningful insights from this partial assessment, thus promoting robust and effcient development of LLM-based OM systems.
+
+-----------------------------------------------------------------------------------------------
+
+## OAEI Participation
+
+To participate in the OAEI track, please visit the [OAEI Bio-ML website](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html) for more information, especially on the instructions of system or direct result submission.
