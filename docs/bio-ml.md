@@ -356,13 +356,13 @@ For the OAEI 2023 version, we implemented several updates, including:
     - **Semi-supervised**: The validation mapping set is incorporated into the training set (rendering train-val splitting optional), and the test mapping set available at `{task_name}/refs_equiv/test.tsv` is used for global matching evaluation.
     - **Local Ranking**: Both unsupervised and semi-supervised settings use the same set of candidate mappings found at `{task_name}/refs_equiv/test.cands.tsv` for local ranking evaluation.
   - **Subsumption Matching**:
-    - **Target Ontology**: In the OAEI 2022 version, the target ontology for subsumption matching is different from the one for equivalence matching due to **target class deletion**. However, as the locality modules counteracts such deletion process, we use the same target ontology for both types of matching.
+    - **Target Ontology**: In the OAEI 2022 version, the target ontology for subsumption matching is different from the one for equivalence matching due to **target class deletion**. However, as the locality modules counteract such deletion process, we use the same target ontology for both types of matching.
     - **Unsupervised**: We removed the unsupervised setting since the subsumption matching task did not attract enough participation.
     - **Semi-supervised**: The validation mapping set is merged into the training set (rendering train-val splitting optional). We conduct a local ranking evaluation (global matching is not applicable for subsumption matching) for candidate mappings available at `{task_name}/refs_subs/test.cands.tsv`. 
 
 - **Bio-LLM: A Special Sub-Track for Large Language Models**: We introduced a unique sub-track for Large Language Model (LLM)-based OM systems. We extracted small but challenging subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets for this purpose (refer to [OAEI Bio-LLM 2023](#oaei-bio-llm-2023)).
 
-Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are enriched with locaility modules compared to the pruned versions used in OAEI 2022. The augmented structural and logical contexts make these ontologies more similar to their original versions without any processing (available at `raw_data`). The changes compared to the previous version (see [Bio-ML OAEI 2022](#bio-ml-oaei-2022)) are reflected in the `+` numbers of ontology classes. 
+Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are enriched with locality modules compared to the pruned versions used in OAEI 2022. The augmented structural and logical contexts make these ontologies more similar to their original versions without any processing (available at `raw_data`). The changes compared to the previous version (see [Bio-ML OAEI 2022](#bio-ml-oaei-2022)) are reflected in the `+` numbers of ontology classes. 
 
 In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance"*, and *"Neoplastic Process"* in UMLS, respectively. 
 
@@ -407,7 +407,7 @@ For each original dataset, we first randomly select 50 **matched** class pairs f
 From all the 10,000 class pairs in a given subset, the OM system is expected to predict the true mappings among them, which can be compared against the 50 available ground truth mappings using 
 Precision, Recall, and F-score. 
 
-We use the same formulas in main track [evaluation framework](#evaluation-framework) to calculate Precision, Recall, and F-score. The prediction mappings $\mathcal{M}_{pred}$ is the class pairs an OM system predicts as **true mappings**, and the reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. 
+We use the same formulas in the main track [evaluation framework](#evaluation-framework) to calculate Precision, Recall, and F-score. The prediction mappings $\mathcal{M}_{pred}$ are the class pairs an OM system predicts as **true mappings**, and the reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. 
 
 $$P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}, \ \ R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}, \ \ F_1 = \frac{2 P R}{P + R}$$
 
@@ -435,13 +435,13 @@ Given that each source class is associated with 100 candidate mappings, we can c
     RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \prod_{d \in \mathcal{T}_c} (1 - \mathbb{I}_{c \equiv d})  / |\mathcal{M}_{unref}|
     $$
 
-    where $\mathcal{T}_c$ is the set of target candidate classes for $c$, and $\mathbb{I}_{c \equiv d}$ is a binary indicator that outputs 1 if the OM system predicts a false mapping between $c$ and $d$, and outputs 0 otherwise. The product term in this equation returns 1 if all target candidate classes are predicted as unmatched, i.e., $\forall d \in \mathcal{T}_c.\mathbb{I}_{c \equiv d}=0$.
+    where $\mathcal{T}_c$ is the set of target candidate classes for $c$, and $\mathbb{I}_{c \equiv d}$ is a binary indicator that outputs 0 if the OM system predicts a false mapping between $c$ and $d$, and outputs 1 otherwise. The product term in this equation returns 1 if all target candidate classes are predicted as unmatched, i.e., $\forall d \in \mathcal{T}_c.\mathbb{I}_{c \equiv d}=0$.
 
 
-To summarise, the Bio-LLM sub-track provides two representative OM subsets and adopts a range of evaluation metrics to gain meaningful insights from this partial assessment, thus promoting robust and effcient development of LLM-based OM systems.
+To summarise, the Bio-LLM sub-track provides two representative OM subsets and adopts a range of evaluation metrics to gain meaningful insights from this partial assessment, thus promoting robust and efficient development of LLM-based OM systems.
 
 -----------------------------------------------------------------------------------------------
 
 ## OAEI Participation
 
-To participate in the OAEI track, please visit the [OAEI Bio-ML website](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html) for more information, especially on the instructions of system or direct result submission.
+To participate in the OAEI track, please visit the [OAEI Bio-ML website](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html) for more information, especially on the instructions of systems or direct result submission.
