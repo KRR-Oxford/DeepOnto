@@ -454,24 +454,34 @@ To participate in the OAEI track, please visit the [OAEI Bio-ML website](https:/
 
 For the **main Bio-ML track**, we expect two result files for each setting:
 
-1. A prediction mapping file named `pred.tsv` in the same format as the reference mapping file.
+1. A prediction mapping file named `match_results.tsv` in the same format as the reference mapping file (e.g., `task_name/refs_equiv/full.tsv`).
 
 
     !!! note "Matching Result"
         
             Download <a href="../assets/example_reference_mappings.tsv" download>an example of mapping file</a>. The three columns, `"SrcEntity"`, `"TgtEntity"`, and `"Score"` refer to the source class IRI, the target class IRI, and the matching score.
 
-2. A scored or ranked candidate mapping file named `rank.tsv` in the same format as the test candidate mapping file. 
+2. A scored or ranked candidate mapping file named `rank_results.tsv` in the same format as the test candidate mapping file (e.g., `task_name/refs_equiv/test.cands.tsv`). 
 
 
     !!! note "Ranking Result"
 
-            Download <a href="../assets/example_candidate_mappings.tsv" download>an example of raw (unscored) candidate mapping file</a> and <a href="../assets/example_scored_candidate_mappings.tsv" download>an example of scored candidate mapping file</a>. The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a **reference mapping**. The `"TgtCandidates"` column stores a sequence of `tgt_cand_iri` in the unscored file and a list of tuples `(tgt_cand_iri, score)` in the scored file, which can be accessed by the built-in Python function `eval`. 
+            Download <a href="../assets/example_candidate_mappings.tsv" download>an example of raw (unscored) candidate mapping file</a> and <a href="../assets/example_scored_candidate_mappings.tsv" download>an example of scored candidate mapping file</a>. The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a **reference mapping**. The `"TgtCandidates"` column stores a sequence of `tgt_cand_iri` in the unscored file and a list of **tuples** `(tgt_cand_iri, score)` in the scored file, which can be accessed by the built-in Python function `eval`. 
             
             We also accept a result file without scores and in that case we assume the list of `tgt_cand_iri` has been sorted in descending order.
 
 Note that each OM pair is accompanied with an unsupervised and an semi-supervised setting and thus separate sets of result files should be submitted. Moreover, for subsumption matching, only the ranking result file in (2) is required.
 
-For the **Bio-LLM sub-track**, we expect **both matching and ranking result files** for one task. It is worth noting that the **rejection rate** metric will be computed using both result files, i.e., to compute the portion of unmatched source classes that are not involved in any predicted true mappings.
+For the **Bio-LLM sub-track**, we expect one result file (similar to (2) but requiring a list of **triples**) for one task:
+
+3.  A scored or ranked candidate mapping file named `biollm_results.tsv` in the same format as the test candidate mapping file (i.e., `task_name/test.cands.tsv`).
+
+
+    !!! note "Bio-LLM Result"
+
+            Download <a href="../assets/example_bio-llm_candidate_mappings.tsv" download>an example of bio-llm mapping file</a>. The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a **reference mapping**. The `"TgtCandidates"` column stores a sequence of a list of **triples** `(tgt_cand_iri, score, answer)` in the scored file, which can be accessed by the built-in Python function `eval`. The additional `answer` values are `True` or `False` indicating whether the OM system predicts `(src_class_iri, tgt_cand_iri)` as a true mapping.
+
+
+It is important to notice that the `answer` values are necessary for the matching evaluation of P, R, F-score, and the computation of rejection rate, the `score` values are used for ranking evaluation of MRR and Hits@1.
 
 See [evaluation framework](#evaluation-framework) for detailed explanation and code of how we assess the results.
