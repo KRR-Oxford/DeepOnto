@@ -188,7 +188,9 @@ Our evaluation protocol concerns two scenarios for OM: **global matching** for o
 
 As an overall assessment, given a **complete** set of reference mappings, an OM system is expected to compute a set of *true* mappings and compare against the reference mappings using Precision, Recall, and F-score metrics. With $\textsf{DeepOnto}$, the evaluation can be performed using the following code. 
 
-> Download a <a href="../assets/example_reference_mappings.tsv" download>small fragment</a> to see the format of the prediction and reference mapping files. The three columns, `"SrcEntity"`, `"TgtEntity"`, and `"Score"` refer to the source class IRI, the target class IRI, and the matching score.
+!!! note "Matching Result"
+    
+        Download <a href="../assets/example_reference_mappings.tsv" download>an example of matching result file</a>. The three columns, `"SrcEntity"`, `"TgtEntity"`, and `"Score"` refer to the source class IRI, the target class IRI, and the matching score.
 
 ```python
 from deeponto.align.evaluation import AlignmentEvaluator
@@ -265,7 +267,9 @@ An OM system is also expected to **distinguish the reference mapping** among a s
 
     The reference subsumption mappings are inherently incomplete, so only the ranking metrics are adopted in evaluating system performance in subsumption matching.
 
-> Download a <a href="../assets/example_candidate_mappings.tsv" download>small fragment</a> to see the format of the reference mapping and its candidate mappings. The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a **reference mapping**. The `"TgtCandidates"` column stores a sequence of target candidate class IRIs (**including the correct one**) used for ranking, which can be accessed by the built-in Python function `eval`.
+!!! note "Ranking Result"
+
+        Download <a href="../assets/example_candidate_mappings.tsv" download>an example of raw (unscored) candidate mapping file</a> and <a href="../assets/example_scored_candidate_mappings.tsv" download>an example of scored candidate mapping file</a>. The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a **reference mapping**. The `"TgtCandidates"` column stores a sequence of `tgt_cand_iri` in the unscored file and a list of tuples `(tgt_cand_iri, score)` in the scored file, which can be accessed by the built-in Python function `eval`. 
 
 With $\textsf{DeepOnto}$, the evaluation can be performed as follows. First, an OM system needs to assign a score to each target candidate class and save the results as a list of tuples `(tgt_cand_class_iri, matching_score)`. 
 
@@ -444,4 +448,29 @@ To summarise, the Bio-LLM sub-track provides two representative OM subsets and a
 
 ## OAEI Participation
 
-To participate in the OAEI track, please visit the [OAEI Bio-ML website](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html) for more information, especially on the instructions of systems or direct result submission.
+To participate in the OAEI track, please visit the [OAEI Bio-ML website](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html) for more information, especially on the instructions of system submission or direct result submission. In the following, we present the formats of result files we expect the participants to submit.
+
+### Result Submission Format
+
+For the **main Bio-ML track**, we expect two result files for each setting:
+
+1. A prediction mapping file named `pred.tsv` in the same format as the reference mapping file.
+
+
+    !!! note "Matching Result"
+        
+            Download <a href="../assets/example_reference_mappings.tsv" download>an example of mapping file</a>. The three columns, `"SrcEntity"`, `"TgtEntity"`, and `"Score"` refer to the source class IRI, the target class IRI, and the matching score.
+
+2. A scored or ranked candidate mapping file named `rank.tsv` in the same format as the test candidate mapping file. 
+
+
+    !!! note "Ranking Result"
+
+            Download <a href="../assets/example_candidate_mappings.tsv" download>an example of raw (unscored) candidate mapping file</a> and <a href="../assets/example_scored_candidate_mappings.tsv" download>an example of scored candidate mapping file</a>. The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a **reference mapping**. The `"TgtCandidates"` column stores a sequence of `tgt_cand_iri` in the unscored file and a list of tuples `(tgt_cand_iri, score)` in the scored file, which can be accessed by the built-in Python function `eval`. 
+            
+            We also accept a result file without scores and in that case we assume the list of `tgt_cand_iri` has been sorted in descending order.
+
+Note that each OM pair is accompanied with an unsupervised and an semi-supervised settings and thus separate sets of result files should be submitted. Moreover, for subsumption matching, only the ranking result file in (2) is required.
+
+For the **Bio-LLM sub-track**, we expect **both matching and ranking result files** for one task. It is worth noting that the **rejection rate** metric will be computed using both result files, i.e., to compute the portion of unmatched source classes that are not involved in any predicted true mappings.
+
