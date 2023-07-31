@@ -1315,8 +1315,8 @@
 <span class="c1"># then compute the results</span>
 <span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
 </code></pre></div>
-<div class="admonition tips">
-<p class="admonition-title">Tips</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
 <p>We have encapsulated above features in the <a class="autorefs autorefs-internal" href="../deeponto/align/oaei/#deeponto.align.oaei.matching_eval"><code>matching_eval</code></a> function in the OAEI utilities.</p>
 </div>
 <p>However,</p>
@@ -1370,8 +1370,8 @@
 <p>The associated formulas for MRR and Hits@K are:</p>
 <div class="arithmatex">\[MRR = \sum_i^N rank_i^{-1} / N, \ \ Hits@K = \sum_i^N \mathbb{I}_{rank_i \leq k} / N\]</div>
 <p>where <span class="arithmatex">\(N\)</span> is the number of reference mappings used for testing, <span class="arithmatex">\(rank_i\)</span> is the relative rank of the reference mapping among its candidate mappings.</p>
-<div class="admonition tips">
-<p class="admonition-title">Tips</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
 <p>If matching scores are not available, the target candidate classes should be <strong>sorted</strong> in descending order and saved in a list, the <a class="autorefs autorefs-internal" href="../deeponto/align/oaei/#deeponto.align.oaei.ranking_eval"><code>ranking_eval</code></a> function will compute scores according to the sorted list.</p>
 </div>
 <h2 id="oaei-bio-ml-2022">OAEI Bio-ML 2022</h2>
@@ -1616,6 +1616,7 @@ RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \prod_{d \in \mathcal{T}_c} (1
 </ol>
 <p>Note that each OM pair is accompanied with an unsupervised and an semi-supervised settings and thus separate sets of result files should be submitted. Moreover, for subsumption matching, only the ranking result file in (2) is required.</p>
 <p>For the <strong>Bio-LLM sub-track</strong>, we expect <strong>both matching and ranking result files</strong> for one task. It is worth noting that the <strong>rejection rate</strong> metric will be computed using both result files, i.e., to compute the portion of unmatched source classes that are not involved in any predicted true mappings.</p>
+<p>See <a href="#evaluation-framework">evaluation framework</a> for detailed explanation and code of how we assess the results.</p>
 
   <hr>
 <div class="md-source-file">
