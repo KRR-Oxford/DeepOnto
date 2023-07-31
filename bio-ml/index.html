@@ -549,6 +549,13 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#oaei-participation" class="md-nav__link">
+    OAEI Participation
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1530,13 +1537,15 @@
   <img alt="deeponto" src="../images/bio-ml-oaei-2023.svg" height="420" style="width: 70%;">
 </p>
 
-<p>Remarks on this figure:
-1. For equivalence matching, testing of the global matching evaluation should be performed on <code>refs_equiv/full.tsv</code> in the unsupervised setting, and on <code>refs_equiv/test.tsv</code> (with <code>refs_equiv/train.tsv</code> set to null reference mappings) in the semi-supervised setting. Testing of the local ranking evaluation should be performed on <code>refs_equiv/test.cands.tsv</code> for both settings.
-2. For subsumption matching, the local ranking evaluation should be performed on <code>refs_equiv/test.cands.tsv</code> and the training mapping set <code>refs_subs/train.tsv</code> is optional.
-3. The <code>test.cands.tsv</code> file in the Bio-LLM sub-track is different from the main Bio-LM track ones. See <a href="#oaei-bio-llm-2023">OAEI Bio-LLM 2023</a> for more information and how to evaluate on it.</p>
+<p>Remarks on this figure:</p>
+<ol>
+<li>For equivalence matching, testing of the global matching evaluation should be performed on <code>refs_equiv/full.tsv</code> in the unsupervised setting, and on <code>refs_equiv/test.tsv</code> (with <code>refs_equiv/train.tsv</code> set to null reference mappings) in the semi-supervised setting. Testing of the local ranking evaluation should be performed on <code>refs_equiv/test.cands.tsv</code> for both settings.</li>
+<li>For subsumption matching, the local ranking evaluation should be performed on <code>refs_equiv/test.cands.tsv</code> and the training mapping set <code>refs_subs/train.tsv</code> is optional.</li>
+<li>The <code>test.cands.tsv</code> file in the Bio-LLM sub-track is different from the main Bio-LM track ones. See <a href="#oaei-bio-llm-2023">OAEI Bio-LLM 2023</a> for more information and how to evaluate on it.</li>
+</ol>
 <h2 id="oaei-bio-llm-2023">OAEI Bio-LLM 2023</h2>
 <p>As Large Language Models (LLMs) are trending in the AI community, we formulate a special sub-track for evaluating LLM-based OM systems. However, evaluating LLMs with the current OM datasets can be time and resource intensive. To yield insightful results prior to full implementation, we leverage two challenging subsets extracted from the NCIT-DOID and the SNOMED-FMA (Body) equivalence matching datasets.</p>
-<p>For each original dataset, we first randomly select 50 <strong>matched</strong> class pairs from ground truth mappings, but <strong>excluding pairs that can be aligned</strong> with direct string matching (i.e., having at least one shared label) to restrict the efficacy of conventional lexical matching. Next, with a fixed source ontology class, we further select 99 unmatched target ontology classes, thus forming a total of 100 candidate mappings (inclusive of the ground truth mapping). This selection is guided by the sub-word inverted index-based idf scores as in the BERTMap paper (see <a href="../bertmap">BERTMap tutorial</a> for more details), which are capable of producing target ontology classes lexically akin to the fixed source class. We finally randomly choose 50 source classes that <strong>do not have a matched target class</strong> according to the ground truth mappings, and create 100 candidate mappings for each. Therefore, each subset comprises 50 source ontology classes with a match and 50 without. Each class is associated with 100 candidate mappings, culminating in a total extraction of 10,000, i.e., (50+50)*100, class pairs.</p>
+<p>For each original dataset, we first randomly select 50 <strong>matched</strong> class pairs from ground truth mappings, but <strong>excluding pairs that can be aligned</strong> with direct string matching (i.e., having at least one shared label) to restrict the efficacy of conventional lexical matching. Next, with a fixed source ontology class, we further select 99 negative target ontology classes, thus forming a total of 100 candidate mappings (inclusive of the ground truth mapping). This selection is guided by the sub-word inverted index-based idf scores as in the BERTMap paper (see <a href="../bertmap">BERTMap tutorial</a> for more details), which are capable of producing target ontology classes lexically akin to the fixed source class. We finally randomly choose 50 source classes that <strong>do not have a matched target class</strong> according to the ground truth mappings, and create 100 candidate mappings using the inverted index for each. Therefore, each subset comprises 50 source ontology classes with a match and 50 without. Each class is associated with 100 candidate mappings, culminating in a total extraction of 10,000, i.e., (50+50)*100, class pairs.</p>
 <h3 id="evaluation">Evaluation</h3>
 <h4 id="matching">Matching</h4>
 <p>From all the 10,000 class pairs in a given subset, the OM system is expected to predict the true mappings among them, which can be compared against the 50 available ground truth mappings using 
@@ -1546,31 +1555,38 @@ Precision, Recall, and F-score. </p>
 <h4 id="ranking">Ranking</h4>
 <p>Given that each source class is associated with 100 candidate mappings, we can compute ranking-based metrics based on their scores. Specifically, we calculate:</p>
 <ul>
-<li><span class="arithmatex">\(Hits@1\)</span> for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The corresponding formula is:</li>
-</ul>
+<li>
+<p><span class="arithmatex">\(Hits@1\)</span> for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The corresponding formula is:</p>
 <div class="arithmatex">\[
-Hits@K = \sum_{(c, c') \in \mathcal{M}_{ref}} \mathbb{I}_{rank(c') \leq K} / |\mathcal{M}_{ref}|
+Hits@K = \sum_{(c, c') \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c'} \leq K} / |\mathcal{M}_{ref}|
 \]</div>
-<ul>
-<li>The <span class="arithmatex">\(MRR\)</span> score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. The corresponding formula is:</li>
-</ul>
+<p>where <span class="arithmatex">\(rank_{c'}\)</span> is the predicted relative rank of <span class="arithmatex">\(c'\)</span> among its candidates, <span class="arithmatex">\(\mathbb{I}_{rank_{c'} \leq K}\)</span> is a binary indicator function that outputs 1 if the rank is less than or equal to <span class="arithmatex">\(K\)</span> and outputs 0 otherwise.</p>
+</li>
+<li>
+<p>The <span class="arithmatex">\(MRR\)</span> score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. The corresponding formula is:</p>
 <div class="arithmatex">\[
-MRR = \sum_{(c, c') \in \mathcal{M}_{ref}} rank(c')^{-1} / |\mathcal{M}_{ref}|
+MRR = \sum_{(c, c') \in \mathcal{M}_{ref}} rank_{c'}^{-1} / |\mathcal{M}_{ref}|
 \]</div>
-<ul>
-<li>For the 50 unmatched source classes, we compute the rejection rate (denoted as <span class="arithmatex">\(RR\)</span>), counting a successful rejection when <strong>all</strong> the candidate mappings are predicted as <strong>false mappings</strong>. We assign each unmatched source class a null class <span class="arithmatex">\(c_{null}\)</span> which refers to any target class that does not have a match with the source class, and denote this set of <em>unreferenced</em> mappings as <span class="arithmatex">\(\mathcal{M}_{unref}\)</span>.</li>
-</ul>
+</li>
+<li>
+<p>For the 50 unmatched source classes, we compute the rejection rate (denoted as <span class="arithmatex">\(RR\)</span>), counting a successful rejection when <strong>all</strong> the candidate mappings are predicted as <strong>false mappings</strong>. We assign each unmatched source class with a null class <span class="arithmatex">\(c_{null}\)</span>, which refers to any target class that does not have a match with the source class, and denote this set of <em>unreferenced</em> mappings as <span class="arithmatex">\(\mathcal{M}_{unref}\)</span>. </p>
 <div class="arithmatex">\[
-RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{\forall d \in \mathcal{T}(c). f(c, d) = c \not\equiv d} / |\mathcal{M}_{unref}|
+RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \prod_{d \in \mathcal{T}_c} (1 - \mathbb{I}_{c \equiv d})  / |\mathcal{M}_{unref}|
 \]</div>
-<p>&ensp;&ensp;where <span class="arithmatex">\(\mathcal{T}(\cdot)\)</span> returns the 100 target candidate classes for <span class="arithmatex">\(c\)</span>, <span class="arithmatex">\(f\)</span> is the mapping prediction function of an OM system.</p>
+<p>where <span class="arithmatex">\(\mathcal{T}_c\)</span> is the set of target candidate classes for <span class="arithmatex">\(c\)</span>, and <span class="arithmatex">\(\mathbb{I}_{c \equiv d}\)</span> is a binary indicator that outputs 1 if the OM system predicts a false mapping between <span class="arithmatex">\(c\)</span> and <span class="arithmatex">\(d\)</span>, and outputs 0 otherwise. The product term in this equation returns 1 if all target candidate classes are predicted as unmatched, i.e., <span class="arithmatex">\(\forall d \in \mathcal{T}_c.\mathbb{I}_{c \equiv d}=0\)</span>.</p>
+</li>
+</ul>
+<p>To summarise, the Bio-LLM sub-track provides two representative OM subsets and adopts a range of evaluation metrics to gain meaningful insights from this partial assessment, thus promoting robust and effcient development of LLM-based OM systems.</p>
+<hr />
+<h2 id="oaei-participation">OAEI Participation</h2>
+<p>To participate in the OAEI track, please visit the <a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html">OAEI Bio-ML website</a> for more information, especially on the instructions of system or direct result submission.</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 30, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 31, 2023</span>
       
         <br>
         Created:
