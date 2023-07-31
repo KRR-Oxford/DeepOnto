@@ -454,14 +454,14 @@ To participate in the OAEI track, please visit the [OAEI Bio-ML website](https:/
 
 For the **main Bio-ML track**, we expect two result files for each setting:
 
-1. A prediction mapping file named `match_results.tsv` in the same format as the reference mapping file (e.g., `task_name/refs_equiv/full.tsv`).
+- **(1)** A prediction mapping file named `match_results.tsv` in the same format as the reference mapping file (e.g., `task_name/refs_equiv/full.tsv`).
 
 
     !!! note "Matching Result"
         
             Download <a href="../assets/example_reference_mappings.tsv" download>an example of mapping file</a>. The three columns, `"SrcEntity"`, `"TgtEntity"`, and `"Score"` refer to the source class IRI, the target class IRI, and the matching score.
 
-2. A scored or ranked candidate mapping file named `rank_results.tsv` in the same format as the test candidate mapping file (e.g., `task_name/refs_equiv/test.cands.tsv`). 
+- **(2)** A scored or ranked candidate mapping file named `rank_results.tsv` in the same format as the test candidate mapping file (e.g., `task_name/refs_equiv/test.cands.tsv`). 
 
 
     !!! note "Ranking Result"
@@ -474,7 +474,7 @@ Note that each OM pair is accompanied with an unsupervised and an semi-supervise
 
 For the **Bio-LLM sub-track**, we expect one result file (similar to (2) but requiring a list of **triples**) for one task:
 
-3.  A scored or ranked candidate mapping file named `biollm_results.tsv` in the same format as the test candidate mapping file (i.e., `task_name/test.cands.tsv`).
+- **(3)**  A scored or ranked candidate mapping file named `biollm_results.tsv` in the same format as the test candidate mapping file (i.e., `task_name/test.cands.tsv`).
 
 
     !!! note "Bio-LLM Result"
