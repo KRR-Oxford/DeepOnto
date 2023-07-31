@@ -470,7 +470,7 @@ For the **main Bio-ML track**, we expect two result files for each setting:
             
             We also accept a result file without scores and in that case we assume the list of `tgt_cand_iri` has been sorted in descending order.
 
-Note that each OM pair is accompanied with an unsupervised and an semi-supervised settings and thus separate sets of result files should be submitted. Moreover, for subsumption matching, only the ranking result file in (2) is required.
+Note that each OM pair is accompanied with an unsupervised and an semi-supervised setting and thus separate sets of result files should be submitted. Moreover, for subsumption matching, only the ranking result file in (2) is required.
 
 For the **Bio-LLM sub-track**, we expect **both matching and ranking result files** for one task. It is worth noting that the **rejection rate** metric will be computed using both result files, i.e., to compute the portion of unmatched source classes that are not involved in any predicted true mappings.
 
