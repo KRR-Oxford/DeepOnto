@@ -554,6 +554,19 @@
     OAEI Participation
   </a>
   
+    <nav class="md-nav" aria-label="OAEI Participation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#result-submission-format" class="md-nav__link">
+    Result Submission Format
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1255,9 +1268,10 @@
 <p>Our evaluation protocol concerns two scenarios for OM: <strong>global matching</strong> for overall assessment and <strong>local ranking</strong> for partial assessment.</p>
 <h3 id="global-matching">Global Matching</h3>
 <p>As an overall assessment, given a <strong>complete</strong> set of reference mappings, an OM system is expected to compute a set of <em>true</em> mappings and compare against the reference mappings using Precision, Recall, and F-score metrics. With <span class="arithmatex">\(\textsf{DeepOnto}\)</span>, the evaluation can be performed using the following code. </p>
-<blockquote>
-<p>Download a <a href="../assets/example_reference_mappings.tsv" download>small fragment</a> to see the format of the prediction and reference mapping files. The three columns, <code>"SrcEntity"</code>, <code>"TgtEntity"</code>, and <code>"Score"</code> refer to the source class IRI, the target class IRI, and the matching score.</p>
-</blockquote>
+<div class="admonition note">
+<p class="admonition-title">Matching Result<p>Download <a href="../assets/example_reference_mappings.tsv" download>an example of matching result file</a>. The three columns, <code>"SrcEntity"</code>, <code>"TgtEntity"</code>, and <code>"Score"</code> refer to the source class IRI, the target class IRI, and the matching score.</p>
+</p>
+</div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.align.evaluation</span> <span class="kn">import</span> <span class="n">AlignmentEvaluator</span>
 <span class="kn">from</span> <span class="nn">deeponto.align.mapping</span> <span class="kn">import</span> <span class="n">ReferenceMapping</span><span class="p">,</span> <span class="n">EntityMapping</span>
 
@@ -1317,9 +1331,10 @@
 <p class="admonition-title">Warning</p>
 <p>The reference subsumption mappings are inherently incomplete, so only the ranking metrics are adopted in evaluating system performance in subsumption matching.</p>
 </div>
-<blockquote>
-<p>Download a <a href="../assets/example_candidate_mappings.tsv" download>small fragment</a> to see the format of the reference mapping and its candidate mappings. The <code>"SrcEntity"</code> and <code>"TgtEntity"</code> columns refer to the source class IRI and the target class IRI involved in a <strong>reference mapping</strong>. The <code>"TgtCandidates"</code> column stores a sequence of target candidate class IRIs (<strong>including the correct one</strong>) used for ranking, which can be accessed by the built-in Python function <code>eval</code>.</p>
-</blockquote>
+<div class="admonition note">
+<p class="admonition-title">Ranking Result<p>Download <a href="../assets/example_candidate_mappings.tsv" download>an example of raw (unscored) candidate mapping file</a> and <a href="../assets/example_scored_candidate_mappings.tsv" download>an example of scored candidate mapping file</a>. The <code>"SrcEntity"</code> and <code>"TgtEntity"</code> columns refer to the source class IRI and the target class IRI involved in a <strong>reference mapping</strong>. The <code>"TgtCandidates"</code> column stores a sequence of <code>tgt_cand_iri</code> in the unscored file and a list of tuples <code>(tgt_cand_iri, score)</code> in the scored file, which can be accessed by the built-in Python function <code>eval</code>. </p>
+</p>
+</div>
 <p>With <span class="arithmatex">\(\textsf{DeepOnto}\)</span>, the evaluation can be performed as follows. First, an OM system needs to assign a score to each target candidate class and save the results as a list of tuples <code>(tgt_cand_class_iri, matching_score)</code>. </p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">FileUtils</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -1456,7 +1471,7 @@
 <li>
 <p><strong>Subsumption Matching</strong>:</p>
 <ul>
-<li><strong>Target Ontology</strong>: In the OAEI 2022 version, the target ontology for subsumption matching is different from the one for equivalence matching due to <strong>target class deletion</strong>. However, as the locality modules counteracts such deletion process, we use the same target ontology for both types of matching.</li>
+<li><strong>Target Ontology</strong>: In the OAEI 2022 version, the target ontology for subsumption matching is different from the one for equivalence matching due to <strong>target class deletion</strong>. However, as the locality modules counteract such deletion process, we use the same target ontology for both types of matching.</li>
 <li><strong>Unsupervised</strong>: We removed the unsupervised setting since the subsumption matching task did not attract enough participation.</li>
 <li><strong>Semi-supervised</strong>: The validation mapping set is merged into the training set (rendering train-val splitting optional). We conduct a local ranking evaluation (global matching is not applicable for subsumption matching) for candidate mappings available at <code>{task_name}/refs_subs/test.cands.tsv</code>. </li>
 </ul>
@@ -1465,7 +1480,7 @@
 <p><strong>Bio-LLM: A Special Sub-Track for Large Language Models</strong>: We introduced a unique sub-track for Large Language Model (LLM)-based OM systems. We extracted small but challenging subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets for this purpose (refer to <a href="#oaei-bio-llm-2023">OAEI Bio-LLM 2023</a>).</p>
 </li>
 </ul>
-<p>Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are enriched with locaility modules compared to the pruned versions used in OAEI 2022. The augmented structural and logical contexts make these ontologies more similar to their original versions without any processing (available at <code>raw_data</code>). The changes compared to the previous version (see <a href="#bio-ml-oaei-2022">Bio-ML OAEI 2022</a>) are reflected in the <code>+</code> numbers of ontology classes. </p>
+<p>Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are enriched with locality modules compared to the pruned versions used in OAEI 2022. The augmented structural and logical contexts make these ontologies more similar to their original versions without any processing (available at <code>raw_data</code>). The changes compared to the previous version (see <a href="#bio-ml-oaei-2022">Bio-ML OAEI 2022</a>) are reflected in the <code>+</code> numbers of ontology classes. </p>
 <p>In the <strong>Category</strong> column, <em>"Disease"</em> indicates that the Mondo data are mainly about disease concepts, while <em>"Body"</em>, <em>"Pharm"</em>, and <em>"Neoplas"</em> denote semantic types of <em>"Body Part, Organ, or Organ Components"</em>, <em>"Pharmacologic Substance"</em>, and <em>"Neoplastic Process"</em> in UMLS, respectively. </p>
 <p><center>
 <small></p>
@@ -1550,7 +1565,7 @@
 <h4 id="matching">Matching</h4>
 <p>From all the 10,000 class pairs in a given subset, the OM system is expected to predict the true mappings among them, which can be compared against the 50 available ground truth mappings using 
 Precision, Recall, and F-score. </p>
-<p>We use the same formulas in main track <a href="#evaluation-framework">evaluation framework</a> to calculate Precision, Recall, and F-score. The prediction mappings <span class="arithmatex">\(\mathcal{M}_{pred}\)</span> is the class pairs an OM system predicts as <strong>true mappings</strong>, and the reference mappings <span class="arithmatex">\(\mathcal{M}_{ref}\)</span> refers to the 50 matched pairs. </p>
+<p>We use the same formulas in the main track <a href="#evaluation-framework">evaluation framework</a> to calculate Precision, Recall, and F-score. The prediction mappings <span class="arithmatex">\(\mathcal{M}_{pred}\)</span> are the class pairs an OM system predicts as <strong>true mappings</strong>, and the reference mappings <span class="arithmatex">\(\mathcal{M}_{ref}\)</span> refers to the 50 matched pairs. </p>
 <div class="arithmatex">\[P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}, \ \ R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}, \ \ F_1 = \frac{2 P R}{P + R}\]</div>
 <h4 id="ranking">Ranking</h4>
 <p>Given that each source class is associated with 100 candidate mappings, we can compute ranking-based metrics based on their scores. Specifically, we calculate:</p>
@@ -1573,13 +1588,34 @@ MRR = \sum_{(c, c') \in \mathcal{M}_{ref}} rank_{c'}^{-1} / |\mathcal{M}_{ref}|
 <div class="arithmatex">\[
 RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \prod_{d \in \mathcal{T}_c} (1 - \mathbb{I}_{c \equiv d})  / |\mathcal{M}_{unref}|
 \]</div>
-<p>where <span class="arithmatex">\(\mathcal{T}_c\)</span> is the set of target candidate classes for <span class="arithmatex">\(c\)</span>, and <span class="arithmatex">\(\mathbb{I}_{c \equiv d}\)</span> is a binary indicator that outputs 1 if the OM system predicts a false mapping between <span class="arithmatex">\(c\)</span> and <span class="arithmatex">\(d\)</span>, and outputs 0 otherwise. The product term in this equation returns 1 if all target candidate classes are predicted as unmatched, i.e., <span class="arithmatex">\(\forall d \in \mathcal{T}_c.\mathbb{I}_{c \equiv d}=0\)</span>.</p>
+<p>where <span class="arithmatex">\(\mathcal{T}_c\)</span> is the set of target candidate classes for <span class="arithmatex">\(c\)</span>, and <span class="arithmatex">\(\mathbb{I}_{c \equiv d}\)</span> is a binary indicator that outputs 0 if the OM system predicts a false mapping between <span class="arithmatex">\(c\)</span> and <span class="arithmatex">\(d\)</span>, and outputs 1 otherwise. The product term in this equation returns 1 if all target candidate classes are predicted as unmatched, i.e., <span class="arithmatex">\(\forall d \in \mathcal{T}_c.\mathbb{I}_{c \equiv d}=0\)</span>.</p>
 </li>
 </ul>
-<p>To summarise, the Bio-LLM sub-track provides two representative OM subsets and adopts a range of evaluation metrics to gain meaningful insights from this partial assessment, thus promoting robust and effcient development of LLM-based OM systems.</p>
+<p>To summarise, the Bio-LLM sub-track provides two representative OM subsets and adopts a range of evaluation metrics to gain meaningful insights from this partial assessment, thus promoting robust and efficient development of LLM-based OM systems.</p>
 <hr />
 <h2 id="oaei-participation">OAEI Participation</h2>
-<p>To participate in the OAEI track, please visit the <a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html">OAEI Bio-ML website</a> for more information, especially on the instructions of system or direct result submission.</p>
+<p>To participate in the OAEI track, please visit the <a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html">OAEI Bio-ML website</a> for more information, especially on the instructions of system submission or direct result submission. In the following, we present the formats of result files we expect the participants to submit.</p>
+<h3 id="result-submission-format">Result Submission Format</h3>
+<p>For the <strong>main Bio-ML track</strong>, we expect two result files for each setting:</p>
+<ol>
+<li>
+<p>A prediction mapping file named <code>pred.tsv</code> in the same format as the reference mapping file.</p>
+<div class="admonition note">
+<p class="admonition-title">Matching Result<p>Download <a href="../assets/example_reference_mappings.tsv" download>an example of mapping file</a>. The three columns, <code>"SrcEntity"</code>, <code>"TgtEntity"</code>, and <code>"Score"</code> refer to the source class IRI, the target class IRI, and the matching score.</p>
+</p>
+</div>
+</li>
+<li>
+<p>A scored or ranked candidate mapping file named <code>rank.tsv</code> in the same format as the test candidate mapping file. </p>
+<div class="admonition note">
+<p class="admonition-title">Ranking Result<p>Download <a href="../assets/example_candidate_mappings.tsv" download>an example of raw (unscored) candidate mapping file</a> and <a href="../assets/example_scored_candidate_mappings.tsv" download>an example of scored candidate mapping file</a>. The <code>"SrcEntity"</code> and <code>"TgtEntity"</code> columns refer to the source class IRI and the target class IRI involved in a <strong>reference mapping</strong>. The <code>"TgtCandidates"</code> column stores a sequence of <code>tgt_cand_iri</code> in the unscored file and a list of tuples <code>(tgt_cand_iri, score)</code> in the scored file, which can be accessed by the built-in Python function <code>eval</code>. </p>
+<p>We also accept a result file without scores and in that case we assume the list of <code>tgt_cand_iri</code> has been sorted in descending order.</p>
+</p>
+</div>
+</li>
+</ol>
+<p>Note that each OM pair is accompanied with an unsupervised and an semi-supervised settings and thus separate sets of result files should be submitted. Moreover, for subsumption matching, only the ranking result file in (2) is required.</p>
+<p>For the <strong>Bio-LLM sub-track</strong>, we expect <strong>both matching and ranking result files</strong> for one task. It is worth noting that the <strong>rejection rate</strong> metric will be computed using both result files, i.e., to compute the portion of unmatched source classes that are not involved in any predicted true mappings.</p>
 
   <hr>
 <div class="md-source-file">
