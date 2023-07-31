@@ -248,7 +248,7 @@ preds = remove_ignored_mappings(preds, ignored_class_index)
 results = AlignmentEvaluator.f1(preds, refs, ...)
 ```
 
-!!! tips
+!!! tip
 
     We have encapsulated above features in the [`matching_eval`][deeponto.align.oaei.matching_eval] function in the OAEI utilities.
 
@@ -315,7 +315,7 @@ $$MRR = \sum_i^N rank_i^{-1} / N, \ \ Hits@K = \sum_i^N \mathbb{I}_{rank_i \leq 
 
 where $N$ is the number of reference mappings used for testing, $rank_i$ is the relative rank of the reference mapping among its candidate mappings.
 
-!!! tips
+!!! tip
 
     If matching scores are not available, the target candidate classes should be **sorted** in descending order and saved in a list, the [`ranking_eval`][deeponto.align.oaei.ranking_eval] function will compute scores according to the sorted list.
 
@@ -474,3 +474,4 @@ Note that each OM pair is accompanied with an unsupervised and an semi-supervise
 
 For the **Bio-LLM sub-track**, we expect **both matching and ranking result files** for one task. It is worth noting that the **rejection rate** metric will be computed using both result files, i.e., to compute the portion of unmatched source classes that are not involved in any predicted true mappings.
 
+See [evaluation framework](#evaluation-framework) for detailed explanation and code of how we assess the results.
