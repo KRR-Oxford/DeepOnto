@@ -448,7 +448,7 @@ To summarise, the Bio-LLM sub-track provides two representative OM subsets and a
 
 ## OAEI Participation
 
-To participate in the OAEI track, please visit the [OAEI Bio-ML website](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html) for more information, especially on the instructions of system submission or direct result submission. In the following, we present the formats of result files we expect the participants to submit.
+To participate in the OAEI track, please visit the [OAEI Bio-ML website](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html) for more information, especially on the instructions of system submission or direct result submission. In the following, we present the formats of result files we expect participants to submit.
 
 ### Result Submission Format
 
@@ -470,9 +470,9 @@ For the **main Bio-ML track**, we expect two result files for each setting:
             
             We also accept a result file without scores and in that case we assume the list of `tgt_cand_iri` has been sorted in descending order.
 
-Note that each OM pair is accompanied with an unsupervised and an semi-supervised setting and thus separate sets of result files should be submitted. Moreover, for subsumption matching, only the ranking result file in (2) is required.
+Note that each OM pair is accompanied with an unsupervised and a semi-supervised setting and thus separate sets of result files should be submitted. Moreover, for subsumption matching, only the ranking result file in (2) is required.
 
-For the **Bio-LLM sub-track**, we expect one result file (similar to (2) but requiring a list of **triples**) for one task:
+For the **Bio-LLM sub-track**, we expect one result file (similar to (2) but requiring a list of **triples**) for the task:
 
 - **(3)**  A scored or ranked candidate mapping file named `biollm_results.tsv` in the same format as the test candidate mapping file (i.e., `task_name/test.cands.tsv`).
 
@@ -484,4 +484,4 @@ For the **Bio-LLM sub-track**, we expect one result file (similar to (2) but req
 
 It is important to notice that the `answer` values are necessary for the matching evaluation of P, R, F-score, and the computation of rejection rate, the `score` values are used for ranking evaluation of MRR and Hits@1.
 
-See [evaluation framework](#evaluation-framework) for detailed explanation and code of how we assess the results.
+See [evaluation framework](#evaluation-framework) for detailed explanations and code of how we assess the results.
