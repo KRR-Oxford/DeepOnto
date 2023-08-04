@@ -188,7 +188,9 @@ Our evaluation protocol concerns two scenarios for OM: **global matching** for o
 
 As an overall assessment, given a **complete** set of reference mappings, an OM system is expected to compute a set of *true* mappings and compare against the reference mappings using Precision, Recall, and F-score metrics. With $\textsf{DeepOnto}$, the evaluation can be performed using the following code. 
 
-> Download a <a href="../assets/example_reference_mappings.tsv" download>small fragment</a> to see the format of the prediction and reference mapping files. The three columns, `"SrcEntity"`, `"TgtEntity"`, and `"Score"` refer to the source class IRI, the target class IRI, and the matching score.
+!!! note "Matching Result"
+    
+        Download <a href="../assets/example_reference_mappings.tsv" download>an example of matching result file</a>. The three columns, `"SrcEntity"`, `"TgtEntity"`, and `"Score"` refer to the source class IRI, the target class IRI, and the matching score.
 
 ```python
 from deeponto.align.evaluation import AlignmentEvaluator
@@ -205,7 +207,7 @@ print(results)
 
 The associated formulas for Precision, Recall and F-score are:
 
-$$P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}, R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}, F_1 = \frac{2 P R}{P + R}$$
+$$P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}, \ \ R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}, \ \ F_1 = \frac{2 P R}{P + R}$$
 
 where $\mathcal{M}_{pred}$ and $\mathcal{M}_{ref}$ denote the prediction mappings and reference mappings, respectively.
 
@@ -224,7 +226,7 @@ results = AlignmentEvaluator.f1(preds, refs, null_reference_mappings=train_refs)
 
 When null reference mappings are involved, the formulas of Precision and Recall become:
 
-$$P = \frac{|(\mathcal{M}_{pred} \cap \mathcal{M}_{ref}) - \mathcal{M}_{null}|}{|\mathcal{M}_{pred} - \mathcal{M}_{null} |}, R = \frac{|(\mathcal{M}_{pred} \cap \mathcal{M}_{ref}) - \mathcal{M}_{null}|}{|\mathcal{M}_{ref} - \mathcal{M}_{null}|}$$
+$$P = \frac{|(\mathcal{M}_{pred} \cap \mathcal{M}_{ref}) - \mathcal{M}_{null}|}{|\mathcal{M}_{pred} - \mathcal{M}_{null} |}, \ \ R = \frac{|(\mathcal{M}_{pred} \cap \mathcal{M}_{ref}) - \mathcal{M}_{null}|}{|\mathcal{M}_{ref} - \mathcal{M}_{null}|}$$
 
 As for the OAEI 2023 version, some prediction mappings could involve classes that are marked as **not used in alignment**. Therefore, we need to filter out those mappings before evaluation.
 
@@ -246,7 +248,7 @@ preds = remove_ignored_mappings(preds, ignored_class_index)
 results = AlignmentEvaluator.f1(preds, refs, ...)
 ```
 
-!!! tips
+!!! tip
 
     We have encapsulated above features in the [`matching_eval`][deeponto.align.oaei.matching_eval] function in the OAEI utilities.
 
@@ -265,7 +267,9 @@ An OM system is also expected to **distinguish the reference mapping** among a s
 
     The reference subsumption mappings are inherently incomplete, so only the ranking metrics are adopted in evaluating system performance in subsumption matching.
 
-> Download a <a href="../assets/example_candidate_mappings.tsv" download>small fragment</a> to see the format of the reference mapping and its candidate mappings. The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a **reference mapping**. The `"TgtCandidates"` column stores a sequence of target candidate class IRIs (**including the correct one**) used for ranking, which can be accessed by the built-in Python function `eval`.
+!!! note "Ranking Result"
+
+        Download <a href="../assets/example_candidate_mappings.tsv" download>an example of raw (unscored) candidate mapping file</a> and <a href="../assets/example_scored_candidate_mappings.tsv" download>an example of scored candidate mapping file</a>. The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a **reference mapping**. The `"TgtCandidates"` column stores a sequence of `tgt_cand_iri` in the unscored file and a list of tuples `(tgt_cand_iri, score)` in the scored file, which can be accessed by the built-in Python function `eval`. 
 
 With $\textsf{DeepOnto}$, the evaluation can be performed as follows. First, an OM system needs to assign a score to each target candidate class and save the results as a list of tuples `(tgt_cand_class_iri, matching_score)`. 
 
@@ -307,11 +311,11 @@ ranking_eval("scored.test.cands.tsv", has_score=True, Ks=[1, 5, 10])
 
 The associated formulas for MRR and Hits@K are:
 
-$$MRR = \sum_i^N rank_i^{-1} / N, Hits@K = \sum_i^N \mathbb{I}_{rank_i \leq k} / N$$
+$$MRR = \sum_i^N rank_i^{-1} / N, \ \ Hits@K = \sum_i^N \mathbb{I}_{rank_i \leq k} / N$$
 
-where $N$ is the number of reference mappings, $rank_i$ is the relative rank of the reference mapping among its candidate mappings.
+where $N$ is the number of reference mappings used for testing, $rank_i$ is the relative rank of the reference mapping among its candidate mappings.
 
-!!! tips
+!!! tip
 
     If matching scores are not available, the target candidate classes should be **sorted** in descending order and saved in a list, the [`ranking_eval`][deeponto.align.oaei.ranking_eval] function will compute scores according to the sorted list.
 
@@ -356,13 +360,13 @@ For the OAEI 2023 version, we implemented several updates, including:
     - **Semi-supervised**: The validation mapping set is incorporated into the training set (rendering train-val splitting optional), and the test mapping set available at `{task_name}/refs_equiv/test.tsv` is used for global matching evaluation.
     - **Local Ranking**: Both unsupervised and semi-supervised settings use the same set of candidate mappings found at `{task_name}/refs_equiv/test.cands.tsv` for local ranking evaluation.
   - **Subsumption Matching**:
-    - **Target Ontology**: In the OAEI 2022 version, the target ontology for subsumption matching is different from the one for equivalence matching due to **target class deletion**. However, as the locality modules counteracts such deletion process, we use the same target ontology for both types of matching.
+    - **Target Ontology**: In the OAEI 2022 version, the target ontology for subsumption matching is different from the one for equivalence matching due to **target class deletion**. However, as the locality modules counteract such deletion process, we use the same target ontology for both types of matching.
     - **Unsupervised**: We removed the unsupervised setting since the subsumption matching task did not attract enough participation.
     - **Semi-supervised**: The validation mapping set is merged into the training set (rendering train-val splitting optional). We conduct a local ranking evaluation (global matching is not applicable for subsumption matching) for candidate mappings available at `{task_name}/refs_subs/test.cands.tsv`. 
 
 - **Bio-LLM: A Special Sub-Track for Large Language Models**: We introduced a unique sub-track for Large Language Model (LLM)-based OM systems. We extracted small but challenging subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets for this purpose (refer to [OAEI Bio-LLM 2023](#oaei-bio-llm-2023)).
 
-Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are enriched with locaility modules compared to the pruned versions used in OAEI 2022. The augmented structural and logical contexts make these ontologies more similar to their original versions without any processing (available at `raw_data`). The changes compared to the previous version (see [Bio-ML OAEI 2022](#bio-ml-oaei-2022)) are reflected in the `+` numbers of ontology classes. 
+Below demonstrates the data statistics for the OAEI 2023 version of Bio-ML, where the input ontologies are enriched with locality modules compared to the pruned versions used in OAEI 2022. The augmented structural and logical contexts make these ontologies more similar to their original versions without any processing (available at `raw_data`). The changes compared to the previous version (see [Bio-ML OAEI 2022](#bio-ml-oaei-2022)) are reflected in the `+` numbers of ontology classes. 
 
 In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance"*, and *"Neoplastic Process"* in UMLS, respectively. 
 
@@ -388,16 +392,17 @@ The file structure for the download datasets (from Zenodo) is also simplified th
 </p>
 
 Remarks on this figure:
-- (1) For equivalence matching, testing of the global matching evaluation should be performed on `refs_equiv/full.tsv` in the unsupervised setting, and on `refs_equiv/test.tsv` (with `refs_equiv/train.tsv` set to null reference mappings) in the semi-supervised setting. Testing of the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` for both settings.
-- (2) For subsumption matching, the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` and the training mapping set `refs_subs/train.tsv` is optional.
-- (3) The `test.cands.tsv` file in the Bio-LLM sub-track is different from the main Bio-LM track ones. See [OAEI Bio-LLM 2023](#oaei-bio-llm-2023) for more information and how to evaluate on it.
+
+1. For equivalence matching, testing of the global matching evaluation should be performed on `refs_equiv/full.tsv` in the unsupervised setting, and on `refs_equiv/test.tsv` (with `refs_equiv/train.tsv` set to null reference mappings) in the semi-supervised setting. Testing of the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` for both settings.
+2. For subsumption matching, the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` and the training mapping set `refs_subs/train.tsv` is optional.
+3. The `test.cands.tsv` file in the Bio-LLM sub-track is different from the main Bio-LM track ones. See [OAEI Bio-LLM 2023](#oaei-bio-llm-2023) for more information and how to evaluate on it.
 
 
 ## OAEI Bio-LLM 2023
 
 As Large Language Models (LLMs) are trending in the AI community, we formulate a special sub-track for evaluating LLM-based OM systems. However, evaluating LLMs with the current OM datasets can be time and resource intensive. To yield insightful results prior to full implementation, we leverage two challenging subsets extracted from the NCIT-DOID and the SNOMED-FMA (Body) equivalence matching datasets.
 
-For each original dataset, we first randomly select 50 **matched** class pairs from ground truth mappings, but **excluding pairs that can be aligned** with direct string matching (i.e., having at least one shared label) to restrict the efficacy of conventional lexical matching. Next, with a fixed source ontology class, we further select 99 unmatched target ontology classes, thus forming a total of 100 candidate mappings (inclusive of the ground truth mapping). This selection is guided by the sub-word inverted index-based idf scores as in the BERTMap paper (see [BERTMap tutorial](../bertmap) for more details), which are capable of producing target ontology classes lexically akin to the fixed source class. We finally randomly choose 50 source classes that **do not have a matched target class** according to the ground truth mappings, and create 100 candidate mappings for each. Therefore, each subset comprises 50 source ontology classes with a match and 50 without. Each class is associated with 100 candidate mappings, culminating in a total extraction of 10,000, i.e., (50+50)*100, class pairs.
+For each original dataset, we first randomly select 50 **matched** class pairs from ground truth mappings, but **excluding pairs that can be aligned** with direct string matching (i.e., having at least one shared label) to restrict the efficacy of conventional lexical matching. Next, with a fixed source ontology class, we further select 99 negative target ontology classes, thus forming a total of 100 candidate mappings (inclusive of the ground truth mapping). This selection is guided by the sub-word inverted index-based idf scores as in the BERTMap paper (see [BERTMap tutorial](../bertmap) for more details), which are capable of producing target ontology classes lexically akin to the fixed source class. We finally randomly choose 50 source classes that **do not have a matched target class** according to the ground truth mappings, and create 100 candidate mappings using the inverted index for each. Therefore, each subset comprises 50 source ontology classes with a match and 50 without. Each class is associated with 100 candidate mappings, culminating in a total extraction of 10,000, i.e., (50+50)*100, class pairs.
 
 ### Evaluation 
 
@@ -406,27 +411,77 @@ For each original dataset, we first randomly select 50 **matched** class pairs f
 From all the 10,000 class pairs in a given subset, the OM system is expected to predict the true mappings among them, which can be compared against the 50 available ground truth mappings using 
 Precision, Recall, and F-score. 
 
-We use the same formulas in main track [evaluation framework](#evaluation-framework) to calculate Precision, Recall, and F-score.
-The prediction mappings $\mathcal{M}_{pred}$ is the class pairs an OM system predicts as **true mappings**, and the reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. 
+We use the same formulas in the main track [evaluation framework](#evaluation-framework) to calculate Precision, Recall, and F-score. The prediction mappings $\mathcal{M}_{pred}$ are the class pairs an OM system predicts as **true mappings**, and the reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. 
+
+$$P = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{pred}|}, \ \ R = \frac{|\mathcal{M}_{pred} \cap \mathcal{M}_{ref}|}{|\mathcal{M}_{ref}|}, \ \ F_1 = \frac{2 P R}{P + R}$$
 
 #### Ranking
 
-Given that each source class is associated with 100 candidate mappings, we can calculate ranking-based metrics based on their scores. Specifically, we calculate Hits@1$^{+}$ for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The MRR$^{+}$ score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. For the 50 unmatched source classes, we compute Hits@1$^{-}$, considering a hit when the top-ranked candidate mapping is deemed as a negative mapping by the model. In other words, Hits@1$^{-}$ counts a hit if **all** the candidate mappings are predicted as false mappings.
+Given that each source class is associated with 100 candidate mappings, we can compute ranking-based metrics based on their scores. Specifically, we calculate:
 
-As mentioned above, the set of reference mappings $\mathcal{M}_{ref}$ refers to the 50 matched pairs. We assign each unmatched source class a null class $c_{null}$ which refers to any target class that does not have a match with the source class, and denote this set of *unreferenced* mappings as $\mathcal{M}_{unref}$.
+- $Hits@1$ for the 50 matched source classes, counting a hit when the top-ranked candidate mapping is a ground truth mapping. The corresponding formula is:
 
-The formulas for the mentioned metrics are:
+    $$
+    Hits@K = \sum_{(c, c') \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c'} \leq K} / |\mathcal{M}_{ref}|
+    $$
 
-$$
-Hits@1^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} \mathbb{I}_{rank_{c_{tgt}} = 1} / |\mathcal{M}_{ref}|,
-$$
-$$
-Hits@1^{-} = \sum_{(c_{src}, c_{null}) \in \mathcal{M}_{unref}} \mathbb{I}_{rank_{c_{null}} = 1} / |\mathcal{M}_{unref}|,
-$$
-$$
-MRR^{+} = \sum_{(c_{src}, c_{tgt}) \in \mathcal{M}_{ref}} rank_{c_{tgt}}^{-1} / |\mathcal{M}_{ref}|
-$$
+    where $rank_{c'}$ is the predicted relative rank of $c'$ among its candidates, $\mathbb{I}_{rank_{c'} \leq K}$ is a binary indicator function that outputs 1 if the rank is less than or equal to $K$ and outputs 0 otherwise.
 
-where $rank_{c_{tgt}}$ is the relative rank of the matched target class, $rank_{c_{null}}$ is the relative rank of a target class that is seen as unmatched by the OM system.
+- The $MRR$ score is also computed for these matched source classes, summing the inverses of the ground truth mappings' relative ranks among candidate mappings. The corresponding formula is:
 
-Note that $MRR^{-}$ cannot be defined as there is no unique rank for the null class $c_{null}$.
+    $$
+    MRR = \sum_{(c, c') \in \mathcal{M}_{ref}} rank_{c'}^{-1} / |\mathcal{M}_{ref}|
+    $$
+
+- For the 50 unmatched source classes, we compute the rejection rate (denoted as $RR$), counting a successful rejection when **all** the candidate mappings are predicted as **false mappings**. We assign each unmatched source class with a null class $c_{null}$, which refers to any target class that does not have a match with the source class, and denote this set of *unreferenced* mappings as $\mathcal{M}_{unref}$. 
+
+    $$
+    RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \prod_{d \in \mathcal{T}_c} (1 - \mathbb{I}_{c \equiv d})  / |\mathcal{M}_{unref}|
+    $$
+
+    where $\mathcal{T}_c$ is the set of target candidate classes for $c$, and $\mathbb{I}_{c \equiv d}$ is a binary indicator that outputs 0 if the OM system predicts a false mapping between $c$ and $d$, and outputs 1 otherwise. The product term in this equation returns 1 if all target candidate classes are predicted as unmatched, i.e., $\forall d \in \mathcal{T}_c.\mathbb{I}_{c \equiv d}=0$.
+
+
+To summarise, the Bio-LLM sub-track provides two representative OM subsets and adopts a range of evaluation metrics to gain meaningful insights from this partial assessment, thus promoting robust and efficient development of LLM-based OM systems.
+
+-----------------------------------------------------------------------------------------------
+
+## OAEI Participation
+
+To participate in the OAEI track, please visit the [OAEI Bio-ML website](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html) for more information, especially on the instructions of system submission or direct result submission. In the following, we present the formats of result files we expect participants to submit.
+
+### Result Submission Format
+
+For the **main Bio-ML track**, we expect two result files for each setting:
+
+- **(1)** A prediction mapping file named `match_results.tsv` in the same format as the reference mapping file (e.g., `task_name/refs_equiv/full.tsv`).
+
+
+    !!! note "Matching Result"
+        
+            Download <a href="../assets/example_reference_mappings.tsv" download>an example of mapping file</a>. The three columns, `"SrcEntity"`, `"TgtEntity"`, and `"Score"` refer to the source class IRI, the target class IRI, and the matching score.
+
+- **(2)** A scored or ranked candidate mapping file named `rank_results.tsv` in the same format as the test candidate mapping file (e.g., `task_name/refs_equiv/test.cands.tsv`). 
+
+
+    !!! note "Ranking Result"
+
+            Download <a href="../assets/example_candidate_mappings.tsv" download>an example of raw (unscored) candidate mapping file</a> and <a href="../assets/example_scored_candidate_mappings.tsv" download>an example of scored candidate mapping file</a>. The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a **reference mapping**. The `"TgtCandidates"` column stores a sequence of `tgt_cand_iri` in the unscored file and a list of **tuples** `(tgt_cand_iri, score)` in the scored file, which can be accessed by the built-in Python function `eval`. 
+            
+            We also accept a result file without scores and in that case we assume the list of `tgt_cand_iri` has been sorted in descending order.
+
+Note that each OM pair is accompanied with an unsupervised and a semi-supervised setting and thus separate sets of result files should be submitted. Moreover, for subsumption matching, only the ranking result file in (2) is required.
+
+For the **Bio-LLM sub-track**, we expect one result file (similar to (2) but requiring a list of **triples**) for the task:
+
+- **(3)**  A scored or ranked candidate mapping file named `biollm_results.tsv` in the same format as the test candidate mapping file (i.e., `task_name/test.cands.tsv`).
+
+
+    !!! note "Bio-LLM Result"
+
+            Download <a href="../assets/example_bio-llm_candidate_mappings.tsv" download>an example of bio-llm mapping file</a>. The `"SrcEntity"` and `"TgtEntity"` columns refer to the source class IRI and the target class IRI involved in a **reference mapping**. The `"TgtCandidates"` column stores a sequence of a list of **triples** `(tgt_cand_iri, score, answer)` in the scored file, which can be accessed by the built-in Python function `eval`. The additional `answer` values are `True` or `False` indicating whether the OM system predicts `(src_class_iri, tgt_cand_iri)` as a true mapping.
+
+
+It is important to notice that the `answer` values are necessary for the matching evaluation of P, R, F-score, and the computation of rejection rate, the `score` values are used for ranking evaluation of MRR and Hits@1.
+
+See [evaluation framework](#evaluation-framework) for detailed explanations and code of how we assess the results.
