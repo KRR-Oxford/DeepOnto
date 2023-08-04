@@ -52,6 +52,7 @@ config.tgt_label_property = ['http://www.w3.org/2000/01/rdf-schema#label',
 config.test_type = 'evaluation'
 config.subsumption_type = 'named_class'  # named_class, restriction
 config.prompt.prompt_type = 'path'  # isolated, traversal, path
+config.fine_tune.output_dir = 'fine-tuned-bert-helis-foodon'  # direction to store the fine-tuned PLM
 
 src_onto = Ontology(owl_path=config.src_onto_file)
 tgt_onto = Ontology(owl_path=config.tgt_onto_file)
