@@ -101,6 +101,13 @@ To conduct probing, users can write the following code into a script, e.g., `pro
 from openprompt.config import get_config
 from deeponto.probe.ontolama import run_inference
 
+config, args = get_config()
+# you can then manipulate the configuration before running the inference
+config.learning_setting = "few_shot"  # zero_shot, full
+config.manual_template.choice = 0  # using the first template in the template file
+...
+
+# run the subsumption inference
 run_inference(config, args)
 ```
 
