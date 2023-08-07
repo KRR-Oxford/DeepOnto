@@ -1113,6 +1113,13 @@
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">openprompt.config</span> <span class="kn">import</span> <span class="n">get_config</span>
 <span class="kn">from</span> <span class="nn">deeponto.probe.ontolama</span> <span class="kn">import</span> <span class="n">run_inference</span>
 
+<span class="n">config</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">get_config</span><span class="p">()</span>
+<span class="c1"># you can then manipulate the configuration before running the inference</span>
+<span class="n">config</span><span class="o">.</span><span class="n">learning_setting</span> <span class="o">=</span> <span class="s2">&quot;few_shot&quot;</span>  <span class="c1"># zero_shot, full</span>
+<span class="n">config</span><span class="o">.</span><span class="n">manual_template</span><span class="o">.</span><span class="n">choice</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># using the first template in the template file</span>
+<span class="o">...</span>
+
+<span class="c1"># run the subsumption inference</span>
 <span class="n">run_inference</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
 </code></pre></div>
 <p>Then, run the script with the following command:</p>
@@ -1128,7 +1135,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 28, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 7, 2023</span>
       
         <br>
         Created:
