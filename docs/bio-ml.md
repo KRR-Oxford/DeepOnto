@@ -35,7 +35,7 @@ $\textsf{Bio-ML}$ is a comprehensive ontology matching (OM) dataset that include
 
 - **Complete Documentation**: *<https://krr-oxford.github.io/DeepOnto/bio-ml/>* (this page).
 - **Reference Paper**: *<https://arxiv.org/abs/2205.03447>* (revised arXiv version).
-- **Official OAEI Page**: *<https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html>* (system participation and results).
+- **Official OAEI Page**: *<https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html>* (OAEI participation and results).
 
 
 ## Ontology Pruning
