@@ -50,7 +50,7 @@ To obtain the literal values (as `#!python Set[str]`) of an annotation property 
 
 ```python
 # note that annotations with no language tags are deemed as in English ("en")
-doid.get_owl_object_annotations(
+doid.get_annotations(
     doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969"),
     annotation_property_iri='http://www.w3.org/2000/01/rdf-schema#label',
     annotation_language_tag=None,

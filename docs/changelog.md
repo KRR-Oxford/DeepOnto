@@ -12,6 +12,7 @@ Security in case of vulnerabilities. -->
 
 ### Changed 
 
+- [X] **Change** the `.verbalise_class_expression()` method by adding an option to keep entity IRIs without verbalising them using `.vocabs` at `deeponto.onto.OntologyVerbaliser`.
 - [X] **Change** default `apply_lowercasing` value to `False` for both `.get_annotations()` and `.build_annotation_index()` methods at `deeponto.onto.Ontology`.
 - [X] **Change** the method `.get_owl_object_annotations()` to `.get_annotations()` at `deeponto.onto.Ontology`.
 - [X] **Change** the LogMap debugger memory options for BERTMap's mapping repair.

@@ -102,7 +102,7 @@ class OntologyVerbaliser:
         """
         self.vocab[entity_iri] = entity_name
 
-    def verbalise_class_expression(self, class_expression: Union[OWLClassExpression, str, RangeNode]):
+    def verbalise_class_expression(self, class_expression: Union[OWLClassExpression, str, RangeNode], keep_iri: bool = False):
         r"""Verbalise a class expression (`OWLClassExpression`) or its parsed form (in `RangeNode`).
         
         See currently supported types of class (or concept) expressions [here][deeponto.onto.verbalisation.OntologyVerbaliser].
@@ -110,6 +110,7 @@ class OntologyVerbaliser:
 
         Args:
             class_expression (Union[OWLClassExpression, str, RangeNode]): A class expression to be verbalised.
+            keep_iri (bool): Whether to keep the IRIs of entities without verbalising them using `self.vocab`.
 
         Raises:
             RuntimeError: Occurs when the class expression is not in one of the supported types.
@@ -127,7 +128,8 @@ class OntologyVerbaliser:
         # for a singleton IRI
         if parsed_class_expression.is_iri:
             iri = parsed_class_expression.text.lstrip("<").rstrip(">")
-            return CfgNode({"verbal": self.vocab[iri], "iri": iri, "type": "IRI"})
+            verbal = self.vocab[iri] if not keep_iri else parsed_class_expression.text
+            return CfgNode({"verbal": verbal, "iri": iri, "type": "IRI"})
         
         if parsed_class_expression.name.startswith("NEG"):
             # negation only has one child
