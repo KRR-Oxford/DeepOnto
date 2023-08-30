@@ -46,11 +46,11 @@ class OntologyVerbaliser:
     and [`OWLClassExpression`](https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/model/OWLClassExpression.html).
 
     The concept patterns supported by this verbaliser are shown below:
-    
+
     | **Pattern**                 | **Verbalisation** ($\mathcal{V}$)                                                                                                                                                    |
     |-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
     | $A$ (atomic)                | the name ($\texttt{rdfs:label}$) of $A$                                                                                                                                               |
-    | $r$ (property)              | the name ($\texttt{rdfs:label}$) of $r$; *"is"* is appended to the head if the name starts with a passive verb, noun, or adjective                                                    |                                
+    | $r$ (property)              | the name ($\texttt{rdfs:label}$) of $r$; *"is"* is appended to the head if the name starts with a passive verb, noun, or adjective                                                    |
     | $\neg C$                    | *"not $\mathcal{V}(C)$"*                                                                                                                                                              |
     | $\exists r.C$               | *"something that $\mathcal{V}(r)$ some $\mathcal{V}(C)$"*                                                                                                                              |
     | $\forall r.C$               | *"something that $\mathcal{V}(r)$ only $\mathcal{V}(C)$"*                                                                                                                             |
@@ -63,7 +63,7 @@ class OntologyVerbaliser:
         This verbaliser utilises spacy for POS tagging used in the auto-correction of property names.
         Automatic download of the rule-based library `en_core_web_sm` is available at the init function. However, if you
         somehow cannot find it, please manually download it using `python -m spacy download en_core_web_sm`.
-    
+
 
     Attributes:
         onto (Ontology): An ontology whose entities are to be verbalised.
@@ -75,21 +75,23 @@ class OntologyVerbaliser:
     def __init__(self, onto: Ontology, apply_lowercasing_to_vocab: bool = False):
         self.onto = onto
         self.parser = OntologySyntaxParser()
-        
-        # download en_core_web_sm for object property 
+
+        # download en_core_web_sm for object property
         try:
             spacy.load("en_core_web_sm")
         except:
             print("Download `en_core_web_sm` for pos tagger.")
             os.system("python -m spacy download en_core_web_sm")
-            
+
         self.nlp = spacy.load("en_core_web_sm")
 
         # build the default vocabulary for entities
         self.apply_lowercasing_to_vocab = apply_lowercasing_to_vocab
         self.vocab = dict()
         for entity_type in ["Classes", "ObjectProperties", "DataProperties"]:
-            entity_annotations, _ = self.onto.build_annotation_index(entity_type=entity_type, apply_lowercasing=self.apply_lowercasing_to_vocab)
+            entity_annotations, _ = self.onto.build_annotation_index(
+                entity_type=entity_type, apply_lowercasing=self.apply_lowercasing_to_vocab
+            )
             self.vocab.update(**entity_annotations)
         literal_or_iri = lambda k, v: list(v)[0] if v else k  # set vocab to IRI if no string available
         self.vocab = {k: literal_or_iri(k, v) for k, v in self.vocab.items()}  # only set one name for each entity
@@ -102,11 +104,13 @@ class OntologyVerbaliser:
         """
         self.vocab[entity_iri] = entity_name
 
-    def verbalise_class_expression(self, class_expression: Union[OWLClassExpression, str, RangeNode], keep_iri: bool = False):
+    def verbalise_class_expression(
+        self, class_expression: Union[OWLClassExpression, str, RangeNode], keep_iri: bool = False
+    ):
         r"""Verbalise a class expression (`OWLClassExpression`) or its parsed form (in `RangeNode`).
-        
+
         See currently supported types of class (or concept) expressions [here][deeponto.onto.verbalisation.OntologyVerbaliser].
-        
+
 
         Args:
             class_expression (Union[OWLClassExpression, str, RangeNode]): A class expression to be verbalised.
@@ -130,23 +134,29 @@ class OntologyVerbaliser:
             iri = parsed_class_expression.text.lstrip("<").rstrip(">")
             verbal = self.vocab[iri] if not keep_iri else parsed_class_expression.text
             return CfgNode({"verbal": verbal, "iri": iri, "type": "IRI"})
-        
+
         if parsed_class_expression.name.startswith("NEG"):
             # negation only has one child
-            cl = self.verbalise_class_expression(parsed_class_expression.children[0])
+            cl = self.verbalise_class_expression(parsed_class_expression.children[0], keep_iri=keep_iri)
             return CfgNode({"verbal": "not " + cl.verbal, "class": cl, "type": "NEG"})
 
         # for existential and universal restrictions
         if parsed_class_expression.name.startswith("EX.") or parsed_class_expression.name.startswith("ALL"):
-            return self._verbalise_restriction(parsed_class_expression)
+            return self._verbalise_restriction(parsed_class_expression, keep_iri=keep_iri)
 
         # for conjunction and disjunction
         if parsed_class_expression.name.startswith("AND") or parsed_class_expression.name.startswith("OR"):
-            return self._verbalise_junction(parsed_class_expression)
+            return self._verbalise_junction(parsed_class_expression, keep_iri=keep_iri)
 
         raise RuntimeError("Input class expression is not in one of the supported types.")
 
-    def _verbalise_restriction(self, restriction_node: RangeNode, add_something: bool = True, add_quantifier_word: bool = False):
+    def _verbalise_restriction(
+        self,
+        restriction_node: RangeNode,
+        add_something: bool = True,
+        add_quantifier_word: bool = False,
+        keep_iri: bool = False,
+    ):
         """Verbalise a (parsed) class expression in the form of existential or universal restriction."""
 
         try:
@@ -154,31 +164,29 @@ class OntologyVerbaliser:
             assert len(restriction_node.children) == 2
         except:
             raise RuntimeError("Input range node is not related to a existential or universal restriction statement.")
-            
+
         quantifier_word = "some" if restriction_node.name.startswith("EX.") else "only"
 
         object_property = restriction_node.children[0]
         assert object_property.is_iri
-        object_property = self.verbalise_class_expression(object_property)
-        
-        
+        object_property = self.verbalise_class_expression(object_property, keep_iri=keep_iri)
+
         # NOTE modify the object property's verbalisation with rules
-        doc = self.nlp(object_property.verbal)
-        # Rule 1. Add "is" if the object property starts with a NOUN, ADJ, or passive VERB
-        if doc[0].pos_ == 'NOUN' or doc[0].pos_ == 'ADJ' or (doc[0].pos_ == 'VERB' and doc[0].text.endswith("ed")):
-            object_property.verbal = "is " + object_property.verbal  
-        
-        
+        if not keep_iri:
+            doc = self.nlp(object_property.verbal)
+            # Rule 1. Add "is" if the object property starts with a NOUN, ADJ, or passive VERB
+            if doc[0].pos_ == "NOUN" or doc[0].pos_ == "ADJ" or (doc[0].pos_ == "VERB" and doc[0].text.endswith("ed")):
+                object_property.verbal = "is " + object_property.verbal
 
         class_expression = restriction_node.children[1]
-        class_expression = self.verbalise_class_expression(class_expression.text)
+        class_expression = self.verbalise_class_expression(class_expression.text, keep_iri=keep_iri)
 
         # adding quantifier word or not
         if add_quantifier_word:
             verbal = f"{object_property.verbal} {quantifier_word} {class_expression.verbal}"
         else:
             verbal = f"{object_property.verbal} {class_expression.verbal}"
-            
+
         verbal = verbal.lstrip()
         if add_something:
             verbal = f"something that " + verbal
@@ -192,14 +200,14 @@ class OntologyVerbaliser:
             }
         )
 
-    def _verbalise_junction(self, junction_node: RangeNode):
+    def _verbalise_junction(self, junction_node: RangeNode, keep_iri: bool = False):
         """Verbalise a (parsed) class expression in the form of conjunction or disjunction."""
 
         try:
             assert junction_node.name.startswith("AND") or junction_node.name.startswith("OR.")
         except:
             raise RuntimeError("Input range node is not related to a conjunction or disjunction statement.")
-            
+
         junction_word = "and" if junction_node.name.startswith("AND") else "or"
 
         # collect restriction nodes for merging
@@ -208,13 +216,13 @@ class OntologyVerbaliser:
         other_children = []
         for child in junction_node.children:
             if child.name.startswith("EX."):
-                child = self._verbalise_restriction(child, add_something=False)
+                child = self._verbalise_restriction(child, add_something=False, keep_iri=keep_iri)
                 existential_restriction_children[child.property.verbal].append(child)
             elif child.name.startswith("ALL"):
-                child = self._verbalise_restriction(child, add_something=False)
+                child = self._verbalise_restriction(child, add_something=False, keep_iri=keep_iri)
                 universal_restriction_children[child.property.verbal].append(child)
             else:
-                other_children.append(self.verbalise_class_expression(child))
+                other_children.append(self.verbalise_class_expression(child, keep_iri=keep_iri))
 
         merged_children = []
         for v in list(existential_restriction_children.values()) + list(universal_restriction_children.values()):
@@ -228,8 +236,12 @@ class OntologyVerbaliser:
 
                 for i in range(1, len(v)):
                     # v 0.5.2 fix for len(v) > 1 case
-                    merged_child.verbal += f" {junction_word} " + v[i]["class"].verbal  # update grouped concepts with property
-                    merged_child["class"].verbal += f" {junction_word} " + v[i]["class"].verbal  # update grouped concepts
+                    merged_child.verbal += (
+                        f" {junction_word} " + v[i]["class"].verbal
+                    )  # update grouped concepts with property
+                    merged_child["class"].verbal += (
+                        f" {junction_word} " + v[i]["class"].verbal
+                    )  # update grouped concepts
                     merged_child["class"].classes.append(v[i]["class"])
                 merged_children.append(merged_child)
                 # print(merged_children)
@@ -246,9 +258,7 @@ class OntologyVerbaliser:
 
         # add the preceeding "something that" if there are only restrictions
         if not other_children:
-            results.verbal += " something that " + f" {junction_word} ".join(
-                c.verbal for c in merged_children
-            )
+            results.verbal += " something that " + f" {junction_word} ".join(c.verbal for c in merged_children)
             results.verbal.lstrip()
         else:
             results.verbal += f" {junction_word} ".join(c.verbal for c in other_children)
@@ -258,7 +268,9 @@ class OntologyVerbaliser:
                     results.verbal += " that " + f" {junction_word} ".join(c.verbal for c in merged_children)
                 elif junction_word == "or":
                     # sea food or non-vergetarian product or something that derives from shark or goldfish
-                    results.verbal += " or something that " + f" {junction_word} ".join(c.verbal for c in merged_children)
+                    results.verbal += " or something that " + f" {junction_word} ".join(
+                        c.verbal for c in merged_children
+                    )
 
         return results
 
@@ -266,19 +278,19 @@ class OntologyVerbaliser:
     #     #TODO
     #     pass
 
-    def verbalise_subsumption_axiom(self, subsumption_axiom: OWLAxiom):
+    def verbalise_subsumption_axiom(self, subsumption_axiom: OWLAxiom, keep_iri: bool = False):
         r"""Verbalise a subsumption axiom.
 
         The subsumption axiom can have two forms:
-        
+
         - $C \sqsubseteq D$, the `SubClassOf` axiom;
         - $C \sqsupseteq D$, the `SuperClassOf` axiom.
 
         Args:
             subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.
-        
+
         Returns:
-            (Tuple[CfgNode, CfgNode]): The verbalised sub-concept and super-concept (order matters). 
+            (Tuple[CfgNode, CfgNode]): The verbalised sub-concept and super-concept (order matters).
         """
         parsed_subsumption_axiom = self.parser.parse(subsumption_axiom).children[0]  # skip the root node
         if str(subsumption_axiom).startswith("SubClassOf"):
@@ -287,7 +299,9 @@ class OntologyVerbaliser:
             parsed_super_class, parsed_sub_class = parsed_subsumption_axiom.children
         else:
             raise RuntimeError(f"The input axiom is not a valid subsumption axiom.")
-        return self.verbalise_class_expression(parsed_sub_class), self.verbalise_class_expression(parsed_super_class)
+        return self.verbalise_class_expression(parsed_sub_class, keep_iri=keep_iri), self.verbalise_class_expression(
+            parsed_super_class, keep_iri=keep_iri
+        )
 
 
 class OntologySyntaxParser:
