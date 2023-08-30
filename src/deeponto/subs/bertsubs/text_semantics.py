@@ -49,7 +49,7 @@ class SubsumptionSampler:
         for iri in self.named_classes:
             self.iri_label[iri] = []
             for p in config.label_property:
-                strings = onto.get_owl_object_annotations(
+                strings = onto.get_annotations(
                     owl_object=onto.get_owl_object_from_iri(iri),
                     annotation_property_iri=p,
                     annotation_language_tag=None,

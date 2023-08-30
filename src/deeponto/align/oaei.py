@@ -35,7 +35,7 @@ def get_ignored_class_index(onto: Ontology):
     """
     ignored_class_index = defaultdict(lambda: False)
     for class_iri, class_obj in onto.owl_classes.items():
-        use_in_alignment = onto.get_owl_object_annotations(
+        use_in_alignment = onto.get_annotations(
             class_obj, "http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment"
         )
         if use_in_alignment and str(use_in_alignment[0]).lower() == "false":

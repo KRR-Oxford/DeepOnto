@@ -368,7 +368,7 @@ class NegativeCandidateMappingGenerator:
 
         # for IDF sample
         self.tgt_annotation_index, self.annotation_property_iris = self.tgt_onto.build_annotation_index(
-            annotation_property_iris
+            annotation_property_iris, apply_lowercasing=True
         )
         self.tokenizer = tokenizer
         self.tgt_inverted_annotation_index = self.tgt_onto.build_inverted_annotation_index(

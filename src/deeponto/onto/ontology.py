@@ -317,15 +317,15 @@ class Ontology:
 
         return set(complex_classes)
 
-    def get_owl_object_annotations(
+    def get_annotations(
         self,
         owl_object: Union[OWLObject, str],
         annotation_property_iri: Optional[str] = None,
         annotation_language_tag: Optional[str] = None,
-        apply_lowercasing: bool = True,
+        apply_lowercasing: bool = False,
         normalise_identifiers: bool = False,
     ):
-        """Get the annotations of the given `OWLObject`.
+        """Get the annotation literals of the given `OWLObject`.
 
         Args:
             owl_object (Union[OWLObject, str]): An `OWLObject` or its IRI.
@@ -336,7 +336,7 @@ class Ontology:
                 annotation has a language tag, in this case assume it is in English.
                 Defaults to `None`. Options are `"en"`, `"ge"` etc.
             apply_lowercasing (bool): Whether or not to apply lowercasing to annotation literals.
-                Defaults to `True`.
+                Defaults to `False`.
             normalise_identifiers (bool): Whether to normalise annotation text that is in the Java identifier format.
                 Defaults to `False`.
         Returns:
@@ -403,7 +403,7 @@ class Ontology:
             # return False if owl:deprecated is not defined in this ontology
             return False
 
-        deprecated = self.get_owl_object_annotations(owl_object, annotation_property_iri=OWL_DEPRECATED)
+        deprecated = self.get_annotations(owl_object, annotation_property_iri=OWL_DEPRECATED)
         if deprecated and (list(deprecated)[0] == "true" or list(deprecated)[0] == "True"):
             return True
         else:
@@ -447,7 +447,7 @@ class Ontology:
         self,
         annotation_property_iris: List[str] = [RDFS_LABEL],
         entity_type: str = "Classes",
-        apply_lowercasing: bool = True,
+        apply_lowercasing: bool = False,
         normalise_identifiers: bool = False,
     ):
         """Build an annotation index for a given type of entities.
@@ -481,7 +481,7 @@ class Ontology:
         for airi in annotation_property_iris:
             for iri, entity in entity_index.items():
                 annotation_index[iri].update(
-                    self.get_owl_object_annotations(
+                    self.get_annotations(
                         owl_object=entity,
                         annotation_property_iri=airi,
                         annotation_language_tag=None,

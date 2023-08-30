@@ -12,8 +12,10 @@ Security in case of vulnerabilities. -->
 
 ### Changed 
 
+- [X] **Change** default `apply_lowercasing` value to `False` for both `.get_annotations()` and `.build_annotation_index()` methods at `deeponto.onto.Ontology`.
+- [X] **Change** the method `.get_owl_object_annotations()` to `.get_annotations()` at `deeponto.onto.Ontology`.
 - [X] **Change** the LogMap debugger memory options for BERTMap's mapping repair.
-- [X] **Change** the default jar command timeout to 10 hours.
+- [X] **Change** the default jar command timeout to 1 hour.
 
 ## v0.8.4 (2023 July)
 ### Added
