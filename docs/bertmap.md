@@ -251,7 +251,7 @@ Adjust these two parameters if users found an inappropriate GPU memory fit.
 :   The score threshold of mappings preserved for final mapping refinement. 
 
 `config.global_matching.for_oaei`
-:   Set to `false` for normal use and set to `true` for the [OAEI 2023 Bio-ML Track](../bio-ml.md) such that entities that are annotated as not used in alignment will be ignored during global matching.
+:   Set to `false` for normal use and set to `true` for the [OAEI 2023 Bio-ML Track](../bio-ml) such that entities that are annotated as not used in alignment will be ignored during global matching.
 
 
 ## Output Format
