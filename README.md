@@ -39,6 +39,7 @@ limitations under the License.
 
 **News** :newspaper:
 
+- [X] Minor modifications of certain methods and set all utility methods to direct import. (**v0.8.5**)
 - [X] Deploy OAEI utilities at `deeponto.align.oaei` for scripts at the sub-repository [OAEI-Bio-ML](https://github.com/KRR-Oxford/OAEI-Bio-ML) as well as bug fixing. (**v0.8.4**)
 - [X] Bug fixing for BERTMap (stuck at reasoning) and ontology alignment evaluation. (**v0.8.3**)
 - [X] Deploy `deeponto.onto.OntologyNormaliser` and `deeponto.onto.OntologyProjector` (**v0.8.0**).
