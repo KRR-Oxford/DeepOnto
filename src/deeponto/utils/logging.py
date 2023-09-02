@@ -54,6 +54,7 @@ def create_logger(model_name: str, saved_path: str):
     # add the handlers to the logger
     logger.addHandler(fh)
     logger.addHandler(ch)
+    logger.propagate = False
     return logger
 
 
