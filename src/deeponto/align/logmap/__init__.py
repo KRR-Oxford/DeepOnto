@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from deeponto.utils import FileUtils
+from deeponto.utils import run_jar
 import os
 
 
@@ -37,4 +37,4 @@ def run_logmap_repair(
         + f" {output_path} false false"
     )
     print(f"The jar command is:\n{repair_command}.")
-    FileUtils.run_jar(repair_command)
+    run_jar(repair_command)

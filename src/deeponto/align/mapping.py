@@ -21,7 +21,7 @@ import pandas as pd
 import random
 
 from deeponto.onto import Ontology
-from deeponto.utils import FileUtils, Tokenizer, uniqify
+from deeponto.utils import Tokenizer, uniqify, read_table
 
 if TYPE_CHECKING:
     from org.semanticweb.owlapi.model import OWLObject  # type: ignore
@@ -137,7 +137,7 @@ class EntityMapping:
         Returns:
             (List[EntityMapping]): A list of entity mappings loaded from the table file.
         """
-        df = FileUtils.read_table(table_of_mappings_file)
+        df = read_table(table_of_mappings_file)
         entity_mappings = []
         for _, dp in df.iterrows():
             if is_reference:

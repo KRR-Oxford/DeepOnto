@@ -24,7 +24,7 @@ from collections import defaultdict
 
 from deeponto.align.mapping import ReferenceMapping
 from deeponto.onto import Ontology
-from deeponto.utils import FileUtils
+from deeponto.utils import print_dict, create_path, load_file, save_file
 from deeponto.utils.logging import create_logger
 from .text_semantics import TextSemanticsCorpora
 from .bert_classifier import BERTSynonymClassifier
@@ -86,7 +86,7 @@ class BERTMapPipeline:
         self.config.output_path = "." if not self.config.output_path else self.config.output_path
         self.config.output_path = os.path.abspath(self.config.output_path)
         self.output_path = os.path.join(self.config.output_path, self.name)
-        FileUtils.create_path(self.output_path)
+        create_path(self.output_path)
 
         # create logger and progress manager (hidden attribute) 
         self.logger = create_logger(self.name, self.output_path)
@@ -96,7 +96,7 @@ class BERTMapPipeline:
         self.src_onto = src_onto
         self.tgt_onto = tgt_onto
         self.annotation_property_iris = self.config.annotation_property_iris
-        self.logger.info(f"Load the following configurations:\n{FileUtils.print_dict(self.config)}")
+        self.logger.info(f"Load the following configurations:\n{print_dict(self.config)}")
         config_path = os.path.join(self.output_path, "config.yaml")
         self.logger.info(f"Save the configuration file at {config_path}.")
         self.save_bertmap_config(self.config, config_path)
@@ -137,7 +137,7 @@ class BERTMapPipeline:
             if self.bert_synonym_classifier.eval_mode == False:
                 self.logger.info(
                     f"Data statistics:\n \
-                    {FileUtils.print_dict(self.bert_synonym_classifier.data_stat)}"
+                    {print_dict(self.bert_synonym_classifier.data_stat)}"
                 )
                 self.bert_synonym_classifier.train(self.bert_resume_training)
                 # turn on eval mode after training
@@ -228,7 +228,7 @@ class BERTMapPipeline:
             self.logger.info(f"Construct new {data_name} and save at {data_file}.")
             construct_func(*args, **kwargs)
         # load the data file that is supposed to be saved locally
-        return FileUtils.load_file(data_file)
+        return load_file(data_file)
 
     def load_text_semantics_corpora(self):
         """Load or construct text semantics corpora.
@@ -274,7 +274,7 @@ class BERTMapPipeline:
                 split_index = int(0.9 * len(samples))  # split at 90%
                 finetune_data["training"] = samples[:split_index]
                 finetune_data["validation"] = samples[split_index:]
-                FileUtils.save_file(finetune_data, self.finetune_data_path)
+                save_file(finetune_data, self.finetune_data_path)
 
             return self.load_or_construct(self.finetune_data_path, data_name, construct)
 
@@ -316,7 +316,7 @@ class BERTMapPipeline:
             for file in os.listdir(self.bert_finetuned_path):
                 # load trainer states from each checkpoint file
                 if file.startswith("checkpoint"):
-                    trainer_state = FileUtils.load_file(
+                    trainer_state = load_file(
                         os.path.join(self.bert_finetuned_path, file, "trainer_state.json")
                     )
                     checkpoint = int(trainer_state["best_model_checkpoint"].split("/")[-1].split("-")[-1])
@@ -341,7 +341,7 @@ class BERTMapPipeline:
             print(f"Use the default configuration at {DEFAULT_CONFIG_FILE}.")  
         if not config_file.endswith(".yaml"):
             raise RuntimeError("Configuration file should be in `yaml` format.")
-        return CfgNode(FileUtils.load_file(config_file))
+        return CfgNode(load_file(config_file))
 
     @staticmethod
     def save_bertmap_config(config: CfgNode, config_file: str):

@@ -14,13 +14,9 @@
 
 from __future__ import annotations
 
-from typing import Optional
 import logging
 import datetime
 import time
-import torch
-import xml.etree.ElementTree as ET
-import subprocess
 
 
 # subclass of logging.Formatter

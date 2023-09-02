@@ -19,10 +19,16 @@ from typing import Optional, List, Union
 from collections import defaultdict
 from yacs.config import CfgNode
 import warnings
-import itertools
 import jpype
 
-from deeponto.utils import TextUtils, Tokenizer, InvertedIndex, FileUtils, uniqify
+from deeponto.utils import (
+    Tokenizer,
+    InvertedIndex,
+    uniqify,
+    print_dict,
+    split_java_identifier,
+    process_annotation_literal,
+)
 from deeponto import init_jvm
 
 # initialise JVM for python-java interaction
@@ -169,7 +175,7 @@ class Ontology:
             pass
 
     def __str__(self) -> str:
-        return FileUtils.print_dict(self.info)
+        return print_dict(self.info)
 
     @staticmethod
     def get_max_jvm_memory():
@@ -373,7 +379,7 @@ class Ontology:
                 # only get annotations that have a literal value
                 if annotation.isLiteral():
                     annotations.append(
-                        TextUtils.process_annotation_literal(
+                        process_annotation_literal(
                             str(annotation.getLiteral()), apply_lowercasing, normalise_identifiers
                         )
                     )
@@ -469,7 +475,7 @@ class Ontology:
 
         annotation_index = defaultdict(set)
         # example: Classes => owl_classes; ObjectProperties => owl_object_properties
-        entity_type = "owl_" + TextUtils.split_java_identifier(entity_type).replace(" ", "_").lower()
+        entity_type = "owl_" + split_java_identifier(entity_type).replace(" ", "_").lower()
         entity_index = getattr(self, entity_type)
 
         # preserve available annotation properties

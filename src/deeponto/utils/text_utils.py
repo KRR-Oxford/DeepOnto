@@ -25,72 +25,69 @@ from spacy.lang.en import English
 import xml.etree.ElementTree as ET
 
 
-class TextUtils:
-    """Provides text processing utilities."""
+def process_annotation_literal(
+    annotation_literal: str, apply_lowercasing: bool = True, normalise_identifiers: bool = False
+):
+    """Pre-process an annotation literal string.
 
-    @staticmethod
-    def process_annotation_literal(annotation_literal: str, apply_lowercasing: bool = True, normalise_identifiers: bool = False):
-        """Pre-process an annotation literal string.
+    Args:
+        annotation_literal (str): A literal string of an entity's annotation.
+        apply_lowercasing (bool): A boolean that determines lowercasing or not. Defaults to `True`.
+        normalise_identifiers (bool): Whether to normalise annotation text that is in the Java identifier format. Defaults to `False`.
 
-        Args:
-            annotation_literal (str): A literal string of an entity's annotation.
-            apply_lowercasing (bool): A boolean that determines lowercasing or not. Defaults to `True`.
-            normalise_identifiers (bool): Whether to normalise annotation text that is in the Java identifier format. Defaults to `False`.
+    Returns:
+        (str): the processed annotation literal string.
+    """
 
-        Returns:
-            (str): the processed annotation literal string.
-        """
+    # replace the underscores with spaces
+    annotation_literal = annotation_literal.replace("_", " ")
 
-        # replace the underscores with spaces
-        annotation_literal = annotation_literal.replace("_", " ")
+    # if the annotation literal is a valid identifier with first letter capitalised
+    # we suspect that it could be a Java style identifier that needs to be split
+    if normalise_identifiers and annotation_literal[0].isupper() and annotation_literal.isidentifier():
+        annotation_literal = split_java_identifier(annotation_literal)
 
-        # if the annotation literal is a valid identifier with first letter capitalised
-        # we suspect that it could be a Java style identifier that needs to be split
-        if normalise_identifiers and annotation_literal[0].isupper() and annotation_literal.isidentifier():
-            annotation_literal = TextUtils.split_java_identifier(annotation_literal)
+    # lowercase the annotation literal if specfied
+    if apply_lowercasing:
+        annotation_literal = annotation_literal.lower()
 
-        # lowercase the annotation literal if specfied
-        if apply_lowercasing:
-            annotation_literal = annotation_literal.lower()
+    return annotation_literal
 
-        return annotation_literal
 
-    @staticmethod
-    def split_java_identifier(java_style_identifier: str):
-        r"""Split words in java's identifier style into natural language phrase.
+def split_java_identifier(java_style_identifier: str):
+    r"""Split words in java's identifier style into natural language phrase.
 
-        Examples:
-            - `"SuperNaturalPower"` $\rightarrow$ `"Super Natural Power"`
-            - `"APIReference"` $\rightarrow$ `"API Reference"`
-            - `"Covid19"` $\rightarrow$ `"Covid 19"`
-        """
-        # split at every capital letter or number (numbers are treated as capital letters)
-        raw_words = re.findall("([0-9A-Z][a-z]*)", java_style_identifier)
-        words = []
-        capitalized_word = ""
-        for i, w in enumerate(raw_words):
-
-            # the above regex pattern will split at capitals
-            # so the capitalized words are split into characters
-            # i.e., (len(w) == 1)
-            if len(w) == 1:
-                capitalized_word += w
-                # edge case for the last word
-                if i == len(raw_words) - 1:
-                    words.append(capitalized_word)
-
-            # if the the current w is a full word, save the previous
-            # cached capitalized_word and also save current full word
-            elif capitalized_word:
+    Examples:
+        - `"SuperNaturalPower"` $\rightarrow$ `"Super Natural Power"`
+        - `"APIReference"` $\rightarrow$ `"API Reference"`
+        - `"Covid19"` $\rightarrow$ `"Covid 19"`
+    """
+    # split at every capital letter or number (numbers are treated as capital letters)
+    raw_words = re.findall("([0-9A-Z][a-z]*)", java_style_identifier)
+    words = []
+    capitalized_word = ""
+    for i, w in enumerate(raw_words):
+        # the above regex pattern will split at capitals
+        # so the capitalized words are split into characters
+        # i.e., (len(w) == 1)
+        if len(w) == 1:
+            capitalized_word += w
+            # edge case for the last word
+            if i == len(raw_words) - 1:
                 words.append(capitalized_word)
-                words.append(w)
-                capitalized_word = ""
 
-            # just save the current full word otherwise
-            else:
-                words.append(w)
+        # if the the current w is a full word, save the previous
+        # cached capitalized_word and also save current full word
+        elif capitalized_word:
+            words.append(capitalized_word)
+            words.append(w)
+            capitalized_word = ""
 
-        return " ".join(words)
+        # just save the current full word otherwise
+        else:
+            words.append(w)
+
+    return " ".join(words)
 
 
 class Tokenizer:

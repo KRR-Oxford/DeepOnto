@@ -25,7 +25,7 @@ import enlighten
 
 from deeponto.align.mapping import EntityMapping
 from deeponto.onto import Ontology
-from deeponto.utils import FileUtils
+from deeponto.utils import create_path
 from deeponto.align.logmap import run_logmap_repair
 from .mapping_prediction import MappingPredictor
 
@@ -335,7 +335,7 @@ class MappingRefiner:
             lines.append(f"{src_class_iri}|{tgt_class_iri}|=|{score}|CLS\n")
             
         # create a path to prevent error
-        FileUtils.create_path(self.logmap_repair_path)
+        create_path(self.logmap_repair_path)
         formatted_file = os.path.join(self.logmap_repair_path, f"filtered_mappings_for_LogMap_repair.txt")
         with open(formatted_file, "w") as f:
             f.writelines(lines)

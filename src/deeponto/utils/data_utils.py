@@ -15,6 +15,7 @@
 from __future__ import annotations
 
 from typing import Optional
+import json
 from transformers import set_seed as t_set_seed
 
 
@@ -33,3 +34,10 @@ def uniqify(ls):
     """Return a list of unique elements without messing around the order"""
     non_empty_ls = list(filter(lambda x: x != "", ls))
     return list(dict.fromkeys(non_empty_ls))
+
+
+def print_dict(dic: dict):
+    """Pretty print a dictionary."""
+    pretty_print = json.dumps(dic, indent=4, separators=(",", ": "))
+    # print(pretty_print)
+    return pretty_print

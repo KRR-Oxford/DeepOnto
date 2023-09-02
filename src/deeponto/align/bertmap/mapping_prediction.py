@@ -28,7 +28,7 @@ import warnings
 
 from deeponto.align.mapping import EntityMapping
 from deeponto.onto import Ontology
-from deeponto.utils import FileUtils, Tokenizer
+from deeponto.utils import Tokenizer, create_path, load_file, save_file
 from .bert_classifier import BERTSynonymClassifier
 
 
@@ -292,11 +292,11 @@ class MappingPredictor:
 
         match_dir = os.path.join(self.output_path, "match")
         try:
-            mapping_index = FileUtils.load_file(os.path.join(match_dir, "raw_mappings.json"))
+            mapping_index = load_file(os.path.join(match_dir, "raw_mappings.json"))
             self.logger.info("Load the existing mapping prediction file.")
         except:
             mapping_index = dict()
-            FileUtils.create_path(match_dir)
+            create_path(match_dir)
 
         progress_bar = self.enlighten_manager.counter(
             total=len(self.src_annotation_index), desc="Mapping Prediction", unit="per src class"
@@ -318,7 +318,7 @@ class MappingPredictor:
             mapping_index[src_class_iri] = [m.to_tuple(with_score=True) for m in mappings]
 
             if i % 100 == 0 or i == len(self.src_annotation_index) - 1:
-                FileUtils.save_file(mapping_index, os.path.join(match_dir, "raw_mappings.json"))
+                save_file(mapping_index, os.path.join(match_dir, "raw_mappings.json"))
                 # also save a .tsv version
                 mapping_in_tuples = list(itertools.chain.from_iterable(mapping_index.values()))
                 mapping_df = pd.DataFrame(mapping_in_tuples, columns=["SrcEntity", "TgtEntity", "Score"])

@@ -15,7 +15,7 @@ from abc import abstractmethod
 import itertools
 import random
 from collections import defaultdict
-from typing import Callable, Optional
+from typing import Optional
 import enlighten
 import re
 

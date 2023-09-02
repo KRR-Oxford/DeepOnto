@@ -23,7 +23,7 @@ import warnings
 
 from deeponto.onto import Ontology
 from deeponto.align.mapping import ReferenceMapping
-from deeponto.utils import FileUtils, uniqify
+from deeponto.utils import uniqify, create_path, save_file, print_dict
 
 
 # @paper(
@@ -92,7 +92,7 @@ class AnnotationThesaurus:
 
     def __str__(self):
         str(self.onto)  # the info of ontology is updated upon calling its __str__ method
-        return FileUtils.print_dict(self.info)
+        return print_dict(self.info)
 
     @staticmethod
     def get_synonym_pairs(synonym_group: Set[str], remove_duplicates: bool = True):
@@ -250,7 +250,7 @@ class AnnotationThesaurus:
         """
         # intialise the sibling class groups
         self.onto.sibling_class_groups
-        
+
         if not self.onto.sibling_class_groups:
             warnings.warn("Skip hard negative sampling as no sibling class groups are defined.")
             return []
@@ -306,7 +306,6 @@ class IntraOntologyTextSemanticsCorpus:
         soft_negative_ratio: int = 2,
         hard_negative_ratio: int = 2,
     ):
-
         self.onto = onto
         # $\textsf{BERTMap}$ does not apply synonym transitivity
         self.thesaurus = AnnotationThesaurus(onto, annotation_property_iris, apply_transitivity=False)
@@ -330,19 +329,19 @@ class IntraOntologyTextSemanticsCorpus:
         }
 
     def __str__(self):
-        return FileUtils.print_dict(self.info)
+        return print_dict(self.info)
 
     def save(self, save_path: str):
         """Save the intra-ontology corpus (a `.json` file for label pairs
         and its summary) in the specified directory.
         """
-        FileUtils.create_path(save_path)
+        create_path(save_path)
         save_json = {
             "summary": self.info,
             "synonyms": [(pos[0], pos[1], 1) for pos in self.synonyms],
             "nonsynonyms": [(neg[0], neg[1], 0) for neg in self.soft_nonsynonyms + self.hard_nonsynonyms],
         }
-        FileUtils.save_file(save_json, os.path.join(save_path, "intra-onto.corpus.json"))
+        save_file(save_json, os.path.join(save_path, "intra-onto.corpus.json"))
 
 
 class CrossOntologyTextSemanticsCorpus:
@@ -392,19 +391,19 @@ class CrossOntologyTextSemanticsCorpus:
         }
 
     def __str__(self):
-        return FileUtils.print_dict(self.info)
+        return print_dict(self.info)
 
     def save(self, save_path: str):
         """Save the cross-ontology corpus (a `.json` file for label pairs
         and its summary) in the specified directory.
         """
-        FileUtils.create_path(save_path)
+        create_path(save_path)
         save_json = {
             "summary": self.info,
             "synonyms": [(pos[0], pos[1], 1) for pos in self.synonyms],
             "nonsynonyms": [(neg[0], neg[1], 0) for neg in self.nonsynonyms],
         }
-        FileUtils.save_file(save_json, os.path.join(save_path, "cross-onto.corpus.json"))
+        save_file(save_json, os.path.join(save_path, "cross-onto.corpus.json"))
 
     def synonym_sampling_from_mappings(self):
         r"""Sample synonyms from cross-ontology class mappings.
@@ -554,25 +553,29 @@ class TextSemanticsCorpora:
                 "num_nonsynonyms": len(self.nonsynonyms),
                 "intra_src_onto_corpus": self.intra_src_onto_corpus.info["IntraOntologyTextSemanticsCorpus"],
                 "intra_tgt_onto_corpus": self.intra_tgt_onto_corpus.info["IntraOntologyTextSemanticsCorpus"],
-                "cross_onto_corpus": self.cross_onto_corpus.info["CrossOntologyTextSemanticsCorpus"] if self.cross_onto_corpus else None,
-                "auxiliary_onto_corpora": [a.info["IntraOntologyTextSemanticsCorpus"] for a in self.auxiliary_onto_corpora],
+                "cross_onto_corpus": self.cross_onto_corpus.info["CrossOntologyTextSemanticsCorpus"]
+                if self.cross_onto_corpus
+                else None,
+                "auxiliary_onto_corpora": [
+                    a.info["IntraOntologyTextSemanticsCorpus"] for a in self.auxiliary_onto_corpora
+                ],
             }
         }
 
     def __str__(self):
-        return FileUtils.print_dict(self.info)
+        return print_dict(self.info)
 
     def save(self, save_path: str):
         """Save the overall text semantics corpora (a `.json` file for label pairs
         and its summary) in the specified directory.
         """
-        FileUtils.create_path(save_path)
+        create_path(save_path)
         save_json = {
             "summary": self.info,
             "synonyms": [(pos[0], pos[1], 1) for pos in self.synonyms],
             "nonsynonyms": [(neg[0], neg[1], 0) for neg in self.nonsynonyms],
         }
-        FileUtils.save_file(save_json, os.path.join(save_path, "text-semantics.corpora.json"))
+        save_file(save_json, os.path.join(save_path, "text-semantics.corpora.json"))
 
     def add_samples_from_sub_corpus(
         self, sub_corpus: Union[IntraOntologyTextSemanticsCorpus, CrossOntologyTextSemanticsCorpus]

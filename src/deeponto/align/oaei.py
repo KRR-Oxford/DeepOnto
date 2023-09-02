@@ -18,7 +18,7 @@ import warnings
 
 from deeponto.onto import Ontology
 from deeponto.align.mapping import ReferenceMapping, EntityMapping
-from deeponto.utils import FileUtils
+from deeponto.utils import read_table
 from deeponto.align.evaluation import AlignmentEvaluator
 
 
@@ -107,7 +107,7 @@ def read_candidate_mappings(cand_maps_file: str, has_score: bool = True):
     This method loads the candidate mappings in this format and parse them into the inputs of [`mean_reciprocal_rank`][deeponto.align.evaluation.AlignmentEvaluator.mean_reciprocal_rank]
     and [`hits_at_K`][[`mean_reciprocal_rank`][deeponto.align.evaluation.AlignmentEvaluator.hits_at_K].
     """
-    all_cand_maps = FileUtils.read_table(cand_maps_file).values.tolist()
+    all_cand_maps = read_table(cand_maps_file).values.tolist()
     formatted = []
     for src_ref_class, tgt_ref_class, tgt_cands in all_cand_maps:
         ref_map = ReferenceMapping(src_ref_class, tgt_ref_class, "=")

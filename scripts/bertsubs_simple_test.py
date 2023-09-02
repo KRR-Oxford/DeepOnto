@@ -14,14 +14,14 @@
 
 from yacs.config import CfgNode
 from deeponto.subs.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE_INTRA, BERTSubsInterPipeline, DEFAULT_CONFIG_FILE_INTER
-from deeponto.utils import FileUtils
+from deeponto.utils import load_file
 from deeponto.onto import Ontology
 
 '''
     The following segment of codes is for testing BERTSubs Intra-ontology subsumption, 
     with a given ontology (and training/valid subsumptions optionally), and a testing file.
 '''
-config = CfgNode(FileUtils.load_file(DEFAULT_CONFIG_FILE_INTRA))
+config = CfgNode(load_file(DEFAULT_CONFIG_FILE_INTRA))
 config.onto_file = './foodon.owl'
 config.train_subsumption_file = './train_subsumptions.csv'
 config.valid_subsumption_file = './valid_subsumptions.csv'
@@ -39,7 +39,7 @@ intra_pipeline = BERTSubsIntraPipeline(onto=onto, config=config)
     with a given ontology (and training/valid subsumptions optionally), and a testing file
 '''
 
-config = CfgNode(FileUtils.load_file(DEFAULT_CONFIG_FILE_INTER))
+config = CfgNode(load_file(DEFAULT_CONFIG_FILE_INTER))
 config.src_onto_file = './helis2foodon/helis_v1.00.owl'
 config.tgt_onto_file = './helis2foodon/foodon-merged.0.4.8.subs.owl'
 config.train_subsumption_file = './helis2foodon/train_subsumptions.csv'  # optional
