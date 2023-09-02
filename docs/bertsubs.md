@@ -77,10 +77,10 @@ The test metrics (MRR and Hits@K) can also be output if the ground truth and a s
 ```python
 from yacs.config import CfgNode
 from deeponto.subs.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE_INTRA
-from deeponto.utils import FileUtils
+from deeponto.utils import load_file
 from deeponto.onto import Ontology
 
-config = CfgNode(FileUtils.load_file(DEFAULT_CONFIG_FILE_INTRA)) # Load default configuration file
+config = CfgNode(load_file(DEFAULT_CONFIG_FILE_INTRA)) # Load default configuration file
 config.onto_file = './foodon.owl'
 config.train_subsumption_file = './train_subsumptions.csv' # optional
 config.valid_subsumption_file = './valid_subsumptions.csv' # optional
@@ -97,10 +97,10 @@ intra_pipeline = BERTSubsIntraPipeline(onto=onto, config=config)
 ```python
 from yacs.config import CfgNode
 from deeponto.subs.bertsubs import BERTSubsInterPipeline, DEFAULT_CONFIG_FILE_INTER
-from deeponto.utils import FileUtils
+from deeponto.utils import load_file
 from deeponto.onto import Ontology
 
-config = CfgNode(FileUtils.load_file(DEFAULT_CONFIG_FILE_INTER)) # Load default configuration file
+config = CfgNode(load_file(DEFAULT_CONFIG_FILE_INTER)) # Load default configuration file
 config.src_onto_file = './helis2foodon/helis_v1.00.owl'
 config.tgt_onto_file = './helis2foodon/foodon-merged.0.4.8.subs.owl'
 config.train_subsumption_file = './helis2foodon/train_subsumptions.csv' # optional

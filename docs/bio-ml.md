@@ -274,10 +274,10 @@ An OM system is also expected to **distinguish the reference mapping** among a s
 With $\textsf{DeepOnto}$, the evaluation can be performed as follows. First, an OM system needs to assign a score to each target candidate class and save the results as a list of tuples `(tgt_cand_class_iri, matching_score)`. 
 
 ```python
-from deeponto.utils import FileUtils
+from deeponto.utils import read_table
 import pandas as pd
 
-test_candidate_mappings = FileUtils.read_table("test.cands.tsv").values.to_list()
+test_candidate_mappings = read_table("test.cands.tsv").values.to_list()
 ranking_results = []
 for src_ref_class, tgt_ref_class, tgt_cands in test_candidate_mappings:
     tgt_cands = eval(tgt_cands)  # transform string into list or sequence
