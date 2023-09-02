@@ -21,7 +21,7 @@ import pandas as pd
 import random
 
 from deeponto.onto import Ontology
-from deeponto.utils import FileUtils, DataUtils, Tokenizer
+from deeponto.utils import FileUtils, Tokenizer, uniqify
 
 if TYPE_CHECKING:
     from org.semanticweb.owlapi.model import OWLObject  # type: ignore
@@ -321,7 +321,7 @@ class SubsFromEquivMappingGenerator:
                 f"{len(used_equiv_tgt_class_iris)}/{len(self.equiv_class_pairs)} are used for creating at least one subsumption mapping."
             )
 
-        subs_class_pairs = DataUtils.uniqify(subs_class_pairs)
+        subs_class_pairs = uniqify(subs_class_pairs)
         print(f"{len(subs_class_pairs)} subsumption mappings are created in the end.")
 
         return subs_class_pairs, used_equiv_tgt_class_iris

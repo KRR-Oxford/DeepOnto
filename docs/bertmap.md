@@ -141,6 +141,11 @@ for src_class_iri, tgt_class_iri in class_pairs_to_be_scored:
     of both results. However, this does not usually bring better performance and significantly consumes more time. Therefore, this feature is discarded
     and the users can choose which direction to match.
 
+!!! warning
+
+    Occasionally, the fine-tuning loss may not be converging and the validation accuracy is not improving; in that case,
+    set to a different random seed can usually fix the problem. 
+
 
 ## Configuration
 
@@ -184,6 +189,7 @@ global_matching:
   num_best_predictions: 10 
   mapping_extension_threshold: 0.9   
   mapping_filtered_threshold: 0.9995 
+  for_oaei: false
 ```
 
 ### BERTMap or BERTMapLt
@@ -243,6 +249,9 @@ Adjust these two parameters if users found an inappropriate GPU memory fit.
 
 `config.global_matching.mapping_filtered_threshold`
 :   The score threshold of mappings preserved for final mapping refinement. 
+
+`config.global_matching.for_oaei`
+:   Set to `false` for normal use and set to `true` for the [OAEI 2023 Bio-ML Track](../bio-ml.md) such that entities that are annotated as not used in alignment will be ignored during global matching.
 
 
 ## Output Format

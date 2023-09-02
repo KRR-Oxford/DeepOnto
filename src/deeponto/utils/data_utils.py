@@ -15,17 +15,21 @@
 from __future__ import annotations
 
 from typing import Optional
+from transformers import set_seed as t_set_seed
 
-class DataUtils:
-    
-    @staticmethod
-    def uniqify(ls):
-        """Return a list of unique elements without messing around the order"""
-        non_empty_ls = list(filter(lambda x: x != "", ls))
-        return list(dict.fromkeys(non_empty_ls))
 
-    @staticmethod
-    def sort_dict_by_values(dic: dict, desc: bool = True, k: Optional[int] = None):
-        """Return a sorted dict by values with first k reserved if provided."""
-        sorted_items = list(sorted(dic.items(), key=lambda item: item[1], reverse=desc))
-        return dict(sorted_items[:k])
+def set_seed(seed):
+    """Set seed function imported from transformers."""
+    t_set_seed(seed)
+
+
+def sort_dict_by_values(dic: dict, desc: bool = True, k: Optional[int] = None):
+    """Return a sorted dict by values with first k reserved if provided."""
+    sorted_items = list(sorted(dic.items(), key=lambda item: item[1], reverse=desc))
+    return dict(sorted_items[:k])
+
+
+def uniqify(ls):
+    """Return a list of unique elements without messing around the order"""
+    non_empty_ls = list(filter(lambda x: x != "", ls))
+    return list(dict.fromkeys(non_empty_ls))

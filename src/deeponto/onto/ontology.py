@@ -22,7 +22,7 @@ import warnings
 import itertools
 import jpype
 
-from deeponto.utils import TextUtils, Tokenizer, InvertedIndex, FileUtils, DataUtils
+from deeponto.utils import TextUtils, Tokenizer, InvertedIndex, FileUtils, uniqify
 from deeponto import init_jvm
 
 # initialise JVM for python-java interaction
@@ -378,7 +378,7 @@ class Ontology:
                         )
                     )
 
-        return DataUtils.uniqify(annotations)
+        return uniqify(annotations)
 
     def check_named_entity(self, owl_object: OWLObject):
         r"""Check if the input entity is a named atomic entity. That is,

@@ -10,8 +10,13 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased 
 
+
+### Added
+
+- [X] **Add** `set_seed()` method at `deeponto.utils`.
 ### Changed 
 
+- [X] **Change** the layout of all utility methods by making them stand-alone instead of static methods.
 - [X] **Change** the `.verbalise_class_expression()` method by adding an option to keep entity IRIs without verbalising them using `.vocabs` at `deeponto.onto.OntologyVerbaliser`.
 - [X] **Change** default `apply_lowercasing` value to `False` for both `.get_annotations()` and `.build_annotation_index()` methods at `deeponto.onto.Ontology`.
 - [X] **Change** the method `.get_owl_object_annotations()` to `.get_annotations()` at `deeponto.onto.Ontology`.

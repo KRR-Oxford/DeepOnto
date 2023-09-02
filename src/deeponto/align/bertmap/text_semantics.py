@@ -23,7 +23,7 @@ import warnings
 
 from deeponto.onto import Ontology
 from deeponto.align.mapping import ReferenceMapping
-from deeponto.utils import FileUtils, DataUtils
+from deeponto.utils import FileUtils, uniqify
 
 
 # @paper(
@@ -106,7 +106,7 @@ class AnnotationThesaurus:
         """
         synonym_pairs = list(itertools.product(synonym_group, synonym_group))
         if remove_duplicates:
-            return DataUtils.uniqify(synonym_pairs)
+            return uniqify(synonym_pairs)
         else:
             return synonym_pairs
 
@@ -134,7 +134,7 @@ class AnnotationThesaurus:
         for synonym_group in synonym_groups:
             # gather synonym pairs from the self-product of a synonym group
             synonym_pairs += AnnotationThesaurus.get_synonym_pairs(synonym_group, remove_duplicates=False)
-        synonym_pairs = DataUtils.uniqify(synonym_pairs)
+        synonym_pairs = uniqify(synonym_pairs)
         merged_grouped_synonyms = AnnotationThesaurus.connected_labels(synonym_pairs)
         return merged_grouped_synonyms
 
@@ -177,7 +177,7 @@ class AnnotationThesaurus:
             synonym_pairs = self.get_synonym_pairs(synonym_group, remove_duplicates=False)
             synonym_pool += synonym_pairs
         # remove duplicates afer the loop
-        synonym_pool = DataUtils.uniqify(synonym_pool)
+        synonym_pool = uniqify(synonym_pool)
 
         if (not num_samples) or (num_samples >= len(synonym_pool)):
             # print("Return all synonym pairs without downsampling.")
@@ -214,12 +214,12 @@ class AnnotationThesaurus:
                 continue
 
         # DataUtils.uniqify is too slow so we should avoid operating it too often
-        nonsyonym_pool = DataUtils.uniqify(nonsyonym_pool)
+        nonsyonym_pool = uniqify(nonsyonym_pool)
 
         while len(nonsyonym_pool) < num_samples and max_iter > 0:
             max_iter = max_iter - 1  # reduce the iteration to prevent exhausting loop
             nonsyonym_pool += self.soft_nonsynonym_sampling(num_samples - len(nonsyonym_pool), max_iter)
-            nonsyonym_pool = DataUtils.uniqify(nonsyonym_pool)
+            nonsyonym_pool = uniqify(nonsyonym_pool)
 
         return nonsyonym_pool
 
@@ -274,12 +274,12 @@ class AnnotationThesaurus:
                 continue
 
         # DataUtils.uniqify is too slow so we should avoid operating it too often
-        nonsynonym_pool = DataUtils.uniqify(nonsynonym_pool)
+        nonsynonym_pool = uniqify(nonsynonym_pool)
 
         while len(nonsynonym_pool) < num_samples and max_iter > 0:
             max_iter = max_iter - 1  # reduce the iteration to prevent exhausting loop
             nonsynonym_pool += self.hard_nonsynonym_sampling(num_samples - len(nonsynonym_pool), max_iter)
-            nonsynonym_pool = DataUtils.uniqify(nonsynonym_pool)
+            nonsynonym_pool = uniqify(nonsynonym_pool)
 
         return nonsynonym_pool
 
@@ -434,7 +434,7 @@ class CrossOntologyTextSemanticsCorpus:
             backward_synonym_pairs = [(r, l) for l, r in synonym_pairs]
             synonym_pool += synonym_pairs + backward_synonym_pairs
 
-        synonym_pool = DataUtils.uniqify(synonym_pool)
+        synonym_pool = uniqify(synonym_pool)
         return synonym_pool
 
     def nonsynonym_sampling_from_mappings(self, num_samples: int, max_iter: int = 5):
@@ -477,11 +477,11 @@ class CrossOntologyTextSemanticsCorpus:
                 continue
 
         # DataUtils.uniqify is too slow so we should avoid operating it too often
-        nonsynonym_pool = DataUtils.uniqify(nonsynonym_pool)
+        nonsynonym_pool = uniqify(nonsynonym_pool)
         while len(nonsynonym_pool) < num_samples and max_iter > 0:
             max_iter = max_iter - 1  # reduce the iteration to prevent exhausting loop
             nonsynonym_pool += self.nonsynonym_sampling_from_mappings(num_samples - len(nonsynonym_pool), max_iter)
-            nonsynonym_pool = DataUtils.uniqify(nonsynonym_pool)
+            nonsynonym_pool = uniqify(nonsynonym_pool)
         return nonsynonym_pool
 
 
@@ -542,8 +542,8 @@ class TextSemanticsCorpora:
             self.add_samples_from_sub_corpus(auxiliary_onto_corpus)
 
         # DataUtils.uniqify the samples
-        self.synonyms = DataUtils.uniqify(self.synonyms)
-        self.nonsynonyms = DataUtils.uniqify(self.nonsynonyms)
+        self.synonyms = uniqify(self.synonyms)
+        self.nonsynonyms = uniqify(self.nonsynonyms)
         # remove invalid nonsynonyms
         self.nonsynonyms = list(set(self.nonsynonyms) - set(self.synonyms))
 
