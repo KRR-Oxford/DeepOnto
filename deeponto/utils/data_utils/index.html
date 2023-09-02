@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#deeponto.utils.data_utils.DataUtils" class="md-skip">
+        <a href="#deeponto.utils.data_utils.set_seed" class="md-skip">
           Skip to content
         </a>
       
@@ -912,29 +912,30 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#deeponto.utils.data_utils.DataUtils" class="md-nav__link">
-    DataUtils
-  </a>
-  
-    <nav class="md-nav" aria-label="DataUtils">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#deeponto.utils.data_utils.DataUtils.uniqify" class="md-nav__link">
-    uniqify()
+  <a href="#deeponto.utils.data_utils.set_seed" class="md-nav__link">
+    set_seed()
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#deeponto.utils.data_utils.DataUtils.sort_dict_by_values" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#deeponto.utils.data_utils.sort_dict_by_values" class="md-nav__link">
     sort_dict_by_values()
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
+      
+        <li class="md-nav__item">
+  <a href="#deeponto.utils.data_utils.uniqify" class="md-nav__link">
+    uniqify()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deeponto.utils.data_utils.print_dict" class="md-nav__link">
+    print_dict()
+  </a>
   
 </li>
       
@@ -1012,46 +1013,74 @@
 
 
 
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="deeponto.utils.data_utils.DataUtils" class="doc doc-heading">
-          <code>DataUtils</code>
-
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-
-
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
 
 
 <div class="doc doc-object doc-function">
 
 
 
-<h3 id="deeponto.utils.data_utils.DataUtils.uniqify" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">uniqify</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
-  </span>
+<h2 id="deeponto.utils.data_utils.set_seed" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span></code>
 
-</h3>
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Set seed function imported from transformers.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/deeponto/utils/data_utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set seed function imported from transformers.&quot;&quot;&quot;</span>
+    <span class="n">t_set_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="deeponto.utils.data_utils.sort_dict_by_values" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">sort_dict_by_values</span><span class="p">(</span><span class="n">dic</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Return a sorted dict by values with first k reserved if provided.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/deeponto/utils/data_utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
+<span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">sort_dict_by_values</span><span class="p">(</span><span class="n">dic</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a sorted dict by values with first k reserved if provided.&quot;&quot;&quot;</span>
+    <span class="n">sorted_items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dic</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="n">desc</span><span class="p">))</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">sorted_items</span><span class="p">[:</span><span class="n">k</span><span class="p">])</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="deeponto.utils.data_utils.uniqify" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">uniqify</span><span class="p">(</span><span class="n">ls</span><span class="p">)</span></code>
+
+</h2>
 
 
   <div class="doc doc-contents ">
@@ -1060,12 +1089,10 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/utils/data_utils.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
-<span class="normal">22</span>
-<span class="normal">23</span>
-<span class="normal">24</span>
-<span class="normal">25</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">uniqify</span><span class="p">(</span><span class="n">ls</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">uniqify</span><span class="p">(</span><span class="n">ls</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a list of unique elements without messing around the order&quot;&quot;&quot;</span>
     <span class="n">non_empty_ls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="p">))</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">non_empty_ls</span><span class="p">))</span>
@@ -1080,45 +1107,32 @@
 
 
 
-<h3 id="deeponto.utils.data_utils.DataUtils.sort_dict_by_values" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">sort_dict_by_values</span><span class="p">(</span><span class="n">dic</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
-  </span>
+<h2 id="deeponto.utils.data_utils.print_dict" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">print_dict</span><span class="p">(</span><span class="n">dic</span><span class="p">)</span></code>
 
-</h3>
+</h2>
 
 
   <div class="doc doc-contents ">
   
-      <p>Return a sorted dict by values with first k reserved if provided.</p>
+      <p>Pretty print a dictionary.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/utils/data_utils.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span>
-<span class="normal">30</span>
-<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">sort_dict_by_values</span><span class="p">(</span><span class="n">dic</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">desc</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return a sorted dict by values with first k reserved if provided.&quot;&quot;&quot;</span>
-    <span class="n">sorted_items</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">dic</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="n">desc</span><span class="p">))</span>
-    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">sorted_items</span><span class="p">[:</span><span class="n">k</span><span class="p">])</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">print_dict</span><span class="p">(</span><span class="n">dic</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pretty print a dictionary.&quot;&quot;&quot;</span>
+    <span class="n">pretty_print</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">dic</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="s2">&quot;: &quot;</span><span class="p">))</span>
+    <span class="c1"># print(pretty_print)</span>
+    <span class="k">return</span> <span class="n">pretty_print</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
 
 </div>
-
-
-
-  </div>
-
-  </div>
-
-</div>
-
 
 
 

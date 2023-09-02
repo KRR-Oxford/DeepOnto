@@ -1054,7 +1054,7 @@
 </code></pre></div>
 <p>To obtain the literal values (as <code class="highlight"><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span></code>) of an annotation property (such as <span class="arithmatex">\(\texttt{rdfs:label}\)</span>) for an entity:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># note that annotations with no language tags are deemed as in English (&quot;en&quot;)</span>
-<span class="n">doid</span><span class="o">.</span><span class="n">get_owl_object_annotations</span><span class="p">(</span>
+<span class="n">doid</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span>
     <span class="n">doid</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_9969&quot;</span><span class="p">),</span>
     <span class="n">annotation_property_iri</span><span class="o">=</span><span class="s1">&#39;http://www.w3.org/2000/01/rdf-schema#label&#39;</span><span class="p">,</span>
     <span class="n">annotation_language_tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -1105,7 +1105,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 30, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 30, 2023</span>
       
         <br>
         Created:

@@ -1792,7 +1792,7 @@ and then apply BERT matching.</li>
     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output_path</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output_path</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output_path</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output_path</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
-    <span class="n">FileUtils</span><span class="o">.</span><span class="n">create_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">)</span>
+    <span class="n">create_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">)</span>
 
     <span class="c1"># create logger and progress manager (hidden attribute) </span>
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">create_logger</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">)</span>
@@ -1802,14 +1802,14 @@ and then apply BERT matching.</li>
     <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span> <span class="o">=</span> <span class="n">src_onto</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span> <span class="o">=</span> <span class="n">tgt_onto</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">annotation_property_iris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">annotation_property_iris</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Load the following configurations:</span><span class="se">\n</span><span class="si">{</span><span class="n">FileUtils</span><span class="o">.</span><span class="n">print_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Load the following configurations:</span><span class="se">\n</span><span class="si">{</span><span class="n">print_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;config.yaml&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Save the configuration file at </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">save_bertmap_config</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">config_path</span><span class="p">)</span>
 
     <span class="c1"># build the annotation thesaurus</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">src_annotation_index</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">build_annotation_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation_property_iris</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">tgt_annotation_index</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">build_annotation_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation_property_iris</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">src_annotation_index</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">build_annotation_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation_property_iris</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tgt_annotation_index</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">build_annotation_index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">annotation_property_iris</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># provided mappings if any</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">known_mappings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">known_mappings</span>
@@ -1843,7 +1843,7 @@ and then apply BERT matching.</li>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bert_synonym_classifier</span><span class="o">.</span><span class="n">eval_mode</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;Data statistics:</span><span class="se">\n</span><span class="s2"> </span><span class="se">\</span>
-<span class="s2">                </span><span class="si">{</span><span class="n">FileUtils</span><span class="o">.</span><span class="n">print_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bert_synonym_classifier</span><span class="o">.</span><span class="n">data_stat</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="s2">                </span><span class="si">{</span><span class="n">print_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bert_synonym_classifier</span><span class="o">.</span><span class="n">data_stat</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">bert_synonym_classifier</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bert_resume_training</span><span class="p">)</span>
             <span class="c1"># turn on eval mode after training</span>
@@ -1872,11 +1872,11 @@ and then apply BERT matching.</li>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_matching_config</span><span class="o">.</span><span class="n">for_oaei</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ignored_class_index</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">False</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">src_class_iri</span><span class="p">,</span> <span class="n">src_class</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">owl_classes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">use_in_alignment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">get_owl_object_annotations</span><span class="p">(</span><span class="n">src_class</span><span class="p">,</span> <span class="s2">&quot;http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment&quot;</span><span class="p">)</span>
+            <span class="n">use_in_alignment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">src_onto</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="n">src_class</span><span class="p">,</span> <span class="s2">&quot;http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">use_in_alignment</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">use_in_alignment</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">ignored_class_index</span><span class="p">[</span><span class="n">src_class_iri</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">for</span> <span class="n">tgt_class_iri</span><span class="p">,</span> <span class="n">tgt_class</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">owl_classes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">use_in_alignment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">get_owl_object_annotations</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">,</span> <span class="s2">&quot;http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment&quot;</span><span class="p">)</span>
+            <span class="n">use_in_alignment</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span><span class="n">tgt_class</span><span class="p">,</span> <span class="s2">&quot;http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">use_in_alignment</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">use_in_alignment</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">ignored_class_index</span><span class="p">[</span><span class="n">tgt_class_iri</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
 
@@ -1979,7 +1979,7 @@ a local data file.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Construct new </span><span class="si">{</span><span class="n">data_name</span><span class="si">}</span><span class="s2"> and save at </span><span class="si">{</span><span class="n">data_file</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
         <span class="n">construct_func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="c1"># load the data file that is supposed to be saved locally</span>
-    <span class="k">return</span> <span class="n">FileUtils</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">load_file</span><span class="p">(</span><span class="n">data_file</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -2122,7 +2122,7 @@ a local data file.</p>
             <span class="n">split_index</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.9</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">))</span>  <span class="c1"># split at 90%</span>
             <span class="n">finetune_data</span><span class="p">[</span><span class="s2">&quot;training&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[:</span><span class="n">split_index</span><span class="p">]</span>
             <span class="n">finetune_data</span><span class="p">[</span><span class="s2">&quot;validation&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">samples</span><span class="p">[</span><span class="n">split_index</span><span class="p">:]</span>
-            <span class="n">FileUtils</span><span class="o">.</span><span class="n">save_file</span><span class="p">(</span><span class="n">finetune_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">finetune_data_path</span><span class="p">)</span>
+            <span class="n">save_file</span><span class="p">(</span><span class="n">finetune_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">finetune_data_path</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_or_construct</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">finetune_data_path</span><span class="p">,</span> <span class="n">data_name</span><span class="p">,</span> <span class="n">construct</span><span class="p">)</span>
 
@@ -2259,7 +2259,7 @@ a local data file.</p>
         <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bert_finetuned_path</span><span class="p">):</span>
             <span class="c1"># load trainer states from each checkpoint file</span>
             <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;checkpoint&quot;</span><span class="p">):</span>
-                <span class="n">trainer_state</span> <span class="o">=</span> <span class="n">FileUtils</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span>
+                <span class="n">trainer_state</span> <span class="o">=</span> <span class="n">load_file</span><span class="p">(</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bert_finetuned_path</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="s2">&quot;trainer_state.json&quot;</span><span class="p">)</span>
                 <span class="p">)</span>
                 <span class="n">checkpoint</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">trainer_state</span><span class="p">[</span><span class="s2">&quot;best_model_checkpoint&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
@@ -2321,7 +2321,7 @@ is not provided, use the default configuration.</p>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Use the default configuration at </span><span class="si">{</span><span class="n">DEFAULT_CONFIG_FILE</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>  
     <span class="k">if</span> <span class="ow">not</span> <span class="n">config_file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.yaml&quot;</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Configuration file should be in `yaml` format.&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">CfgNode</span><span class="p">(</span><span class="n">FileUtils</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="n">config_file</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">CfgNode</span><span class="p">(</span><span class="n">load_file</span><span class="p">(</span><span class="n">config_file</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -2754,7 +2754,7 @@ a synonym pair then (B, A) is a synonym pair, too.</li>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">synonym_pairs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">synonym_group</span><span class="p">,</span> <span class="n">synonym_group</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">remove_duplicates</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="n">synonym_pairs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">synonym_pairs</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">synonym_pairs</span>
 </code></pre></div></td></tr></table></div>
@@ -2897,7 +2897,7 @@ overall number of annotations is not large enough then this could be a good opti
     <span class="k">for</span> <span class="n">synonym_group</span> <span class="ow">in</span> <span class="n">synonym_groups</span><span class="p">:</span>
         <span class="c1"># gather synonym pairs from the self-product of a synonym group</span>
         <span class="n">synonym_pairs</span> <span class="o">+=</span> <span class="n">AnnotationThesaurus</span><span class="o">.</span><span class="n">get_synonym_pairs</span><span class="p">(</span><span class="n">synonym_group</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">synonym_pairs</span> <span class="o">=</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="n">synonym_pairs</span><span class="p">)</span>
+    <span class="n">synonym_pairs</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">synonym_pairs</span><span class="p">)</span>
     <span class="n">merged_grouped_synonyms</span> <span class="o">=</span> <span class="n">AnnotationThesaurus</span><span class="o">.</span><span class="n">connected_labels</span><span class="p">(</span><span class="n">synonym_pairs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">merged_grouped_synonyms</span>
 </code></pre></div></td></tr></table></div>
@@ -3144,7 +3144,7 @@ to the same ontology class.</p>
         <span class="n">synonym_pairs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_synonym_pairs</span><span class="p">(</span><span class="n">synonym_group</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">synonym_pool</span> <span class="o">+=</span> <span class="n">synonym_pairs</span>
     <span class="c1"># remove duplicates afer the loop</span>
-    <span class="n">synonym_pool</span> <span class="o">=</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="n">synonym_pool</span><span class="p">)</span>
+    <span class="n">synonym_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">synonym_pool</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">num_samples</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">num_samples</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">synonym_pool</span><span class="p">)):</span>
         <span class="c1"># print(&quot;Return all synonym pairs without downsampling.&quot;)</span>
@@ -3311,12 +3311,12 @@ larger</strong> (considering random combinations of different synonym groups).</
             <span class="k">continue</span>
 
     <span class="c1"># DataUtils.uniqify is too slow so we should avoid operating it too often</span>
-    <span class="n">nonsyonym_pool</span> <span class="o">=</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="n">nonsyonym_pool</span><span class="p">)</span>
+    <span class="n">nonsyonym_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">nonsyonym_pool</span><span class="p">)</span>
 
     <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">nonsyonym_pool</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_samples</span> <span class="ow">and</span> <span class="n">max_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># reduce the iteration to prevent exhausting loop</span>
         <span class="n">nonsyonym_pool</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">soft_nonsynonym_sampling</span><span class="p">(</span><span class="n">num_samples</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">nonsyonym_pool</span><span class="p">),</span> <span class="n">max_iter</span><span class="p">)</span>
-        <span class="n">nonsyonym_pool</span> <span class="o">=</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="n">nonsyonym_pool</span><span class="p">)</span>
+        <span class="n">nonsyonym_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">nonsyonym_pool</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">nonsyonym_pool</span>
 </code></pre></div></td></tr></table></div>
@@ -3545,12 +3545,12 @@ larger</strong> (considering random combinations of different synonym groups).</
             <span class="k">continue</span>
 
     <span class="c1"># DataUtils.uniqify is too slow so we should avoid operating it too often</span>
-    <span class="n">nonsynonym_pool</span> <span class="o">=</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="n">nonsynonym_pool</span><span class="p">)</span>
+    <span class="n">nonsynonym_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">nonsynonym_pool</span><span class="p">)</span>
 
     <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">nonsynonym_pool</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_samples</span> <span class="ow">and</span> <span class="n">max_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># reduce the iteration to prevent exhausting loop</span>
         <span class="n">nonsynonym_pool</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hard_nonsynonym_sampling</span><span class="p">(</span><span class="n">num_samples</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">nonsynonym_pool</span><span class="p">),</span> <span class="n">max_iter</span><span class="p">)</span>
-        <span class="n">nonsynonym_pool</span> <span class="o">=</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="n">nonsynonym_pool</span><span class="p">)</span>
+        <span class="n">nonsynonym_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">nonsynonym_pool</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">nonsynonym_pool</span>
 </code></pre></div></td></tr></table></div>
@@ -3674,15 +3674,13 @@ the number in this case.</p>
 <span class="normal">326</span>
 <span class="normal">327</span>
 <span class="normal">328</span>
-<span class="normal">329</span>
-<span class="normal">330</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">329</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
     <span class="n">annotation_property_iris</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
     <span class="n">soft_negative_ratio</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
     <span class="n">hard_negative_ratio</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
 <span class="p">):</span>
-
     <span class="bp">self</span><span class="o">.</span><span class="n">onto</span> <span class="o">=</span> <span class="n">onto</span>
     <span class="c1"># $\textsf{BERTMap}$ does not apply synonym transitivity</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">thesaurus</span> <span class="o">=</span> <span class="n">AnnotationThesaurus</span><span class="p">(</span><span class="n">onto</span><span class="p">,</span> <span class="n">annotation_property_iris</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -3737,7 +3735,8 @@ and its summary) in the specified directory.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/text_semantics.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">335</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">334</span>
+<span class="normal">335</span>
 <span class="normal">336</span>
 <span class="normal">337</span>
 <span class="normal">338</span>
@@ -3746,18 +3745,17 @@ and its summary) in the specified directory.</p>
 <span class="normal">341</span>
 <span class="normal">342</span>
 <span class="normal">343</span>
-<span class="normal">344</span>
-<span class="normal">345</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">344</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save the intra-ontology corpus (a `.json` file for label pairs</span>
 <span class="sd">    and its summary) in the specified directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">FileUtils</span><span class="o">.</span><span class="n">create_path</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+    <span class="n">create_path</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
     <span class="n">save_json</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">,</span>
         <span class="s2">&quot;synonyms&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">synonyms</span><span class="p">],</span>
         <span class="s2">&quot;nonsynonyms&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="n">neg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">neg</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">neg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">soft_nonsynonyms</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">hard_nonsynonyms</span><span class="p">],</span>
     <span class="p">}</span>
-    <span class="n">FileUtils</span><span class="o">.</span><span class="n">save_file</span><span class="p">(</span><span class="n">save_json</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="s2">&quot;intra-onto.corpus.json&quot;</span><span class="p">))</span>
+    <span class="n">save_file</span><span class="p">(</span><span class="n">save_json</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="s2">&quot;intra-onto.corpus.json&quot;</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -3863,7 +3861,8 @@ that we do not have <em>hard</em> non-synonyms at the cross-ontology level.</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/align/bertmap/text_semantics.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">364</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">363</span>
+<span class="normal">364</span>
 <span class="normal">365</span>
 <span class="normal">366</span>
 <span class="normal">367</span>
@@ -3890,8 +3889,7 @@ that we do not have <em>hard</em> non-synonyms at the cross-ontology level.</p>
 <span class="normal">388</span>
 <span class="normal">389</span>
 <span class="normal">390</span>
-<span class="normal">391</span>
-<span class="normal">392</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">391</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">class_mappings</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">ReferenceMapping</span><span class="p">],</span>
     <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
@@ -3953,7 +3951,8 @@ and its summary) in the specified directory.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/text_semantics.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">397</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">396</span>
+<span class="normal">397</span>
 <span class="normal">398</span>
 <span class="normal">399</span>
 <span class="normal">400</span>
@@ -3962,18 +3961,17 @@ and its summary) in the specified directory.</p>
 <span class="normal">403</span>
 <span class="normal">404</span>
 <span class="normal">405</span>
-<span class="normal">406</span>
-<span class="normal">407</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">406</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save the cross-ontology corpus (a `.json` file for label pairs</span>
 <span class="sd">    and its summary) in the specified directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">FileUtils</span><span class="o">.</span><span class="n">create_path</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+    <span class="n">create_path</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
     <span class="n">save_json</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">,</span>
         <span class="s2">&quot;synonyms&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">synonyms</span><span class="p">],</span>
         <span class="s2">&quot;nonsynonyms&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="n">neg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">neg</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">neg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nonsynonyms</span><span class="p">],</span>
     <span class="p">}</span>
-    <span class="n">FileUtils</span><span class="o">.</span><span class="n">save_file</span><span class="p">(</span><span class="n">save_json</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="s2">&quot;cross-onto.corpus.json&quot;</span><span class="p">))</span>
+    <span class="n">save_file</span><span class="p">(</span><span class="n">save_json</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="s2">&quot;cross-onto.corpus.json&quot;</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -4029,7 +4027,8 @@ in the intra-ontology case.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/text_semantics.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">409</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">408</span>
+<span class="normal">409</span>
 <span class="normal">410</span>
 <span class="normal">411</span>
 <span class="normal">412</span>
@@ -4057,8 +4056,7 @@ in the intra-ontology case.</p>
 <span class="normal">434</span>
 <span class="normal">435</span>
 <span class="normal">436</span>
-<span class="normal">437</span>
-<span class="normal">438</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">synonym_sampling_from_mappings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">437</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">synonym_sampling_from_mappings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Sample synonyms from cross-ontology class mappings.</span>
 
 <span class="sd">    Arguments of this method are all class attributes.</span>
@@ -4086,7 +4084,7 @@ in the intra-ontology case.</p>
         <span class="n">backward_synonym_pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">r</span><span class="p">,</span> <span class="n">l</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">synonym_pairs</span><span class="p">]</span>
         <span class="n">synonym_pool</span> <span class="o">+=</span> <span class="n">synonym_pairs</span> <span class="o">+</span> <span class="n">backward_synonym_pairs</span>
 
-    <span class="n">synonym_pool</span> <span class="o">=</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="n">synonym_pool</span><span class="p">)</span>
+    <span class="n">synonym_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">synonym_pool</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">synonym_pool</span>
 </code></pre></div></td></tr></table></div>
           </details>
@@ -4143,7 +4141,8 @@ the number of incorrect mappings is much larger than the number of correct ones.
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/text_semantics.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">440</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">439</span>
+<span class="normal">440</span>
 <span class="normal">441</span>
 <span class="normal">442</span>
 <span class="normal">443</span>
@@ -4187,8 +4186,7 @@ the number of incorrect mappings is much larger than the number of correct ones.
 <span class="normal">481</span>
 <span class="normal">482</span>
 <span class="normal">483</span>
-<span class="normal">484</span>
-<span class="normal">485</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">nonsynonym_sampling_from_mappings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">):</span>
+<span class="normal">484</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">nonsynonym_sampling_from_mappings</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_iter</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Sample non-synonyms from cross-ontology class mappings.</span>
 
 <span class="sd">    Arguments of this method are all class attributes.</span>
@@ -4228,11 +4226,11 @@ the number of incorrect mappings is much larger than the number of correct ones.
             <span class="k">continue</span>
 
     <span class="c1"># DataUtils.uniqify is too slow so we should avoid operating it too often</span>
-    <span class="n">nonsynonym_pool</span> <span class="o">=</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="n">nonsynonym_pool</span><span class="p">)</span>
+    <span class="n">nonsynonym_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">nonsynonym_pool</span><span class="p">)</span>
     <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">nonsynonym_pool</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">num_samples</span> <span class="ow">and</span> <span class="n">max_iter</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">max_iter</span> <span class="o">=</span> <span class="n">max_iter</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># reduce the iteration to prevent exhausting loop</span>
         <span class="n">nonsynonym_pool</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nonsynonym_sampling_from_mappings</span><span class="p">(</span><span class="n">num_samples</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">nonsynonym_pool</span><span class="p">),</span> <span class="n">max_iter</span><span class="p">)</span>
-        <span class="n">nonsynonym_pool</span> <span class="o">=</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="n">nonsynonym_pool</span><span class="p">)</span>
+        <span class="n">nonsynonym_pool</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">nonsynonym_pool</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">nonsynonym_pool</span>
 </code></pre></div></td></tr></table></div>
           </details>
@@ -4341,7 +4339,8 @@ source and the target ontologies. Defaults to <code>None</code>.</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/align/bertmap/text_semantics.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">506</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">505</span>
+<span class="normal">506</span>
 <span class="normal">507</span>
 <span class="normal">508</span>
 <span class="normal">509</span>
@@ -4395,7 +4394,10 @@ source and the target ontologies. Defaults to <code>None</code>.</p>
 <span class="normal">557</span>
 <span class="normal">558</span>
 <span class="normal">559</span>
-<span class="normal">560</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">560</span>
+<span class="normal">561</span>
+<span class="normal">562</span>
+<span class="normal">563</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">src_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
     <span class="n">tgt_onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span>
@@ -4434,8 +4436,8 @@ source and the target ontologies. Defaults to <code>None</code>.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_samples_from_sub_corpus</span><span class="p">(</span><span class="n">auxiliary_onto_corpus</span><span class="p">)</span>
 
     <span class="c1"># DataUtils.uniqify the samples</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">synonyms</span> <span class="o">=</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">synonyms</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">nonsynonyms</span> <span class="o">=</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nonsynonyms</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">synonyms</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">synonyms</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">nonsynonyms</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nonsynonyms</span><span class="p">)</span>
     <span class="c1"># remove invalid nonsynonyms</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">nonsynonyms</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nonsynonyms</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">synonyms</span><span class="p">))</span>
 
@@ -4446,8 +4448,12 @@ source and the target ontologies. Defaults to <code>None</code>.</p>
             <span class="s2">&quot;num_nonsynonyms&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nonsynonyms</span><span class="p">),</span>
             <span class="s2">&quot;intra_src_onto_corpus&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">intra_src_onto_corpus</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;IntraOntologyTextSemanticsCorpus&quot;</span><span class="p">],</span>
             <span class="s2">&quot;intra_tgt_onto_corpus&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">intra_tgt_onto_corpus</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;IntraOntologyTextSemanticsCorpus&quot;</span><span class="p">],</span>
-            <span class="s2">&quot;cross_onto_corpus&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_onto_corpus</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;CrossOntologyTextSemanticsCorpus&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_onto_corpus</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
-            <span class="s2">&quot;auxiliary_onto_corpora&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;IntraOntologyTextSemanticsCorpus&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">auxiliary_onto_corpora</span><span class="p">],</span>
+            <span class="s2">&quot;cross_onto_corpus&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_onto_corpus</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;CrossOntologyTextSemanticsCorpus&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_onto_corpus</span>
+            <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;auxiliary_onto_corpora&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="n">a</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;IntraOntologyTextSemanticsCorpus&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">auxiliary_onto_corpora</span>
+            <span class="p">],</span>
         <span class="p">}</span>
     <span class="p">}</span>
 </code></pre></div></td></tr></table></div>
@@ -4483,27 +4489,27 @@ and its summary) in the specified directory.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/text_semantics.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">565</span>
-<span class="normal">566</span>
-<span class="normal">567</span>
-<span class="normal">568</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">568</span>
 <span class="normal">569</span>
 <span class="normal">570</span>
 <span class="normal">571</span>
 <span class="normal">572</span>
 <span class="normal">573</span>
 <span class="normal">574</span>
-<span class="normal">575</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">575</span>
+<span class="normal">576</span>
+<span class="normal">577</span>
+<span class="normal">578</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save the overall text semantics corpora (a `.json` file for label pairs</span>
 <span class="sd">    and its summary) in the specified directory.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">FileUtils</span><span class="o">.</span><span class="n">create_path</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
+    <span class="n">create_path</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
     <span class="n">save_json</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;summary&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">,</span>
         <span class="s2">&quot;synonyms&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">pos</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">synonyms</span><span class="p">],</span>
         <span class="s2">&quot;nonsynonyms&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="n">neg</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">neg</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">neg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nonsynonyms</span><span class="p">],</span>
     <span class="p">}</span>
-    <span class="n">FileUtils</span><span class="o">.</span><span class="n">save_file</span><span class="p">(</span><span class="n">save_json</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="s2">&quot;text-semantics.corpora.json&quot;</span><span class="p">))</span>
+    <span class="n">save_file</span><span class="p">(</span><span class="n">save_json</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="p">,</span> <span class="s2">&quot;text-semantics.corpora.json&quot;</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -4527,15 +4533,15 @@ and its summary) in the specified directory.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/bertmap/text_semantics.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">577</span>
-<span class="normal">578</span>
-<span class="normal">579</span>
-<span class="normal">580</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">580</span>
 <span class="normal">581</span>
 <span class="normal">582</span>
 <span class="normal">583</span>
 <span class="normal">584</span>
-<span class="normal">585</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add_samples_from_sub_corpus</span><span class="p">(</span>
+<span class="normal">585</span>
+<span class="normal">586</span>
+<span class="normal">587</span>
+<span class="normal">588</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add_samples_from_sub_corpus</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">sub_corpus</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">IntraOntologyTextSemanticsCorpus</span><span class="p">,</span> <span class="n">CrossOntologyTextSemanticsCorpus</span><span class="p">]</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add synonyms and non-synonyms from each sub-corpus to the overall collection.&quot;&quot;&quot;</span>
@@ -6089,11 +6095,11 @@ bar keeps track of the number of source ontology classes that have been matched.
 
     <span class="n">match_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">output_path</span><span class="p">,</span> <span class="s2">&quot;match&quot;</span><span class="p">)</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="n">mapping_index</span> <span class="o">=</span> <span class="n">FileUtils</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">match_dir</span><span class="p">,</span> <span class="s2">&quot;raw_mappings.json&quot;</span><span class="p">))</span>
+        <span class="n">mapping_index</span> <span class="o">=</span> <span class="n">load_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">match_dir</span><span class="p">,</span> <span class="s2">&quot;raw_mappings.json&quot;</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Load the existing mapping prediction file.&quot;</span><span class="p">)</span>
     <span class="k">except</span><span class="p">:</span>
         <span class="n">mapping_index</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
-        <span class="n">FileUtils</span><span class="o">.</span><span class="n">create_path</span><span class="p">(</span><span class="n">match_dir</span><span class="p">)</span>
+        <span class="n">create_path</span><span class="p">(</span><span class="n">match_dir</span><span class="p">)</span>
 
     <span class="n">progress_bar</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">enlighten_manager</span><span class="o">.</span><span class="n">counter</span><span class="p">(</span>
         <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_annotation_index</span><span class="p">),</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Mapping Prediction&quot;</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;per src class&quot;</span>
@@ -6115,7 +6121,7 @@ bar keeps track of the number of source ontology classes that have been matched.
         <span class="n">mapping_index</span><span class="p">[</span><span class="n">src_class_iri</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">(</span><span class="n">with_score</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">mappings</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">src_annotation_index</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">FileUtils</span><span class="o">.</span><span class="n">save_file</span><span class="p">(</span><span class="n">mapping_index</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">match_dir</span><span class="p">,</span> <span class="s2">&quot;raw_mappings.json&quot;</span><span class="p">))</span>
+            <span class="n">save_file</span><span class="p">(</span><span class="n">mapping_index</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">match_dir</span><span class="p">,</span> <span class="s2">&quot;raw_mappings.json&quot;</span><span class="p">))</span>
             <span class="c1"># also save a .tsv version</span>
             <span class="n">mapping_in_tuples</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">mapping_index</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
             <span class="n">mapping_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">mapping_in_tuples</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;SrcEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;TgtEntity&quot;</span><span class="p">,</span> <span class="s2">&quot;Score&quot;</span><span class="p">])</span>
@@ -7081,7 +7087,7 @@ to be formatted as LogMap's input format.</p>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">src_class_iri</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="n">tgt_class_iri</span><span class="si">}</span><span class="s2">|=|</span><span class="si">{</span><span class="n">score</span><span class="si">}</span><span class="s2">|CLS</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># create a path to prevent error</span>
-    <span class="n">FileUtils</span><span class="o">.</span><span class="n">create_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logmap_repair_path</span><span class="p">)</span>
+    <span class="n">create_path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logmap_repair_path</span><span class="p">)</span>
     <span class="n">formatted_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">logmap_repair_path</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;filtered_mappings_for_LogMap_repair.txt&quot;</span><span class="p">)</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">formatted_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>

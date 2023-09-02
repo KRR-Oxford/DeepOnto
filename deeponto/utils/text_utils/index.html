@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#deeponto.utils.text_utils.TextUtils" class="md-skip">
+        <a href="#deeponto.utils.text_utils.Tokenizer" class="md-skip">
           Skip to content
         </a>
       
@@ -870,33 +870,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#deeponto.utils.text_utils.TextUtils" class="md-nav__link">
-    TextUtils
-  </a>
-  
-    <nav class="md-nav" aria-label="TextUtils">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#deeponto.utils.text_utils.TextUtils.process_annotation_literal" class="md-nav__link">
-    process_annotation_literal()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deeponto.utils.text_utils.TextUtils.split_java_identifier" class="md-nav__link">
-    split_java_identifier()
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#deeponto.utils.text_utils.Tokenizer" class="md-nav__link">
     Tokenizer
   </a>
@@ -940,6 +913,20 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deeponto.utils.text_utils.process_annotation_literal" class="md-nav__link">
+    process_annotation_literal()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deeponto.utils.text_utils.split_java_identifier" class="md-nav__link">
+    split_java_identifier()
+  </a>
   
 </li>
       
@@ -1063,9 +1050,8 @@
 
 
 
-<h2 id="deeponto.utils.text_utils.TextUtils" class="doc doc-heading">
-          <code>TextUtils</code>
-
+<h2 id="deeponto.utils.text_utils.Tokenizer" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">Tokenizer</span><span class="p">(</span><span class="n">tokenizer_type</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1073,8 +1059,19 @@
   <div class="doc doc-contents ">
 
   
-      <p>Provides text processing utilities.</p>
+      <p>A Tokenizer class for both sub-word (pre-trained) and word (rule-based) level tokenization.</p>
 
+              <details class="quote">
+                <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">96</span>
+<span class="normal">97</span>
+<span class="normal">98</span>
+<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">tokenizer_type</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># hidden tokenizer</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tokenize</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the tokenization method</span>
+</code></pre></div></td></tr></table></div>
+              </details>
 
   
 
@@ -1093,14 +1090,273 @@
 
 
 
-<h3 id="deeponto.utils.text_utils.TextUtils.process_annotation_literal" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">process_annotation_literal</span><span class="p">(</span><span class="n">annotation_literal</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalise_identifiers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<h3 id="deeponto.utils.text_utils.Tokenizer.from_pretrained" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">from_pretrained</span><span class="p">(</span><span class="n">pretrained_path</span><span class="o">=</span><span class="s1">&#39;bert-base-uncased&#39;</span><span class="p">)</span></code>
   
   <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
   </span>
 
 </h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>(Based on <strong>transformers</strong>) Load a sub-word level tokenizer from pre-trained model.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">107</span>
+<span class="normal">108</span>
+<span class="normal">109</span>
+<span class="normal">110</span>
+<span class="normal">111</span>
+<span class="normal">112</span>
+<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">from_pretrained</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pretrained_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bert-base-uncased&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;(Based on **transformers**) Load a sub-word level tokenizer from pre-trained model.&quot;&quot;&quot;</span>
+    <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="s2">&quot;pre-trained&quot;</span><span class="p">)</span>
+    <span class="n">instance</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">pretrained_path</span><span class="p">)</span>
+    <span class="n">instance</span><span class="o">.</span><span class="n">tokenize</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">_tokenizer</span><span class="o">.</span><span class="n">tokenize</span>
+    <span class="k">return</span> <span class="n">instance</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.utils.text_utils.Tokenizer.from_rule_based" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">from_rule_based</span><span class="p">()</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
+  </span>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>(Based on <strong>spacy</strong>) Load a word-level (rule-based) tokenizer.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
+<span class="normal">116</span>
+<span class="normal">117</span>
+<span class="normal">118</span>
+<span class="normal">119</span>
+<span class="normal">120</span>
+<span class="normal">121</span>
+<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span> <span class="nf">from_rule_based</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;(Based on **spacy**) Load a word-level (rule-based) tokenizer.&quot;&quot;&quot;</span>
+    <span class="n">spacy</span><span class="o">.</span><span class="n">prefer_gpu</span><span class="p">()</span>
+    <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="s2">&quot;rule-based&quot;</span><span class="p">)</span>
+    <span class="n">instance</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="n">English</span><span class="p">()</span>
+    <span class="n">instance</span><span class="o">.</span><span class="n">tokenize</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">texts</span><span class="p">:</span> <span class="p">[</span><span class="n">word</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">instance</span><span class="o">.</span><span class="n">_tokenizer</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span><span class="o">.</span><span class="n">doc</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">instance</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="deeponto.utils.text_utils.InvertedIndex" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">InvertedIndex</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Inverted index built from a text index.</p>
+
+
+
+  <p><strong>Attributes:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>tokenizer</code></td>
+          <td>
+                <code><a class="autorefs autorefs-internal" title="deeponto.utils.text_utils.Tokenizer" href="#deeponto.utils.text_utils.Tokenizer">Tokenizer</a></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A tokenizer instance to be used.</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>original_index</code></td>
+          <td>
+                <code><span title="collections.defaultdict">defaultdict</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A dictionary where the values are text strings to be tokenized.</p>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td><code>constructed_index</code></td>
+          <td>
+                <code><span title="collections.defaultdict">defaultdict</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A dictionary that acts as the inverted index of <code>original_index</code>.</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+              <details class="quote">
+                <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Tokenizer</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">original_index</span> <span class="o">=</span> <span class="n">index</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">constructed_index</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_index</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># value is a list of strings</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">constructed_index</span><span class="p">[</span><span class="n">token</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+              </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="deeponto.utils.text_utils.InvertedIndex.idf_select" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">idf_select</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">pool_size</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span></code>
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Given a list of tokens, select a set candidates based on the inverted document frequency (idf) scores.</p>
+<p>We use <code>idf</code> instead of  <code>tf</code> because labels have different lengths and thus tf is not a fair measure.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span>
+<span class="normal">151</span>
+<span class="normal">152</span>
+<span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span>
+<span class="normal">164</span>
+<span class="normal">165</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">idf_select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">pool_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a list of tokens, select a set candidates based on the inverted document frequency (idf) scores.</span>
+
+<span class="sd">    We use `idf` instead of  `tf` because labels have different lengths and thus tf is not a fair measure.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">candidate_pool</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># D := number of &quot;documents&quot;, i.e., number of &quot;keys&quot; in the original index</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_index</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">(</span><span class="n">texts</span><span class="p">):</span>
+        <span class="c1"># each token is associated with some classes</span>
+        <span class="n">potential_candidates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constructed_index</span><span class="p">[</span><span class="n">token</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">potential_candidates</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="c1"># We use idf instead of tf because the text for each class is of different length, tf is not a fair measure</span>
+        <span class="c1"># inverse document frequency: with more classes to have the current token tk, the score decreases</span>
+        <span class="n">idf</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">D</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">potential_candidates</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">potential_candidates</span><span class="p">:</span>
+            <span class="c1"># each candidate class is scored by sum(idf)</span>
+            <span class="n">candidate_pool</span><span class="p">[</span><span class="n">candidate</span><span class="p">]</span> <span class="o">+=</span> <span class="n">idf</span>
+    <span class="n">candidate_pool</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">candidate_pool</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="c1"># print(f&quot;Select {min(len(candidate_pool), pool_size)} candidates.&quot;)</span>
+    <span class="c1"># select the first K ranked</span>
+    <span class="k">return</span> <span class="n">candidate_pool</span><span class="p">[:</span><span class="n">pool_size</span><span class="p">]</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="deeponto.utils.text_utils.process_annotation_literal" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">process_annotation_literal</span><span class="p">(</span><span class="n">annotation_literal</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalise_identifiers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+
+</h2>
 
 
   <div class="doc doc-contents ">
@@ -1191,7 +1447,10 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
+<span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
 <span class="normal">32</span>
 <span class="normal">33</span>
 <span class="normal">34</span>
@@ -1214,10 +1473,9 @@
 <span class="normal">51</span>
 <span class="normal">52</span>
 <span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span>
-<span class="normal">56</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">process_annotation_literal</span><span class="p">(</span><span class="n">annotation_literal</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">normalise_identifiers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">process_annotation_literal</span><span class="p">(</span>
+    <span class="n">annotation_literal</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">normalise_identifiers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pre-process an annotation literal string.</span>
 
 <span class="sd">    Args:</span>
@@ -1235,7 +1493,7 @@
     <span class="c1"># if the annotation literal is a valid identifier with first letter capitalised</span>
     <span class="c1"># we suspect that it could be a Java style identifier that needs to be split</span>
     <span class="k">if</span> <span class="n">normalise_identifiers</span> <span class="ow">and</span> <span class="n">annotation_literal</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isupper</span><span class="p">()</span> <span class="ow">and</span> <span class="n">annotation_literal</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">():</span>
-        <span class="n">annotation_literal</span> <span class="o">=</span> <span class="n">TextUtils</span><span class="o">.</span><span class="n">split_java_identifier</span><span class="p">(</span><span class="n">annotation_literal</span><span class="p">)</span>
+        <span class="n">annotation_literal</span> <span class="o">=</span> <span class="n">split_java_identifier</span><span class="p">(</span><span class="n">annotation_literal</span><span class="p">)</span>
 
     <span class="c1"># lowercase the annotation literal if specfied</span>
     <span class="k">if</span> <span class="n">apply_lowercasing</span><span class="p">:</span>
@@ -1253,14 +1511,10 @@
 
 
 
-<h3 id="deeponto.utils.text_utils.TextUtils.split_java_identifier" class="doc doc-heading">
+<h2 id="deeponto.utils.text_utils.split_java_identifier" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">split_java_identifier</span><span class="p">(</span><span class="n">java_style_identifier</span><span class="p">)</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
-  </span>
 
-</h3>
+</h2>
 
 
   <div class="doc doc-contents ">
@@ -1278,7 +1532,8 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">58</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">57</span>
+<span class="normal">58</span>
 <span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
@@ -1310,11 +1565,7 @@
 <span class="normal">87</span>
 <span class="normal">88</span>
 <span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">split_java_identifier</span><span class="p">(</span><span class="n">java_style_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">split_java_identifier</span><span class="p">(</span><span class="n">java_style_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Split words in java&#39;s identifier style into natural language phrase.</span>
 
 <span class="sd">    Examples:</span>
@@ -1327,7 +1578,6 @@
     <span class="n">words</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">capitalized_word</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">raw_words</span><span class="p">):</span>
-
         <span class="c1"># the above regex pattern will split at capitals</span>
         <span class="c1"># so the capitalized words are split into characters</span>
         <span class="c1"># i.e., (len(w) == 1)</span>
@@ -1354,316 +1604,6 @@
   </div>
 
 </div>
-
-
-
-  </div>
-
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="deeponto.utils.text_utils.Tokenizer" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">Tokenizer</span><span class="p">(</span><span class="n">tokenizer_type</span><span class="p">)</span></code>
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-
-  
-      <p>A Tokenizer class for both sub-word (pre-trained) and word (rule-based) level tokenization.</p>
-
-              <details class="quote">
-                <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">tokenizer_type</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># hidden tokenizer</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">tokenize</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the tokenization method</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.utils.text_utils.Tokenizer.from_pretrained" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">from_pretrained</span><span class="p">(</span><span class="n">pretrained_path</span><span class="o">=</span><span class="s1">&#39;bert-base-uncased&#39;</span><span class="p">)</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
-  </span>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>(Based on <strong>transformers</strong>) Load a sub-word level tokenizer from pre-trained model.</p>
-
-          <details class="quote">
-            <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
-<span class="k">def</span> <span class="nf">from_pretrained</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pretrained_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bert-base-uncased&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;(Based on **transformers**) Load a sub-word level tokenizer from pre-trained model.&quot;&quot;&quot;</span>
-    <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="s2">&quot;pre-trained&quot;</span><span class="p">)</span>
-    <span class="n">instance</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">pretrained_path</span><span class="p">)</span>
-    <span class="n">instance</span><span class="o">.</span><span class="n">tokenize</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">_tokenizer</span><span class="o">.</span><span class="n">tokenize</span>
-    <span class="k">return</span> <span class="n">instance</span>
-</code></pre></div></td></tr></table></div>
-          </details>
-  </div>
-
-</div>
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.utils.text_utils.Tokenizer.from_rule_based" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">from_rule_based</span><span class="p">()</span></code>
-  
-  <span class="doc doc-labels">
-      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
-  </span>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>(Based on <strong>spacy</strong>) Load a word-level (rule-based) tokenizer.</p>
-
-          <details class="quote">
-            <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
-<span class="k">def</span> <span class="nf">from_rule_based</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;(Based on **spacy**) Load a word-level (rule-based) tokenizer.&quot;&quot;&quot;</span>
-    <span class="n">spacy</span><span class="o">.</span><span class="n">prefer_gpu</span><span class="p">()</span>
-    <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="s2">&quot;rule-based&quot;</span><span class="p">)</span>
-    <span class="n">instance</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="n">English</span><span class="p">()</span>
-    <span class="n">instance</span><span class="o">.</span><span class="n">tokenize</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">texts</span><span class="p">:</span> <span class="p">[</span><span class="n">word</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">instance</span><span class="o">.</span><span class="n">_tokenizer</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span><span class="o">.</span><span class="n">doc</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">instance</span>
-</code></pre></div></td></tr></table></div>
-          </details>
-  </div>
-
-</div>
-
-
-
-  </div>
-
-  </div>
-
-</div>
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="deeponto.utils.text_utils.InvertedIndex" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">InvertedIndex</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">)</span></code>
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-
-  
-      <p>Inverted index built from a text index.</p>
-
-
-
-  <p><strong>Attributes:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>tokenizer</code></td>
-          <td>
-                <code><a class="autorefs autorefs-internal" title="deeponto.utils.text_utils.Tokenizer" href="#deeponto.utils.text_utils.Tokenizer">Tokenizer</a></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A tokenizer instance to be used.</p>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><code>original_index</code></td>
-          <td>
-                <code><span title="collections.defaultdict">defaultdict</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A dictionary where the values are text strings to be tokenized.</p>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><code>constructed_index</code></td>
-          <td>
-                <code><span title="collections.defaultdict">defaultdict</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A dictionary that acts as the inverted index of <code>original_index</code>.</p>
-            </div>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-              <details class="quote">
-                <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Tokenizer</span><span class="p">):</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">original_index</span> <span class="o">=</span> <span class="n">index</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">constructed_index</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_index</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="c1"># value is a list of strings</span>
-        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">constructed_index</span><span class="p">[</span><span class="n">token</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.utils.text_utils.InvertedIndex.idf_select" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">idf_select</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">pool_size</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Given a list of tokens, select a set candidates based on the inverted document frequency (idf) scores.</p>
-<p>We use <code>idf</code> instead of  <code>tf</code> because labels have different lengths and thus tf is not a fair measure.</p>
-
-          <details class="quote">
-            <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">idf_select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">pool_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a list of tokens, select a set candidates based on the inverted document frequency (idf) scores.</span>
-
-<span class="sd">    We use `idf` instead of  `tf` because labels have different lengths and thus tf is not a fair measure.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">candidate_pool</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="c1"># D := number of &quot;documents&quot;, i.e., number of &quot;keys&quot; in the original index</span>
-    <span class="n">D</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">original_index</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span><span class="p">(</span><span class="n">texts</span><span class="p">):</span>
-        <span class="c1"># each token is associated with some classes</span>
-        <span class="n">potential_candidates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">constructed_index</span><span class="p">[</span><span class="n">token</span><span class="p">]</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">potential_candidates</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="c1"># We use idf instead of tf because the text for each class is of different length, tf is not a fair measure</span>
-        <span class="c1"># inverse document frequency: with more classes to have the current token tk, the score decreases</span>
-        <span class="n">idf</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">D</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">potential_candidates</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">potential_candidates</span><span class="p">:</span>
-            <span class="c1"># each candidate class is scored by sum(idf)</span>
-            <span class="n">candidate_pool</span><span class="p">[</span><span class="n">candidate</span><span class="p">]</span> <span class="o">+=</span> <span class="n">idf</span>
-    <span class="n">candidate_pool</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">candidate_pool</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-    <span class="c1"># print(f&quot;Select {min(len(candidate_pool), pool_size)} candidates.&quot;)</span>
-    <span class="c1"># select the first K ranked</span>
-    <span class="k">return</span> <span class="n">candidate_pool</span><span class="p">[:</span><span class="n">pool_size</span><span class="p">]</span>
-</code></pre></div></td></tr></table></div>
-          </details>
-  </div>
-
-</div>
-
-
-
-  </div>
-
-  </div>
-
-</div>
-
 
 
 

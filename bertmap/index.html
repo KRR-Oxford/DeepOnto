@@ -1157,6 +1157,11 @@ Because of this, it is recommended to set the source ontology as the one with a 
 of both results. However, this does not usually bring better performance and significantly consumes more time. Therefore, this feature is discarded
 and the users can choose which direction to match.</p>
 </div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Occasionally, the fine-tuning loss may not be converging and the validation accuracy is not improving; in that case,
+set to a different random seed can usually fix the problem. </p>
+</div>
 <h2 id="configuration">Configuration</h2>
 <p>The default configuration file looks like:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bertmap</span><span class="w">  </span><span class="c1"># bertmap or bertmaplt</span>
@@ -1196,6 +1201,7 @@ and the users can choose which direction to match.</p>
 <span class="w">  </span><span class="nt">num_best_predictions</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"> </span>
 <span class="w">  </span><span class="nt">mapping_extension_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9</span><span class="w">   </span>
 <span class="w">  </span><span class="nt">mapping_filtered_threshold</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.9995</span><span class="w"> </span>
+<span class="w">  </span><span class="nt">for_oaei</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </code></pre></div>
 <h3 id="bertmap-or-bertmaplt">BERTMap or BERTMapLt</h3>
 <dl>
@@ -1245,6 +1251,8 @@ that define the <strong>synonyms</strong> of an ontology class. Many ontology ma
 <dd>Set the score threshold of mappings used in the iterative mapping extension process. Higher value shortens the time but reduces the recall. </dd>
 <dt><code>config.global_matching.mapping_filtered_threshold</code></dt>
 <dd>The score threshold of mappings preserved for final mapping refinement. </dd>
+<dt><code>config.global_matching.for_oaei</code></dt>
+<dd>Set to <code>false</code> for normal use and set to <code>true</code> for the <a href="../bio-ml.md">OAEI 2023 Bio-ML Track</a> such that entities that are annotated as not used in alignment will be ignored during global matching.</dd>
 </dl>
 <h2 id="output-format">Output Format</h2>
 <p>Running <span class="arithmatex">\(\textsf{BERTMap}\)</span> will create a directory named <code>bertmap</code> or <code>bertmaplt</code> in the specified output path.
@@ -1286,7 +1294,7 @@ The file structure of this directory is as follows:</p>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 6, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 2, 2023</span>
       
         <br>
         Created:

@@ -359,12 +359,33 @@
     Unreleased
   </a>
   
-    <nav class="md-nav" aria-label="Unreleased">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v085-2023-september" class="md-nav__link">
+    v0.8.5 (2023 September)
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.8.5 (2023 September)">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    Added
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#changed" class="md-nav__link">
     Changed
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    Fixed
   </a>
   
 </li>
@@ -383,7 +404,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added" class="md-nav__link">
+  <a href="#added_1" class="md-nav__link">
     Added
   </a>
   
@@ -397,7 +418,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed" class="md-nav__link">
+  <a href="#fixed_1" class="md-nav__link">
     Fixed
   </a>
   
@@ -424,7 +445,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_1" class="md-nav__link">
+  <a href="#fixed_2" class="md-nav__link">
     Fixed
   </a>
   
@@ -444,7 +465,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_1" class="md-nav__link">
+  <a href="#added_2" class="md-nav__link">
     Added
   </a>
   
@@ -478,7 +499,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_2" class="md-nav__link">
+  <a href="#fixed_3" class="md-nav__link">
     Fixed
   </a>
   
@@ -498,7 +519,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_2" class="md-nav__link">
+  <a href="#added_3" class="md-nav__link">
     Added
   </a>
   
@@ -512,7 +533,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_3" class="md-nav__link">
+  <a href="#fixed_4" class="md-nav__link">
     Fixed
   </a>
   
@@ -532,7 +553,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_3" class="md-nav__link">
+  <a href="#added_4" class="md-nav__link">
     Added
   </a>
   
@@ -546,7 +567,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#fixed_4" class="md-nav__link">
+  <a href="#fixed_5" class="md-nav__link">
     Fixed
   </a>
   
@@ -1201,13 +1222,26 @@ Fixed for any bug fixes.
 Security in case of vulnerabilities. -->
 
 <h2 id="unreleased">Unreleased</h2>
+<h2 id="v085-2023-september">v0.8.5 (2023 September)</h2>
+<h3 id="added">Added</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>set_seed()</code> method at <code>deeponto.utils</code>.</li>
+</ul>
 <h3 id="changed">Changed</h3>
 <ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the layout of all utility methods by making them stand-alone instead of static methods.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the <code>.verbalise_class_expression()</code> method by adding an option to keep entity IRIs without verbalising them using <code>.vocabs</code> at <code>deeponto.onto.OntologyVerbaliser</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> default <code>apply_lowercasing</code> value to <code>False</code> for both <code>.get_annotations()</code> and <code>.build_annotation_index()</code> methods at <code>deeponto.onto.Ontology</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the method <code>.get_owl_object_annotations()</code> to <code>.get_annotations()</code> at <code>deeponto.onto.Ontology</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the LogMap debugger memory options for BERTMap's mapping repair.</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the default jar command timeout to 10 hours.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the default jar command timeout to 1 hour.</li>
+</ul>
+<h3 id="fixed">Fixed</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> duplicate logging in running BERTMap due to progapagation.</li>
 </ul>
 <h2 id="v084-2023-july">v0.8.4 (2023 July)</h2>
-<h3 id="added">Added</h3>
+<h3 id="added_1">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> specific check of <code>use_in_alignment</code> annotation in BERTMap for the OAEI.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> OAEI utilities at <code>deeponto.align.oaei</code>.</li>
@@ -1216,7 +1250,7 @@ Security in case of vulnerabilities. -->
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the <code>read_table_mappings</code> method to allow <code>None</code> for threshold.</li>
 </ul>
-<h3 id="fixed">Fixed</h3>
+<h3 id="fixed_1">Fixed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> BERTMap error and add corresponding warning when an input ontology has no sibling class group, related to Issue #10.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> BERTMap error and add corresponding warning when an input ontology has some class with no label (annotation), related to Issue #10.</li>
@@ -1229,12 +1263,12 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the verbalisation function by setting quantifier words as optional (by default not adding).</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> sibing retrieval from using reasoner to direct assertions.</li>
 </ul>
-<h3 id="fixed_1">Fixed</h3>
+<h3 id="fixed_2">Fixed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> the minor bug for the <code>f1</code> and <code>MRR</code> method in <code>deeponto.align.evaluation.AlignmentEvaluator</code>.</li>
 </ul>
 <h2 id="v080-2023-june">v0.8.0 (2023 June)</h2>
-<h3 id="added_1">Added</h3>
+<h3 id="added_2">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the ontology normaliser at <code>deeponto.onto.OntologyNormaliser</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the ontology projector at <code>deeponto.onto.OntologyProjector</code>.</li>
@@ -1249,12 +1283,12 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> Java dependencies from using <code>lib</code> from mowl to direct import.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> <code>get_owl_object_annotations</code> by adding <code>uniqify</code> at the end to preserve the order.</li>
 </ul>
-<h3 id="fixed_2">Fixed</h3>
+<h3 id="fixed_3">Fixed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> BERTMap's non-synonym sampling when the class labels are not available using the try-catch block.</li>
 </ul>
 <h2 id="v070-2023-april">v0.7.0 (2023 April)</h2>
-<h3 id="added_2">Added</h3>
+<h3 id="added_3">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the BERTSubs module at <code>deeponto.subs.bertsubs</code>; its inter-ontology setting is also imported at <code>deeponto.align.bertsubs</code>.</li>
 </ul>
@@ -1264,12 +1298,12 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Amend</strong> JVM checking before displaying the JVM memory prompt from importing <code>deeponto.onto.Ontology</code>; if started already, skip this step.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the function <code>get_owl_object_annotations</code> at <code>deeponto.onto.Ontology</code> by preserving the relative order of annotation retrieval, i.e., create <code>set</code> first and use the <code>.add()</code> function instead of casting the <code>list</code> into <code>set</code> in the end.</li>
 </ul>
-<h3 id="fixed_3">Fixed</h3>
+<h3 id="fixed_4">Fixed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> the function <code>check_deprecated</code> at <code>deeponto.onto.Ontology</code> by adding a check for the <span class="arithmatex">\(\texttt{owl:deprecated}\)</span> annotation property -- if this property does not exist in the current ontology, return <code>False</code> (not deprecated).</li>
 </ul>
 <h2 id="v061-2023-april">v0.6.1 (2023 April)</h2>
-<h3 id="added_3">Added</h3>
+<h3 id="added_4">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method <code>remove_axiom</code> for removing an axiom from the ontology at <code>deeponto.onto.Ontology</code> (note that the counterpart <code>add_axiom</code> has already been available).</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method <code>check_named_entity</code> for checking if an entity is named at <code>deeponto.onto.Ontology</code>.</li>
@@ -1282,13 +1316,11 @@ Security in case of vulnerabilities. -->
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Move</strong> the spacy <code>en_core_web_sm</code> download into the initialisation of <code>OntologyVerbaliser</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the method of getting equivalence axioms by adding support to different entity types at <code>deeponto.onto.Ontology</code>.</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Rename</strong> the methods of getting inferred super-entities and sub-entities at <code>deeponto.onto.OntologyReasoner</code>:<ul>
-<li><code>super_entities_of</code> <span class="arithmatex">\(\rightarrow\)</span> <code>get_inferred_super_entities</code> </li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Rename</strong> the methods of getting inferred super-entities and sub-entities at <code>deeponto.onto.OntologyReasoner</code>:</li>
+<li><code>super_entities_of</code> <span class="arithmatex">\(\rightarrow\)</span> <code>get_inferred_super_entities</code></li>
 <li><code>sub_entities_of</code> <span class="arithmatex">\(\rightarrow\)</span> <code>get_inferred_sub_entities</code></li>
 </ul>
-</li>
-</ul>
-<h3 id="fixed_4">Fixed</h3>
+<h3 id="fixed_5">Fixed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> the top and bottom data property iris (from "https:" to "http:") at <code>deeponto.onto.Ontology</code>.</li>
 </ul>
@@ -1313,7 +1345,7 @@ Security in case of vulnerabilities. -->
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 27, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 2, 2023</span>
       
         <br>
         Created:

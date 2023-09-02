@@ -2493,7 +2493,7 @@ and the remaining elements are potential (candidate) super-classes of <span clas
     <span class="k">for</span> <span class="n">iri</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">named_classes</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">iri_label</span><span class="p">[</span><span class="n">iri</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">label_property</span><span class="p">:</span>
-            <span class="n">strings</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_annotations</span><span class="p">(</span>
+            <span class="n">strings</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span>
                 <span class="n">owl_object</span><span class="o">=</span><span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">iri</span><span class="p">),</span>
                 <span class="n">annotation_property_iri</span><span class="o">=</span><span class="n">p</span><span class="p">,</span>
                 <span class="n">annotation_language_tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>

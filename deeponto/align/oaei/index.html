@@ -1064,7 +1064,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ignored_class_index</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="kc">False</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">class_iri</span><span class="p">,</span> <span class="n">class_obj</span> <span class="ow">in</span> <span class="n">onto</span><span class="o">.</span><span class="n">owl_classes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">use_in_alignment</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_annotations</span><span class="p">(</span>
+        <span class="n">use_in_alignment</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span>
             <span class="n">class_obj</span><span class="p">,</span> <span class="s2">&quot;http://oaei.ontologymatching.org/bio-ml/ann/use_in_alignment&quot;</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">use_in_alignment</span> <span class="ow">and</span> <span class="nb">str</span><span class="p">(</span><span class="n">use_in_alignment</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;false&quot;</span><span class="p">:</span>
@@ -1268,7 +1268,7 @@ and [<code>hits_at_K</code>][[<code>mean_reciprocal_rank</code>][deeponto.align.
 <span class="sd">    This method loads the candidate mappings in this format and parse them into the inputs of [`mean_reciprocal_rank`][deeponto.align.evaluation.AlignmentEvaluator.mean_reciprocal_rank]</span>
 <span class="sd">    and [`hits_at_K`][[`mean_reciprocal_rank`][deeponto.align.evaluation.AlignmentEvaluator.hits_at_K].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">all_cand_maps</span> <span class="o">=</span> <span class="n">FileUtils</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">all_cand_maps</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
     <span class="n">formatted</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">src_ref_class</span><span class="p">,</span> <span class="n">tgt_ref_class</span><span class="p">,</span> <span class="n">tgt_cands</span> <span class="ow">in</span> <span class="n">all_cand_maps</span><span class="p">:</span>
         <span class="n">ref_map</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="p">(</span><span class="n">src_ref_class</span><span class="p">,</span> <span class="n">tgt_ref_class</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">)</span>

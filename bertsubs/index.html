@@ -1054,10 +1054,10 @@ The test metrics (MRR and Hits@K) can also be output if the ground truth and a s
 <p>The following code is for intra-ontology subsumption.
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">yacs.config</span> <span class="kn">import</span> <span class="n">CfgNode</span>
 <span class="kn">from</span> <span class="nn">deeponto.subs.bertsubs</span> <span class="kn">import</span> <span class="n">BERTSubsIntraPipeline</span><span class="p">,</span> <span class="n">DEFAULT_CONFIG_FILE_INTRA</span>
-<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">FileUtils</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">load_file</span>
 <span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">CfgNode</span><span class="p">(</span><span class="n">FileUtils</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="n">DEFAULT_CONFIG_FILE_INTRA</span><span class="p">))</span> <span class="c1"># Load default configuration file</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">CfgNode</span><span class="p">(</span><span class="n">load_file</span><span class="p">(</span><span class="n">DEFAULT_CONFIG_FILE_INTRA</span><span class="p">))</span> <span class="c1"># Load default configuration file</span>
 <span class="n">config</span><span class="o">.</span><span class="n">onto_file</span> <span class="o">=</span> <span class="s1">&#39;./foodon.owl&#39;</span>
 <span class="n">config</span><span class="o">.</span><span class="n">train_subsumption_file</span> <span class="o">=</span> <span class="s1">&#39;./train_subsumptions.csv&#39;</span> <span class="c1"># optional</span>
 <span class="n">config</span><span class="o">.</span><span class="n">valid_subsumption_file</span> <span class="o">=</span> <span class="s1">&#39;./valid_subsumptions.csv&#39;</span> <span class="c1"># optional</span>
@@ -1074,10 +1074,10 @@ The test metrics (MRR and Hits@K) can also be output if the ground truth and a s
 <p>The following code is for inter-ontology subsumption.
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">yacs.config</span> <span class="kn">import</span> <span class="n">CfgNode</span>
 <span class="kn">from</span> <span class="nn">deeponto.subs.bertsubs</span> <span class="kn">import</span> <span class="n">BERTSubsInterPipeline</span><span class="p">,</span> <span class="n">DEFAULT_CONFIG_FILE_INTER</span>
-<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">FileUtils</span>
+<span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">load_file</span>
 <span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">CfgNode</span><span class="p">(</span><span class="n">FileUtils</span><span class="o">.</span><span class="n">load_file</span><span class="p">(</span><span class="n">DEFAULT_CONFIG_FILE_INTER</span><span class="p">))</span> <span class="c1"># Load default configuration file</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">CfgNode</span><span class="p">(</span><span class="n">load_file</span><span class="p">(</span><span class="n">DEFAULT_CONFIG_FILE_INTER</span><span class="p">))</span> <span class="c1"># Load default configuration file</span>
 <span class="n">config</span><span class="o">.</span><span class="n">src_onto_file</span> <span class="o">=</span> <span class="s1">&#39;./helis2foodon/helis_v1.00.owl&#39;</span>
 <span class="n">config</span><span class="o">.</span><span class="n">tgt_onto_file</span> <span class="o">=</span> <span class="s1">&#39;./helis2foodon/foodon-merged.0.4.8.subs.owl&#39;</span>
 <span class="n">config</span><span class="o">.</span><span class="n">train_subsumption_file</span> <span class="o">=</span> <span class="s1">&#39;./helis2foodon/train_subsumptions.csv&#39;</span> <span class="c1"># optional</span>
@@ -1102,7 +1102,7 @@ and <a href="https://github.com/KRR-Oxford/DeepOnto/blob/main/src/deeponto/subs/
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">July 13, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 2, 2023</span>
       
         <br>
         Created:

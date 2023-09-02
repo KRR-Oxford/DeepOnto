@@ -1860,7 +1860,7 @@ are all set to <span class="arithmatex">\(1.0\)</span>. Defaults to <code>False<
 <span class="sd">    Returns:</span>
 <span class="sd">        (List[EntityMapping]): A list of entity mappings loaded from the table file.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">FileUtils</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">table_of_mappings_file</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span><span class="n">table_of_mappings_file</span><span class="p">)</span>
     <span class="n">entity_mappings</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">dp</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">is_reference</span><span class="p">:</span>
@@ -2555,7 +2555,7 @@ target classes that have been <strong>used to create a subsumption mapping</stro
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">used_equiv_tgt_class_iris</span><span class="p">)</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">equiv_class_pairs</span><span class="p">)</span><span class="si">}</span><span class="s2"> are used for creating at least one subsumption mapping.&quot;</span>
         <span class="p">)</span>
 
-    <span class="n">subs_class_pairs</span> <span class="o">=</span> <span class="n">DataUtils</span><span class="o">.</span><span class="n">uniqify</span><span class="p">(</span><span class="n">subs_class_pairs</span><span class="p">)</span>
+    <span class="n">subs_class_pairs</span> <span class="o">=</span> <span class="n">uniqify</span><span class="p">(</span><span class="n">subs_class_pairs</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">subs_class_pairs</span><span class="p">)</span><span class="si">}</span><span class="s2"> subsumption mappings are created in the end.&quot;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">subs_class_pairs</span><span class="p">,</span> <span class="n">used_equiv_tgt_class_iris</span>
@@ -2688,7 +2688,7 @@ according to the target side.</p>
 
     <span class="c1"># for IDF sample</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tgt_annotation_index</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotation_property_iris</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">build_annotation_index</span><span class="p">(</span>
-        <span class="n">annotation_property_iris</span>
+        <span class="n">annotation_property_iris</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tgt_inverted_annotation_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tgt_onto</span><span class="o">.</span><span class="n">build_inverted_annotation_index</span><span class="p">(</span>

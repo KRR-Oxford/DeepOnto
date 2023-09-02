@@ -1336,10 +1336,10 @@
 </p>
 </div>
 <p>With <span class="arithmatex">\(\textsf{DeepOnto}\)</span>, the evaluation can be performed as follows. First, an OM system needs to assign a score to each target candidate class and save the results as a list of tuples <code>(tgt_cand_class_iri, matching_score)</code>. </p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">FileUtils</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.utils</span> <span class="kn">import</span> <span class="n">read_table</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="n">test_candidate_mappings</span> <span class="o">=</span> <span class="n">FileUtils</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;test.cands.tsv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+<span class="n">test_candidate_mappings</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span><span class="s2">&quot;test.cands.tsv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
 <span class="n">ranking_results</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">src_ref_class</span><span class="p">,</span> <span class="n">tgt_ref_class</span><span class="p">,</span> <span class="n">tgt_cands</span> <span class="ow">in</span> <span class="n">test_candidate_mappings</span><span class="p">:</span>
     <span class="n">tgt_cands</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">tgt_cands</span><span class="p">)</span>  <span class="c1"># transform string into list or sequence</span>
@@ -1633,7 +1633,7 @@ RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \prod_{d \in \mathcal{T}_c} (1
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 10, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 2, 2023</span>
       
         <br>
         Created:
