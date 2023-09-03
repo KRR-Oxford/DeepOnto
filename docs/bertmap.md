@@ -138,7 +138,7 @@ for src_class_iri, tgt_class_iri in class_pairs_to_be_scored:
     Because of this, it is recommended to set the source ontology as the one with a **smaller number of classes** for efficiency.
 
     Note that in the original paper, the model is expected to match for both directions `src2tgt` and `tgt2src`, and also consider the combination
-    of both results. However, this does not usually bring better performance and significantly consumes more time. Therefore, this feature is discarded
+    of both results. However, this does not usually bring better performance and consumes significantly more time. Therefore, this feature is discarded
     and the users can choose which direction to match.
 
 !!! warning
