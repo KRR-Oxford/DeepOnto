@@ -36,6 +36,7 @@ ABBREVIATION_DICT = {
     "EquivalentClasses": "[EQV]",  # equivalence
     "SubClassOf": "[SUB]",  # subsumed by
     "SuperClassOf": "[SUP]",  # subsumes
+    "ClassAssertion": "[CLA]",  # class assertion
 }
 
 RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
@@ -88,7 +89,7 @@ class OntologyVerbaliser:
         # build the default vocabulary for entities
         self.apply_lowercasing_to_vocab = apply_lowercasing_to_vocab
         self.vocab = dict()
-        for entity_type in ["Classes", "ObjectProperties", "DataProperties"]:
+        for entity_type in ["Classes", "ObjectProperties", "DataProperties", "Individuals"]:
             entity_annotations, _ = self.onto.build_annotation_index(
                 entity_type=entity_type, apply_lowercasing=self.apply_lowercasing_to_vocab
             )
@@ -131,9 +132,7 @@ class OntologyVerbaliser:
 
         # for a singleton IRI
         if parsed_class_expression.is_iri:
-            iri = parsed_class_expression.text.lstrip("<").rstrip(">")
-            verbal = self.vocab[iri] if not keep_iri else parsed_class_expression.text
-            return CfgNode({"verbal": verbal, "iri": iri, "type": "IRI"})
+            return self._verbalise_iri(parsed_class_expression, keep_iri=keep_iri)
 
         if parsed_class_expression.name.startswith("NEG"):
             # negation only has one child
@@ -149,6 +148,12 @@ class OntologyVerbaliser:
             return self._verbalise_junction(parsed_class_expression, keep_iri=keep_iri)
 
         raise RuntimeError("Input class expression is not in one of the supported types.")
+
+    def _verbalise_iri(self, iri_node: RangeNode, keep_iri: bool = False):
+        """Verbalise a (parsed) named entity (class, property, or individual) that has an IRI."""
+        iri = iri_node.text.lstrip("<").rstrip(">")
+        verbal = self.vocab[iri] if not keep_iri else iri_node.text
+        return CfgNode({"verbal": verbal, "iri": iri, "type": "IRI"})
 
     def _verbalise_restriction(
         self,
@@ -169,7 +174,7 @@ class OntologyVerbaliser:
 
         object_property = restriction_node.children[0]
         assert object_property.is_iri
-        object_property = self.verbalise_class_expression(object_property, keep_iri=keep_iri)
+        object_property = self._verbalise_iri(object_property, keep_iri=keep_iri)
 
         # NOTE modify the object property's verbalisation with rules
         if not keep_iri:
@@ -274,12 +279,8 @@ class OntologyVerbaliser:
 
         return results
 
-    # def verbalise_equivalence_axiom(self, equivalence_axiom: OWLAxiom):
-    #     #TODO
-    #     pass
-
     def verbalise_subsumption_axiom(self, subsumption_axiom: OWLAxiom, keep_iri: bool = False):
-        r"""Verbalise a subsumption axiom.
+        r"""Verbalise a class subsumption axiom.
 
         The subsumption axiom can have two forms:
 
@@ -292,6 +293,14 @@ class OntologyVerbaliser:
         Returns:
             (Tuple[CfgNode, CfgNode]): The verbalised sub-concept and super-concept (order matters).
         """
+
+        # input check
+        axiom_type = self.onto.get_axiom_type(subsumption_axiom)
+        assert axiom_type in [
+            "SubClassOf",
+            "SuperClassOf",
+        ], f"Input axiom type `{axiom_type}` is not subsumption (`SubClassOf` or `SuperClassOf`)."
+
         parsed_subsumption_axiom = self.parser.parse(subsumption_axiom).children[0]  # skip the root node
         if str(subsumption_axiom).startswith("SubClassOf"):
             parsed_sub_class, parsed_super_class = parsed_subsumption_axiom.children
@@ -299,9 +308,60 @@ class OntologyVerbaliser:
             parsed_super_class, parsed_sub_class = parsed_subsumption_axiom.children
         else:
             raise RuntimeError(f"The input axiom is not a valid subsumption axiom.")
-        return self.verbalise_class_expression(parsed_sub_class, keep_iri=keep_iri), self.verbalise_class_expression(
-            parsed_super_class, keep_iri=keep_iri
-        )
+
+        verbalised_sub_class = self.verbalise_class_expression(parsed_sub_class, keep_iri=keep_iri)
+        verbalised_super_class = self.verbalise_class_expression(parsed_super_class, keep_iri=keep_iri)
+        return verbalised_sub_class, verbalised_super_class
+
+    def verbalise_equivalence_axiom(self, equivalence_axiom: OWLAxiom, keep_iri: bool = False):
+        r"""Verbalise a class equivalence axiom.
+
+        The equivalence axiom has the form $C \equiv D$.
+
+        Args:
+            equivalence_axiom (OWLAxiom): The equivalence axiom to be verbalised.
+
+        Returns:
+            (Tuple[CfgNode, CfgNode]): The verbalised concept (lhs) and its equivalent concept (rhs).
+        """
+
+        # input check
+        axiom_type = self.onto.get_axiom_type(equivalence_axiom)
+        assert (
+            axiom_type == "EquivalentClasses"
+        ), f"Input axiom type `{axiom_type}` is not equivalence (`EquivalentClasses`)."
+
+        parsed_equivalence_axiom = self.parser.parse(equivalence_axiom).children[0]  # skip the root node
+        parsed_class_left, parsed_class_right = parsed_equivalence_axiom.children
+
+        verbalised_left_class = self.verbalise_class_expression(parsed_class_left, keep_iri=keep_iri)
+        verbalised_right_class = self.verbalise_class_expression(parsed_class_right, keep_iri=keep_iri)
+        return verbalised_left_class, verbalised_right_class
+
+    def verbalise_class_assertion(self, class_assertion: OWLAxiom, keep_iri: bool = False):
+        r"""Verbalise a class assertion axiom.
+
+        The class assertion axiom has the form $C(x)$.
+
+        Args:
+            class_assertion (OWLAxiom): The class assertion axiom to be verbalised.
+
+        Returns:
+            (Tuple[CfgNode, CfgNode]): The verbalised class and individual (order matters).
+        """
+
+        # input check
+        axiom_type = self.onto.get_axiom_type(class_assertion)
+        assert (
+            axiom_type == "ClassAssertion"
+        ), f"Input axiom type `{axiom_type}` is not class assertion (`ClassAssertion`)."
+
+        class_expression = class_assertion.getClassExpression()
+        individual = class_assertion.getIndividual()
+
+        verbalised_class = self.verbalise_class_expression(class_expression, keep_iri=keep_iri)
+        verbalised_individual = self._verbalise_iri(individual, keep_iri=keep_iri)
+        return verbalised_class, verbalised_individual
 
 
 class OntologySyntaxParser:
@@ -412,6 +472,7 @@ class OntologySyntaxParser:
             "EquivalentClasses": "[EQV]",  # equivalence
             "SubClassOf": "[SUB]",  # subsumed by
             "SuperClassOf": "[SUP]",  # subsumes
+            "ClassAssertion": "[CLA]", # class assertion
         }
         ```
 

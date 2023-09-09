@@ -42,7 +42,7 @@ if not jpype.isJVMStarted():
 from java.io import File  # type: ignore
 from java.lang import Runtime  # type: ignore
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
-from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLNamedIndividual, OWLAxiom, AddAxiom, RemoveAxiom, AxiomType  # type: ignore
+from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLIndividual, OWLAxiom, AddAxiom, RemoveAxiom, AxiomType  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory  # type: ignore
 from org.semanticweb.owlapi.util import OWLObjectDuplicator, OWLEntityRemover  # type: ignore
 from org.semanticweb.owlapi.search import EntitySearcher  # type: ignore
@@ -105,6 +105,7 @@ class Ontology:
         self.owl_data_properties = self.get_owl_objects("DataProperties")
         self.owl_data_factory = self.owl_manager.getOWLDataFactory()
         self.owl_annotation_properties = self.get_owl_objects("AnnotationProperties")
+        self.owl_individuals = self.get_owl_objects("Individuals")
 
         # reasoning
         self.reasoner = OntologyReasoner(self)
@@ -170,6 +171,8 @@ class Ontology:
             return "ObjectProperties" if not is_singular else "ObjectProperty"
         elif isinstance(entity, OWLDataPropertyExpression):
             return "DataProperties" if not is_singular else "DataProperty"
+        elif isinstance(entity, OWLIndividual):
+            return "Individuals" if not is_singular else "Individual"
         else:
             # NOTE: add further options in future
             pass
@@ -210,8 +213,18 @@ class Ontology:
             return self.owl_data_properties[iri]
         elif iri in self.owl_annotation_properties.keys():
             return self.owl_annotation_properties[iri]
+        elif iri in self.owl_individuals.keys():
+            return self.owl_individuals[iri]
         else:
             raise KeyError(f"Cannot retrieve unknown IRI: {iri}.")
+
+    @staticmethod
+    def get_axiom_type(axiom: OWLAxiom):
+        r"""Get the axiom type (in `str`) for the given axiom.
+
+        Check full list at: <http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/AxiomType.html>.
+        """
+        return str(axiom.getAxiomType())
 
     def get_subsumption_axioms(self, entity_type: str = "Classes"):
         """Return subsumption axioms (subject to input entity type) asserted in the ontology.
@@ -697,11 +710,11 @@ class OntologyReasoner:
                 also include the sub-classes' instances (`direct=False`). Defaults to `False`.
 
         Returns:
-            (List[OWLNamedIndividual]): A list of named individuals that are instances of `owl_class`.
+            (List[OWLIndividual]): A list of named individuals that are instances of `owl_class`.
         """
         return list(self.owl_reasoner.getInstances(owl_class, direct).getFlattened())
 
-    def check_instance(self, owl_instance: OWLNamedIndividual, owl_class: OWLClassExpression):
+    def check_instance(self, owl_instance: OWLIndividual, owl_class: OWLClassExpression):
         """Check if a named individual is an instance of an OWL class."""
         assertion_axiom = self.owl_data_factory.getOWLClassAssertionAxiom(owl_class, owl_instance)
         return self.owl_reasoner.isEntailed(assertion_axiom)
