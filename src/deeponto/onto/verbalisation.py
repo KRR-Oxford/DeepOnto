@@ -279,7 +279,7 @@ class OntologyVerbaliser:
 
         return results
 
-    def verbalise_class_subsumption_axiom(self, subsumption_axiom: OWLAxiom, keep_iri: bool = False):
+    def verbalise_class_subsumption_axiom(self, class_subsumption_axiom: OWLAxiom, keep_iri: bool = False):
         r"""Verbalise a class subsumption axiom.
 
         The subsumption axiom can have two forms:
@@ -288,23 +288,23 @@ class OntologyVerbaliser:
         - $C \sqsupseteq D$, the `SuperClassOf` axiom.
 
         Args:
-            subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.
+            class_subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.
 
         Returns:
             (Tuple[CfgNode, CfgNode]): The verbalised sub-concept and super-concept (order matters).
         """
 
         # input check
-        axiom_type = self.onto.get_axiom_type(subsumption_axiom)
+        axiom_type = self.onto.get_axiom_type(class_subsumption_axiom)
         assert axiom_type in [
             "SubClassOf",
             "SuperClassOf",
         ], f"Input axiom type `{axiom_type}` is not subsumption (`SubClassOf` or `SuperClassOf`)."
 
-        parsed_subsumption_axiom = self.parser.parse(subsumption_axiom).children[0]  # skip the root node
-        if str(subsumption_axiom).startswith("SubClassOf"):
+        parsed_subsumption_axiom = self.parser.parse(class_subsumption_axiom).children[0]  # skip the root node
+        if str(class_subsumption_axiom).startswith("SubClassOf"):
             parsed_sub_class, parsed_super_class = parsed_subsumption_axiom.children
-        elif str(subsumption_axiom).startswith("SuperClassOf"):
+        elif str(class_subsumption_axiom).startswith("SuperClassOf"):
             parsed_super_class, parsed_sub_class = parsed_subsumption_axiom.children
         else:
             raise RuntimeError(f"The input axiom is not a valid subsumption axiom.")
@@ -313,54 +313,54 @@ class OntologyVerbaliser:
         verbalised_super_class = self.verbalise_class_expression(parsed_super_class, keep_iri=keep_iri)
         return verbalised_sub_class, verbalised_super_class
 
-    def verbalise_class_equivalence_axiom(self, equivalence_axiom: OWLAxiom, keep_iri: bool = False):
+    def verbalise_class_equivalence_axiom(self, class_equivalence_axiom: OWLAxiom, keep_iri: bool = False):
         r"""Verbalise a class equivalence axiom.
 
         The equivalence axiom has the form $C \equiv D$.
 
         Args:
-            equivalence_axiom (OWLAxiom): The equivalence axiom to be verbalised.
+            class_equivalence_axiom (OWLAxiom): The equivalence axiom to be verbalised.
 
         Returns:
             (Tuple[CfgNode, CfgNode]): The verbalised concept (lhs) and its equivalent concept (rhs).
         """
 
         # input check
-        axiom_type = self.onto.get_axiom_type(equivalence_axiom)
+        axiom_type = self.onto.get_axiom_type(class_equivalence_axiom)
         assert (
             axiom_type == "EquivalentClasses"
         ), f"Input axiom type `{axiom_type}` is not equivalence (`EquivalentClasses`)."
 
-        parsed_equivalence_axiom = self.parser.parse(equivalence_axiom).children[0]  # skip the root node
+        parsed_equivalence_axiom = self.parser.parse(class_equivalence_axiom).children[0]  # skip the root node
         parsed_class_left, parsed_class_right = parsed_equivalence_axiom.children
 
         verbalised_left_class = self.verbalise_class_expression(parsed_class_left, keep_iri=keep_iri)
         verbalised_right_class = self.verbalise_class_expression(parsed_class_right, keep_iri=keep_iri)
         return verbalised_left_class, verbalised_right_class
 
-    def verbalise_class_assertion_axiom(self, class_assertion: OWLAxiom, keep_iri: bool = False):
+    def verbalise_class_assertion_axiom(self, class_assertion_axiom: OWLAxiom, keep_iri: bool = False):
         r"""Verbalise a class assertion axiom.
 
         The class assertion axiom has the form $C(x)$.
 
         Args:
-            class_assertion (OWLAxiom): The class assertion axiom to be verbalised.
+            class_assertion_axiom (OWLAxiom): The class assertion axiom to be verbalised.
 
         Returns:
             (Tuple[CfgNode, CfgNode]): The verbalised class and individual (order matters).
         """
 
         # input check
-        axiom_type = self.onto.get_axiom_type(class_assertion)
+        axiom_type = self.onto.get_axiom_type(class_assertion_axiom)
         assert (
             axiom_type == "ClassAssertion"
         ), f"Input axiom type `{axiom_type}` is not class assertion (`ClassAssertion`)."
 
-        class_expression = class_assertion.getClassExpression()
-        individual = class_assertion.getIndividual()
+        parsed_equivalence_axiom = self.parser.parse(class_assertion_axiom).children[0]  # skip the root node
+        parsed_class, parsed_individual = parsed_equivalence_axiom.children
 
-        verbalised_class = self.verbalise_class_expression(class_expression, keep_iri=keep_iri)
-        verbalised_individual = self._verbalise_iri(individual, keep_iri=keep_iri)
+        verbalised_class = self.verbalise_class_expression(parsed_class, keep_iri=keep_iri)
+        verbalised_individual = self._verbalise_iri(parsed_individual, keep_iri=keep_iri)
         return verbalised_class, verbalised_individual
 
 
