@@ -279,7 +279,7 @@ class OntologyVerbaliser:
 
         return results
 
-    def verbalise_subsumption_axiom(self, subsumption_axiom: OWLAxiom, keep_iri: bool = False):
+    def verbalise_class_subsumption_axiom(self, subsumption_axiom: OWLAxiom, keep_iri: bool = False):
         r"""Verbalise a class subsumption axiom.
 
         The subsumption axiom can have two forms:
@@ -313,7 +313,7 @@ class OntologyVerbaliser:
         verbalised_super_class = self.verbalise_class_expression(parsed_super_class, keep_iri=keep_iri)
         return verbalised_sub_class, verbalised_super_class
 
-    def verbalise_equivalence_axiom(self, equivalence_axiom: OWLAxiom, keep_iri: bool = False):
+    def verbalise_class_equivalence_axiom(self, equivalence_axiom: OWLAxiom, keep_iri: bool = False):
         r"""Verbalise a class equivalence axiom.
 
         The equivalence axiom has the form $C \equiv D$.
