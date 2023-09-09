@@ -1562,7 +1562,7 @@ can be accessed with the key <code>["verbal"]</code>.</p>
 
 
 <h3 id="deeponto.onto.verbalisation.OntologyVerbaliser.verbalise_class_subsumption_axiom" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">verbalise_class_subsumption_axiom</span><span class="p">(</span><span class="n">subsumption_axiom</span><span class="p">,</span> <span class="n">keep_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">verbalise_class_subsumption_axiom</span><span class="p">(</span><span class="n">class_subsumption_axiom</span><span class="p">,</span> <span class="n">keep_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h3>
 
@@ -1590,7 +1590,7 @@ can be accessed with the key <code>["verbal"]</code>.</p>
     </thead>
     <tbody>
         <tr>
-          <td><code>subsumption_axiom</code></td>
+          <td><code>class_subsumption_axiom</code></td>
           <td>
                 <code><span title="org.semanticweb.owlapi.model.OWLAxiom">OWLAxiom</span></code>
           </td>
@@ -1664,7 +1664,7 @@ can be accessed with the key <code>["verbal"]</code>.</p>
 <span class="normal">311</span>
 <span class="normal">312</span>
 <span class="normal">313</span>
-<span class="normal">314</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_class_subsumption_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subsumption_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">,</span> <span class="n">keep_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">314</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_class_subsumption_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_subsumption_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">,</span> <span class="n">keep_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Verbalise a class subsumption axiom.</span>
 
 <span class="sd">    The subsumption axiom can have two forms:</span>
@@ -1673,23 +1673,23 @@ can be accessed with the key <code>["verbal"]</code>.</p>
 <span class="sd">    - $C \sqsupseteq D$, the `SuperClassOf` axiom.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.</span>
+<span class="sd">        class_subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        (Tuple[CfgNode, CfgNode]): The verbalised sub-concept and super-concept (order matters).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># input check</span>
-    <span class="n">axiom_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_axiom_type</span><span class="p">(</span><span class="n">subsumption_axiom</span><span class="p">)</span>
+    <span class="n">axiom_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_axiom_type</span><span class="p">(</span><span class="n">class_subsumption_axiom</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">axiom_type</span> <span class="ow">in</span> <span class="p">[</span>
         <span class="s2">&quot;SubClassOf&quot;</span><span class="p">,</span>
         <span class="s2">&quot;SuperClassOf&quot;</span><span class="p">,</span>
     <span class="p">],</span> <span class="sa">f</span><span class="s2">&quot;Input axiom type `</span><span class="si">{</span><span class="n">axiom_type</span><span class="si">}</span><span class="s2">` is not subsumption (`SubClassOf` or `SuperClassOf`).&quot;</span>
 
-    <span class="n">parsed_subsumption_axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># skip the root node</span>
-    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SubClassOf&quot;</span><span class="p">):</span>
+    <span class="n">parsed_subsumption_axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">class_subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># skip the root node</span>
+    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">class_subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SubClassOf&quot;</span><span class="p">):</span>
         <span class="n">parsed_sub_class</span><span class="p">,</span> <span class="n">parsed_super_class</span> <span class="o">=</span> <span class="n">parsed_subsumption_axiom</span><span class="o">.</span><span class="n">children</span>
-    <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SuperClassOf&quot;</span><span class="p">):</span>
+    <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">class_subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SuperClassOf&quot;</span><span class="p">):</span>
         <span class="n">parsed_super_class</span><span class="p">,</span> <span class="n">parsed_sub_class</span> <span class="o">=</span> <span class="n">parsed_subsumption_axiom</span><span class="o">.</span><span class="n">children</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The input axiom is not a valid subsumption axiom.&quot;</span><span class="p">)</span>
@@ -1709,7 +1709,7 @@ can be accessed with the key <code>["verbal"]</code>.</p>
 
 
 <h3 id="deeponto.onto.verbalisation.OntologyVerbaliser.verbalise_class_equivalence_axiom" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">verbalise_class_equivalence_axiom</span><span class="p">(</span><span class="n">equivalence_axiom</span><span class="p">,</span> <span class="n">keep_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">verbalise_class_equivalence_axiom</span><span class="p">(</span><span class="n">class_equivalence_axiom</span><span class="p">,</span> <span class="n">keep_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h3>
 
@@ -1733,7 +1733,7 @@ can be accessed with the key <code>["verbal"]</code>.</p>
     </thead>
     <tbody>
         <tr>
-          <td><code>equivalence_axiom</code></td>
+          <td><code>class_equivalence_axiom</code></td>
           <td>
                 <code><span title="org.semanticweb.owlapi.model.OWLAxiom">OWLAxiom</span></code>
           </td>
@@ -1798,25 +1798,25 @@ can be accessed with the key <code>["verbal"]</code>.</p>
 <span class="normal">336</span>
 <span class="normal">337</span>
 <span class="normal">338</span>
-<span class="normal">339</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_class_equivalence_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">equivalence_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">,</span> <span class="n">keep_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">339</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_class_equivalence_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_equivalence_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">,</span> <span class="n">keep_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Verbalise a class equivalence axiom.</span>
 
 <span class="sd">    The equivalence axiom has the form $C \equiv D$.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        equivalence_axiom (OWLAxiom): The equivalence axiom to be verbalised.</span>
+<span class="sd">        class_equivalence_axiom (OWLAxiom): The equivalence axiom to be verbalised.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        (Tuple[CfgNode, CfgNode]): The verbalised concept (lhs) and its equivalent concept (rhs).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># input check</span>
-    <span class="n">axiom_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_axiom_type</span><span class="p">(</span><span class="n">equivalence_axiom</span><span class="p">)</span>
+    <span class="n">axiom_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_axiom_type</span><span class="p">(</span><span class="n">class_equivalence_axiom</span><span class="p">)</span>
     <span class="k">assert</span> <span class="p">(</span>
         <span class="n">axiom_type</span> <span class="o">==</span> <span class="s2">&quot;EquivalentClasses&quot;</span>
     <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Input axiom type `</span><span class="si">{</span><span class="n">axiom_type</span><span class="si">}</span><span class="s2">` is not equivalence (`EquivalentClasses`).&quot;</span>
 
-    <span class="n">parsed_equivalence_axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">equivalence_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># skip the root node</span>
+    <span class="n">parsed_equivalence_axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">class_equivalence_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># skip the root node</span>
     <span class="n">parsed_class_left</span><span class="p">,</span> <span class="n">parsed_class_right</span> <span class="o">=</span> <span class="n">parsed_equivalence_axiom</span><span class="o">.</span><span class="n">children</span>
 
     <span class="n">verbalised_left_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbalise_class_expression</span><span class="p">(</span><span class="n">parsed_class_left</span><span class="p">,</span> <span class="n">keep_iri</span><span class="o">=</span><span class="n">keep_iri</span><span class="p">)</span>
@@ -1834,7 +1834,7 @@ can be accessed with the key <code>["verbal"]</code>.</p>
 
 
 <h3 id="deeponto.onto.verbalisation.OntologyVerbaliser.verbalise_class_assertion_axiom" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">verbalise_class_assertion_axiom</span><span class="p">(</span><span class="n">class_assertion</span><span class="p">,</span> <span class="n">keep_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">verbalise_class_assertion_axiom</span><span class="p">(</span><span class="n">class_assertion_axiom</span><span class="p">,</span> <span class="n">keep_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h3>
 
@@ -1858,7 +1858,7 @@ can be accessed with the key <code>["verbal"]</code>.</p>
     </thead>
     <tbody>
         <tr>
-          <td><code>class_assertion</code></td>
+          <td><code>class_assertion_axiom</code></td>
           <td>
                 <code><span title="org.semanticweb.owlapi.model.OWLAxiom">OWLAxiom</span></code>
           </td>
@@ -1923,29 +1923,29 @@ can be accessed with the key <code>["verbal"]</code>.</p>
 <span class="normal">361</span>
 <span class="normal">362</span>
 <span class="normal">363</span>
-<span class="normal">364</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_class_assertion_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_assertion</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">,</span> <span class="n">keep_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">364</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_class_assertion_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_assertion_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">,</span> <span class="n">keep_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Verbalise a class assertion axiom.</span>
 
 <span class="sd">    The class assertion axiom has the form $C(x)$.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        class_assertion (OWLAxiom): The class assertion axiom to be verbalised.</span>
+<span class="sd">        class_assertion_axiom (OWLAxiom): The class assertion axiom to be verbalised.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        (Tuple[CfgNode, CfgNode]): The verbalised class and individual (order matters).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># input check</span>
-    <span class="n">axiom_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_axiom_type</span><span class="p">(</span><span class="n">class_assertion</span><span class="p">)</span>
+    <span class="n">axiom_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_axiom_type</span><span class="p">(</span><span class="n">class_assertion_axiom</span><span class="p">)</span>
     <span class="k">assert</span> <span class="p">(</span>
         <span class="n">axiom_type</span> <span class="o">==</span> <span class="s2">&quot;ClassAssertion&quot;</span>
     <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;Input axiom type `</span><span class="si">{</span><span class="n">axiom_type</span><span class="si">}</span><span class="s2">` is not class assertion (`ClassAssertion`).&quot;</span>
 
-    <span class="n">class_expression</span> <span class="o">=</span> <span class="n">class_assertion</span><span class="o">.</span><span class="n">getClassExpression</span><span class="p">()</span>
-    <span class="n">individual</span> <span class="o">=</span> <span class="n">class_assertion</span><span class="o">.</span><span class="n">getIndividual</span><span class="p">()</span>
+    <span class="n">parsed_equivalence_axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">class_assertion_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># skip the root node</span>
+    <span class="n">parsed_class</span><span class="p">,</span> <span class="n">parsed_individual</span> <span class="o">=</span> <span class="n">parsed_equivalence_axiom</span><span class="o">.</span><span class="n">children</span>
 
-    <span class="n">verbalised_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbalise_class_expression</span><span class="p">(</span><span class="n">class_expression</span><span class="p">,</span> <span class="n">keep_iri</span><span class="o">=</span><span class="n">keep_iri</span><span class="p">)</span>
-    <span class="n">verbalised_individual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbalise_iri</span><span class="p">(</span><span class="n">individual</span><span class="p">,</span> <span class="n">keep_iri</span><span class="o">=</span><span class="n">keep_iri</span><span class="p">)</span>
+    <span class="n">verbalised_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbalise_class_expression</span><span class="p">(</span><span class="n">parsed_class</span><span class="p">,</span> <span class="n">keep_iri</span><span class="o">=</span><span class="n">keep_iri</span><span class="p">)</span>
+    <span class="n">verbalised_individual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbalise_iri</span><span class="p">(</span><span class="n">parsed_individual</span><span class="p">,</span> <span class="n">keep_iri</span><span class="o">=</span><span class="n">keep_iri</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">verbalised_class</span><span class="p">,</span> <span class="n">verbalised_individual</span>
 </code></pre></div></td></tr></table></div>
           </details>
