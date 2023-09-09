@@ -264,6 +264,24 @@ class Ontology:
             return list(self.owl_onto.getAxioms(AxiomType.EQUIVALENT_DATA_PROPERTIES))
         else:
             raise ValueError(f"Unknown entity type {entity_type}.")
+        
+    def get_assertion_axioms(self, entity_type: str = "Classes"):
+        """Return assertion (ABox) axioms (subject to input entity type) asserted in the ontology.
+
+        Args:
+            entity_type (str, optional): The entity type to be considered. Defaults to `"Classes"`.
+                Options are `"Classes"`, `"ObjectProperties"`, and `"DataProperties"`.
+        Returns:
+            (List[OWLAxiom]): A list of assertion axioms subject to input entity type.
+        """
+        if entity_type == "Classes":
+            return list(self.owl_onto.getAxioms(AxiomType.CLASS_ASSERTION))
+        elif entity_type == "ObjectProperties":
+            return list(self.owl_onto.getAxioms(AxiomType.OBJECT_PROPERTY_ASSERTION))
+        elif entity_type == "DataProperties":
+            return list(self.owl_onto.getAxioms(AxiomType.DATA_PROPERTY_ASSERTION))
+        else:
+            raise ValueError(f"Unknown entity type {entity_type}.")
 
     def get_asserted_parents(self, owl_object: OWLObject, named_only: bool = False):
         r"""Get all the asserted parents of a given owl object.
