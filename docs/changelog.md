@@ -9,6 +9,12 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased
 
+### Added
+
+- [X] **Add** `get_axiom_type()` method at `deeponto.onto.Ontology`.
+- [X] **Add** `owl_individuals` attribute at `deeponto.onto.Ontology`.
+- [X] **Add** the verbalisation of equivalence and class assertion axioms at `deeponto.onto.OntologyVerbaliser`.
+
 ## v0.8.5 (2023 September)
 
 ### Added
