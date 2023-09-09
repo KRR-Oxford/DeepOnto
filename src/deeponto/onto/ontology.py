@@ -82,8 +82,9 @@ class Ontology:
         owl_classes (Dict[str, OWLClass]): A dictionary that stores the `(iri, ontology_class)` pairs.
         owl_object_properties (Dict[str, OWLObjectProperty]): A dictionary that stores the `(iri, ontology_object_property)` pairs.
         owl_data_properties (Dict[str, OWLDataProperty]): A dictionary that stores the `(iri, ontology_data_property)` pairs.
-        owl_data_factory (OWLDataFactory): A data factory for manipulating axioms.
         owl_annotation_properties (Dict[str, OWLAnnotationProperty]): A dictionary that stores the `(iri, ontology_annotation_property)` pairs.
+        owl_individuals (Dict[str, OWLIndividual]): A dictionary that stores the `(iri, ontology_individual)` pairs.
+        owl_data_factory (OWLDataFactory): A data factory for manipulating axioms.
         reasoner (OntologyReasoner): A reasoner for ontology inference.
     """
 
