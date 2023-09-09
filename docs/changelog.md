@@ -14,7 +14,7 @@ Security in case of vulnerabilities. -->
 - [X] **Add** `get_assertion_axioms()` method at `deeponto.onto.Ontology`.
 - [X] **Add** `get_axiom_type()` method at `deeponto.onto.Ontology`.
 - [X] **Add** `owl_individuals` attribute at `deeponto.onto.Ontology`.
-- [X] **Add** the verbalisation of equivalence and class assertion axioms at `deeponto.onto.OntologyVerbaliser`.
+- [X] **Add** the verbalisation of class subsumption, equivalence and assertion axioms at `deeponto.onto.OntologyVerbaliser`.
 
 ## v0.8.5 (2023 September)
 
