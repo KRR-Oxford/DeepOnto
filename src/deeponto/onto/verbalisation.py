@@ -338,7 +338,7 @@ class OntologyVerbaliser:
         verbalised_right_class = self.verbalise_class_expression(parsed_class_right, keep_iri=keep_iri)
         return verbalised_left_class, verbalised_right_class
 
-    def verbalise_class_assertion(self, class_assertion: OWLAxiom, keep_iri: bool = False):
+    def verbalise_class_assertion_axiom(self, class_assertion: OWLAxiom, keep_iri: bool = False):
         r"""Verbalise a class assertion axiom.
 
         The class assertion axiom has the form $C(x)$.
