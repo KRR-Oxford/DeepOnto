@@ -147,7 +147,7 @@ class OntologyVerbaliser:
         if parsed_class_expression.name.startswith("AND") or parsed_class_expression.name.startswith("OR"):
             return self._verbalise_junction(parsed_class_expression, keep_iri=keep_iri)
 
-        raise RuntimeError("Input class expression is not in one of the supported types.")
+        raise RuntimeError(f"Input class expression `{str(class_expression)}` is not in one of the supported types.")
 
     def _verbalise_iri(self, iri_node: RangeNode, keep_iri: bool = False):
         """Verbalise a (parsed) named entity (class, property, or individual) that has an IRI."""
