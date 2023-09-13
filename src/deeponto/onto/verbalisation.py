@@ -41,6 +41,45 @@ ABBREVIATION_DICT = {
 
 RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
 
+# A set of common English prepositions. You can expand or modify this list as needed.
+PREPOSITIONS = set(
+    [
+        "about",
+        "above",
+        "across",
+        "after",
+        "against",
+        "along",
+        "among",
+        "around",
+        "at",
+        "before",
+        "behind",
+        "below",
+        "beneath",
+        "beside",
+        "between",
+        "by",
+        "during",
+        "for",
+        "from",
+        "in",
+        "into",
+        "like",
+        "near",
+        "of",
+        "off",
+        "on",
+        "over",
+        "through",
+        "to",
+        "under",
+        "up",
+        "with",
+        "without",
+    ]
+)
+
 
 class OntologyVerbaliser:
     r"""A recursive natural language verbaliser for the OWL logical expressions, e.g., [`OWLAxiom`](http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html)
@@ -166,23 +205,25 @@ class OntologyVerbaliser:
         iri = iri_node.text.lstrip("<").rstrip(">")
         verbal = self.vocab[iri] if not self.keep_iri else iri_node.text
         if self.auto_correct:
-            fix = self.fix_verb if is_property else self.fix_noun
+            fix = self.fix_verb_phrase if is_property else self.fix_noun_phrase
             verbal = fix(verbal)
         return CfgNode({"verbal": verbal, "iri": iri, "type": "IRI"})
 
-    def fix_noun(self, noun: str):
+    def fix_noun_phrase(self, noun_phrase: str):
         """Rule-based auto-correction for the noun phrase."""
-        if noun.endswith("of"):
-            pass
-        return noun
+        # Rule 1. Remove the preposition word if it appears to be the last word of the noun phrase.
+        words = noun_phrase.split(" ")
+        if words[-1] in PREPOSITIONS:
+            noun_phrase = " ".join(words[:-1])
+        return noun_phrase
 
-    def fix_verb(self, verb: str):
+    def fix_verb_phrase(self, verb_phrase: str):
         """Rule-based auto-correction for the verb phrase."""
-        doc = self.nlp(verb)
+        doc = self.nlp(verb_phrase)
         # Rule 1. Add "is" if the object property starts with a NOUN, ADJ, or passive VERB
         if doc[0].pos_ == "NOUN" or doc[0].pos_ == "ADJ" or (doc[0].pos_ == "VERB" and doc[0].text.endswith("ed")):
-            verb = "is " + verb
-        return verb
+            verb_phrase = "is " + verb_phrase
+        return verb_phrase
 
     def _verbalise_restriction(self, restriction_node: RangeNode, add_something: bool = True):
         """Verbalise a (parsed) class expression in the form of existential or universal restriction."""
