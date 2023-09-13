@@ -110,18 +110,18 @@ class OntologyVerbaliser:
         parser (OntologySyntaxParser): A syntax parser for the string representation of an `OWLObject`.
         vocab (Dict[str, List[str]]): A dictionary with `(entity_iri, entity_name)` pairs, by default
             the names are retrieved from $\texttt{rdfs:label}$.
-        apply_lowercasing_to_vocab (bool): Whether to apply lowercasing to the entity names.
+        apply_lowercasing (bool): Whether to apply lowercasing to the entity names.
         keep_iri (bool): Whether to keep the IRIs of entities without verbalising them using `self.vocab`.
-        auto_correct (bool): Whether to automatically apply rule-based auto-correction to entity names.
+        apply_auto_correction (bool): Whether to automatically apply rule-based auto-correction to entity names.
         add_quantifier_word (bool): Whether to add quantifier words ("some"/"only") as in the Manchester syntax.
     """
 
     def __init__(
         self,
         onto: Ontology,
-        apply_lowercasing_to_vocab: bool = False,
+        apply_lowercasing: bool = False,
         keep_iri: bool = False,
-        auto_correct: bool = False,
+        apply_auto_correction: bool = False,
         add_quantifier_word: bool = False,
     ):
         self.onto = onto
@@ -137,7 +137,7 @@ class OntologyVerbaliser:
         self.nlp = spacy.load("en_core_web_sm")
 
         # build the default vocabulary for entities
-        self.apply_lowercasing_to_vocab = apply_lowercasing_to_vocab
+        self.apply_lowercasing_to_vocab = apply_lowercasing
         self.vocab = dict()
         for entity_type in ["Classes", "ObjectProperties", "DataProperties", "Individuals"]:
             entity_annotations, _ = self.onto.build_annotation_index(
@@ -148,7 +148,7 @@ class OntologyVerbaliser:
         self.vocab = {k: literal_or_iri(k, v) for k, v in self.vocab.items()}  # only set one name for each entity
 
         self.keep_iri = keep_iri
-        self.auto_correct = auto_correct
+        self.apply_auto_correction = apply_auto_correction
         self.add_quantifier_word = add_quantifier_word
 
     def update_entity_name(self, entity_iri: str, entity_name: str):
@@ -204,7 +204,7 @@ class OntologyVerbaliser:
         """Verbalise a (parsed) named entity (class, property, or individual) that has an IRI."""
         iri = iri_node.text.lstrip("<").rstrip(">")
         verbal = self.vocab[iri] if not self.keep_iri else iri_node.text
-        if self.auto_correct:
+        if self.apply_auto_correction:
             fix = self.fix_verb_phrase if is_property else self.fix_noun_phrase
             verbal = fix(verbal)
         return CfgNode({"verbal": verbal, "iri": iri, "type": "IRI"})
