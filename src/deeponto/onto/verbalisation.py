@@ -74,7 +74,7 @@ class OntologyVerbaliser:
         apply_lowercasing_to_vocab (bool): Whether to apply lowercasing to the entity names.
         keep_iri (bool): Whether to keep the IRIs of entities without verbalising them using `self.vocab`.
         auto_correct (bool): Whether to automatically apply rule-based auto-correction to entity names.
-        add_quantifier_words (bool): Whether to add quantifier words ("some"/"only") as in the Manchester syntax.
+        add_quantifier_word (bool): Whether to add quantifier words ("some"/"only") as in the Manchester syntax.
     """
 
     def __init__(
@@ -83,7 +83,7 @@ class OntologyVerbaliser:
         apply_lowercasing_to_vocab: bool = False,
         keep_iri: bool = False,
         auto_correct: bool = False,
-        add_quantifier_words: bool = False,
+        add_quantifier_word: bool = False,
     ):
         self.onto = onto
         self.parser = OntologySyntaxParser()
@@ -110,7 +110,7 @@ class OntologyVerbaliser:
 
         self.keep_iri = keep_iri
         self.auto_correct = auto_correct
-        self.add_quantifier_words = add_quantifier_words
+        self.add_quantifier_word = add_quantifier_word
 
     def update_entity_name(self, entity_iri: str, entity_name: str):
         """Update the name of an entity in `self.vocab`.

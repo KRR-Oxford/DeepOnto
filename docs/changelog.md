@@ -18,7 +18,7 @@ Security in case of vulnerabilities. -->
   - [ ] `verbalise_relation_assertion()` for relation assertion axioms;
   - [ ] `auto-correction` option for fixing entity names.
   - [ ] `keep_iri` option for keeping entity IRIs.
-  - [ ] `add_quantifier_words` option for adding quantifier words as in the Manchester syntax.  
+  - [ ] `add_quantifier_word` option for adding quantifier words as in the Manchester syntax.  
 
 - [X] **Add** `get_assertion_axioms()` method at `deeponto.onto.Ontology`.
 - [X] **Add** `get_axiom_type()` method at `deeponto.onto.Ontology`.
