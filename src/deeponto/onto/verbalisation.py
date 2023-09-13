@@ -71,9 +71,20 @@ class OntologyVerbaliser:
         parser (OntologySyntaxParser): A syntax parser for the string representation of an `OWLObject`.
         vocab (Dict[str, List[str]]): A dictionary with `(entity_iri, entity_name)` pairs, by default
             the names are retrieved from $\texttt{rdfs:label}$.
+        apply_lowercasing_to_vocab (bool): Whether to apply lowercasing to the entity names.
+        keep_iri (bool): Whether to keep the IRIs of entities without verbalising them using `self.vocab`.
+        auto_correct (bool): Whether to automatically apply rule-based auto-correction to entity names.
+        add_quantifier_words (bool): Whether to add quantifier words ("some"/"only") as in the Manchester syntax.
     """
 
-    def __init__(self, onto: Ontology, apply_lowercasing_to_vocab: bool = False):
+    def __init__(
+        self,
+        onto: Ontology,
+        apply_lowercasing_to_vocab: bool = False,
+        keep_iri: bool = False,
+        auto_correct: bool = False,
+        add_quantifier_words: bool = False,
+    ):
         self.onto = onto
         self.parser = OntologySyntaxParser()
 
@@ -97,6 +108,10 @@ class OntologyVerbaliser:
         literal_or_iri = lambda k, v: list(v)[0] if v else k  # set vocab to IRI if no string available
         self.vocab = {k: literal_or_iri(k, v) for k, v in self.vocab.items()}  # only set one name for each entity
 
+        self.keep_iri = keep_iri
+        self.auto_correct = auto_correct
+        self.add_quantifier_words = add_quantifier_words
+
     def update_entity_name(self, entity_iri: str, entity_name: str):
         """Update the name of an entity in `self.vocab`.
 
@@ -105,12 +120,7 @@ class OntologyVerbaliser:
         """
         self.vocab[entity_iri] = entity_name
 
-    def verbalise_class_expression(
-        self,
-        class_expression: Union[OWLClassExpression, str, RangeNode],
-        keep_iri: bool = False,
-        auto_correct: bool = False,
-    ):
+    def verbalise_class_expression(self, class_expression: Union[OWLClassExpression, str, RangeNode]):
         r"""Verbalise a class expression (`OWLClassExpression`) or its parsed form (in `RangeNode`).
 
         See currently supported types of class (or concept) expressions [here][deeponto.onto.verbalisation.OntologyVerbaliser].
@@ -118,8 +128,6 @@ class OntologyVerbaliser:
 
         Args:
             class_expression (Union[OWLClassExpression, str, RangeNode]): A class expression to be verbalised.
-            keep_iri (bool): Whether to keep the IRIs of entities without verbalising them using `self.vocab`.
-            auto_correct (bool): Whether to automatically apply rule-based auto-correction to entity names.
 
         Raises:
             RuntimeError: Occurs when the class expression is not in one of the supported types.
@@ -136,30 +144,28 @@ class OntologyVerbaliser:
 
         # for a singleton IRI
         if parsed_class_expression.is_iri:
-            return self._verbalise_iri(parsed_class_expression, keep_iri=keep_iri, auto_correct=auto_correct)
+            return self._verbalise_iri(parsed_class_expression)
 
         if parsed_class_expression.name.startswith("NEG"):
             # negation only has one child
-            cl = self.verbalise_class_expression(parsed_class_expression.children[0], keep_iri=keep_iri)
+            cl = self.verbalise_class_expression(parsed_class_expression.children[0])
             return CfgNode({"verbal": "not " + cl.verbal, "class": cl, "type": "NEG"})
 
         # for existential and universal restrictions
         if parsed_class_expression.name.startswith("EX.") or parsed_class_expression.name.startswith("ALL"):
-            return self._verbalise_restriction(parsed_class_expression, keep_iri=keep_iri)
+            return self._verbalise_restriction(parsed_class_expression)
 
         # for conjunction and disjunction
         if parsed_class_expression.name.startswith("AND") or parsed_class_expression.name.startswith("OR"):
-            return self._verbalise_junction(parsed_class_expression, keep_iri=keep_iri)
+            return self._verbalise_junction(parsed_class_expression)
 
         raise RuntimeError(f"Input class expression `{str(class_expression)}` is not in one of the supported types.")
 
-    def _verbalise_iri(
-        self, iri_node: RangeNode, keep_iri: bool = False, auto_correct: bool = False, is_property: bool = False
-    ):
+    def _verbalise_iri(self, iri_node: RangeNode, is_property: bool = False):
         """Verbalise a (parsed) named entity (class, property, or individual) that has an IRI."""
         iri = iri_node.text.lstrip("<").rstrip(">")
-        verbal = self.vocab[iri] if not keep_iri else iri_node.text
-        if auto_correct:
+        verbal = self.vocab[iri] if not self.keep_iri else iri_node.text
+        if self.auto_correct:
             fix = self.fix_verb if is_property else self.fix_noun
             verbal = fix(verbal)
         return CfgNode({"verbal": verbal, "iri": iri, "type": "IRI"})
@@ -178,13 +184,7 @@ class OntologyVerbaliser:
             verb = "is " + verb
         return verb
 
-    def _verbalise_restriction(
-        self,
-        restriction_node: RangeNode,
-        add_something: bool = True,
-        add_quantifier_word: bool = False,
-        keep_iri: bool = False,
-    ):
+    def _verbalise_restriction(self, restriction_node: RangeNode, add_something: bool = True):
         """Verbalise a (parsed) class expression in the form of existential or universal restriction."""
 
         try:
@@ -197,20 +197,13 @@ class OntologyVerbaliser:
 
         object_property = restriction_node.children[0]
         assert object_property.is_iri
-        object_property = self._verbalise_iri(object_property, keep_iri=keep_iri, is_property=True)
-
-        # # NOTE modify the object property's verbalisation with rules
-        # if not keep_iri:
-        #     doc = self.nlp(object_property.verbal)
-        #     # Rule 1. Add "is" if the object property starts with a NOUN, ADJ, or passive VERB
-        #     if doc[0].pos_ == "NOUN" or doc[0].pos_ == "ADJ" or (doc[0].pos_ == "VERB" and doc[0].text.endswith("ed")):
-        #         object_property.verbal = "is " + object_property.verbal
+        object_property = self._verbalise_iri(object_property, is_property=True)
 
         class_expression = restriction_node.children[1]
-        class_expression = self.verbalise_class_expression(class_expression.text, keep_iri=keep_iri)
+        class_expression = self.verbalise_class_expression(class_expression.text)
 
         # adding quantifier word or not
-        if add_quantifier_word:
+        if self.add_quantifier_word:
             verbal = f"{object_property.verbal} {quantifier_word} {class_expression.verbal}"
         else:
             verbal = f"{object_property.verbal} {class_expression.verbal}"
@@ -228,7 +221,7 @@ class OntologyVerbaliser:
             }
         )
 
-    def _verbalise_junction(self, junction_node: RangeNode, keep_iri: bool = False):
+    def _verbalise_junction(self, junction_node: RangeNode):
         """Verbalise a (parsed) class expression in the form of conjunction or disjunction."""
 
         try:
@@ -244,13 +237,13 @@ class OntologyVerbaliser:
         other_children = []
         for child in junction_node.children:
             if child.name.startswith("EX."):
-                child = self._verbalise_restriction(child, add_something=False, keep_iri=keep_iri)
+                child = self._verbalise_restriction(child, add_something=False)
                 existential_restriction_children[child.property.verbal].append(child)
             elif child.name.startswith("ALL"):
-                child = self._verbalise_restriction(child, add_something=False, keep_iri=keep_iri)
+                child = self._verbalise_restriction(child, add_something=False)
                 universal_restriction_children[child.property.verbal].append(child)
             else:
-                other_children.append(self.verbalise_class_expression(child, keep_iri=keep_iri))
+                other_children.append(self.verbalise_class_expression(child))
 
         merged_children = []
         for v in list(existential_restriction_children.values()) + list(universal_restriction_children.values()):
@@ -302,9 +295,7 @@ class OntologyVerbaliser:
 
         return results
 
-    def verbalise_class_subsumption_axiom(
-        self, class_subsumption_axiom: OWLAxiom, keep_iri: bool = False, auto_correct: bool = False
-    ):
+    def verbalise_class_subsumption_axiom(self, class_subsumption_axiom: OWLAxiom):
         r"""Verbalise a class subsumption axiom.
 
         The subsumption axiom can have two forms:
@@ -314,8 +305,6 @@ class OntologyVerbaliser:
 
         Args:
             class_subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.
-            keep_iri (bool): Whether to keep the IRIs of entities without verbalising them using `self.vocab`.
-            auto_correct (bool): Whether to automatically apply rule-based auto-correction to entity names.
 
         Returns:
             (Tuple[CfgNode, CfgNode]): The verbalised sub-concept and super-concept (order matters).
@@ -334,25 +323,17 @@ class OntologyVerbaliser:
         elif str(class_subsumption_axiom).startswith("SuperClassOf"):
             parsed_super_class, parsed_sub_class = parsed_subsumption_axiom.children
 
-        verbalised_sub_class = self.verbalise_class_expression(
-            parsed_sub_class, keep_iri=keep_iri, auto_correct=auto_correct
-        )
-        verbalised_super_class = self.verbalise_class_expression(
-            parsed_super_class, keep_iri=keep_iri, auto_correct=auto_correct
-        )
+        verbalised_sub_class = self.verbalise_class_expression(parsed_sub_class)
+        verbalised_super_class = self.verbalise_class_expression(parsed_super_class)
         return verbalised_sub_class, verbalised_super_class
 
-    def verbalise_class_equivalence_axiom(
-        self, class_equivalence_axiom: OWLAxiom, keep_iri: bool = False, auto_correct: bool = False
-    ):
+    def verbalise_class_equivalence_axiom(self, class_equivalence_axiom: OWLAxiom):
         r"""Verbalise a class equivalence axiom.
 
         The equivalence axiom has the form $C \equiv D$.
 
         Args:
             class_equivalence_axiom (OWLAxiom): The equivalence axiom to be verbalised.
-            keep_iri (bool): Whether to keep the IRIs of entities without verbalising them using `self.vocab`.
-            auto_correct (bool): Whether to automatically apply rule-based auto-correction to entity names.
 
         Returns:
             (Tuple[CfgNode, CfgNode]): The verbalised concept (lhs) and its equivalent concept (rhs).
@@ -367,25 +348,17 @@ class OntologyVerbaliser:
         parsed_equivalence_axiom = self.parser.parse(class_equivalence_axiom).children[0]  # skip the root node
         parsed_class_left, parsed_class_right = parsed_equivalence_axiom.children
 
-        verbalised_left_class = self.verbalise_class_expression(
-            parsed_class_left, keep_iri=keep_iri, auto_correct=auto_correct
-        )
-        verbalised_right_class = self.verbalise_class_expression(
-            parsed_class_right, keep_iri=keep_iri, auto_correct=auto_correct
-        )
+        verbalised_left_class = self.verbalise_class_expression(parsed_class_left)
+        verbalised_right_class = self.verbalise_class_expression(parsed_class_right)
         return verbalised_left_class, verbalised_right_class
 
-    def verbalise_class_assertion_axiom(
-        self, class_assertion_axiom: OWLAxiom, keep_iri: bool = False, auto_correct: bool = False
-    ):
+    def verbalise_class_assertion_axiom(self, class_assertion_axiom: OWLAxiom):
         r"""Verbalise a class assertion axiom.
 
         The class assertion axiom has the form $C(x)$.
 
         Args:
             class_assertion_axiom (OWLAxiom): The class assertion axiom to be verbalised.
-            keep_iri (bool): Whether to keep the IRIs of entities without verbalising them using `self.vocab`.
-            auto_correct (bool): Whether to automatically apply rule-based auto-correction to entity names.
 
         Returns:
             (Tuple[CfgNode, CfgNode]): The verbalised class and individual (order matters).
@@ -400,8 +373,8 @@ class OntologyVerbaliser:
         parsed_equivalence_axiom = self.parser.parse(class_assertion_axiom).children[0]  # skip the root node
         parsed_class, parsed_individual = parsed_equivalence_axiom.children
 
-        verbalised_class = self.verbalise_class_expression(parsed_class, keep_iri=keep_iri, auto_correct=auto_correct)
-        verbalised_individual = self._verbalise_iri(parsed_individual, keep_iri=keep_iri, auto_correct=auto_correct)
+        verbalised_class = self.verbalise_class_expression(parsed_class)
+        verbalised_individual = self._verbalise_iri(parsed_individual)
         return verbalised_class, verbalised_individual
 
 
