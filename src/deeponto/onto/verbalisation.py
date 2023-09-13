@@ -106,7 +106,10 @@ class OntologyVerbaliser:
         self.vocab[entity_iri] = entity_name
 
     def verbalise_class_expression(
-        self, class_expression: Union[OWLClassExpression, str, RangeNode], keep_iri: bool = False
+        self,
+        class_expression: Union[OWLClassExpression, str, RangeNode],
+        keep_iri: bool = False,
+        auto_correct: bool = False,
     ):
         r"""Verbalise a class expression (`OWLClassExpression`) or its parsed form (in `RangeNode`).
 
@@ -116,6 +119,7 @@ class OntologyVerbaliser:
         Args:
             class_expression (Union[OWLClassExpression, str, RangeNode]): A class expression to be verbalised.
             keep_iri (bool): Whether to keep the IRIs of entities without verbalising them using `self.vocab`.
+            auto_correct (bool): Whether to automatically apply rule-based auto-correction to entity names.
 
         Raises:
             RuntimeError: Occurs when the class expression is not in one of the supported types.
@@ -132,7 +136,7 @@ class OntologyVerbaliser:
 
         # for a singleton IRI
         if parsed_class_expression.is_iri:
-            return self._verbalise_iri(parsed_class_expression, keep_iri=keep_iri)
+            return self._verbalise_iri(parsed_class_expression, keep_iri=keep_iri, auto_correct=auto_correct)
 
         if parsed_class_expression.name.startswith("NEG"):
             # negation only has one child
@@ -149,11 +153,28 @@ class OntologyVerbaliser:
 
         raise RuntimeError(f"Input class expression `{str(class_expression)}` is not in one of the supported types.")
 
-    def _verbalise_iri(self, iri_node: RangeNode, keep_iri: bool = False):
+    def _verbalise_iri(
+        self, iri_node: RangeNode, keep_iri: bool = False, auto_correct: bool = False, is_property: bool = False
+    ):
         """Verbalise a (parsed) named entity (class, property, or individual) that has an IRI."""
         iri = iri_node.text.lstrip("<").rstrip(">")
         verbal = self.vocab[iri] if not keep_iri else iri_node.text
+        if auto_correct:
+            fix = self._fix_verb if is_property else self._fix_noun
+            verbal = fix(verbal)
         return CfgNode({"verbal": verbal, "iri": iri, "type": "IRI"})
+
+    def _fix_noun(self, noun: str):
+        """Rule-based auto-correction for the noun phrase."""
+        return noun
+
+    def _fix_verb(self, verb: str):
+        """Rule-based auto-correction for the verb phrase."""
+        doc = self.nlp(verb)
+        # Rule 1. Add "is" if the object property starts with a NOUN, ADJ, or passive VERB
+        if doc[0].pos_ == "NOUN" or doc[0].pos_ == "ADJ" or (doc[0].pos_ == "VERB" and doc[0].text.endswith("ed")):
+            verb = "is " + verb
+        return verb
 
     def _verbalise_restriction(
         self,
@@ -174,14 +195,14 @@ class OntologyVerbaliser:
 
         object_property = restriction_node.children[0]
         assert object_property.is_iri
-        object_property = self._verbalise_iri(object_property, keep_iri=keep_iri)
+        object_property = self._verbalise_iri(object_property, keep_iri=keep_iri, is_property=True)
 
-        # NOTE modify the object property's verbalisation with rules
-        if not keep_iri:
-            doc = self.nlp(object_property.verbal)
-            # Rule 1. Add "is" if the object property starts with a NOUN, ADJ, or passive VERB
-            if doc[0].pos_ == "NOUN" or doc[0].pos_ == "ADJ" or (doc[0].pos_ == "VERB" and doc[0].text.endswith("ed")):
-                object_property.verbal = "is " + object_property.verbal
+        # # NOTE modify the object property's verbalisation with rules
+        # if not keep_iri:
+        #     doc = self.nlp(object_property.verbal)
+        #     # Rule 1. Add "is" if the object property starts with a NOUN, ADJ, or passive VERB
+        #     if doc[0].pos_ == "NOUN" or doc[0].pos_ == "ADJ" or (doc[0].pos_ == "VERB" and doc[0].text.endswith("ed")):
+        #         object_property.verbal = "is " + object_property.verbal
 
         class_expression = restriction_node.children[1]
         class_expression = self.verbalise_class_expression(class_expression.text, keep_iri=keep_iri)
@@ -306,8 +327,6 @@ class OntologyVerbaliser:
             parsed_sub_class, parsed_super_class = parsed_subsumption_axiom.children
         elif str(class_subsumption_axiom).startswith("SuperClassOf"):
             parsed_super_class, parsed_sub_class = parsed_subsumption_axiom.children
-        else:
-            raise RuntimeError(f"The input axiom is not a valid subsumption axiom.")
 
         verbalised_sub_class = self.verbalise_class_expression(parsed_sub_class, keep_iri=keep_iri)
         verbalised_super_class = self.verbalise_class_expression(parsed_super_class, keep_iri=keep_iri)
