@@ -160,15 +160,17 @@ class OntologyVerbaliser:
         iri = iri_node.text.lstrip("<").rstrip(">")
         verbal = self.vocab[iri] if not keep_iri else iri_node.text
         if auto_correct:
-            fix = self._fix_verb if is_property else self._fix_noun
+            fix = self.fix_verb if is_property else self.fix_noun
             verbal = fix(verbal)
         return CfgNode({"verbal": verbal, "iri": iri, "type": "IRI"})
 
-    def _fix_noun(self, noun: str):
+    def fix_noun(self, noun: str):
         """Rule-based auto-correction for the noun phrase."""
+        if noun.endswith("of"):
+            pass
         return noun
 
-    def _fix_verb(self, verb: str):
+    def fix_verb(self, verb: str):
         """Rule-based auto-correction for the verb phrase."""
         doc = self.nlp(verb)
         # Rule 1. Add "is" if the object property starts with a NOUN, ADJ, or passive VERB
@@ -300,7 +302,9 @@ class OntologyVerbaliser:
 
         return results
 
-    def verbalise_class_subsumption_axiom(self, class_subsumption_axiom: OWLAxiom, keep_iri: bool = False):
+    def verbalise_class_subsumption_axiom(
+        self, class_subsumption_axiom: OWLAxiom, keep_iri: bool = False, auto_correct: bool = False
+    ):
         r"""Verbalise a class subsumption axiom.
 
         The subsumption axiom can have two forms:
@@ -310,6 +314,8 @@ class OntologyVerbaliser:
 
         Args:
             class_subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.
+            keep_iri (bool): Whether to keep the IRIs of entities without verbalising them using `self.vocab`.
+            auto_correct (bool): Whether to automatically apply rule-based auto-correction to entity names.
 
         Returns:
             (Tuple[CfgNode, CfgNode]): The verbalised sub-concept and super-concept (order matters).
@@ -328,17 +334,25 @@ class OntologyVerbaliser:
         elif str(class_subsumption_axiom).startswith("SuperClassOf"):
             parsed_super_class, parsed_sub_class = parsed_subsumption_axiom.children
 
-        verbalised_sub_class = self.verbalise_class_expression(parsed_sub_class, keep_iri=keep_iri)
-        verbalised_super_class = self.verbalise_class_expression(parsed_super_class, keep_iri=keep_iri)
+        verbalised_sub_class = self.verbalise_class_expression(
+            parsed_sub_class, keep_iri=keep_iri, auto_correct=auto_correct
+        )
+        verbalised_super_class = self.verbalise_class_expression(
+            parsed_super_class, keep_iri=keep_iri, auto_correct=auto_correct
+        )
         return verbalised_sub_class, verbalised_super_class
 
-    def verbalise_class_equivalence_axiom(self, class_equivalence_axiom: OWLAxiom, keep_iri: bool = False):
+    def verbalise_class_equivalence_axiom(
+        self, class_equivalence_axiom: OWLAxiom, keep_iri: bool = False, auto_correct: bool = False
+    ):
         r"""Verbalise a class equivalence axiom.
 
         The equivalence axiom has the form $C \equiv D$.
 
         Args:
             class_equivalence_axiom (OWLAxiom): The equivalence axiom to be verbalised.
+            keep_iri (bool): Whether to keep the IRIs of entities without verbalising them using `self.vocab`.
+            auto_correct (bool): Whether to automatically apply rule-based auto-correction to entity names.
 
         Returns:
             (Tuple[CfgNode, CfgNode]): The verbalised concept (lhs) and its equivalent concept (rhs).
@@ -353,17 +367,25 @@ class OntologyVerbaliser:
         parsed_equivalence_axiom = self.parser.parse(class_equivalence_axiom).children[0]  # skip the root node
         parsed_class_left, parsed_class_right = parsed_equivalence_axiom.children
 
-        verbalised_left_class = self.verbalise_class_expression(parsed_class_left, keep_iri=keep_iri)
-        verbalised_right_class = self.verbalise_class_expression(parsed_class_right, keep_iri=keep_iri)
+        verbalised_left_class = self.verbalise_class_expression(
+            parsed_class_left, keep_iri=keep_iri, auto_correct=auto_correct
+        )
+        verbalised_right_class = self.verbalise_class_expression(
+            parsed_class_right, keep_iri=keep_iri, auto_correct=auto_correct
+        )
         return verbalised_left_class, verbalised_right_class
 
-    def verbalise_class_assertion_axiom(self, class_assertion_axiom: OWLAxiom, keep_iri: bool = False):
+    def verbalise_class_assertion_axiom(
+        self, class_assertion_axiom: OWLAxiom, keep_iri: bool = False, auto_correct: bool = False
+    ):
         r"""Verbalise a class assertion axiom.
 
         The class assertion axiom has the form $C(x)$.
 
         Args:
             class_assertion_axiom (OWLAxiom): The class assertion axiom to be verbalised.
+            keep_iri (bool): Whether to keep the IRIs of entities without verbalising them using `self.vocab`.
+            auto_correct (bool): Whether to automatically apply rule-based auto-correction to entity names.
 
         Returns:
             (Tuple[CfgNode, CfgNode]): The verbalised class and individual (order matters).
@@ -378,8 +400,8 @@ class OntologyVerbaliser:
         parsed_equivalence_axiom = self.parser.parse(class_assertion_axiom).children[0]  # skip the root node
         parsed_class, parsed_individual = parsed_equivalence_axiom.children
 
-        verbalised_class = self.verbalise_class_expression(parsed_class, keep_iri=keep_iri)
-        verbalised_individual = self._verbalise_iri(parsed_individual, keep_iri=keep_iri)
+        verbalised_class = self.verbalise_class_expression(parsed_class, keep_iri=keep_iri, auto_correct=auto_correct)
+        verbalised_individual = self._verbalise_iri(parsed_individual, keep_iri=keep_iri, auto_correct=auto_correct)
         return verbalised_class, verbalised_individual
 
 
