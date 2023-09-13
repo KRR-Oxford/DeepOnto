@@ -11,10 +11,17 @@ Security in case of vulnerabilities. -->
 
 ### Added
 
+- [X] **Add** new features into `deeponto.onto.OntologyVerbaliser` including:
+  - [X] `verbalise_class_subsumption()` for class subsumption axioms;
+  - [X] `verbalise_class_equivalence()` for class equivalence axioms;
+  - [X] `verbalise_class_assertion()` for class assertion axioms;
+  - [ ] `verbalise_relation_assertion()` for relation assertion axioms;
+  - [ ] auto-correction option for fixing entity names.
+
 - [X] **Add** `get_assertion_axioms()` method at `deeponto.onto.Ontology`.
 - [X] **Add** `get_axiom_type()` method at `deeponto.onto.Ontology`.
 - [X] **Add** `owl_individuals` attribute at `deeponto.onto.Ontology`.
-- [X] **Add** the verbalisation of class subsumption, equivalence and assertion axioms at `deeponto.onto.OntologyVerbaliser`.
+
 
 ## v0.8.5 (2023 September)
 
