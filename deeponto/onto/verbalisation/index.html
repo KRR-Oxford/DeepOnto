@@ -1507,8 +1507,8 @@ function before applying verbalisation.</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>A nested dictionary that presents the details of verbalisation. The verbalised string
-can be accessed with the key <code>["verbal"]</code>.</p>
+              <p>A nested dictionary that presents the recursive results of verbalisation. The verbalised string
+can be accessed with the key <code>["verbal"]</code> or with the attribute <code>.verbal</code>.</p>
             </div>
           </td>
         </tr>
@@ -1569,8 +1569,8 @@ can be accessed with the key <code>["verbal"]</code>.</p>
 <span class="sd">        RuntimeError: Occurs when the class expression is not in one of the supported types.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        (CfgNode): A nested dictionary that presents the details of verbalisation. The verbalised string</span>
-<span class="sd">            can be accessed with the key `[&quot;verbal&quot;]`.</span>
+<span class="sd">        (CfgNode): A nested dictionary that presents the recursive results of verbalisation. The verbalised string</span>
+<span class="sd">            can be accessed with the key `[&quot;verbal&quot;]` or with the attribute `.verbal`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">class_expression</span><span class="p">,</span> <span class="n">RangeNode</span><span class="p">):</span>
@@ -1618,8 +1618,8 @@ can be accessed with the key <code>["verbal"]</code>.</p>
       <p>Verbalise a class subsumption axiom.</p>
 <p>The subsumption axiom can have two forms:</p>
 <ul>
-<li><span class="arithmatex">\(C \sqsubseteq D\)</span>, the <code>SubClassOf</code> axiom;</li>
-<li><span class="arithmatex">\(C \sqsupseteq D\)</span>, the <code>SuperClassOf</code> axiom.</li>
+<li><span class="arithmatex">\(C_{sub} \sqsubseteq C_{super}\)</span>, the <code>SubClassOf</code> axiom;</li>
+<li><span class="arithmatex">\(C_{super} \sqsupseteq C_{sub}\)</span>, the <code>SuperClassOf</code> axiom.</li>
 </ul>
 
 
@@ -1669,7 +1669,7 @@ can be accessed with the key <code>["verbal"]</code>.</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>The verbalised sub-concept and super-concept (order matters).</p>
+              <p>The verbalised sub-concept <span class="arithmatex">\(\mathcal{V}(C_{sub})\)</span> and super-concept <span class="arithmatex">\(\mathcal{V}(C_{super})\)</span> (order matters).</p>
             </div>
           </td>
         </tr>
@@ -1713,14 +1713,14 @@ can be accessed with the key <code>["verbal"]</code>.</p>
 
 <span class="sd">    The subsumption axiom can have two forms:</span>
 
-<span class="sd">    - $C \sqsubseteq D$, the `SubClassOf` axiom;</span>
-<span class="sd">    - $C \sqsupseteq D$, the `SuperClassOf` axiom.</span>
+<span class="sd">    - $C_{sub} \sqsubseteq C_{super}$, the `SubClassOf` axiom;</span>
+<span class="sd">    - $C_{super} \sqsupseteq C_{sub}$, the `SuperClassOf` axiom.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        class_subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        (Tuple[CfgNode, CfgNode]): The verbalised sub-concept and super-concept (order matters).</span>
+<span class="sd">        (Tuple[CfgNode, CfgNode]): The verbalised sub-concept $\mathcal{V}(C_{sub})$ and super-concept $\mathcal{V}(C_{super})$ (order matters).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># input check</span>
@@ -1808,7 +1808,7 @@ can be accessed with the key <code>["verbal"]</code>.</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>The verbalised concept (lhs) and its equivalent concept (rhs).</p>
+              <p>The verbalised concept <span class="arithmatex">\(\mathcal{V}(C})\)</span> and its equivalent concept <span class="arithmatex">\(\mathcal{V}(D)\)</span> (order matters).</p>
             </div>
           </td>
         </tr>
@@ -1849,7 +1849,7 @@ can be accessed with the key <code>["verbal"]</code>.</p>
 <span class="sd">        class_equivalence_axiom (OWLAxiom): The equivalence axiom to be verbalised.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        (Tuple[CfgNode, CfgNode]): The verbalised concept (lhs) and its equivalent concept (rhs).</span>
+<span class="sd">        (Tuple[CfgNode, CfgNode]): The verbalised concept $\mathcal{V}(C})$ and its equivalent concept $\mathcal{V}(D)$ (order matters).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># input check</span>
@@ -1933,7 +1933,7 @@ can be accessed with the key <code>["verbal"]</code>.</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>The verbalised class and individual (order matters).</p>
+              <p>The verbalised class <span class="arithmatex">\(\mathcal{V}(C})\)</span> and individual <span class="arithmatex">\(\mathcal{V}(x})\)</span> (order matters).</p>
             </div>
           </td>
         </tr>
@@ -1974,7 +1974,7 @@ can be accessed with the key <code>["verbal"]</code>.</p>
 <span class="sd">        class_assertion_axiom (OWLAxiom): The class assertion axiom to be verbalised.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        (Tuple[CfgNode, CfgNode]): The verbalised class and individual (order matters).</span>
+<span class="sd">        (Tuple[CfgNode, CfgNode]): The verbalised class $\mathcal{V}(C})$ and individual $\mathcal{V}(x})$ (order matters).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># input check</span>
