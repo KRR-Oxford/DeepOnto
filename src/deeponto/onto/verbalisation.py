@@ -377,7 +377,7 @@ class OntologyVerbaliser:
             class_equivalence_axiom (OWLAxiom): The equivalence axiom to be verbalised.
 
         Returns:
-            (Tuple[CfgNode, CfgNode]): The verbalised concept $\mathcal{V}(C})$ and its equivalent concept $\mathcal{V}(D)$ (order matters).
+            (Tuple[CfgNode, CfgNode]): The verbalised concept $\mathcal{V}(C)$ and its equivalent concept $\mathcal{V}(D)$ (order matters).
         """
 
         # input check
@@ -402,7 +402,7 @@ class OntologyVerbaliser:
             class_assertion_axiom (OWLAxiom): The class assertion axiom to be verbalised.
 
         Returns:
-            (Tuple[CfgNode, CfgNode]): The verbalised class $\mathcal{V}(C})$ and individual $\mathcal{V}(x})$ (order matters).
+            (Tuple[CfgNode, CfgNode]): The verbalised class $\mathcal{V}(C)$ and individual $\mathcal{V}(x)$ (order matters).
         """
 
         # input check
