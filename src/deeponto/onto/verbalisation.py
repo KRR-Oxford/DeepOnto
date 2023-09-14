@@ -172,8 +172,8 @@ class OntologyVerbaliser:
             RuntimeError: Occurs when the class expression is not in one of the supported types.
 
         Returns:
-            (CfgNode): A nested dictionary that presents the details of verbalisation. The verbalised string
-                can be accessed with the key `["verbal"]`.
+            (CfgNode): A nested dictionary that presents the recursive results of verbalisation. The verbalised string
+                can be accessed with the key `["verbal"]` or with the attribute `.verbal`.
         """
 
         if not isinstance(class_expression, RangeNode):
@@ -341,14 +341,14 @@ class OntologyVerbaliser:
 
         The subsumption axiom can have two forms:
 
-        - $C \sqsubseteq D$, the `SubClassOf` axiom;
-        - $C \sqsupseteq D$, the `SuperClassOf` axiom.
+        - $C_{sub} \sqsubseteq C_{super}$, the `SubClassOf` axiom;
+        - $C_{super} \sqsupseteq C_{sub}$, the `SuperClassOf` axiom.
 
         Args:
             class_subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.
 
         Returns:
-            (Tuple[CfgNode, CfgNode]): The verbalised sub-concept and super-concept (order matters).
+            (Tuple[CfgNode, CfgNode]): The verbalised sub-concept $\mathcal{V}(C_{sub})$ and super-concept $\mathcal{V}(C_{super})$ (order matters).
         """
 
         # input check
@@ -377,7 +377,7 @@ class OntologyVerbaliser:
             class_equivalence_axiom (OWLAxiom): The equivalence axiom to be verbalised.
 
         Returns:
-            (Tuple[CfgNode, CfgNode]): The verbalised concept (lhs) and its equivalent concept (rhs).
+            (Tuple[CfgNode, CfgNode]): The verbalised concept $\mathcal{V}(C})$ and its equivalent concept $\mathcal{V}(D)$ (order matters).
         """
 
         # input check
@@ -402,7 +402,7 @@ class OntologyVerbaliser:
             class_assertion_axiom (OWLAxiom): The class assertion axiom to be verbalised.
 
         Returns:
-            (Tuple[CfgNode, CfgNode]): The verbalised class and individual (order matters).
+            (Tuple[CfgNode, CfgNode]): The verbalised class $\mathcal{V}(C})$ and individual $\mathcal{V}(x})$ (order matters).
         """
 
         # input check
