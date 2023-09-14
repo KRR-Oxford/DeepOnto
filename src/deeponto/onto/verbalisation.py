@@ -37,6 +37,7 @@ ABBREVIATION_DICT = {
     "SubClassOf": "[SUB]",  # subsumed by
     "SuperClassOf": "[SUP]",  # subsumes
     "ClassAssertion": "[CLA]",  # class assertion
+    "ObjectPropertyAssertion": "[OBA]",  # object property assertion
 }
 
 RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
@@ -418,6 +419,33 @@ class OntologyVerbaliser:
         verbalised_individual = self._verbalise_iri(parsed_individual)
         return verbalised_class, verbalised_individual
 
+    def verbalise_object_property_assertion(self, object_property_assertion_axiom: OWLAxiom):
+        r"""Verbalise an object property assertion axiom.
+
+        The object property assertion axiom has the form $r(x, y)$.
+
+        Args:
+            object_property_assertion_axiom (OWLAxiom): The object property assertion axiom to be verbalised.
+
+        Returns:
+            (Tuple[CfgNode, CfgNode]): The verbalised object property $\mathcal{V}(r)$ and two individuals $\mathcal{V}(x)$ and $\mathcal{V}(y)$ (order matters).
+        """
+
+        # input check
+        axiom_type = self.onto.get_axiom_type(object_property_assertion_axiom)
+        assert (
+            axiom_type == "ObjectPropertyAssertion"
+        ), f"Input axiom type `{axiom_type}` is not class assertion (`ObjectPropertyAssertion`)."
+
+        # skip the root node
+        parsed_object_property_assertion_axiom = self.parser.parse(object_property_assertion_axiom).children[0]
+        parsed_obj_prop, parsed_indiv_x, parsed_indiv_y = parsed_object_property_assertion_axiom.children
+
+        verbalised_object_property = self._verbalise_iri(parsed_obj_prop, is_property=True)
+        verbalised_individual_x = self._verbalise_iri(parsed_indiv_x)
+        verbalised_individual_y = self._verbalise_iri(parsed_indiv_y)
+        return verbalised_object_property, verbalised_individual_x, verbalised_individual_y
+
 
 class OntologySyntaxParser:
     r"""A syntax parser for the OWL logical expressions, e.g., [`OWLAxiom`](http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html)
@@ -515,21 +543,7 @@ class OntologySyntaxParser:
         r"""Abbreviate the string representations of logical operators to a
         fixed length (easier for parsing).
 
-        The abbreviations are as follows:
-
-        ```python
-        {
-            "ObjectComplementOf": "[NEG]",  # negation
-            "ObjectSomeValuesFrom": "[EX.]",  # existential restriction
-            "ObjectAllValuesFrom": "[ALL]",  # universal restriction
-            "ObjectUnionOf": "[OR.]",  # disjunction
-            "ObjectIntersectionOf": "[AND]",  # conjunction
-            "EquivalentClasses": "[EQV]",  # equivalence
-            "SubClassOf": "[SUB]",  # subsumed by
-            "SuperClassOf": "[SUP]",  # subsumes
-            "ClassAssertion": "[CLA]", # class assertion
-        }
-        ```
+        The abbreviations are specified at `deeponto.onto.verbalisation.ABBREVIATION_DICT`.
 
         Args:
             owl_expression (str): The string representation of an `OWLObject`.
