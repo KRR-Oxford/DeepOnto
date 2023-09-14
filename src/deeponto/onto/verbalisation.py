@@ -205,11 +205,11 @@ class OntologyVerbaliser:
         iri = iri_node.text.lstrip("<").rstrip(">")
         verbal = self.vocab[iri] if not self.keep_iri else iri_node.text
         if self.apply_auto_correction:
-            fix = self.fix_verb_phrase if is_property else self.fix_noun_phrase
+            fix = self._fix_verb_phrase if is_property else self._fix_noun_phrase
             verbal = fix(verbal)
         return CfgNode({"verbal": verbal, "iri": iri, "type": "IRI"})
 
-    def fix_noun_phrase(self, noun_phrase: str):
+    def _fix_noun_phrase(self, noun_phrase: str):
         """Rule-based auto-correction for the noun phrase."""
         # Rule 1. Remove the preposition word if it appears to be the last word of the noun phrase.
         words = noun_phrase.split(" ")
@@ -217,7 +217,7 @@ class OntologyVerbaliser:
             noun_phrase = " ".join(words[:-1])
         return noun_phrase
 
-    def fix_verb_phrase(self, verb_phrase: str):
+    def _fix_verb_phrase(self, verb_phrase: str):
         """Rule-based auto-correction for the verb phrase."""
         doc = self.nlp(verb_phrase)
         # Rule 1. Add "is" if the object property starts with a NOUN, ADJ, or passive VERB
