@@ -45,6 +45,7 @@ nav:
       - Introduction: index.md
       - Load an Ontology: ontology.md  # basic usage of ontologies, ontology pruning, etc.
       - Changelog: changelog.md
+      - FAQs: faqs.md
     - TUTORIALS:
       - Verbalise Complex Ontology Concepts: verbaliser.md
       - Ontology Matching with BERTMap Family: bertmap.md
