@@ -55,18 +55,22 @@ To verbalise a complex concept expression:
 complex_concepts = onto.get_asserted_complex_classes()
 
 # verbalise the first complex concept
-result = verbaliser.verbalise_class_expression(complex_concepts[0])
+v_concept = verbaliser.verbalise_class_expression(complex_concepts[0])
 ```
 
-To verbaliser a subsumption axiom:
+To verbaliser a class subsumption axiom:
 
 ```python
 # get subsumption axioms from the ontology
-subsumption_axioms = onto.get_subsumption_axioms()
+subsumption_axioms = onto.get_subsumption_axioms(entity_type="Classes)
 
 # verbalise the first subsumption axiom
-result = verbaliser.verbalise_subsumption_axiom(subsumption_axioms[0])
+v_sub, v_super = verbaliser.verbalise_class_subsumption_axiom(subsumption_axioms[0])
 ```
+
+!!! tips
+
+        The concept verbaliser is under development to incorporate the parsing of various axiom types. Please check the existing functions of [`OntologyVerbaliser`][deeponto.onto.verbalisation.OntologyVerbaliser] for specific usage.
 
 Notice that the verbalised result is a `CfgNode` object which keeps track of the
 recursive process. Users can access the final verbalisation by:
