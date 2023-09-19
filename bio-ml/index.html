@@ -1613,14 +1613,14 @@ RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \prod_{d \in \mathcal{T}_c} (1
 <p>For the <strong>main Bio-ML track</strong>, we expect two result files for each setting:</p>
 <ul>
 <li>
-<p><strong>(1)</strong> A prediction mapping file named <code>match_results.tsv</code> in the same format as the reference mapping file (e.g., <code>task_name/refs_equiv/full.tsv</code>).</p>
+<p><strong>(1)</strong> A prediction mapping file named <code>match.result.tsv</code> in the same format as the reference mapping file (e.g., <code>task_name/refs_equiv/full.tsv</code>).</p>
 <div class="admonition note">
 <p class="admonition-title">Matching Result<p>Download <a href="../assets/example_reference_mappings.tsv" download>an example of mapping file</a>. The three columns, <code>"SrcEntity"</code>, <code>"TgtEntity"</code>, and <code>"Score"</code> refer to the source class IRI, the target class IRI, and the matching score.</p>
 </p>
 </div>
 </li>
 <li>
-<p><strong>(2)</strong> A scored or ranked candidate mapping file named <code>rank_results.tsv</code> in the same format as the test candidate mapping file (e.g., <code>task_name/refs_equiv/test.cands.tsv</code>). </p>
+<p><strong>(2)</strong> A scored or ranked candidate mapping file named <code>rank.result.tsv</code> in the same format as the test candidate mapping file (e.g., <code>task_name/refs_equiv/test.cands.tsv</code>). </p>
 <div class="admonition note">
 <p class="admonition-title">Ranking Result<p>Download <a href="../assets/example_candidate_mappings.tsv" download>an example of raw (unscored) candidate mapping file</a> and <a href="../assets/example_scored_candidate_mappings.tsv" download>an example of scored candidate mapping file</a>. The <code>"SrcEntity"</code> and <code>"TgtEntity"</code> columns refer to the source class IRI and the target class IRI involved in a <strong>reference mapping</strong>. The <code>"TgtCandidates"</code> column stores a sequence of <code>tgt_cand_iri</code> in the unscored file and a list of <strong>tuples</strong> <code>(tgt_cand_iri, score)</code> in the scored file, which can be accessed by the built-in Python function <code>eval</code>. </p>
 <p>We also accept a result file without scores and in that case we assume the list of <code>tgt_cand_iri</code> has been sorted in descending order.</p>
@@ -1632,7 +1632,7 @@ RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \prod_{d \in \mathcal{T}_c} (1
 <p>For the <strong>Bio-LLM sub-track</strong>, we expect one result file (similar to (2) but requiring a list of <strong>triples</strong>) for the task:</p>
 <ul>
 <li>
-<p><strong>(3)</strong>  A scored or ranked candidate mapping file named <code>biollm_results.tsv</code> in the same format as the test candidate mapping file (i.e., <code>task_name/test.cands.tsv</code>).</p>
+<p><strong>(3)</strong>  A scored or ranked candidate mapping file named <code>biollm.result.tsv</code> in the same format as the test candidate mapping file (i.e., <code>task_name/test.cands.tsv</code>).</p>
 <div class="admonition note">
 <p class="admonition-title">Bio-LLM Result<p>Download <a href="../assets/example_bio-llm_candidate_mappings.tsv" download>an example of bio-llm mapping file</a>. The <code>"SrcEntity"</code> and <code>"TgtEntity"</code> columns refer to the source class IRI and the target class IRI involved in a <strong>reference mapping</strong>. The <code>"TgtCandidates"</code> column stores a sequence of a list of <strong>triples</strong> <code>(tgt_cand_iri, score, answer)</code> in the scored file, which can be accessed by the built-in Python function <code>eval</code>. The additional <code>answer</code> values are <code>True</code> or <code>False</code> indicating whether the OM system predicts <code>(src_class_iri, tgt_cand_iri)</code> as a true mapping.</p>
 </p>
@@ -1647,7 +1647,7 @@ RR = \sum_{(c, c_{null}) \in \mathcal{M}_{unref}} \prod_{d \in \mathcal{T}_c} (1
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 2, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 19, 2023</span>
       
         <br>
         Created:
