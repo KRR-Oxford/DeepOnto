@@ -1002,15 +1002,19 @@
 <span class="n">complex_concepts</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_asserted_complex_classes</span><span class="p">()</span>
 
 <span class="c1"># verbalise the first complex concept</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">verbaliser</span><span class="o">.</span><span class="n">verbalise_class_expression</span><span class="p">(</span><span class="n">complex_concepts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">v_concept</span> <span class="o">=</span> <span class="n">verbaliser</span><span class="o">.</span><span class="n">verbalise_class_expression</span><span class="p">(</span><span class="n">complex_concepts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </code></pre></div>
-<p>To verbaliser a subsumption axiom:</p>
+<p>To verbaliser a class subsumption axiom:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># get subsumption axioms from the ontology</span>
-<span class="n">subsumption_axioms</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_subsumption_axioms</span><span class="p">()</span>
+<span class="n">subsumption_axioms</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_subsumption_axioms</span><span class="p">(</span><span class="n">entity_type</span><span class="o">=</span><span class="s2">&quot;Classes)</span>
 
 <span class="c1"># verbalise the first subsumption axiom</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">verbaliser</span><span class="o">.</span><span class="n">verbalise_subsumption_axiom</span><span class="p">(</span><span class="n">subsumption_axioms</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">v_sub</span><span class="p">,</span> <span class="n">v_super</span> <span class="o">=</span> <span class="n">verbaliser</span><span class="o">.</span><span class="n">verbalise_class_subsumption_axiom</span><span class="p">(</span><span class="n">subsumption_axioms</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </code></pre></div>
+<div class="admonition tips">
+<p class="admonition-title">Tips<p>The concept verbaliser is under development to incorporate the parsing of various axiom types. Please check the existing functions of <a class="autorefs autorefs-internal" href="../deeponto/onto/verbalisation/#deeponto.onto.verbalisation.OntologyVerbaliser"><code>OntologyVerbaliser</code></a> for specific usage.</p>
+</p>
+</div>
 <p>Notice that the verbalised result is a <code>CfgNode</code> object which keeps track of the
 recursive process. Users can access the final verbalisation by:</p>
 <div class="highlight"><pre><span></span><code><span class="n">result</span><span class="o">.</span><span class="n">verbal</span>
@@ -1035,7 +1039,7 @@ recursive process. Users can access the final verbalisation by:</p>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 7, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 19, 2023</span>
       
         <br>
         Created:
