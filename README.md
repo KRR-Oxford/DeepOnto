@@ -113,7 +113,7 @@ The base class of $\textsf{DeepOnto}$ is [`Ontology`][deeponto.onto.Ontology], w
 
 - **Ontology Pruning** ([`OntologyPruner`][deeponto.onto.OntologyPruner]): This sub-module aims to incorporate pruning algorithms for extracting a sub-ontology from an input ontology. We currently implement the one proposed in [2], which introduces subsumption axioms between the asserted (atomic or complex) parents and children of the class targeted for removal.
 
-- **Ontology Verbalisation** ([`OntologyVerbaliser`][deeponto.onto.OntologyVerbaliser]): The recursive concept verbaliser proposed in \cite{he2023ontolama} is implemented here, which can automatically transform a complex logical expression into a textual sentence based on entity names or labels available in the ontology. See [verbalising ontology concepts](https://krr-oxford.github.io/DeepOnto/verbaliser).
+- **Ontology Verbalisation** ([`OntologyVerbaliser`][deeponto.onto.OntologyVerbaliser]): The recursive concept verbaliser proposed in [4] is implemented here, which can automatically transform a complex logical expression into a textual sentence based on entity names or labels available in the ontology. See [verbalising ontology concepts](https://krr-oxford.github.io/DeepOnto/verbaliser).
 
 - **Ontology Projection** ([`OntologyProjector`][deeponto.onto.OntologyProjector]): The projection algorithm adopted in the OWL2Vec* ontology embeddings is implemented here, which is to transform an ontology's TBox into a set of RDF triples. The relevant code is modified from the mOWL library.
 
@@ -126,7 +126,7 @@ Individual tools and resources are implemented based on the core ontology proces
 
 - **BERTMap** [1] is a BERT-based *ontology matching* (OM) system originally developed in [repo](https://github.com/KRR-Oxford/BERTMap) but is now maintained in $\textsf{DeepOnto}$. See [Ontology Matching with BERTMap & BERTMapLt](https://krr-oxford.github.io/DeepOnto/bertmap/).
 
-- **Bio-ML** [2] is an OM resource that has been used in the [Bio-ML track of the OAEI](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/). See [Bio-ML: A Comprehensive Documentation](https://krr-oxford.github.io/DeepOnto/bio-ml/).
+- **Bio-ML** [2] is an OM resource that has been used in the [Bio-ML track of the OAEI](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/). See [Bio-ML: A Comprehensive Documentation](https://krr-oxford.github.io/DeepOnto/bio-ml/). 
 
 - **BERTSubs** [3] is a system for ontology subsumption prediction. We have transformed its original [experimental code](https://gitlab.com/chen00217/bert_subsumption) into this project. See [Subsumption Inference with BERTSubs](https://krr-oxford.github.io/DeepOnto/bertsubs/).
 
