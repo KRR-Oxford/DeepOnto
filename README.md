@@ -48,7 +48,7 @@ limitations under the License.
 - [X] Deploy the `deeponto.probe.ontolama` and `deeponto.onto.verbalisation` modules (**v0.6.0**). 
 - [X] Rebuild the whole package based on the OWLAPI; remove owlready2 from the essential dependencies (from **v0.5.x**). 
 
-Check the complete [changelog](https://github.com/KRR-Oxford/DeepOnto/blob/main/docs/changelog.md) and [FAQs](https://github.com/KRR-Oxford/DeepOnto/blob/main/docs/faqs.md). The FAQs page does not contain much information now but will be updated according to feedback.
+Check the complete [changelog](https://krr-oxford.github.io/DeepOnto/changelog/) and [FAQs](https://krr-oxford.github.io/DeepOnto/faqs/). The FAQs page does not contain much information now but will be updated according to feedback.
 
 ## About
 
