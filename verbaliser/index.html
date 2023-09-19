@@ -1011,21 +1011,18 @@
 <span class="c1"># verbalise the first subsumption axiom</span>
 <span class="n">v_sub</span><span class="p">,</span> <span class="n">v_super</span> <span class="o">=</span> <span class="n">verbaliser</span><span class="o">.</span><span class="n">verbalise_class_subsumption_axiom</span><span class="p">(</span><span class="n">subsumption_axioms</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </code></pre></div>
-<div class="admonition tips">
-<p class="admonition-title">Tips<p>The concept verbaliser is under development to incorporate the parsing of various axiom types. Please check the existing functions of <a class="autorefs autorefs-internal" href="../deeponto/onto/verbalisation/#deeponto.onto.verbalisation.OntologyVerbaliser"><code>OntologyVerbaliser</code></a> for specific usage.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip<p>The concept verbaliser is under development to incorporate the parsing of various axiom types. Please check the existing functions of <a class="autorefs autorefs-internal" href="../deeponto/onto/verbalisation/#deeponto.onto.verbalisation.OntologyVerbaliser"><code>OntologyVerbaliser</code></a> for specific usage.</p>
 </p>
 </div>
 <p>Notice that the verbalised result is a <code>CfgNode</code> object which keeps track of the
 recursive process. Users can access the final verbalisation by:</p>
 <div class="highlight"><pre><span></span><code><span class="n">result</span><span class="o">.</span><span class="n">verbal</span>
 </code></pre></div>
-<div class="admonition tip">
-<p class="admonition-title">Updating entity names</p>
-<p>Users can manually update the vocabulary for named entities by:</p>
+<p>Users can also manually update the vocabulary for named entities by:</p>
 <div class="highlight"><pre><span></span><code><span class="n">verbaliser</span><span class="o">.</span><span class="n">update_entity_name</span><span class="p">(</span><span class="n">entity_iri</span><span class="p">,</span> <span class="n">entity_name</span><span class="p">)</span>
 </code></pre></div>
 <p>This is useful when the entity labels are not naturally fitted into the verbalised sentence.</p>
-</div>
 <p>Moreover, users can see the parsed sub-formula tree using:</p>
 <div class="highlight"><pre><span></span><code><span class="n">tree</span> <span class="o">=</span> <span class="n">verbaliser</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">subsumption_axioms</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 <span class="n">tree</span><span class="o">.</span><span class="n">render_image</span><span class="p">()</span>
