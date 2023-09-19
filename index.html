@@ -1177,7 +1177,7 @@ pip<span class="w"> </span>install<span class="w"> </span>deeponto
 <p><strong>Ontology Pruning</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/pruning/#deeponto.onto.pruning.OntologyPruner"><code>OntologyPruner</code></a>): This sub-module aims to incorporate pruning algorithms for extracting a sub-ontology from an input ontology. We currently implement the one proposed in [2], which introduces subsumption axioms between the asserted (atomic or complex) parents and children of the class targeted for removal.</p>
 </li>
 <li>
-<p><strong>Ontology Verbalisation</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/verbalisation/#deeponto.onto.verbalisation.OntologyVerbaliser"><code>OntologyVerbaliser</code></a>): The recursive concept verbaliser proposed in \cite{he2023ontolama} is implemented here, which can automatically transform a complex logical expression into a textual sentence based on entity names or labels available in the ontology. See <a href="https://krr-oxford.github.io/DeepOnto/verbaliser">verbalising ontology concepts</a>.</p>
+<p><strong>Ontology Verbalisation</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/verbalisation/#deeponto.onto.verbalisation.OntologyVerbaliser"><code>OntologyVerbaliser</code></a>): The recursive concept verbaliser proposed in [4] is implemented here, which can automatically transform a complex logical expression into a textual sentence based on entity names or labels available in the ontology. See <a href="https://krr-oxford.github.io/DeepOnto/verbaliser">verbalising ontology concepts</a>.</p>
 </li>
 <li>
 <p><strong>Ontology Projection</strong> (<a class="autorefs autorefs-internal" href="deeponto/onto/projection/#deeponto.onto.projection.OntologyProjector"><code>OntologyProjector</code></a>): The projection algorithm adopted in the OWL2Vec* ontology embeddings is implemented here, which is to transform an ontology's TBox into a set of RDF triples. The relevant code is modified from the mOWL library.</p>
@@ -1193,7 +1193,7 @@ pip<span class="w"> </span>install<span class="w"> </span>deeponto
 <p><strong>BERTMap</strong> [1] is a BERT-based <em>ontology matching</em> (OM) system originally developed in <a href="https://github.com/KRR-Oxford/BERTMap">repo</a> but is now maintained in <span class="arithmatex">\(\textsf{DeepOnto}\)</span>. See <a href="https://krr-oxford.github.io/DeepOnto/bertmap/">Ontology Matching with BERTMap &amp; BERTMapLt</a>.</p>
 </li>
 <li>
-<p><strong>Bio-ML</strong> [2] is an OM resource that has been used in the <a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/">Bio-ML track of the OAEI</a>. See <a href="https://krr-oxford.github.io/DeepOnto/bio-ml/">Bio-ML: A Comprehensive Documentation</a>.</p>
+<p><strong>Bio-ML</strong> [2] is an OM resource that has been used in the <a href="https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/">Bio-ML track of the OAEI</a>. See <a href="https://krr-oxford.github.io/DeepOnto/bio-ml/">Bio-ML: A Comprehensive Documentation</a>. </p>
 </li>
 <li>
 <p><strong>BERTSubs</strong> [3] is a system for ontology subsumption prediction. We have transformed its original <a href="https://gitlab.com/chen00217/bert_subsumption">experimental code</a> into this project. See <a href="https://krr-oxford.github.io/DeepOnto/bertsubs/">Subsumption Inference with BERTSubs</a>.</p>
