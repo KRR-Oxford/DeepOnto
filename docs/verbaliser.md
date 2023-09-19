@@ -68,7 +68,7 @@ subsumption_axioms = onto.get_subsumption_axioms(entity_type="Classes)
 v_sub, v_super = verbaliser.verbalise_class_subsumption_axiom(subsumption_axioms[0])
 ```
 
-!!! tips
+!!! tip
 
         The concept verbaliser is under development to incorporate the parsing of various axiom types. Please check the existing functions of [`OntologyVerbaliser`][deeponto.onto.verbalisation.OntologyVerbaliser] for specific usage.
 
@@ -79,15 +79,14 @@ recursive process. Users can access the final verbalisation by:
 result.verbal
 ```
 
-!!! tip "Updating entity names"
 
-    Users can manually update the vocabulary for named entities by:
+Users can also manually update the vocabulary for named entities by:
 
-    ```python
-    verbaliser.update_entity_name(entity_iri, entity_name)
-    ```
+```python
+verbaliser.update_entity_name(entity_iri, entity_name)
+```
 
-    This is useful when the entity labels are not naturally fitted into the verbalised sentence.
+This is useful when the entity labels are not naturally fitted into the verbalised sentence.
 
 
 Moreover, users can see the parsed sub-formula tree using:
