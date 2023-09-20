@@ -28,6 +28,7 @@ Security in case of vulnerabilities. -->
 
 ### Changed
 
+- [X] **Change** `get_owl_objects()` method to be anonymous as it is only used for creating pre-processed entity index at `deeponto.onto.Ontology`.
 - [X] **Change** `get_owl_object_from_iri()` method to `get_owl_object()` at `deeponto.onto.Ontology`.
 
 ## v0.8.5 (2023 September)

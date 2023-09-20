@@ -98,15 +98,15 @@ class Ontology:
         self.owl_manager = OWLManager.createOWLOntologyManager()
         self.owl_onto = self.owl_manager.loadOntologyFromOntologyDocument(IRI.create("file:///" + self.owl_path))
         self.owl_iri = str(self.owl_onto.getOntologyID().getOntologyIRI().get())
-        self.owl_classes = self.get_owl_objects("Classes")
-        self.owl_object_properties = self.get_owl_objects("ObjectProperties")
+        self.owl_classes = self._get_owl_objects("Classes")
+        self.owl_object_properties = self._get_owl_objects("ObjectProperties")
         # for some reason the top object property is included
         if OWL_TOP_OBJECT_PROPERTY in self.owl_object_properties.keys():
             del self.owl_object_properties[OWL_TOP_OBJECT_PROPERTY]
-        self.owl_data_properties = self.get_owl_objects("DataProperties")
+        self.owl_data_properties = self._get_owl_objects("DataProperties")
         self.owl_data_factory = self.owl_manager.getOWLDataFactory()
-        self.owl_annotation_properties = self.get_owl_objects("AnnotationProperties")
-        self.owl_individuals = self.get_owl_objects("Individuals")
+        self.owl_annotation_properties = self._get_owl_objects("AnnotationProperties")
+        self.owl_individuals = self._get_owl_objects("Individuals")
 
         # reasoning
         self.reasoner = OntologyReasoner(self)
@@ -189,7 +189,7 @@ class Ontology:
         else:
             raise RuntimeError("Cannot retrieve JVM memory as it is not started.")
 
-    def get_owl_objects(self, entity_type: str):
+    def _get_owl_objects(self, entity_type: str):
         """Get an index of `OWLObject` of certain type from the ontology.
 
         Args:
