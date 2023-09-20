@@ -20,14 +20,14 @@ from deeponto.subs.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE_IN
 from deeponto.utils import load_file
 
 '''
-    partition the declared subsumptions into train, valid (--valid_ratio) and test (--test_ratio)
+    partition the declared subsumptions into sets of train, valid (--valid_ratio) and test (--test_ratio)
     when subsumption_type == named_class:
         a test sample is composed of two named classes: a subclass, a superclass (GT), 
         and at most --test_max_neg_size false superclasses are extracted from the GT's neighbourhood
     when subsumption_type == restriction:
         a sample is composed of a named class (subclass), an existential restriction (superclass GT), 
         and at most --test_max_neg_size false restrictions are randomly extracted from all existential restrictions 
-        (this is different from the evaluation setting in our WWW J paper).
+        (note this is different from the evaluation setting in our WWW J paper).
 '''
 
 parser = argparse.ArgumentParser()
