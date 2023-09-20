@@ -114,8 +114,7 @@ class Ontology:
         # hidden attributes
         self._multi_children_classes = None
         self._sibling_class_groups = None
-        # self._equiv_axioms = None
-        # self._subsumption_axioms = None
+        self._axiom_type = AxiomType  # for development use
 
         # summary
         self.info = {
