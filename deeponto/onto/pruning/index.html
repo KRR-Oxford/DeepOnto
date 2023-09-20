@@ -1226,7 +1226,7 @@ relevant hierarchy.</p>
 
     <span class="c1"># create the subsumption axioms first</span>
     <span class="k">for</span> <span class="n">cl_iri</span> <span class="ow">in</span> <span class="n">class_iris_to_be_removed</span><span class="p">:</span>
-        <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">cl_iri</span><span class="p">)</span>
+        <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object</span><span class="p">(</span><span class="n">cl_iri</span><span class="p">)</span>
         <span class="n">cl_parents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_asserted_parents</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
         <span class="n">cl_children</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_asserted_children</span><span class="p">(</span><span class="n">cl</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">parent</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">cl_parents</span><span class="p">,</span> <span class="n">cl_children</span><span class="p">):</span>
@@ -1236,7 +1236,7 @@ relevant hierarchy.</p>
     <span class="c1"># apply pruning</span>
     <span class="n">class_remover</span> <span class="o">=</span> <span class="n">OWLEntityRemover</span><span class="p">(</span><span class="n">Collections</span><span class="o">.</span><span class="n">singleton</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_onto</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">cl_iri</span> <span class="ow">in</span> <span class="n">class_iris_to_be_removed</span><span class="p">:</span>
-        <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="n">cl_iri</span><span class="p">)</span>
+        <span class="n">cl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object</span><span class="p">(</span><span class="n">cl_iri</span><span class="p">)</span>
         <span class="n">cl</span><span class="o">.</span><span class="n">accept</span><span class="p">(</span><span class="n">class_remover</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_manager</span><span class="o">.</span><span class="n">applyChanges</span><span class="p">(</span><span class="n">class_remover</span><span class="o">.</span><span class="n">getChanges</span><span class="p">())</span>
 </code></pre></div></td></tr></table></div>
