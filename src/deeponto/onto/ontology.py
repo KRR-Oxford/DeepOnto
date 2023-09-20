@@ -204,7 +204,7 @@ class Ontology:
             owl_objects[str(cl.getIRI())] = cl
         return owl_objects
 
-    def get_owl_object_from_iri(self, iri: str):
+    def get_owl_object(self, iri: str):
         """Get an `OWLObject` given its IRI."""
         if iri in self.owl_classes.keys():
             return self.owl_classes[iri]
@@ -381,12 +381,12 @@ class Ontology:
             (Set[str]): A set of annotation literals of the given `OWLObject`.
         """
         if isinstance(owl_object, str):
-            owl_object = self.get_owl_object_from_iri(owl_object)
+            owl_object = self.get_owl_object(owl_object)
 
         annotation_property = None
         if annotation_property_iri:
             # return an empty list if `annotation_property_iri` does not exist in this OWLOntology`
-            annotation_property = self.get_owl_object_from_iri(annotation_property_iri)
+            annotation_property = self.get_owl_object(annotation_property_iri)
 
         annotations = []
         for annotation in EntitySearcher.getAnnotations(owl_object, self.owl_onto, annotation_property):
@@ -462,7 +462,7 @@ class Ontology:
                 if cl_iri == OWL_THING:
                     cl = self.OWLThing
                 else:
-                    cl = self.get_owl_object_from_iri(cl_iri)
+                    cl = self.get_owl_object(cl_iri)
 
                 children = self.get_asserted_children(cl)
                 children_iris = [str(child.getIRI()) for child in children if self.check_named_entity(child)]
@@ -716,7 +716,7 @@ class OntologyReasoner:
         # for every inferred child of `computed`, check if it is subsumed by `compared``
         for descendant_iri in self.get_inferred_sub_entities(computed, direct=False):
             # print("check a subsumption")
-            if self.check_subsumption(self.onto.get_owl_object_from_iri(descendant_iri), compared):
+            if self.check_subsumption(self.onto.get_owl_object(descendant_iri), compared):
                 return True
         return False
 

@@ -56,7 +56,7 @@ class OntologyPruner:
 
         # create the subsumption axioms first
         for cl_iri in class_iris_to_be_removed:
-            cl = self.onto.get_owl_object_from_iri(cl_iri)
+            cl = self.onto.get_owl_object(cl_iri)
             cl_parents = self.onto.get_asserted_parents(cl)
             cl_children = self.onto.get_asserted_children(cl)
             for parent, child in itertools.product(cl_parents, cl_children):
@@ -66,7 +66,7 @@ class OntologyPruner:
         # apply pruning
         class_remover = OWLEntityRemover(Collections.singleton(self.onto.owl_onto))
         for cl_iri in class_iris_to_be_removed:
-            cl = self.onto.get_owl_object_from_iri(cl_iri)
+            cl = self.onto.get_owl_object(cl_iri)
             cl.accept(class_remover)
         self.onto.owl_manager.applyChanges(class_remover.getChanges())
 

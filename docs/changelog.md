@@ -24,6 +24,9 @@ Security in case of vulnerabilities. -->
 - [X] **Add** `get_axiom_type()` method at `deeponto.onto.Ontology`.
 - [X] **Add** `owl_individuals` attribute at `deeponto.onto.Ontology`.
 
+### Changed
+
+- [X] **Change** `get_owl_object_from_iri()` method to `get_owl_object()` at `deeponto.onto.Ontology`.
 
 ## v0.8.5 (2023 September)
 
