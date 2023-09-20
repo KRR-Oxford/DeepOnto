@@ -219,6 +219,13 @@ class Ontology:
         else:
             raise KeyError(f"Cannot retrieve unknown IRI: {iri}.")
 
+    def get_iri(self, owl_object: OWLObject):
+        """Get the IRI of an `OWLObject`. Raises an exception if there is no associated IRI."""
+        try:
+            return str(owl_object.getIRI())
+        except:
+            raise RuntimeError("Input owl object does not have IRI.")
+
     @staticmethod
     def get_axiom_type(axiom: OWLAxiom):
         r"""Get the axiom type (in `str`) for the given axiom.
@@ -264,7 +271,7 @@ class Ontology:
             return list(self.owl_onto.getAxioms(AxiomType.EQUIVALENT_DATA_PROPERTIES))
         else:
             raise ValueError(f"Unknown entity type {entity_type}.")
-        
+
     def get_assertion_axioms(self, entity_type: str = "Classes"):
         """Return assertion (ABox) axioms (subject to input entity type) asserted in the ontology.
 
