@@ -29,6 +29,7 @@ config.test_subsumption_file = './test_subsumptions.csv'
 config.test_type = 'evaluation'
 config.subsumption_type = 'named_class'  # named_class or restriction
 config.prompt.prompt_type = 'isolated'  # isolated, traversal, or path
+config.no_reasoning = False  # True, or False
 
 onto = Ontology(owl_path=config.onto_file)
 intra_pipeline = BERTSubsIntraPipeline(onto=onto, config=config)
