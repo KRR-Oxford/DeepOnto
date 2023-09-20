@@ -38,7 +38,7 @@ test_subsumption_file: test_subsumptions.csv
 test_type: evaluation
 
 # not do entailment reasoning
-no_reasoning: true
+no_reasoning: false
 
 # valid_subsumption_file is optional. If it is set, validation metrics are calculated and output.
 valid_subsumption_file:

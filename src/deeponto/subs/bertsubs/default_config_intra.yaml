@@ -34,7 +34,7 @@ test_subsumption_file: test_subsumption.csv
 test_type: prediction
 
 # not do entailment reasoning
-no_reasoning: true
+no_reasoning: false
 
 # validation_subsumption_file and train_subsumption_file are optional
 # If train_subsumption_file is set to None (or left as empty)
