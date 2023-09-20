@@ -279,13 +279,20 @@ class SubsumptionSampler:
         """
         subclass = self.onto.get_owl_object_from_iri(iri=subclass_iri)
         if subsumption_type == "named_class":
-            ancestors = set(self.onto.reasoner.get_inferred_super_entities(subclass, direct=False))
+            if self.config.no_reasoning:
+                parents = self.onto.get_asserted_parents(owl_object=subclass, named_only=True)
+                ancestors = set([str(item.getIRI()) for item in parents])
+            else:
+                ancestors = set(self.onto.reasoner.get_inferred_super_entities(subclass, direct=False))
             neg_c = random.sample(self.named_classes - ancestors, 1)[0]
             return neg_c
         else:
             for neg_c in random.sample(self.restrictionObjects, 5):
-                if not self.onto.reasoner.check_subsumption(sub_entity=subclass, super_entity=neg_c):
+                if self.config.no_reasoning:
                     return str(neg_c)
+                else:
+                    if not self.onto.reasoner.check_subsumption(sub_entity=subclass, super_entity=neg_c):
+                        return str(neg_c)
             return None
 
     def named_subsumption_to_str(self, subsum: List):
