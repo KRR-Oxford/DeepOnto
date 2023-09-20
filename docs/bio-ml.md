@@ -474,7 +474,7 @@ Note that each OM pair is accompanied with an unsupervised and a semi-supervised
 
 For the **Bio-LLM sub-track**, we expect one result file (similar to (2) but requiring a list of **triples**) for the task:
 
-- **(3)**  A scored or ranked candidate mapping file named `biollm.result.tsv` in the same format as the test candidate mapping file (i.e., `task_name/test.cands.tsv`).
+- **(3)**  A scored or ranked (with answers) candidate mapping file named `biollm.result.tsv` in the same format as the test candidate mapping file (i.e., `task_name/test.cands.tsv`).
 
 
     !!! note "Bio-LLM Result"
@@ -483,5 +483,3 @@ For the **Bio-LLM sub-track**, we expect one result file (similar to (2) but req
 
 
 It is important to notice that the `answer` values are necessary for the matching evaluation of P, R, F-score, and the computation of rejection rate, the `score` values are used for ranking evaluation of MRR and Hits@1.
-
-See [evaluation framework](#evaluation-framework) for detailed explanations and code of how we assess the results.
