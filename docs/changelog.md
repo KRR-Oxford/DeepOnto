@@ -16,6 +16,7 @@ Security in case of vulnerabilities. -->
 - [X] **Add** `get_iri()` method at `deeponto.onto.Ontology`.
 
 - [X] **Add** new features into `deeponto.onto.OntologyVerbaliser` including:
+    - `verbalise_object_property_subsumption()` for object property subsumption axioms.
     - property chain verbalisation at `verbalise_class_expression()`.
     - `verbalise_class_subsumption()` for class subsumption axioms;
     - `verbalise_class_equivalence()` for class equivalence axioms;

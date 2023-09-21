@@ -99,13 +99,13 @@ class OntologyVerbaliser:
     | $C_1 \sqcap ... \sqcap C_n$ | if $C_i = \exists/\forall r.D_i$ and $C_j = \exists/\forall r.D_j$, they will be re-written into $\exists/\forall r.(D_i \sqcap D_j)$ before verbalisation; suppose after re-writing the new expression is $C_1 \sqcap ... \sqcap C_{n'}$ <p> **(a)** if **all** $C_i$s (for $i = 1, ..., n'$) are restrictions, in the form of $\exists/\forall r_i.D_i$: <br /> *"something that $\mathcal{V}(r_1)$ some/only $V(D_1)$ and ... and $\mathcal{V}(r_{n'})$ some/only $V(D_{n'})$"* <br /> **(b)** if **some** $C_i$s (for $i = m+1, ..., n'$) are restrictions, in the form of $\exists/\forall r_i.D_i$: <br /> *"$\mathcal{V}(C_{1})$ and ... and $\mathcal{V}(C_{m})$ that $\mathcal{V}(r_{m+1})$ some/only $V(D_{m+1})$ and ... and $\mathcal{V}(r_{n'})$ some/only $V(D_{n'})$"* <br /> **(c)** if **no** $C_i$ is a restriction: <br /> *"$\mathcal{V}(C_{1})$ and ... and $\mathcal{V}(C_{n'})$"* |
     | $C_1 \sqcup ... \sqcup C_n$ | similar to verbalising $C_1 \sqcap ... \sqcap C_n$ except that *"and"* is replaced by *"or"* and case **(b)** uses the same verbalisation as case **(c)**                             |
     | $r_1 \cdot r_2$ (property chain) |  $\mathcal{V}(r_1)$ something that $\mathcal{V}(r_2)$ |
-    
-    
+
+
     With this concept verbaliser, a range of OWL axioms (`verbalise_owl_axiom`[deeponto.onto.OntologyVerbaliser.verbalise_owl_axiom]) are supported:
-    
+
     - Class axioms for subsumption, equivalence, assertion.
     - Object property axioms for subsumption, assertion.
-    
+
     The verbaliser operates at the concept level, and an additional template is needed to integrate the verbalised components of an axiom.
 
 
@@ -374,7 +374,7 @@ class OntologyVerbaliser:
                     )
 
         return results
-    
+
     def verbalise_axiom(self, owl_axiom: OWLAxiom):
         r"""Verbalise an owl axiom (`OWLAxiom`) or its parsed form (in `RangeNode`).
 
@@ -401,7 +401,7 @@ class OntologyVerbaliser:
         - $C_{super} \sqsupseteq C_{sub}$, the `SuperClassOf` axiom.
 
         Args:
-            class_subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.
+            class_subsumption_axiom (OWLAxiom): Then class subsumption axiom to be verbalised.
 
         Returns:
             (Tuple[CfgNode, CfgNode]): The verbalised sub-concept $\mathcal{V}(C_{sub})$ and super-concept $\mathcal{V}(C_{super})$ (order matters).
@@ -412,7 +412,7 @@ class OntologyVerbaliser:
         assert axiom_type in [
             "SubClassOf",
             "SuperClassOf",
-        ], f"Input axiom type `{axiom_type}` is not subsumption (`SubClassOf` or `SuperClassOf`)."
+        ], f"Input axiom type `{axiom_type}` is not class subsumption (`SubClassOf` or `SuperClassOf`)."
 
         parsed_subsumption_axiom = self.parser.parse(class_subsumption_axiom).children[0]  # skip the root node
         if str(class_subsumption_axiom).startswith("SubClassOf"):
@@ -430,7 +430,7 @@ class OntologyVerbaliser:
         The equivalence axiom has the form $C \equiv D$.
 
         Args:
-            class_equivalence_axiom (OWLAxiom): The equivalence axiom to be verbalised.
+            class_equivalence_axiom (OWLAxiom): The class equivalence axiom to be verbalised.
 
         Returns:
             (Tuple[CfgNode, CfgNode]): The verbalised concept $\mathcal{V}(C)$ and its equivalent concept $\mathcal{V}(D)$ (order matters).
@@ -473,38 +473,40 @@ class OntologyVerbaliser:
         verbalised_class = self.verbalise_class_expression(parsed_class)
         verbalised_individual = self._verbalise_iri(parsed_individual)
         return verbalised_class, verbalised_individual
-    
-    def verbalise_object_property_subsumption_axiom(self, class_subsumption_axiom: OWLAxiom):
-        r"""Verbalise a class subsumption axiom.
+
+    def verbalise_object_property_subsumption_axiom(self, object_property_subsumption_axiom: OWLAxiom):
+        r"""Verbalise an object property subsumption axiom.
 
         The subsumption axiom can have two forms:
 
-        - $C_{sub} \sqsubseteq C_{super}$, the `SubClassOf` axiom;
-        - $C_{super} \sqsupseteq C_{sub}$, the `SuperClassOf` axiom.
+        - $r_{sub} \sqsubseteq r_{super}$, the `SubObjectPropertyOf` axiom;
+        - $r_{super} \sqsupseteq r_{sub}$, the `SuperObjectPropertyOf` axiom.
 
         Args:
-            class_subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.
+            object_property_subsumption_axiom (OWLAxiom): The object property subsumption axiom to be verbalised.
 
         Returns:
-            (Tuple[CfgNode, CfgNode]): The verbalised sub-concept $\mathcal{V}(C_{sub})$ and super-concept $\mathcal{V}(C_{super})$ (order matters).
+            (Tuple[CfgNode, CfgNode]): The verbalised sub-property $\mathcal{V}(r_{sub})$ and super-property $\mathcal{V}(r_{super})$ (order matters).
         """
 
         # input check
-        axiom_type = self.onto.get_axiom_type(class_subsumption_axiom)
+        axiom_type = self.onto.get_axiom_type(object_property_subsumption_axiom)
         assert axiom_type in [
-            "SubClassOf",
-            "SuperClassOf",
-        ], f"Input axiom type `{axiom_type}` is not subsumption (`SubClassOf` or `SuperClassOf`)."
+            "SubObjectPropertyOf",
+            "SuperObjectPropertyOf",
+        ], f"Input axiom type `{axiom_type}` is not object property subsumption (`SubObjectPropertyOf` or `SuperObjectPropertyOf`)."
 
-        parsed_subsumption_axiom = self.parser.parse(class_subsumption_axiom).children[0]  # skip the root node
-        if str(class_subsumption_axiom).startswith("SubClassOf"):
-            parsed_sub_class, parsed_super_class = parsed_subsumption_axiom.children
-        elif str(class_subsumption_axiom).startswith("SuperClassOf"):
-            parsed_super_class, parsed_sub_class = parsed_subsumption_axiom.children
+        parsed_subsumption_axiom = self.parser.parse(object_property_subsumption_axiom).children[
+            0
+        ]  # skip the root node
+        if str(object_property_subsumption_axiom).startswith("SubObjectPropertyOf"):
+            parsed_sub_property, parsed_super_property = parsed_subsumption_axiom.children
+        elif str(object_property_subsumption_axiom).startswith("SuperObjectPropertyOf"):
+            parsed_super_property, parsed_sub_property = parsed_subsumption_axiom.children
 
-        verbalised_sub_class = self.verbalise_class_expression(parsed_sub_class)
-        verbalised_super_class = self.verbalise_class_expression(parsed_super_class)
-        return verbalised_sub_class, verbalised_super_class
+        verbalised_sub_property = self._verbalise_property(parsed_sub_property)
+        verbalised_super_property = self._verbalise_property(parsed_super_property)
+        return verbalised_sub_property, verbalised_super_property
 
     def verbalise_object_property_assertion(self, object_property_assertion_axiom: OWLAxiom):
         r"""Verbalise an object property assertion axiom.
