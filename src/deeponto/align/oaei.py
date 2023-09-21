@@ -123,12 +123,12 @@ def read_candidate_mappings(cand_maps_file: str, for_biollm: bool = False, thres
         tgt_cands = eval(tgt_cands)
         has_score = True if all([len(x) > 1 for x in tgt_cands]) else False
         cand_maps = []
-        refs.append(ReferenceMapping(src_ref_class, tgt_ref_class))
+        refs.append(ref_map) if tgt_ref_class != "UnMatched" else None
         if for_biollm:
-            for i, (t, s, a) in enumerate(tgt_cands):
+            for t, s, a in tgt_cands:
                 m = EntityMapping(src_ref_class, t, "=", s)
                 cand_maps.append(m)
-                if i == 0 and a is True and s >= threshold:  # only keep first one
+                if a is True and s >= threshold:  # only keep first one
                     preds.append(m)
         elif has_score:
             cand_maps = [EntityMapping(src_ref_class, t, "=", s) for t, s in tgt_cands]
