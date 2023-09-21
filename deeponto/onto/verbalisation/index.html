@@ -1279,7 +1279,7 @@ the names are retrieved from <span class="arithmatex">\(\texttt{rdfs:label}\)</s
           </td>
           <td>
             <div class="doc-md-description">
-              <p>Whether to apply lowercasing to the entity names.</p>
+              <p>Whether to apply lowercasing to the entity names. Defaults to <code>False</code>.</p>
             </div>
           </td>
         </tr>
@@ -1290,7 +1290,7 @@ the names are retrieved from <span class="arithmatex">\(\texttt{rdfs:label}\)</s
           </td>
           <td>
             <div class="doc-md-description">
-              <p>Whether to keep the IRIs of entities without verbalising them using <code>self.vocab</code>.</p>
+              <p>Whether to keep the IRIs of entities without verbalising them using <code>self.vocab</code>. Defaults to <code>False</code>.</p>
             </div>
           </td>
         </tr>
@@ -1301,7 +1301,7 @@ the names are retrieved from <span class="arithmatex">\(\texttt{rdfs:label}\)</s
           </td>
           <td>
             <div class="doc-md-description">
-              <p>Whether to automatically apply rule-based auto-correction to entity names.</p>
+              <p>Whether to automatically apply rule-based auto-correction to entity names. Defaults to <code>False</code>.</p>
             </div>
           </td>
         </tr>
@@ -1312,7 +1312,7 @@ the names are retrieved from <span class="arithmatex">\(\texttt{rdfs:label}\)</s
           </td>
           <td>
             <div class="doc-md-description">
-              <p>Whether to add quantifier words ("some"/"only") as in the Manchester syntax.</p>
+              <p>Whether to add quantifier words ("some"/"only") as in the Manchester syntax. Defaults to <code>False</code>.</p>
             </div>
           </td>
         </tr>
@@ -1354,7 +1354,7 @@ the names are retrieved from <span class="arithmatex">\(\texttt{rdfs:label}\)</s
           </td>
           <td>
             <div class="doc-md-description">
-              <p>Whether to apply lowercasing to the entity names. Defaults to False.</p>
+              <p>Whether to apply lowercasing to the entity names. Defaults to <code>False</code>.</p>
             </div>
           </td>
           <td>
@@ -1368,7 +1368,7 @@ the names are retrieved from <span class="arithmatex">\(\texttt{rdfs:label}\)</s
           </td>
           <td>
             <div class="doc-md-description">
-              <p>Whether to keep the IRIs of entities without verbalising them using <code>self.vocab</code>. Defaults to False.</p>
+              <p>Whether to keep the IRIs of entities without verbalising them using <code>self.vocab</code>. Defaults to <code>False</code>.</p>
             </div>
           </td>
           <td>
@@ -1382,7 +1382,7 @@ the names are retrieved from <span class="arithmatex">\(\texttt{rdfs:label}\)</s
           </td>
           <td>
             <div class="doc-md-description">
-              <p>Whether to automatically apply rule-based auto-correction to entity names. Defaults to False.</p>
+              <p>Whether to automatically apply rule-based auto-correction to entity names. Defaults to <code>False</code>.</p>
             </div>
           </td>
           <td>
@@ -1396,7 +1396,7 @@ the names are retrieved from <span class="arithmatex">\(\texttt{rdfs:label}\)</s
           </td>
           <td>
             <div class="doc-md-description">
-              <p>Whether to add quantifier words ("some"/"only") as in the Manchester syntax. Defaults to False.</p>
+              <p>Whether to add quantifier words ("some"/"only") as in the Manchester syntax. Defaults to <code>False</code>.</p>
             </div>
           </td>
           <td>
@@ -1462,10 +1462,10 @@ the names are retrieved from <span class="arithmatex">\(\texttt{rdfs:label}\)</s
 
 <span class="sd">    Args:</span>
 <span class="sd">        onto (Ontology): An ontology whose entities and axioms are to be verbalised.</span>
-<span class="sd">        apply_lowercasing (bool, optional): Whether to apply lowercasing to the entity names. Defaults to False.</span>
-<span class="sd">        keep_iri (bool, optional): Whether to keep the IRIs of entities without verbalising them using `self.vocab`. Defaults to False.</span>
-<span class="sd">        apply_auto_correction (bool, optional): Whether to automatically apply rule-based auto-correction to entity names. Defaults to False.</span>
-<span class="sd">        add_quantifier_word (bool, optional): Whether to add quantifier words (&quot;some&quot;/&quot;only&quot;) as in the Manchester syntax. Defaults to False.</span>
+<span class="sd">        apply_lowercasing (bool, optional): Whether to apply lowercasing to the entity names. Defaults to `False`.</span>
+<span class="sd">        keep_iri (bool, optional): Whether to keep the IRIs of entities without verbalising them using `self.vocab`. Defaults to `False`.</span>
+<span class="sd">        apply_auto_correction (bool, optional): Whether to automatically apply rule-based auto-correction to entity names. Defaults to `False`.</span>
+<span class="sd">        add_quantifier_word (bool, optional): Whether to add quantifier words (&quot;some&quot;/&quot;only&quot;) as in the Manchester syntax. Defaults to `False`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">onto</span> <span class="o">=</span> <span class="n">onto</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">OntologySyntaxParser</span><span class="p">()</span>

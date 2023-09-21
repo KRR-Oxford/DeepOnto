@@ -1092,6 +1092,65 @@ assertions and annotations. Defaults to <code>False</code>.</p>
         </tr>
     </tbody>
   </table>
+  
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>bidirectional_taxonomy</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p><em>description</em>. If <code>True</code> then per each <code>SubClass</code> edge one <code>SuperClass</code> edge will</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>only_taxonomy</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>If <code>True</code>, then projection will only include <code>subClass</code> edges. Defaults to <code>False</code>.</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>include_literals</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p><em>description</em>. If <code>True</code> the projection will also include triples involving data property</p>
+            </div>
+          </td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/onto/projection.py</code></summary>
@@ -1100,7 +1159,25 @@ assertions and annotations. Defaults to <code>False</code>.</p>
 <span class="normal">74</span>
 <span class="normal">75</span>
 <span class="normal">76</span>
-<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bidirectional_taxonomy</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_taxonomy</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_literals</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="normal">77</span>
+<span class="normal">78</span>
+<span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span>
+<span class="normal">86</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bidirectional_taxonomy</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">only_taxonomy</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">include_literals</span><span class="p">:</span> <span class="nb">bool</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise an ontology projector.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        bidirectional_taxonomy (bool, optional): _description_. If `True` then per each `SubClass` edge one `SuperClass` edge will</span>
+<span class="sd">        be generated. Defaults to `False`.</span>
+<span class="sd">        only_taxonomy (bool, optional): If `True`, then projection will only include `subClass` edges. Defaults to `False`.</span>
+<span class="sd">        include_literals (bool, optional): _description_. If `True` the projection will also include triples involving data property</span>
+<span class="sd">        assertions and annotations. Defaults to `False`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">bidirectional_taxonomy</span> <span class="o">=</span> <span class="n">bidirectional_taxonomy</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">include_literals</span> <span class="o">=</span> <span class="n">include_literals</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">only_taxonomy</span> <span class="o">=</span> <span class="n">only_taxonomy</span>
@@ -1192,22 +1269,22 @@ assertions and annotations. Defaults to <code>False</code>.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/projection.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">79</span>
-<span class="normal">80</span>
-<span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span>
-<span class="normal">84</span>
-<span class="normal">85</span>
-<span class="normal">86</span>
-<span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span>
-<span class="normal">92</span>
-<span class="normal">93</span>
-<span class="normal">94</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ontology</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 88</span>
+<span class="normal"> 89</span>
+<span class="normal"> 90</span>
+<span class="normal"> 91</span>
+<span class="normal"> 92</span>
+<span class="normal"> 93</span>
+<span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">project</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ontology</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The projection algorithm implemented in OWL2Vec*.</span>
 
 <span class="sd">    Args:</span>
