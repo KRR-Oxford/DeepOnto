@@ -56,7 +56,7 @@ dependencies {
     implementation 'de.tu-dresden.inf.lat.jcel:jcel-owlapi:0.24.1'
     implementation 'net.sourceforge.owlapi:owlapi-distribution:4.5.22'
     implementation 'net.sourceforge.owlapi:owlapi-osgidistribution:4.5.22'
-    implementation 'org.semanticweb.elk:elk-distribution:0.4.3'
+    // implementation 'org.semanticweb.elk:elk-distribution:0.4.3'  // latest version manually added
     implementation 'net.sourceforge.owlapi:org.semanticweb.hermit:1.3.8.413'
     implementation 'org.codehaus.groovy:groovy-all:2.4.15'
     implementation 'org.scala-lang:scala-library:2.11.12'
