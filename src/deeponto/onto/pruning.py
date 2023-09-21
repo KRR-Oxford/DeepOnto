@@ -30,6 +30,11 @@ class OntologyPruner:
     """
     
     def __init__(self, onto: Ontology):
+        """Initialise an ontology pruner.
+
+        Args:
+            onto (Ontology): The input ontology to be pruned. Note that the pruning process is in-place.
+        """
         self.onto = onto
         self._pruning_applied = None
         
