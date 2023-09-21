@@ -87,17 +87,22 @@ class OntologyVerbaliser:
     r"""A recursive natural language verbaliser for the OWL logical expressions, e.g., [`OWLAxiom`](http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html)
     and [`OWLClassExpression`](https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/model/OWLClassExpression.html).
 
-    The concept patterns supported by this verbaliser are shown below:
+    The concept patterns supported by this verbaliser (`.verbalise_class_expression()`) are shown below:
 
     | **Pattern**                 | **Verbalisation** ($\mathcal{V}$)                                                                                                                                                    |
     |-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-    | $A$ (atomic)                | the name ($\texttt{rdfs:label}$) of $A$                                                                                                                                               |
-    | $r$ (property)              | the name ($\texttt{rdfs:label}$) of $r$; *"is"* is appended to the head if the name starts with a passive verb, noun, or adjective                                                    |
+    | $A$ (atomic)                | the name ($\texttt{rdfs:label}$) of $A$  (auto-correction is optional)                                                                                                                                              |
+    | $r$ (property)              | the name ($\texttt{rdfs:label}$) of $r$  (auto-correction is optional)                                                |
     | $\neg C$                    | *"not $\mathcal{V}(C)$"*                                                                                                                                                              |
-    | $\exists r.C$               | *"something that $\mathcal{V}(r)$ some $\mathcal{V}(C)$"*                                                                                                                              |
-    | $\forall r.C$               | *"something that $\mathcal{V}(r)$ only $\mathcal{V}(C)$"*                                                                                                                             |
+    | $\exists r.C$               | *"something that $\mathcal{V}(r)$ some $\mathcal{V}(C)$"*  (the quantifier word *"some"* is optional)                                                                                                              |
+    | $\forall r.C$               | *"something that $\mathcal{V}(r)$ only $\mathcal{V}(C)$"*  (the quantifier word *"only"* is optional)                                                                                                                           |
     | $C_1 \sqcap ... \sqcap C_n$ | if $C_i = \exists/\forall r.D_i$ and $C_j = \exists/\forall r.D_j$, they will be re-written into $\exists/\forall r.(D_i \sqcap D_j)$ before verbalisation; suppose after re-writing the new expression is $C_1 \sqcap ... \sqcap C_{n'}$ <p> **(a)** if **all** $C_i$s (for $i = 1, ..., n'$) are restrictions, in the form of $\exists/\forall r_i.D_i$: <br /> *"something that $\mathcal{V}(r_1)$ some/only $V(D_1)$ and ... and $\mathcal{V}(r_{n'})$ some/only $V(D_{n'})$"* <br /> **(b)** if **some** $C_i$s (for $i = m+1, ..., n'$) are restrictions, in the form of $\exists/\forall r_i.D_i$: <br /> *"$\mathcal{V}(C_{1})$ and ... and $\mathcal{V}(C_{m})$ that $\mathcal{V}(r_{m+1})$ some/only $V(D_{m+1})$ and ... and $\mathcal{V}(r_{n'})$ some/only $V(D_{n'})$"* <br /> **(c)** if **no** $C_i$ is a restriction: <br /> *"$\mathcal{V}(C_{1})$ and ... and $\mathcal{V}(C_{n'})$"* |
     | $C_1 \sqcup ... \sqcup C_n$ | similar to verbalising $C_1 \sqcap ... \sqcap C_n$ except that *"and"* is replaced by *"or"* and case **(b)** uses the same verbalisation as case **(c)**                             |
+    | $r_1 \cdot r_2$ (property chain) |  $\mathcal{V}(r_1)$ something that $\mathcal{V}(r_2)$ |
+    
+    
+    With this concept verbaliser, a range of OWL axioms (`.verbalise_owl_axiom()`) are supported:
+    - 
 
 
     !!! warning
@@ -246,7 +251,7 @@ class OntologyVerbaliser:
             return self._verbalise_iri(property_node, is_property=True)
         else:
             properties = [self._verbalise_iri(p, is_property=True) for p in property_node.children]
-            verbal = [p.verbal for p in properties].join(" something that ")
+            verbal = " something that ".join([p.verbal for p in properties])
             return CfgNode(
                 {
                     "verbal": verbal,
@@ -365,6 +370,23 @@ class OntologyVerbaliser:
                     )
 
         return results
+    
+    def verbalise_axiom(self, owl_axiom: OWLAxiom):
+        r"""Verbalise an owl axiom (`OWLAxiom`) or its parsed form (in `RangeNode`).
+
+        See currently supported types of class (or concept) expressions [here][deeponto.onto.verbalisation.OntologyVerbaliser].
+
+
+        Args:
+            class_expression (Union[OWLClassExpression, str, RangeNode]): A class expression to be verbalised.
+
+        Raises:
+            RuntimeError: Occurs when the class expression is not in one of the supported types.
+
+        Returns:
+            (CfgNode): A nested dictionary that presents the recursive results of verbalisation. The verbalised string
+                can be accessed with the key `["verbal"]` or with the attribute `.verbal`.
+        """
 
     def verbalise_class_subsumption_axiom(self, class_subsumption_axiom: OWLAxiom):
         r"""Verbalise a class subsumption axiom.
@@ -447,6 +469,38 @@ class OntologyVerbaliser:
         verbalised_class = self.verbalise_class_expression(parsed_class)
         verbalised_individual = self._verbalise_iri(parsed_individual)
         return verbalised_class, verbalised_individual
+    
+    def verbalise_object_property_subsumption_axiom(self, class_subsumption_axiom: OWLAxiom):
+        r"""Verbalise a class subsumption axiom.
+
+        The subsumption axiom can have two forms:
+
+        - $C_{sub} \sqsubseteq C_{super}$, the `SubClassOf` axiom;
+        - $C_{super} \sqsupseteq C_{sub}$, the `SuperClassOf` axiom.
+
+        Args:
+            class_subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.
+
+        Returns:
+            (Tuple[CfgNode, CfgNode]): The verbalised sub-concept $\mathcal{V}(C_{sub})$ and super-concept $\mathcal{V}(C_{super})$ (order matters).
+        """
+
+        # input check
+        axiom_type = self.onto.get_axiom_type(class_subsumption_axiom)
+        assert axiom_type in [
+            "SubClassOf",
+            "SuperClassOf",
+        ], f"Input axiom type `{axiom_type}` is not subsumption (`SubClassOf` or `SuperClassOf`)."
+
+        parsed_subsumption_axiom = self.parser.parse(class_subsumption_axiom).children[0]  # skip the root node
+        if str(class_subsumption_axiom).startswith("SubClassOf"):
+            parsed_sub_class, parsed_super_class = parsed_subsumption_axiom.children
+        elif str(class_subsumption_axiom).startswith("SuperClassOf"):
+            parsed_super_class, parsed_sub_class = parsed_subsumption_axiom.children
+
+        verbalised_sub_class = self.verbalise_class_expression(parsed_sub_class)
+        verbalised_super_class = self.verbalise_class_expression(parsed_super_class)
+        return verbalised_sub_class, verbalised_super_class
 
     def verbalise_object_property_assertion(self, object_property_assertion_axiom: OWLAxiom):
         r"""Verbalise an object property assertion axiom.
