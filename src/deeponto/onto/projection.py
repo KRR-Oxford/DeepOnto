@@ -74,10 +74,10 @@ class OntologyProjector:
 
         Args:
             bidirectional_taxonomy (bool, optional): _description_. If `True` then per each `SubClass` edge one `SuperClass` edge will
-            be generated. Defaults to `False`.
+                be generated. Defaults to `False`.
             only_taxonomy (bool, optional): If `True`, then projection will only include `subClass` edges. Defaults to `False`.
             include_literals (bool, optional): _description_. If `True` the projection will also include triples involving data property
-            assertions and annotations. Defaults to `False`.
+                assertions and annotations. Defaults to `False`.
         """
         self.bidirectional_taxonomy = bidirectional_taxonomy
         self.include_literals = include_literals
