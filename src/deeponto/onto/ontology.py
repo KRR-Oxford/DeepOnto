@@ -97,6 +97,7 @@ class Ontology:
 
         Args:
             owl_path (str): The path to the OWL ontology file.
+            reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`.
         """
         self.owl_path = os.path.abspath(owl_path)
         self.owl_manager = OWLManager.createOWLOntologyManager()
@@ -609,6 +610,7 @@ class OntologyReasoner:
 
         Args:
             onto (Ontology): The input ontology to conduct reasoning on.
+            reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`.
         """
         self.onto = onto
 
