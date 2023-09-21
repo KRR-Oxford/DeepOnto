@@ -1272,15 +1272,16 @@ Security in case of vulnerabilities. -->
 </li>
 <li class="task-list-item">
 <p><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> new features into <code>deeponto.onto.OntologyVerbaliser</code> including:</p>
-</li>
+<ul>
+<li>property chain verbalisation at <code>verbalise_class_expression()</code>.</li>
 <li><code>verbalise_class_subsumption()</code> for class subsumption axioms;</li>
 <li><code>verbalise_class_equivalence()</code> for class equivalence axioms;</li>
 <li><code>verbalise_class_assertion()</code> for class assertion axioms;</li>
 <li><code>verbalise_relation_assertion()</code> for relation assertion axioms;</li>
 <li><code>auto-correction</code> option for fixing entity names.</li>
 <li><code>keep_iri</code> option for keeping entity IRIs.</li>
-<li>
-<p><code>add_quantifier_word</code> option for adding quantifier words as in the Manchester syntax.  </p>
+<li><code>add_quantifier_word</code> option for adding quantifier words as in the Manchester syntax.  </li>
+</ul>
 </li>
 <li class="task-list-item">
 <p><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>get_assertion_axioms()</code> method at <code>deeponto.onto.Ontology</code>.</p>
