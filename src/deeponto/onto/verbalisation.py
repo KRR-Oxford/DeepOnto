@@ -35,11 +35,11 @@ ABBREVIATION_DICT = {
     "ObjectIntersectionOf": "[AND]",  # conjunction
     "ObjectPropertyChain": "[OPC]",  # object property chain
     "EquivalentClasses": "[EQV]",  # equivalence
-    "SubClassOf": "[SUB]",  # subsumed by
-    "SuperClassOf": "[SUP]",  # subsumes
+    "SubClassOf": "[SUB]",  # subsumed by (class)
+    "SuperClassOf": "[SUP]",  # subsumes (class)
     "ClassAssertion": "[CLA]",  # class assertion
-    "SubObjectPropertyOf": "[SUB]",  # subsumed by
-    "SuperObjectPropertyOf": "[SUP]", #  subsumes
+    "SubObjectPropertyOf": "[SUB]",  # subsumed by (object property)
+    "SuperObjectPropertyOf": "[SUP]", #  subsumes (object property)
     "ObjectPropertyAssertion": "[OPA]",  # object property assertion
 }
 
