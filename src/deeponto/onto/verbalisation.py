@@ -38,6 +38,8 @@ ABBREVIATION_DICT = {
     "SubClassOf": "[SUB]",  # subsumed by
     "SuperClassOf": "[SUP]",  # subsumes
     "ClassAssertion": "[CLA]",  # class assertion
+    "SubObjectPropertyOf": "[SUB]",  # subsumed by
+    "SuperObjectPropertyOf": "[SUP]", #  subsumes
     "ObjectPropertyAssertion": "[OPA]",  # object property assertion
 }
 
