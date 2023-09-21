@@ -377,23 +377,6 @@ class OntologyVerbaliser:
 
         return results
 
-    def verbalise_axiom(self, owl_axiom: OWLAxiom):
-        r"""Verbalise an owl axiom (`OWLAxiom`) or its parsed form (in `RangeNode`).
-
-        See currently supported types of class (or concept) expressions [here][deeponto.onto.verbalisation.OntologyVerbaliser].
-
-
-        Args:
-            class_expression (Union[OWLClassExpression, str, RangeNode]): A class expression to be verbalised.
-
-        Raises:
-            RuntimeError: Occurs when the class expression is not in one of the supported types.
-
-        Returns:
-            (CfgNode): A nested dictionary that presents the recursive results of verbalisation. The verbalised string
-                can be accessed with the key `["verbal"]` or with the attribute `.verbal`.
-        """
-
     def verbalise_class_subsumption_axiom(self, class_subsumption_axiom: OWLAxiom):
         r"""Verbalise a class subsumption axiom.
 
