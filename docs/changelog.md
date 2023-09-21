@@ -9,7 +9,9 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased
 
-...
+### Changed
+
+- [X] Change the log level of the ELK reasoner to `ERROR``.
 ## v0.8.6 (2023 September)
 
 ### Added
