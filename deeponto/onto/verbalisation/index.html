@@ -1934,7 +1934,7 @@ can be accessed with the key <code>["verbal"]</code> or with the attribute <code
           </td>
           <td>
             <div class="doc-md-description">
-              <p>The subsumption axiom to be verbalised.</p>
+              <p>Then class subsumption axiom to be verbalised.</p>
             </div>
           </td>
           <td>
@@ -2009,7 +2009,7 @@ can be accessed with the key <code>["verbal"]</code> or with the attribute <code
 <span class="sd">    - $C_{super} \sqsupseteq C_{sub}$, the `SuperClassOf` axiom.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        class_subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.</span>
+<span class="sd">        class_subsumption_axiom (OWLAxiom): Then class subsumption axiom to be verbalised.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        (Tuple[CfgNode, CfgNode]): The verbalised sub-concept $\mathcal{V}(C_{sub})$ and super-concept $\mathcal{V}(C_{super})$ (order matters).</span>
@@ -2020,7 +2020,7 @@ can be accessed with the key <code>["verbal"]</code> or with the attribute <code
     <span class="k">assert</span> <span class="n">axiom_type</span> <span class="ow">in</span> <span class="p">[</span>
         <span class="s2">&quot;SubClassOf&quot;</span><span class="p">,</span>
         <span class="s2">&quot;SuperClassOf&quot;</span><span class="p">,</span>
-    <span class="p">],</span> <span class="sa">f</span><span class="s2">&quot;Input axiom type `</span><span class="si">{</span><span class="n">axiom_type</span><span class="si">}</span><span class="s2">` is not subsumption (`SubClassOf` or `SuperClassOf`).&quot;</span>
+    <span class="p">],</span> <span class="sa">f</span><span class="s2">&quot;Input axiom type `</span><span class="si">{</span><span class="n">axiom_type</span><span class="si">}</span><span class="s2">` is not class subsumption (`SubClassOf` or `SuperClassOf`).&quot;</span>
 
     <span class="n">parsed_subsumption_axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">class_subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># skip the root node</span>
     <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">class_subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SubClassOf&quot;</span><span class="p">):</span>
@@ -2073,7 +2073,7 @@ can be accessed with the key <code>["verbal"]</code> or with the attribute <code
           </td>
           <td>
             <div class="doc-md-description">
-              <p>The equivalence axiom to be verbalised.</p>
+              <p>The class equivalence axiom to be verbalised.</p>
             </div>
           </td>
           <td>
@@ -2138,7 +2138,7 @@ can be accessed with the key <code>["verbal"]</code> or with the attribute <code
 <span class="sd">    The equivalence axiom has the form $C \equiv D$.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        class_equivalence_axiom (OWLAxiom): The equivalence axiom to be verbalised.</span>
+<span class="sd">        class_equivalence_axiom (OWLAxiom): The class equivalence axiom to be verbalised.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        (Tuple[CfgNode, CfgNode]): The verbalised concept $\mathcal{V}(C)$ and its equivalent concept $\mathcal{V}(D)$ (order matters).</span>
@@ -2293,18 +2293,18 @@ can be accessed with the key <code>["verbal"]</code> or with the attribute <code
 
 
 <h3 id="deeponto.onto.verbalisation.OntologyVerbaliser.verbalise_object_property_subsumption_axiom" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">verbalise_object_property_subsumption_axiom</span><span class="p">(</span><span class="n">class_subsumption_axiom</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">verbalise_object_property_subsumption_axiom</span><span class="p">(</span><span class="n">object_property_subsumption_axiom</span><span class="p">)</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Verbalise a class subsumption axiom.</p>
+      <p>Verbalise an object property subsumption axiom.</p>
 <p>The subsumption axiom can have two forms:</p>
 <ul>
-<li><span class="arithmatex">\(C_{sub} \sqsubseteq C_{super}\)</span>, the <code>SubClassOf</code> axiom;</li>
-<li><span class="arithmatex">\(C_{super} \sqsupseteq C_{sub}\)</span>, the <code>SuperClassOf</code> axiom.</li>
+<li><span class="arithmatex">\(r_{sub} \sqsubseteq r_{super}\)</span>, the <code>SubObjectPropertyOf</code> axiom;</li>
+<li><span class="arithmatex">\(r_{super} \sqsupseteq r_{sub}\)</span>, the <code>SuperObjectPropertyOf</code> axiom.</li>
 </ul>
 
 
@@ -2321,13 +2321,13 @@ can be accessed with the key <code>["verbal"]</code> or with the attribute <code
     </thead>
     <tbody>
         <tr>
-          <td><code>class_subsumption_axiom</code></td>
+          <td><code>object_property_subsumption_axiom</code></td>
           <td>
                 <code><span title="org.semanticweb.owlapi.model.OWLAxiom">OWLAxiom</span></code>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>The subsumption axiom to be verbalised.</p>
+              <p>The object property subsumption axiom to be verbalised.</p>
             </div>
           </td>
           <td>
@@ -2354,7 +2354,7 @@ can be accessed with the key <code>["verbal"]</code> or with the attribute <code
           </td>
           <td>
             <div class="doc-md-description">
-              <p>The verbalised sub-concept <span class="arithmatex">\(\mathcal{V}(C_{sub})\)</span> and super-concept <span class="arithmatex">\(\mathcal{V}(C_{super})\)</span> (order matters).</p>
+              <p>The verbalised sub-property <span class="arithmatex">\(\mathcal{V}(r_{sub})\)</span> and super-property <span class="arithmatex">\(\mathcal{V}(r_{super})\)</span> (order matters).</p>
             </div>
           </td>
         </tr>
@@ -2393,37 +2393,41 @@ can be accessed with the key <code>["verbal"]</code> or with the attribute <code
 <span class="normal">504</span>
 <span class="normal">505</span>
 <span class="normal">506</span>
-<span class="normal">507</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_object_property_subsumption_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_subsumption_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Verbalise a class subsumption axiom.</span>
+<span class="normal">507</span>
+<span class="normal">508</span>
+<span class="normal">509</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_object_property_subsumption_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_property_subsumption_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Verbalise an object property subsumption axiom.</span>
 
 <span class="sd">    The subsumption axiom can have two forms:</span>
 
-<span class="sd">    - $C_{sub} \sqsubseteq C_{super}$, the `SubClassOf` axiom;</span>
-<span class="sd">    - $C_{super} \sqsupseteq C_{sub}$, the `SuperClassOf` axiom.</span>
+<span class="sd">    - $r_{sub} \sqsubseteq r_{super}$, the `SubObjectPropertyOf` axiom;</span>
+<span class="sd">    - $r_{super} \sqsupseteq r_{sub}$, the `SuperObjectPropertyOf` axiom.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        class_subsumption_axiom (OWLAxiom): The subsumption axiom to be verbalised.</span>
+<span class="sd">        object_property_subsumption_axiom (OWLAxiom): The object property subsumption axiom to be verbalised.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        (Tuple[CfgNode, CfgNode]): The verbalised sub-concept $\mathcal{V}(C_{sub})$ and super-concept $\mathcal{V}(C_{super})$ (order matters).</span>
+<span class="sd">        (Tuple[CfgNode, CfgNode]): The verbalised sub-property $\mathcal{V}(r_{sub})$ and super-property $\mathcal{V}(r_{super})$ (order matters).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># input check</span>
-    <span class="n">axiom_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_axiom_type</span><span class="p">(</span><span class="n">class_subsumption_axiom</span><span class="p">)</span>
+    <span class="n">axiom_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">get_axiom_type</span><span class="p">(</span><span class="n">object_property_subsumption_axiom</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">axiom_type</span> <span class="ow">in</span> <span class="p">[</span>
-        <span class="s2">&quot;SubClassOf&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;SuperClassOf&quot;</span><span class="p">,</span>
-    <span class="p">],</span> <span class="sa">f</span><span class="s2">&quot;Input axiom type `</span><span class="si">{</span><span class="n">axiom_type</span><span class="si">}</span><span class="s2">` is not subsumption (`SubClassOf` or `SuperClassOf`).&quot;</span>
+        <span class="s2">&quot;SubObjectPropertyOf&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;SuperObjectPropertyOf&quot;</span><span class="p">,</span>
+    <span class="p">],</span> <span class="sa">f</span><span class="s2">&quot;Input axiom type `</span><span class="si">{</span><span class="n">axiom_type</span><span class="si">}</span><span class="s2">` is not object property subsumption (`SubObjectPropertyOf` or `SuperObjectPropertyOf`).&quot;</span>
 
-    <span class="n">parsed_subsumption_axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">class_subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># skip the root node</span>
-    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">class_subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SubClassOf&quot;</span><span class="p">):</span>
-        <span class="n">parsed_sub_class</span><span class="p">,</span> <span class="n">parsed_super_class</span> <span class="o">=</span> <span class="n">parsed_subsumption_axiom</span><span class="o">.</span><span class="n">children</span>
-    <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">class_subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SuperClassOf&quot;</span><span class="p">):</span>
-        <span class="n">parsed_super_class</span><span class="p">,</span> <span class="n">parsed_sub_class</span> <span class="o">=</span> <span class="n">parsed_subsumption_axiom</span><span class="o">.</span><span class="n">children</span>
+    <span class="n">parsed_subsumption_axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">object_property_subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">children</span><span class="p">[</span>
+        <span class="mi">0</span>
+    <span class="p">]</span>  <span class="c1"># skip the root node</span>
+    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">object_property_subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SubObjectPropertyOf&quot;</span><span class="p">):</span>
+        <span class="n">parsed_sub_property</span><span class="p">,</span> <span class="n">parsed_super_property</span> <span class="o">=</span> <span class="n">parsed_subsumption_axiom</span><span class="o">.</span><span class="n">children</span>
+    <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">object_property_subsumption_axiom</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;SuperObjectPropertyOf&quot;</span><span class="p">):</span>
+        <span class="n">parsed_super_property</span><span class="p">,</span> <span class="n">parsed_sub_property</span> <span class="o">=</span> <span class="n">parsed_subsumption_axiom</span><span class="o">.</span><span class="n">children</span>
 
-    <span class="n">verbalised_sub_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbalise_class_expression</span><span class="p">(</span><span class="n">parsed_sub_class</span><span class="p">)</span>
-    <span class="n">verbalised_super_class</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbalise_class_expression</span><span class="p">(</span><span class="n">parsed_super_class</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">verbalised_sub_class</span><span class="p">,</span> <span class="n">verbalised_super_class</span>
+    <span class="n">verbalised_sub_property</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbalise_property</span><span class="p">(</span><span class="n">parsed_sub_property</span><span class="p">)</span>
+    <span class="n">verbalised_super_property</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verbalise_property</span><span class="p">(</span><span class="n">parsed_super_property</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">verbalised_sub_property</span><span class="p">,</span> <span class="n">verbalised_super_property</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -2502,9 +2506,7 @@ can be accessed with the key <code>["verbal"]</code> or with the attribute <code
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/verbalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">509</span>
-<span class="normal">510</span>
-<span class="normal">511</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">511</span>
 <span class="normal">512</span>
 <span class="normal">513</span>
 <span class="normal">514</span>
@@ -2527,7 +2529,9 @@ can be accessed with the key <code>["verbal"]</code> or with the attribute <code
 <span class="normal">531</span>
 <span class="normal">532</span>
 <span class="normal">533</span>
-<span class="normal">534</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_object_property_assertion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_property_assertion_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">):</span>
+<span class="normal">534</span>
+<span class="normal">535</span>
+<span class="normal">536</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_object_property_assertion</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">object_property_assertion_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Verbalise an object property assertion axiom.</span>
 
 <span class="sd">    The object property assertion axiom has the form $r(x, y)$.</span>
@@ -2649,8 +2653,8 @@ accessed by <code>.text</code>. For example:</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/onto/verbalisation.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">626</span>
-<span class="normal">627</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">628</span>
+<span class="normal">629</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">pass</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -2740,9 +2744,7 @@ fixed length (easier for parsing).</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/verbalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">629</span>
-<span class="normal">630</span>
-<span class="normal">631</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">631</span>
 <span class="normal">632</span>
 <span class="normal">633</span>
 <span class="normal">634</span>
@@ -2754,7 +2756,9 @@ fixed length (easier for parsing).</p>
 <span class="normal">640</span>
 <span class="normal">641</span>
 <span class="normal">642</span>
-<span class="normal">643</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">abbreviate_owl_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">abbreviate_owl_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Abbreviate the string representations of logical operators to a</span>
 <span class="sd">    fixed length (easier for parsing).</span>
 
@@ -2848,9 +2852,7 @@ method below.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/verbalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">645</span>
-<span class="normal">646</span>
-<span class="normal">647</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">647</span>
 <span class="normal">648</span>
 <span class="normal">649</span>
 <span class="normal">650</span>
@@ -2867,7 +2869,9 @@ method below.</p>
 <span class="normal">661</span>
 <span class="normal">662</span>
 <span class="normal">663</span>
-<span class="normal">664</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OWLObject</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
+<span class="normal">664</span>
+<span class="normal">665</span>
+<span class="normal">666</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OWLObject</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.verbalisation.RangeNode].</span>
 
 <span class="sd">    This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.verbalisation.OntologySyntaxParser.parse_by_parentheses]</span>
@@ -3022,9 +3026,7 @@ a different parenthesis pattern.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/verbalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">666</span>
-<span class="normal">667</span>
-<span class="normal">668</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">668</span>
 <span class="normal">669</span>
 <span class="normal">670</span>
 <span class="normal">671</span>
@@ -3086,7 +3088,9 @@ a different parenthesis pattern.</p>
 <span class="normal">727</span>
 <span class="normal">728</span>
 <span class="normal">729</span>
-<span class="normal">730</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">730</span>
+<span class="normal">731</span>
+<span class="normal">732</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span> <span class="nf">parse_by_parentheses</span><span class="p">(</span>
     <span class="bp">cls</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">already_parsed</span><span class="p">:</span> <span class="n">RangeNode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">for_iri</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
@@ -3190,16 +3194,16 @@ a different parenthesis pattern.</p>
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/onto/verbalisation.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">742</span>
-<span class="normal">743</span>
-<span class="normal">744</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">744</span>
 <span class="normal">745</span>
 <span class="normal">746</span>
 <span class="normal">747</span>
 <span class="normal">748</span>
 <span class="normal">749</span>
 <span class="normal">750</span>
-<span class="normal">751</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="normal">751</span>
+<span class="normal">752</span>
+<span class="normal">753</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">start</span> <span class="o">&gt;=</span> <span class="n">end</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;invalid start and end positions ...&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">start</span>
@@ -3250,9 +3254,7 @@ a different parenthesis pattern.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/verbalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">758</span>
-<span class="normal">759</span>
-<span class="normal">760</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">760</span>
 <span class="normal">761</span>
 <span class="normal">762</span>
 <span class="normal">763</span>
@@ -3272,7 +3274,9 @@ a different parenthesis pattern.</p>
 <span class="normal">777</span>
 <span class="normal">778</span>
 <span class="normal">779</span>
-<span class="normal">780</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
+<span class="normal">780</span>
+<span class="normal">781</span>
+<span class="normal">782</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compare two ranges if they have a different `start` and/or a different `end`.</span>
 
 <span class="sd">    - $R_1 \lt R_2$: if range $R_1$ is completely contained in range $R_2$, and $R_1 \neq R_2$.</span>
@@ -3322,11 +3326,11 @@ a different parenthesis pattern.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/verbalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">782</span>
-<span class="normal">783</span>
-<span class="normal">784</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">784</span>
 <span class="normal">785</span>
-<span class="normal">786</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">786</span>
+<span class="normal">787</span>
+<span class="normal">788</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">sort_by_start</span><span class="p">(</span><span class="n">nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RangeNode</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A sorting function that sorts the nodes by their starting positions.&quot;&quot;&quot;</span>
     <span class="n">temp</span> <span class="o">=</span> <span class="p">{</span><span class="n">sib</span><span class="p">:</span> <span class="n">sib</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">sib</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">}</span>
@@ -3355,9 +3359,7 @@ a different parenthesis pattern.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/verbalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">788</span>
-<span class="normal">789</span>
-<span class="normal">790</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">790</span>
 <span class="normal">791</span>
 <span class="normal">792</span>
 <span class="normal">793</span>
@@ -3385,7 +3387,9 @@ a different parenthesis pattern.</p>
 <span class="normal">815</span>
 <span class="normal">816</span>
 <span class="normal">817</span>
-<span class="normal">818</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">insert_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
+<span class="normal">818</span>
+<span class="normal">819</span>
+<span class="normal">820</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">insert_child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">RangeNode</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Inserting a child [`RangeNode`][deeponto.onto.verbalisation.RangeNode].</span>
 
 <span class="sd">    Child nodes have a smaller (inclusive) range, e.g., `[2, 5]` is a child of `[1, 6]`.</span>
@@ -3439,9 +3443,9 @@ a different parenthesis pattern.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/verbalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">823</span>
-<span class="normal">824</span>
-<span class="normal">825</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">render_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">825</span>
+<span class="normal">826</span>
+<span class="normal">827</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">render_tree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Render the whole tree.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">RenderTree</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -3471,9 +3475,7 @@ which will be displayed.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/verbalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">827</span>
-<span class="normal">828</span>
-<span class="normal">829</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">829</span>
 <span class="normal">830</span>
 <span class="normal">831</span>
 <span class="normal">832</span>
@@ -3482,7 +3484,9 @@ which will be displayed.</p>
 <span class="normal">835</span>
 <span class="normal">836</span>
 <span class="normal">837</span>
-<span class="normal">838</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">render_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">838</span>
+<span class="normal">839</span>
+<span class="normal">840</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">render_image</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calling this function will generate a temporary `range_node.png` file</span>
 <span class="sd">    which will be displayed.</span>
 
