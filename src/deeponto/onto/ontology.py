@@ -130,6 +130,7 @@ class Ontology:
                 "num_data_properties": len(self.owl_data_properties),
                 "num_annotation_properties": len(self.owl_annotation_properties),
                 "num_individuals": len(self.owl_individuals),
+                "reasoner_type": self.reasoner_type,
             }
         }
 
