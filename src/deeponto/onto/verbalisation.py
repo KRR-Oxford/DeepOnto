@@ -33,11 +33,12 @@ ABBREVIATION_DICT = {
     "ObjectAllValuesFrom": "[ALL]",  # universal restriction
     "ObjectUnionOf": "[OR.]",  # disjunction
     "ObjectIntersectionOf": "[AND]",  # conjunction
+    "ObjectPropertyChain": "[OPC]",  # object property chain
     "EquivalentClasses": "[EQV]",  # equivalence
     "SubClassOf": "[SUB]",  # subsumed by
     "SuperClassOf": "[SUP]",  # subsumes
     "ClassAssertion": "[CLA]",  # class assertion
-    "ObjectPropertyAssertion": "[OBA]",  # object property assertion
+    "ObjectPropertyAssertion": "[OPA]",  # object property assertion
 }
 
 RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
@@ -208,20 +209,11 @@ class OntologyVerbaliser:
         if parsed_class_expression.name.startswith("AND") or parsed_class_expression.name.startswith("OR"):
             return self._verbalise_junction(parsed_class_expression)
 
-        raise RuntimeError(f"Input class expression `{str(class_expression)}` is not in one of the supported types.")
+        # for a property chain
+        if parsed_class_expression.name.startswith("OPC"):
+            return self._verbalise_property(parsed_class_expression)
 
-    def _verbalise_iri(self, iri_node: RangeNode, is_property: bool = False):
-        """Verbalise a (parsed) named entity (class, property, or individual) that has an IRI."""
-        iri = iri_node.text.lstrip("<").rstrip(">")
-        verbal = self.vocab[iri] if not self.keep_iri else iri_node.text
-        if self.apply_auto_correction:
-            fix = self._fix_verb_phrase if is_property else self._fix_noun_phrase
-            verbal = fix(verbal)
-        return CfgNode({"verbal": verbal, "iri": iri, "type": "IRI"})
-    
-    def _verbalise_property(self, property_node: RangeNode):
-        # TODO: to support property chain; also need to change the recursion at restriction 
-        pass
+        raise RuntimeError(f"Input class expression `{str(class_expression)}` is not in one of the supported types.")
 
     def _fix_noun_phrase(self, noun_phrase: str):
         """Rule-based auto-correction for the noun phrase."""
@@ -239,6 +231,30 @@ class OntologyVerbaliser:
             verb_phrase = "is " + verb_phrase
         return verb_phrase
 
+    def _verbalise_iri(self, iri_node: RangeNode, is_property: bool = False):
+        """Verbalise a (parsed) named entity (class, property, or individual) that has an IRI."""
+        iri = iri_node.text.lstrip("<").rstrip(">")
+        verbal = self.vocab[iri] if not self.keep_iri else iri_node.text
+        if self.apply_auto_correction:
+            fix = self._fix_verb_phrase if is_property else self._fix_noun_phrase
+            verbal = fix(verbal)
+        return CfgNode({"verbal": verbal, "iri": iri, "type": "IRI"})
+
+    def _verbalise_property(self, property_node: RangeNode):
+        """Verbalise a (parsed) property expression in the form of IRI or property chain."""
+        if property_node.is_iri:
+            return self._verbalise_iri(property_node, is_property=True)
+        else:
+            properties = [self._verbalise_iri(p, is_property=True) for p in property_node.children]
+            verbal = [p.verbal for p in properties].join(" something that ")
+            return CfgNode(
+                {
+                    "verbal": verbal,
+                    "properties": properties,
+                    "type": property_node.name[:3],
+                }
+            )
+
     def _verbalise_restriction(self, restriction_node: RangeNode, add_something: bool = True):
         """Verbalise a (parsed) class expression in the form of existential or universal restriction."""
 
@@ -251,8 +267,8 @@ class OntologyVerbaliser:
         quantifier_word = "some" if restriction_node.name.startswith("EX.") else "only"
 
         object_property = restriction_node.children[0]
-        assert object_property.is_iri
-        object_property = self._verbalise_iri(object_property, is_property=True)
+        # assert object_property.is_iri
+        object_property = self._verbalise_property(object_property)
 
         class_expression = restriction_node.children[1]
         class_expression = self.verbalise_class_expression(class_expression.text)
