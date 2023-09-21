@@ -233,6 +233,10 @@ class Ontology:
         Check full list at: <http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/AxiomType.html>.
         """
         return str(axiom.getAxiomType())
+    
+    def get_all_axioms(self):
+        """Return all axioms (in a list) asserted in the ontology."""
+        return list(self.owl_onto.getAxioms())
 
     def get_subsumption_axioms(self, entity_type: str = "Classes"):
         """Return subsumption axioms (subject to input entity type) asserted in the ontology.
