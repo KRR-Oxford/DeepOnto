@@ -96,7 +96,7 @@ def matching_eval(
 ################################################################
 
 
-def read_candidate_mappings(cand_maps_file: str, for_biollm: bool = False):
+def read_candidate_mappings(cand_maps_file: str, for_biollm: bool = False, threshold: float = 0.0):
     r"""Load scored or already ranked candidate mappings.
 
     The predicted candidate mappings are formatted the same as `test.cands.tsv`, with three columns:
@@ -125,10 +125,10 @@ def read_candidate_mappings(cand_maps_file: str, for_biollm: bool = False):
         cand_maps = []
         refs.append(ReferenceMapping(src_ref_class, tgt_ref_class))
         if for_biollm:
-            for t, s, a in tgt_cands:
+            for i, (t, s, a) in enumerate(tgt_cands):
                 m = EntityMapping(src_ref_class, t, "=", s)
                 cand_maps.append(m)
-                if a is True:
+                if i == 0 and a is True and s >= threshold:  # only keep first one
                     preds.append(m)
         elif has_score:
             cand_maps = [EntityMapping(src_ref_class, t, "=", s) for t, s in tgt_cands]
@@ -171,12 +171,12 @@ def is_rejection(preds: List[EntityMapping], cands: List[EntityMapping]):
     return set([p.to_tuple() for p in preds]).intersection(set([c.to_tuple() for c in cands])) == set()
 
 
-def biollm_eval(cand_maps_file, Ks=[1, 5, 10]):
+def biollm_eval(cand_maps_file, Ks=[1], threshold: float = 0.0):
     r"""Conduct Bio-LLM evaluation for the Bio-LLM formatted candidate mappings.
 
     See [`read_candidate_mappings`][deeponto.align.oaei.read_candidate_mappings] for the file format and loading.
     """
-    matched_cand_maps, unmatched_cand_maps, preds, refs = read_candidate_mappings(cand_maps_file, for_biollm=True)
+    matched_cand_maps, unmatched_cand_maps, preds, refs = read_candidate_mappings(cand_maps_file, for_biollm=True, threshold=threshold)
     
     results = AlignmentEvaluator.f1(preds, refs)
     for K in Ks:
