@@ -43,7 +43,8 @@ from java.io import File  # type: ignore
 from java.lang import Runtime  # type: ignore
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
 from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLIndividual, OWLAxiom, AddAxiom, RemoveAxiom, AxiomType  # type: ignore
-from org.semanticweb.HermiT import ReasonerFactory  # type: ignore
+from org.semanticweb.HermiT import ReasonerFactory as HermitReasonerFactory  # type: ignore
+from org.semanticweb.elk.owlapi import ElkReasonerFactory  # type: ignore
 from org.semanticweb.owlapi.util import OWLObjectDuplicator, OWLEntityRemover  # type: ignore
 from org.semanticweb.owlapi.search import EntitySearcher  # type: ignore
 
@@ -65,6 +66,8 @@ TOP_BOTTOMS = CfgNode(
     }
 )
 
+REASONER_TYPES = ["hermit", "elk"]  # to be expanded
+
 
 class Ontology:
     """Ontology class that extends from the Java library OWLAPI.
@@ -85,10 +88,11 @@ class Ontology:
         owl_annotation_properties (Dict[str, OWLAnnotationProperty]): A dictionary that stores the `(iri, ontology_annotation_property)` pairs.
         owl_individuals (Dict[str, OWLIndividual]): A dictionary that stores the `(iri, ontology_individual)` pairs.
         owl_data_factory (OWLDataFactory): A data factory for manipulating axioms.
+        reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`.
         reasoner (OntologyReasoner): A reasoner for ontology inference.
     """
 
-    def __init__(self, owl_path: str):
+    def __init__(self, owl_path: str, reasoner_type: str = "hermit"):
         """Initialise a new ontology.
 
         Args:
@@ -109,7 +113,8 @@ class Ontology:
         self.owl_individuals = self._get_owl_objects("Individuals")
 
         # reasoning
-        self.reasoner = OntologyReasoner(self)
+        self.reasoner_type = reasoner_type
+        self.reasoner = OntologyReasoner(self, self.reasoner_type)
 
         # hidden attributes
         self._multi_children_classes = None
@@ -233,7 +238,7 @@ class Ontology:
         Check full list at: <http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/AxiomType.html>.
         """
         return str(axiom.getAxiomType())
-    
+
     def get_all_axioms(self):
         """Return all axioms (in a list) asserted in the ontology."""
         return list(self.owl_onto.getAxioms())
@@ -598,14 +603,20 @@ class OntologyReasoner:
         owl_data_factory (OWLDataFactory): A data factory (inherited from `onto`) for manipulating axioms.
     """
 
-    def __init__(self, onto: Ontology):
+    def __init__(self, onto: Ontology, reasoner_type: str):
         """Initialise an ontology reasoner.
 
         Args:
             onto (Ontology): The input ontology to conduct reasoning on.
         """
         self.onto = onto
-        self.owl_reasoner_factory = ReasonerFactory()
+
+        assert reasoner_type in REASONER_TYPES, f"Unknown or unsupported reasoner type: {reasoner_type}."
+        if reasoner_type == "hermit":
+            self.owl_reasoner_factory = HermitReasonerFactory()
+        elif reasoner_type == "elk":
+            self.owl_reasoner_factory = ElkReasonerFactory()
+
         self.owl_reasoner = self.owl_reasoner_factory.createReasoner(self.onto.owl_onto)
         self.owl_data_factory = self.onto.owl_data_factory
 
