@@ -16,13 +16,13 @@ Security in case of vulnerabilities. -->
 - [X] **Add** `get_iri()` method at `deeponto.onto.Ontology`.
 
 - [X] **Add** new features into `deeponto.onto.OntologyVerbaliser` including:
-  - [X] `verbalise_class_subsumption()` for class subsumption axioms;
-  - [X] `verbalise_class_equivalence()` for class equivalence axioms;
-  - [X] `verbalise_class_assertion()` for class assertion axioms;
-  - [X] `verbalise_relation_assertion()` for relation assertion axioms;
-  - [X] `auto-correction` option for fixing entity names.
-  - [X] `keep_iri` option for keeping entity IRIs.
-  - [X] `add_quantifier_word` option for adding quantifier words as in the Manchester syntax.  
+  - `verbalise_class_subsumption()` for class subsumption axioms;
+  - `verbalise_class_equivalence()` for class equivalence axioms;
+  - `verbalise_class_assertion()` for class assertion axioms;
+  - `verbalise_relation_assertion()` for relation assertion axioms;
+  - `auto-correction` option for fixing entity names.
+  - `keep_iri` option for keeping entity IRIs.
+  - `add_quantifier_word` option for adding quantifier words as in the Manchester syntax.  
 
 - [X] **Add** `get_assertion_axioms()` method at `deeponto.onto.Ontology`.
 - [X] **Add** `get_axiom_type()` method at `deeponto.onto.Ontology`.
