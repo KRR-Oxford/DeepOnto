@@ -88,7 +88,7 @@ class Ontology:
         owl_annotation_properties (Dict[str, OWLAnnotationProperty]): A dictionary that stores the `(iri, ontology_annotation_property)` pairs.
         owl_individuals (Dict[str, OWLIndividual]): A dictionary that stores the `(iri, ontology_individual)` pairs.
         owl_data_factory (OWLDataFactory): A data factory for manipulating axioms.
-        reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`.
+        reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`. Options are `["hermit", "elk"]`.
         reasoner (OntologyReasoner): A reasoner for ontology inference.
     """
 
@@ -97,7 +97,7 @@ class Ontology:
 
         Args:
             owl_path (str): The path to the OWL ontology file.
-            reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`.
+            reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`. Options are `["hermit", "elk"]`.
         """
         self.owl_path = os.path.abspath(owl_path)
         self.owl_manager = OWLManager.createOWLOntologyManager()
@@ -612,7 +612,7 @@ class OntologyReasoner:
 
         Args:
             onto (Ontology): The input ontology to conduct reasoning on.
-            reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`.
+            reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`. Options are `["hermit", "elk"]`.
         """
         self.onto = onto
 

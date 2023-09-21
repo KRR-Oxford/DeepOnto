@@ -27,6 +27,13 @@ Loading an ontology from a local file:
 ```
 onto = Ontology("path_to_ontology.owl")
 ```
+
+It also possible to choose a reasoner to be used:
+
+```
+onto = Ontology("path_to_ontology.owl", "hermit")
+```
+
 ## Acessing Ontology Entities
 
 The most fundamental feature of [`Ontology`][deeponto.onto.Ontology] is to access entities in the ontology such as **classes** (or *concepts*) and **properties** (*object*, *data*, and *annotation* properties). To get an entity by its IRI, do the following:
@@ -36,14 +43,14 @@ from deeponto.onto import Ontology
 # e.g., load the disease ontology
 doid = Ontology("doid.owl")
 # class or property IRI as input
-doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969")
+doid.get_owl_object("http://purl.obolibrary.org/obo/DOID_9969")
 ```
 
 To get the asserted parents or children of a given class or property, do the following:
 
 ```python
-doid.get_asserted_parents(doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969"))
-doid.get_asserted_children(doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969"))
+doid.get_asserted_parents(doid.get_owl_object("http://purl.obolibrary.org/obo/DOID_9969"))
+doid.get_asserted_children(doid.get_owl_object("http://purl.obolibrary.org/obo/DOID_9969"))
 ```
 
 To obtain the literal values (as `#!python Set[str]`) of an annotation property (such as $\texttt{rdfs:label}$) for an entity:
@@ -51,7 +58,7 @@ To obtain the literal values (as `#!python Set[str]`) of an annotation property 
 ```python
 # note that annotations with no language tags are deemed as in English ("en")
 doid.get_annotations(
-    doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969"),
+    doid.get_owl_object("http://purl.obolibrary.org/obo/DOID_9969"),
     annotation_property_iri='http://www.w3.org/2000/01/rdf-schema#label',
     annotation_language_tag=None,
     apply_lowercasing=False,
