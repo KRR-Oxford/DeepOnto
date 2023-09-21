@@ -103,7 +103,7 @@ class OntologyVerbaliser:
     | $r_1 \cdot r_2$ (property chain) |  $\mathcal{V}(r_1)$ something that $\mathcal{V}(r_2)$ |
 
 
-    With this concept verbaliser, a range of OWL axioms (`verbalise_owl_axiom`[deeponto.onto.OntologyVerbaliser.verbalise_owl_axiom]) are supported:
+    With this concept verbaliser, a range of OWL axioms ([`verbalise_owl_axiom`][deeponto.onto.OntologyVerbaliser.verbalise_owl_axiom]) are supported:
 
     - Class axioms for subsumption, equivalence, assertion.
     - Object property axioms for subsumption, assertion.
