@@ -107,7 +107,7 @@ class OntologyVerbaliser:
 
 
     Attributes:
-        onto (Ontology): An ontology whose entities are to be verbalised.
+        onto (Ontology): An ontology whose entities and axioms are to be verbalised.
         parser (OntologySyntaxParser): A syntax parser for the string representation of an `OWLObject`.
         vocab (Dict[str, List[str]]): A dictionary with `(entity_iri, entity_name)` pairs, by default
             the names are retrieved from $\texttt{rdfs:label}$.
@@ -125,6 +125,15 @@ class OntologyVerbaliser:
         apply_auto_correction: bool = False,
         add_quantifier_word: bool = False,
     ):
+        """Initialise an ontology verbaliser.
+
+        Args:
+            onto (Ontology): An ontology whose entities and axioms are to be verbalised.
+            apply_lowercasing (bool, optional): Whether to apply lowercasing to the entity names. Defaults to False.
+            keep_iri (bool, optional): Whether to keep the IRIs of entities without verbalising them using `self.vocab`. Defaults to False.
+            apply_auto_correction (bool, optional): Whether to automatically apply rule-based auto-correction to entity names. Defaults to False.
+            add_quantifier_word (bool, optional): Whether to add quantifier words ("some"/"only") as in the Manchester syntax. Defaults to False.
+        """
         self.onto = onto
         self.parser = OntologySyntaxParser()
 
