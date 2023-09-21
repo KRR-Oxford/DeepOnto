@@ -2270,7 +2270,9 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
 <span class="normal">299</span>
 <span class="normal">300</span>
 <span class="normal">301</span>
-<span class="normal">302</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_assertion_axioms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Classes&quot;</span><span class="p">):</span>
+<span class="normal">302</span>
+<span class="normal">303</span>
+<span class="normal">304</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_assertion_axioms</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Classes&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return assertion (ABox) axioms (subject to input entity type) asserted in the ontology.</span>
 
 <span class="sd">    Args:</span>
@@ -2285,6 +2287,8 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_onto</span><span class="o">.</span><span class="n">getAxioms</span><span class="p">(</span><span class="n">AxiomType</span><span class="o">.</span><span class="n">OBJECT_PROPERTY_ASSERTION</span><span class="p">))</span>
     <span class="k">elif</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="s2">&quot;DataProperties&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_onto</span><span class="o">.</span><span class="n">getAxioms</span><span class="p">(</span><span class="n">AxiomType</span><span class="o">.</span><span class="n">DATA_PROPERTY_ASSERTION</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="s2">&quot;Annotations&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_onto</span><span class="o">.</span><span class="n">getAxioms</span><span class="p">(</span><span class="n">AxiomType</span><span class="o">.</span><span class="n">ANNOTATION_ASSERTION</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown entity type </span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -2378,9 +2382,7 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">304</span>
-<span class="normal">305</span>
-<span class="normal">306</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">306</span>
 <span class="normal">307</span>
 <span class="normal">308</span>
 <span class="normal">309</span>
@@ -2396,7 +2398,9 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
 <span class="normal">319</span>
 <span class="normal">320</span>
 <span class="normal">321</span>
-<span class="normal">322</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_asserted_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_object</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">named_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">322</span>
+<span class="normal">323</span>
+<span class="normal">324</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_asserted_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_object</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">named_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get all the asserted parents of a given owl object.</span>
 
 <span class="sd">    Args:</span>
@@ -2506,9 +2510,7 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">324</span>
-<span class="normal">325</span>
-<span class="normal">326</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">326</span>
 <span class="normal">327</span>
 <span class="normal">328</span>
 <span class="normal">329</span>
@@ -2524,7 +2526,9 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
 <span class="normal">339</span>
 <span class="normal">340</span>
 <span class="normal">341</span>
-<span class="normal">342</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_asserted_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_object</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">named_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">342</span>
+<span class="normal">343</span>
+<span class="normal">344</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_asserted_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_object</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">named_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get all the asserted children of a given owl object.</span>
 
 <span class="sd">    Args:</span>
@@ -2621,9 +2625,7 @@ those that occur in equivalence axioms as well.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">344</span>
-<span class="normal">345</span>
-<span class="normal">346</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">346</span>
 <span class="normal">347</span>
 <span class="normal">348</span>
 <span class="normal">349</span>
@@ -2651,7 +2653,9 @@ those that occur in equivalence axioms as well.</p>
 <span class="normal">371</span>
 <span class="normal">372</span>
 <span class="normal">373</span>
-<span class="normal">374</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_asserted_complex_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gci_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">374</span>
+<span class="normal">375</span>
+<span class="normal">376</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_asserted_complex_classes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gci_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get complex classes that occur in at least one of the ontology axioms.</span>
 
 <span class="sd">    Args:</span>
@@ -2819,9 +2823,7 @@ Defaults to <code>False</code>.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">376</span>
-<span class="normal">377</span>
-<span class="normal">378</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">378</span>
 <span class="normal">379</span>
 <span class="normal">380</span>
 <span class="normal">381</span>
@@ -2880,7 +2882,9 @@ Defaults to <code>False</code>.</p>
 <span class="normal">434</span>
 <span class="normal">435</span>
 <span class="normal">436</span>
-<span class="normal">437</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_annotations</span><span class="p">(</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_annotations</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">owl_object</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">OWLObject</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">annotation_property_iri</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -2966,9 +2970,7 @@ it is not a complex entity, <span class="arithmatex">\(\top\)</span>, or <span c
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">439</span>
-<span class="normal">440</span>
-<span class="normal">441</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">441</span>
 <span class="normal">442</span>
 <span class="normal">443</span>
 <span class="normal">444</span>
@@ -2977,7 +2979,9 @@ it is not a complex entity, <span class="arithmatex">\(\top\)</span>, or <span c
 <span class="normal">447</span>
 <span class="normal">448</span>
 <span class="normal">449</span>
-<span class="normal">450</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_named_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_object</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
+<span class="normal">450</span>
+<span class="normal">451</span>
+<span class="normal">452</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_named_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_object</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Check if the input entity is a named atomic entity. That is,</span>
 <span class="sd">    it is not a complex entity, $\top$, or $\bot$.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -3014,9 +3018,7 @@ is not defined in this ontology, return <code>False</code> by default.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">452</span>
-<span class="normal">453</span>
-<span class="normal">454</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">454</span>
 <span class="normal">455</span>
 <span class="normal">456</span>
 <span class="normal">457</span>
@@ -3028,7 +3030,9 @@ is not defined in this ontology, return <code>False</code> by default.</p>
 <span class="normal">463</span>
 <span class="normal">464</span>
 <span class="normal">465</span>
-<span class="normal">466</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_deprecated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_object</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
+<span class="normal">466</span>
+<span class="normal">467</span>
+<span class="normal">468</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_deprecated</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_object</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Check if the given OWL object is marked as deprecated according to $\texttt{owl:deprecated}$.</span>
 
 <span class="sd">    NOTE: the string literal indicating deprecation is either `&#39;true&#39;` or `&#39;True&#39;`. Also, if $\texttt{owl:deprecated}$</span>
@@ -3066,9 +3070,9 @@ is not defined in this ontology, return <code>False</code> by default.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">498</span>
-<span class="normal">499</span>
-<span class="normal">500</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_onto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">500</span>
+<span class="normal">501</span>
+<span class="normal">502</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">save_onto</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save the ontology file to the given path.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">owl_onto</span><span class="o">.</span><span class="n">saveOntology</span><span class="p">(</span><span class="n">IRI</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">File</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span><span class="o">.</span><span class="n">toURI</span><span class="p">()))</span>
 </code></pre></div></td></tr></table></div>
@@ -3195,9 +3199,7 @@ Defaults to <code>False</code>.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">502</span>
-<span class="normal">503</span>
-<span class="normal">504</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">504</span>
 <span class="normal">505</span>
 <span class="normal">506</span>
 <span class="normal">507</span>
@@ -3242,7 +3244,9 @@ Defaults to <code>False</code>.</p>
 <span class="normal">546</span>
 <span class="normal">547</span>
 <span class="normal">548</span>
-<span class="normal">549</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build_annotation_index</span><span class="p">(</span>
+<span class="normal">549</span>
+<span class="normal">550</span>
+<span class="normal">551</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build_annotation_index</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">annotation_property_iris</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">RDFS_LABEL</span><span class="p">],</span>
     <span class="n">entity_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;Classes&quot;</span><span class="p">,</span>
@@ -3317,10 +3321,10 @@ Defaults to <code>False</code>.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">551</span>
-<span class="normal">552</span>
-<span class="normal">553</span>
-<span class="normal">554</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">553</span>
+<span class="normal">554</span>
+<span class="normal">555</span>
+<span class="normal">556</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">build_inverted_annotation_index</span><span class="p">(</span><span class="n">annotation_index</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Tokenizer</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build an inverted annotation index given an annotation index and a tokenizer.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">InvertedIndex</span><span class="p">(</span><span class="n">annotation_index</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">)</span>
@@ -3391,9 +3395,7 @@ Defaults to <code>False</code>.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">556</span>
-<span class="normal">557</span>
-<span class="normal">558</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">558</span>
 <span class="normal">559</span>
 <span class="normal">560</span>
 <span class="normal">561</span>
@@ -3402,7 +3404,9 @@ Defaults to <code>False</code>.</p>
 <span class="normal">564</span>
 <span class="normal">565</span>
 <span class="normal">566</span>
-<span class="normal">567</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">,</span> <span class="n">return_undo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="normal">567</span>
+<span class="normal">568</span>
+<span class="normal">569</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">add_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">,</span> <span class="n">return_undo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add an axiom into the current ontology.</span>
 
 <span class="sd">    Args:</span>
@@ -3481,9 +3485,7 @@ Defaults to <code>False</code>.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">569</span>
-<span class="normal">570</span>
-<span class="normal">571</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">571</span>
 <span class="normal">572</span>
 <span class="normal">573</span>
 <span class="normal">574</span>
@@ -3492,7 +3494,9 @@ Defaults to <code>False</code>.</p>
 <span class="normal">577</span>
 <span class="normal">578</span>
 <span class="normal">579</span>
-<span class="normal">580</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">remove_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">,</span> <span class="n">return_undo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="normal">580</span>
+<span class="normal">581</span>
+<span class="normal">582</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">remove_axiom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_axiom</span><span class="p">:</span> <span class="n">OWLAxiom</span><span class="p">,</span> <span class="n">return_undo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove an axiom from the current ontology.</span>
 
 <span class="sd">    Args:</span>
@@ -3609,9 +3613,7 @@ Defaults to <code>False</code>.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">582</span>
-<span class="normal">583</span>
-<span class="normal">584</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">584</span>
 <span class="normal">585</span>
 <span class="normal">586</span>
 <span class="normal">587</span>
@@ -3622,7 +3624,9 @@ Defaults to <code>False</code>.</p>
 <span class="normal">592</span>
 <span class="normal">593</span>
 <span class="normal">594</span>
-<span class="normal">595</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">replace_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_object</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">entity_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">595</span>
+<span class="normal">596</span>
+<span class="normal">597</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">replace_entity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_object</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">entity_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">replacement_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Replace an entity in a class expression with another entity.</span>
 
 <span class="sd">    Args:</span>
