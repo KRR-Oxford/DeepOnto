@@ -96,23 +96,43 @@ def matching_eval(
 ################################################################
 
 
-def read_candidate_mappings(cand_maps_file: str, has_score: bool = True):
+def read_candidate_mappings(cand_maps_file: str):
     r"""Load scored or already ranked candidate mappings.
 
     The predicted candidate mappings are formatted the same as `test.cands.tsv`, with three columns:
     `"SrcEntity"`, `"TgtEntity"`, and `"TgtCandidates"`, indicating the source reference class IRI, the
-    target reference class IRI, and a list of tuples in the form of `(target_candidate_class_IRI, score)`.
-    The scores are optional if the candidate mappings have been ranked.
+    target reference class IRI, and a list of **tuples** in the form of `(target_candidate_class_IRI, score)` where
+    `score` is optional if the candidate mappings have been ranked. For the Bio-LLM special sub-track, `"TgtCandidates"`
+    refers to a list of **triples** in the form of `(target_candidate_class_IRI, score, answer)` where the `answer` is
+    required for computing matching scores.
 
     This method loads the candidate mappings in this format and parse them into the inputs of [`mean_reciprocal_rank`][deeponto.align.evaluation.AlignmentEvaluator.mean_reciprocal_rank]
     and [`hits_at_K`][[`mean_reciprocal_rank`][deeponto.align.evaluation.AlignmentEvaluator.hits_at_K].
+
+    For Bio-LLM, the true prediction mappings and reference mappings will also be generated for the matching evaluation, i.e., the inputs of [`f1`][deeponto.align.evaluation.AlignmentEvaluator.f1].
     """
+
     all_cand_maps = read_table(cand_maps_file).values.tolist()
-    formatted = []
+    cands = []
+    preds = []  # only used for bio-llm
+    refs = []  # only used for bio-llm
+    has_score = False
+    for_biollm = False
+
     for src_ref_class, tgt_ref_class, tgt_cands in all_cand_maps:
         ref_map = ReferenceMapping(src_ref_class, tgt_ref_class, "=")
         tgt_cands = eval(tgt_cands)
-        if has_score:
+        has_score = True if all([len(x) > 1 for x in tgt_cands]) else False
+        for_biollm = True if all([len(x) == 3 for x in tgt_cands]) else False
+        cand_maps = []
+        refs.append(ReferenceMapping(src_ref_class, tgt_ref_class))
+        if for_biollm:
+            for t, s, a in tgt_cands:
+                m = EntityMapping(src_ref_class, t, "=", s)
+                cand_maps.append(m)
+                if a is True:
+                    preds.append(m)
+        elif has_score:
             cand_maps = [EntityMapping(src_ref_class, t, "=", s) for t, s in tgt_cands]
         else:
             warnings.warn("Input candidate mappings do not have a score, assume default rank in descending order.")
@@ -121,17 +141,39 @@ def read_candidate_mappings(cand_maps_file: str, has_score: bool = True):
                 for i, t in enumerate(tgt_cands)
             ]
         cand_maps = EntityMapping.sort_entity_mappings_by_score(cand_maps)
-        formatted.append((ref_map, cand_maps))
-    return formatted
+        cands.append((ref_map, cand_maps))
+
+    if for_biollm:
+        return cands, preds, refs
+    else:
+        return cands
 
 
-def ranking_eval(cand_maps_file: str, has_score: bool = True, Ks=[1, 5, 10]):
+def ranking_eval(cand_maps_file: str, Ks=[1, 5, 10]):
     r"""Conduct **local ranking** evaluation for the scored or ranked candidate mappings.
 
     See [`read_candidate_mappings`][deeponto.align.oaei.read_candidate_mappings] for the file format and loading.
     """
-    formatted_cand_maps = read_candidate_mappings(cand_maps_file, has_score)
+    formatted_cand_maps = read_candidate_mappings(cand_maps_file)
     results = {"MRR": AlignmentEvaluator.mean_reciprocal_rank(formatted_cand_maps)}
     for K in Ks:
         results[f"Hits@{K}"] = AlignmentEvaluator.hits_at_K(formatted_cand_maps, K=K)
+    return results
+
+
+################################################################
+###                  for biollm evaluation                   ###
+################################################################
+
+
+def biollm_eval(cand_maps_file, Ks=[1, 5, 10]):
+    r"""Conduct Bio-LLM evaluation for the Bio-LLM formatted candidate mappings.
+
+    See [`read_candidate_mappings`][deeponto.align.oaei.read_candidate_mappings] for the file format and loading.
+    """
+    formatted_cand_maps, preds, refs = read_candidate_mappings(cand_maps_file)
+    results = {"MRR": AlignmentEvaluator.mean_reciprocal_rank(formatted_cand_maps)}
+    for K in Ks:
+        results[f"Hits@{K}"] = AlignmentEvaluator.hits_at_K(formatted_cand_maps, K=K)
+    results.update(AlignmentEvaluator.f1(preds, refs))
     return results
