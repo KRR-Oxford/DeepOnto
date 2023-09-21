@@ -89,7 +89,7 @@ class OntologyVerbaliser:
     r"""A recursive natural language verbaliser for the OWL logical expressions, e.g., [`OWLAxiom`](http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/OWLAxiom.html)
     and [`OWLClassExpression`](https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/model/OWLClassExpression.html).
 
-    The concept patterns supported by this verbaliser ([`verbalise_class_expression`][deeponto.onto.OntologyVerbaliser.verbalise_class_expression]) are shown below:
+    The concept patterns supported by this verbaliser are shown below:
 
     | **Pattern**                 | **Verbalisation** ($\mathcal{V}$)                                                                                                                                                    |
     |-----------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -103,7 +103,7 @@ class OntologyVerbaliser:
     | $r_1 \cdot r_2$ (property chain) |  $\mathcal{V}(r_1)$ something that $\mathcal{V}(r_2)$ |
 
 
-    With this concept verbaliser, a range of OWL axioms ([`verbalise_owl_axiom`][deeponto.onto.OntologyVerbaliser.verbalise_owl_axiom]) are supported:
+    With this concept verbaliser, a range of OWL axioms are supported:
 
     - Class axioms for subsumption, equivalence, assertion.
     - Object property axioms for subsumption, assertion.
