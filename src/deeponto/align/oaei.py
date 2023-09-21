@@ -176,7 +176,7 @@ def biollm_eval(cand_maps_file, Ks=[1, 5, 10]):
 
     See [`read_candidate_mappings`][deeponto.align.oaei.read_candidate_mappings] for the file format and loading.
     """
-    matched_cand_maps, unmatched_cand_maps, preds, refs = read_candidate_mappings(cand_maps_file)
+    matched_cand_maps, unmatched_cand_maps, preds, refs = read_candidate_mappings(cand_maps_file, for_biollm=True)
     
     results = AlignmentEvaluator.f1(preds, refs)
     for K in Ks:
