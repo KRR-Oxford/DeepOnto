@@ -96,7 +96,7 @@ def matching_eval(
 ################################################################
 
 
-def read_candidate_mappings(cand_maps_file: str):
+def read_candidate_mappings(cand_maps_file: str, for_biollm: bool = False):
     r"""Load scored or already ranked candidate mappings.
 
     The predicted candidate mappings are formatted the same as `test.cands.tsv`, with three columns:
@@ -114,16 +114,14 @@ def read_candidate_mappings(cand_maps_file: str):
 
     all_cand_maps = read_table(cand_maps_file).values.tolist()
     cands = []
+    unmatched_cands = []
     preds = []  # only used for bio-llm
     refs = []  # only used for bio-llm
-    has_score = False
-    for_biollm = False
 
     for src_ref_class, tgt_ref_class, tgt_cands in all_cand_maps:
         ref_map = ReferenceMapping(src_ref_class, tgt_ref_class, "=")
         tgt_cands = eval(tgt_cands)
         has_score = True if all([len(x) > 1 for x in tgt_cands]) else False
-        for_biollm = True if all([len(x) == 3 for x in tgt_cands]) else False
         cand_maps = []
         refs.append(ReferenceMapping(src_ref_class, tgt_ref_class))
         if for_biollm:
@@ -141,10 +139,13 @@ def read_candidate_mappings(cand_maps_file: str):
                 for i, t in enumerate(tgt_cands)
             ]
         cand_maps = EntityMapping.sort_entity_mappings_by_score(cand_maps)
-        cands.append((ref_map, cand_maps))
+        if for_biollm and tgt_ref_class == "UnMatched":
+            unmatched_cands.append((ref_map, cand_maps))
+        else:
+            cands.append((ref_map, cand_maps))
 
     if for_biollm:
-        return cands, preds, refs
+        return cands, unmatched_cands, preds, refs
     else:
         return cands
 
@@ -165,15 +166,24 @@ def ranking_eval(cand_maps_file: str, Ks=[1, 5, 10]):
 ###                  for biollm evaluation                   ###
 ################################################################
 
+def is_rejection(preds: List[EntityMapping], cands: List[EntityMapping]):
+    """A successful rejection means none of the candidate mappings are predicted as true mappings."""
+    return set([p.to_tuple() for p in preds]).intersection(set([c.to_tuple() for c in cands]))
+
 
 def biollm_eval(cand_maps_file, Ks=[1, 5, 10]):
     r"""Conduct Bio-LLM evaluation for the Bio-LLM formatted candidate mappings.
 
     See [`read_candidate_mappings`][deeponto.align.oaei.read_candidate_mappings] for the file format and loading.
     """
-    formatted_cand_maps, preds, refs = read_candidate_mappings(cand_maps_file)
-    results = {"MRR": AlignmentEvaluator.mean_reciprocal_rank(formatted_cand_maps)}
+    matched_cand_maps, unmatched_cand_maps, preds, refs = read_candidate_mappings(cand_maps_file)
+    
+    results = AlignmentEvaluator.f1(preds, refs)
     for K in Ks:
-        results[f"Hits@{K}"] = AlignmentEvaluator.hits_at_K(formatted_cand_maps, K=K)
-    results.update(AlignmentEvaluator.f1(preds, refs))
+        results[f"Hits@{K}"] = AlignmentEvaluator.hits_at_K(matched_cand_maps, K=K)
+    results["MRR"] = AlignmentEvaluator.mean_reciprocal_rank(matched_cand_maps)
+    rej = 0
+    for _, _, cs in unmatched_cand_maps:
+        rej += int(is_rejection(preds, cs))
+    results["RR"] = rej / len(unmatched_cand_maps)
     return results
