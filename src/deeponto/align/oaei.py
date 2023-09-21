@@ -168,7 +168,7 @@ def ranking_eval(cand_maps_file: str, Ks=[1, 5, 10]):
 
 def is_rejection(preds: List[EntityMapping], cands: List[EntityMapping]):
     """A successful rejection means none of the candidate mappings are predicted as true mappings."""
-    return set([p.to_tuple() for p in preds]).intersection(set([c.to_tuple() for c in cands]))
+    return not set([p.to_tuple() for p in preds]).intersection(set([c.to_tuple() for c in cands])) == set()
 
 
 def biollm_eval(cand_maps_file, Ks=[1, 5, 10]):
