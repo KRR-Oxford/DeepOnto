@@ -1054,22 +1054,25 @@
 <p>Loading an ontology from a local file:</p>
 <div class="highlight"><pre><span></span><code>onto = Ontology(&quot;path_to_ontology.owl&quot;)
 </code></pre></div>
+<p>It also possible to choose a reasoner to be used:</p>
+<div class="highlight"><pre><span></span><code>onto = Ontology(&quot;path_to_ontology.owl&quot;, &quot;hermit&quot;)
+</code></pre></div>
 <h2 id="acessing-ontology-entities">Acessing Ontology Entities</h2>
 <p>The most fundamental feature of <a class="autorefs autorefs-internal" href="../deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a> is to access entities in the ontology such as <strong>classes</strong> (or <em>concepts</em>) and <strong>properties</strong> (<em>object</em>, <em>data</em>, and <em>annotation</em> properties). To get an entity by its IRI, do the following:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
 <span class="c1"># e.g., load the disease ontology</span>
 <span class="n">doid</span> <span class="o">=</span> <span class="n">Ontology</span><span class="p">(</span><span class="s2">&quot;doid.owl&quot;</span><span class="p">)</span>
 <span class="c1"># class or property IRI as input</span>
-<span class="n">doid</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_9969&quot;</span><span class="p">)</span>
+<span class="n">doid</span><span class="o">.</span><span class="n">get_owl_object</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_9969&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>To get the asserted parents or children of a given class or property, do the following:</p>
-<div class="highlight"><pre><span></span><code><span class="n">doid</span><span class="o">.</span><span class="n">get_asserted_parents</span><span class="p">(</span><span class="n">doid</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_9969&quot;</span><span class="p">))</span>
-<span class="n">doid</span><span class="o">.</span><span class="n">get_asserted_children</span><span class="p">(</span><span class="n">doid</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_9969&quot;</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><span class="n">doid</span><span class="o">.</span><span class="n">get_asserted_parents</span><span class="p">(</span><span class="n">doid</span><span class="o">.</span><span class="n">get_owl_object</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_9969&quot;</span><span class="p">))</span>
+<span class="n">doid</span><span class="o">.</span><span class="n">get_asserted_children</span><span class="p">(</span><span class="n">doid</span><span class="o">.</span><span class="n">get_owl_object</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_9969&quot;</span><span class="p">))</span>
 </code></pre></div>
 <p>To obtain the literal values (as <code class="highlight"><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span></code>) of an annotation property (such as <span class="arithmatex">\(\texttt{rdfs:label}\)</span>) for an entity:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># note that annotations with no language tags are deemed as in English (&quot;en&quot;)</span>
 <span class="n">doid</span><span class="o">.</span><span class="n">get_annotations</span><span class="p">(</span>
-    <span class="n">doid</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_9969&quot;</span><span class="p">),</span>
+    <span class="n">doid</span><span class="o">.</span><span class="n">get_owl_object</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_9969&quot;</span><span class="p">),</span>
     <span class="n">annotation_property_iri</span><span class="o">=</span><span class="s1">&#39;http://www.w3.org/2000/01/rdf-schema#label&#39;</span><span class="p">,</span>
     <span class="n">annotation_language_tag</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">apply_lowercasing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
@@ -1119,7 +1122,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 30, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 21, 2023</span>
       
         <br>
         Created:

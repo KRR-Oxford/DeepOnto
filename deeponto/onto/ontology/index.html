@@ -1377,7 +1377,7 @@ should feel relatively easy to extend the Python classes here.</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>The type of reasoner used. Defaults to <code>"hermit"</code>.</p>
+              <p>The type of reasoner used. Defaults to <code>"hermit"</code>. Options are <code>["hermit", "elk"]</code>.</p>
             </div>
           </td>
         </tr>
@@ -1430,7 +1430,7 @@ should feel relatively easy to extend the Python classes here.</p>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>The type of reasoner used. Defaults to <code>"hermit"</code>.</p>
+              <p>The type of reasoner used. Defaults to <code>"hermit"</code>. Options are <code>["hermit", "elk"]</code>.</p>
             </div>
           </td>
           <td>
@@ -1488,7 +1488,7 @@ should feel relatively easy to extend the Python classes here.</p>
 
 <span class="sd">    Args:</span>
 <span class="sd">        owl_path (str): The path to the OWL ontology file.</span>
-<span class="sd">        reasoner_type (str): The type of reasoner used. Defaults to `&quot;hermit&quot;`.</span>
+<span class="sd">        reasoner_type (str): The type of reasoner used. Defaults to `&quot;hermit&quot;`. Options are `[&quot;hermit&quot;, &quot;elk&quot;]`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">owl_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">owl_path</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">owl_manager</span> <span class="o">=</span> <span class="n">OWLManager</span><span class="o">.</span><span class="n">createOWLOntologyManager</span><span class="p">()</span>
