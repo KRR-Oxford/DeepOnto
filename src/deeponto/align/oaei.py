@@ -183,7 +183,7 @@ def biollm_eval(cand_maps_file, Ks=[1, 5, 10]):
         results[f"Hits@{K}"] = AlignmentEvaluator.hits_at_K(matched_cand_maps, K=K)
     results["MRR"] = AlignmentEvaluator.mean_reciprocal_rank(matched_cand_maps)
     rej = 0
-    for _, _, cs in unmatched_cand_maps:
+    for _, cs in unmatched_cand_maps:
         rej += int(is_rejection(preds, cs))
     results["RR"] = rej / len(unmatched_cand_maps)
     return results
