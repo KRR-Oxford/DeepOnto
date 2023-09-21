@@ -9,8 +9,12 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased
 
+...
+## v0.8.6 (2023 September)
+
 ### Added
 
+- [X] **Add** the OAEI evaluation code for the main track global matching, local ranking, and the special sub-track bio-llm at `deeponto.align.oaei`. 
 - [X] **Add** `reasoner_type` argument at `deeponto.onto.Ontology`, now supporting `hermit` (default) and `elk`.
 - [X] **Add** `get_all_axioms()` method at `deeponto.onto.Ontology`.
 - [X] **Add** `get_iri()` method at `deeponto.onto.Ontology`.
