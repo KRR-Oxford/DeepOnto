@@ -11,19 +11,33 @@ Security in case of vulnerabilities. -->
 
 ### Added
 
+- [X] **Add** `reasoner_type` argument at `deeponto.onto.Ontology`, now supporting `hermit` (default) and `elk`.
+- [X] **Add** `get_all_axioms()` method at `deeponto.onto.Ontology`.
+- [X] **Add** `get_iri()` method at `deeponto.onto.Ontology`.
+
 - [X] **Add** new features into `deeponto.onto.OntologyVerbaliser` including:
-  - [X] `verbalise_class_subsumption()` for class subsumption axioms;
-  - [X] `verbalise_class_equivalence()` for class equivalence axioms;
-  - [X] `verbalise_class_assertion()` for class assertion axioms;
-  - [X] `verbalise_relation_assertion()` for relation assertion axioms;
-  - [X] `auto-correction` option for fixing entity names.
-  - [X] `keep_iri` option for keeping entity IRIs.
-  - [X] `add_quantifier_word` option for adding quantifier words as in the Manchester syntax.  
+    - `verbalise_object_property_subsumption()` for object property subsumption axioms.
+    - property chain verbalisation at `verbalise_class_expression()`.
+    - `verbalise_class_subsumption()` for class subsumption axioms;
+    - `verbalise_class_equivalence()` for class equivalence axioms;
+    - `verbalise_class_assertion()` for class assertion axioms;
+    - `verbalise_relation_assertion()` for relation assertion axioms;
+    - `auto-correction` option for fixing entity names.
+    - `keep_iri` option for keeping entity IRIs.
+    - `add_quantifier_word` option for adding quantifier words as in the Manchester syntax.  
 
 - [X] **Add** `get_assertion_axioms()` method at `deeponto.onto.Ontology`.
 - [X] **Add** `get_axiom_type()` method at `deeponto.onto.Ontology`.
 - [X] **Add** `owl_individuals` attribute at `deeponto.onto.Ontology`.
 
+### Changed
+
+- [X] **Change** `get_owl_objects()` method to be anonymous as it is only used for creating pre-processed entity index at `deeponto.onto.Ontology`.
+- [X] **Change** `get_owl_object_from_iri()` method to `get_owl_object()` at `deeponto.onto.Ontology`.
+
+### Fixed
+
+- [X] **Fix** the file path problem of loading ontologies for Windows systems.
 
 ## v0.8.5 (2023 September)
 

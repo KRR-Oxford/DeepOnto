@@ -50,7 +50,7 @@ class SubsumptionSampler:
             self.iri_label[iri] = []
             for p in config.label_property:
                 strings = onto.get_annotations(
-                    owl_object=onto.get_owl_object_from_iri(iri),
+                    owl_object=onto.get_owl_object(iri),
                     annotation_property_iri=p,
                     annotation_language_tag=None,
                     apply_lowercasing=False,
@@ -277,7 +277,7 @@ class SubsumptionSampler:
             subclass_iri (str): IRI of a given sub-class.
             subsumption_type (str): `named_class` or `restriction`.
         """
-        subclass = self.onto.get_owl_object_from_iri(iri=subclass_iri)
+        subclass = self.onto.get_owl_object(iri=subclass_iri)
         if subsumption_type == "named_class":
             if self.config.no_reasoning:
                 parents = self.onto.get_asserted_parents(owl_object=subclass, named_only=True)
@@ -478,25 +478,25 @@ class SubsumptionSampler:
             for s in seeds:
                 if direction == "subclass":
                     tmp = self.onto.reasoner.get_inferred_sub_entities(
-                        self.onto.get_owl_object_from_iri(iri=s), direct=True
+                        self.onto.get_owl_object(iri=s), direct=True
                     )
                     if len(tmp) > 1:
                         no_duplicate = False
                     random.shuffle(tmp)
                     for c in tmp:
-                        if not self.onto.check_deprecated(owl_object=self.onto.get_owl_object_from_iri(iri=c)):
+                        if not self.onto.check_deprecated(owl_object=self.onto.get_owl_object(iri=c)):
                             subsumptions.append([c, s])
                             if c not in new_seeds:
                                 new_seeds.append(c)
                 elif direction == "supclass":
                     tmp = self.onto.reasoner.get_inferred_super_entities(
-                        self.onto.get_owl_object_from_iri(iri=s), direct=True
+                        self.onto.get_owl_object(iri=s), direct=True
                     )
                     if len(tmp) > 1:
                         no_duplicate = False
                     random.shuffle(tmp)
                     for c in tmp:
-                        if not self.onto.check_deprecated(owl_object=self.onto.get_owl_object_from_iri(iri=c)):
+                        if not self.onto.check_deprecated(owl_object=self.onto.get_owl_object(iri=c)):
                             subsumptions.append([s, c])
                             if c not in new_seeds:
                                 new_seeds.append(c)
@@ -529,7 +529,7 @@ class SubsumptionSampler:
         while d <= hop:
             if direction == "subclass":
                 tmp = self.onto.reasoner.get_inferred_sub_entities(
-                    self.onto.get_owl_object_from_iri(iri=seed), direct=True
+                    self.onto.get_owl_object(iri=seed), direct=True
                 )
                 if len(tmp) > 1:
                     no_duplicate = False
@@ -537,7 +537,7 @@ class SubsumptionSampler:
                 if len(tmp) > 0:
                     random.shuffle(tmp)
                     for c in tmp:
-                        if not self.onto.check_deprecated(owl_object=self.onto.get_owl_object_from_iri(iri=c)):
+                        if not self.onto.check_deprecated(owl_object=self.onto.get_owl_object(iri=c)):
                             subsumptions.append([c, seed])
                             seed = c
                             end = False
@@ -546,7 +546,7 @@ class SubsumptionSampler:
                     break
             elif direction == "supclass":
                 tmp = self.onto.reasoner.get_inferred_super_entities(
-                    self.onto.get_owl_object_from_iri(iri=seed), direct=True
+                    self.onto.get_owl_object(iri=seed), direct=True
                 )
                 if len(tmp) > 1:
                     no_duplicate = False
@@ -554,7 +554,7 @@ class SubsumptionSampler:
                 if len(tmp) > 0:
                     random.shuffle(tmp)
                     for c in tmp:
-                        if not self.onto.check_deprecated(owl_object=self.onto.get_owl_object_from_iri(iri=c)):
+                        if not self.onto.check_deprecated(owl_object=self.onto.get_owl_object(iri=c)):
                             subsumptions.append([seed, c])
                             seed = c
                             end = False

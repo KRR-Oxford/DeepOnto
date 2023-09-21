@@ -223,11 +223,11 @@ class MappingRefiner:
         def get_iris(owl_objects):
             return [str(x.getIRI()) for x in owl_objects]
         
-        src_class = self.src_onto.get_owl_object_from_iri(src_class_iri)
+        src_class = self.src_onto.get_owl_object(src_class_iri)
         src_class_parent_iris = get_iris(self.src_onto.get_asserted_parents(src_class, named_only=True))
         src_class_children_iris = get_iris(self.src_onto.get_asserted_children(src_class, named_only=True))
 
-        tgt_class = self.tgt_onto.get_owl_object_from_iri(tgt_class_iri)
+        tgt_class = self.tgt_onto.get_owl_object(tgt_class_iri)
         tgt_class_parent_iris = get_iris(self.tgt_onto.get_asserted_parents(tgt_class, named_only=True))
         tgt_class_children_iris = get_iris(self.tgt_onto.get_asserted_children(tgt_class, named_only=True))
 

@@ -43,7 +43,8 @@ from java.io import File  # type: ignore
 from java.lang import Runtime  # type: ignore
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
 from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLIndividual, OWLAxiom, AddAxiom, RemoveAxiom, AxiomType  # type: ignore
-from org.semanticweb.HermiT import ReasonerFactory  # type: ignore
+from org.semanticweb.HermiT import ReasonerFactory as HermitReasonerFactory  # type: ignore
+from org.semanticweb.elk.owlapi import ElkReasonerFactory  # type: ignore
 from org.semanticweb.owlapi.util import OWLObjectDuplicator, OWLEntityRemover  # type: ignore
 from org.semanticweb.owlapi.search import EntitySearcher  # type: ignore
 
@@ -65,6 +66,8 @@ TOP_BOTTOMS = CfgNode(
     }
 )
 
+REASONER_TYPES = ["hermit", "elk"]  # to be expanded
+
 
 class Ontology:
     """Ontology class that extends from the Java library OWLAPI.
@@ -85,37 +88,39 @@ class Ontology:
         owl_annotation_properties (Dict[str, OWLAnnotationProperty]): A dictionary that stores the `(iri, ontology_annotation_property)` pairs.
         owl_individuals (Dict[str, OWLIndividual]): A dictionary that stores the `(iri, ontology_individual)` pairs.
         owl_data_factory (OWLDataFactory): A data factory for manipulating axioms.
+        reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`.
         reasoner (OntologyReasoner): A reasoner for ontology inference.
     """
 
-    def __init__(self, owl_path: str):
+    def __init__(self, owl_path: str, reasoner_type: str = "hermit"):
         """Initialise a new ontology.
 
         Args:
             owl_path (str): The path to the OWL ontology file.
+            reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`.
         """
         self.owl_path = os.path.abspath(owl_path)
         self.owl_manager = OWLManager.createOWLOntologyManager()
-        self.owl_onto = self.owl_manager.loadOntologyFromOntologyDocument(IRI.create("file:///" + self.owl_path))
+        self.owl_onto = self.owl_manager.loadOntologyFromOntologyDocument(IRI.create(File(self.owl_path)))
         self.owl_iri = str(self.owl_onto.getOntologyID().getOntologyIRI().get())
-        self.owl_classes = self.get_owl_objects("Classes")
-        self.owl_object_properties = self.get_owl_objects("ObjectProperties")
+        self.owl_classes = self._get_owl_objects("Classes")
+        self.owl_object_properties = self._get_owl_objects("ObjectProperties")
         # for some reason the top object property is included
         if OWL_TOP_OBJECT_PROPERTY in self.owl_object_properties.keys():
             del self.owl_object_properties[OWL_TOP_OBJECT_PROPERTY]
-        self.owl_data_properties = self.get_owl_objects("DataProperties")
+        self.owl_data_properties = self._get_owl_objects("DataProperties")
         self.owl_data_factory = self.owl_manager.getOWLDataFactory()
-        self.owl_annotation_properties = self.get_owl_objects("AnnotationProperties")
-        self.owl_individuals = self.get_owl_objects("Individuals")
+        self.owl_annotation_properties = self._get_owl_objects("AnnotationProperties")
+        self.owl_individuals = self._get_owl_objects("Individuals")
 
         # reasoning
-        self.reasoner = OntologyReasoner(self)
+        self.reasoner_type = reasoner_type
+        self.reasoner = OntologyReasoner(self, self.reasoner_type)
 
         # hidden attributes
         self._multi_children_classes = None
         self._sibling_class_groups = None
-        # self._equiv_axioms = None
-        # self._subsumption_axioms = None
+        self._axiom_type = AxiomType  # for development use
 
         # summary
         self.info = {
@@ -125,6 +130,8 @@ class Ontology:
                 "num_object_properties": len(self.owl_object_properties),
                 "num_data_properties": len(self.owl_data_properties),
                 "num_annotation_properties": len(self.owl_annotation_properties),
+                "num_individuals": len(self.owl_individuals),
+                "reasoner_type": self.reasoner_type,
             }
         }
 
@@ -189,7 +196,7 @@ class Ontology:
         else:
             raise RuntimeError("Cannot retrieve JVM memory as it is not started.")
 
-    def get_owl_objects(self, entity_type: str):
+    def _get_owl_objects(self, entity_type: str):
         """Get an index of `OWLObject` of certain type from the ontology.
 
         Args:
@@ -204,7 +211,7 @@ class Ontology:
             owl_objects[str(cl.getIRI())] = cl
         return owl_objects
 
-    def get_owl_object_from_iri(self, iri: str):
+    def get_owl_object(self, iri: str):
         """Get an `OWLObject` given its IRI."""
         if iri in self.owl_classes.keys():
             return self.owl_classes[iri]
@@ -219,6 +226,13 @@ class Ontology:
         else:
             raise KeyError(f"Cannot retrieve unknown IRI: {iri}.")
 
+    def get_iri(self, owl_object: OWLObject):
+        """Get the IRI of an `OWLObject`. Raises an exception if there is no associated IRI."""
+        try:
+            return str(owl_object.getIRI())
+        except:
+            raise RuntimeError("Input owl object does not have IRI.")
+
     @staticmethod
     def get_axiom_type(axiom: OWLAxiom):
         r"""Get the axiom type (in `str`) for the given axiom.
@@ -226,6 +240,10 @@ class Ontology:
         Check full list at: <http://owlcs.github.io/owlapi/apidocs_5/org/semanticweb/owlapi/model/AxiomType.html>.
         """
         return str(axiom.getAxiomType())
+
+    def get_all_axioms(self):
+        """Return all axioms (in a list) asserted in the ontology."""
+        return list(self.owl_onto.getAxioms())
 
     def get_subsumption_axioms(self, entity_type: str = "Classes"):
         """Return subsumption axioms (subject to input entity type) asserted in the ontology.
@@ -264,7 +282,7 @@ class Ontology:
             return list(self.owl_onto.getAxioms(AxiomType.EQUIVALENT_DATA_PROPERTIES))
         else:
             raise ValueError(f"Unknown entity type {entity_type}.")
-        
+
     def get_assertion_axioms(self, entity_type: str = "Classes"):
         """Return assertion (ABox) axioms (subject to input entity type) asserted in the ontology.
 
@@ -280,6 +298,8 @@ class Ontology:
             return list(self.owl_onto.getAxioms(AxiomType.OBJECT_PROPERTY_ASSERTION))
         elif entity_type == "DataProperties":
             return list(self.owl_onto.getAxioms(AxiomType.DATA_PROPERTY_ASSERTION))
+        elif entity_type == "Annotations":
+            return list(self.owl_onto.getAxioms(AxiomType.ANNOTATION_ASSERTION))
         else:
             raise ValueError(f"Unknown entity type {entity_type}.")
 
@@ -381,12 +401,12 @@ class Ontology:
             (Set[str]): A set of annotation literals of the given `OWLObject`.
         """
         if isinstance(owl_object, str):
-            owl_object = self.get_owl_object_from_iri(owl_object)
+            owl_object = self.get_owl_object(owl_object)
 
         annotation_property = None
         if annotation_property_iri:
             # return an empty list if `annotation_property_iri` does not exist in this OWLOntology`
-            annotation_property = self.get_owl_object_from_iri(annotation_property_iri)
+            annotation_property = self.get_owl_object(annotation_property_iri)
 
         annotations = []
         for annotation in EntitySearcher.getAnnotations(owl_object, self.owl_onto, annotation_property):
@@ -462,7 +482,7 @@ class Ontology:
                 if cl_iri == OWL_THING:
                     cl = self.OWLThing
                 else:
-                    cl = self.get_owl_object_from_iri(cl_iri)
+                    cl = self.get_owl_object(cl_iri)
 
                 children = self.get_asserted_children(cl)
                 children_iris = [str(child.getIRI()) for child in children if self.check_named_entity(child)]
@@ -587,14 +607,21 @@ class OntologyReasoner:
         owl_data_factory (OWLDataFactory): A data factory (inherited from `onto`) for manipulating axioms.
     """
 
-    def __init__(self, onto: Ontology):
+    def __init__(self, onto: Ontology, reasoner_type: str):
         """Initialise an ontology reasoner.
 
         Args:
             onto (Ontology): The input ontology to conduct reasoning on.
+            reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`.
         """
         self.onto = onto
-        self.owl_reasoner_factory = ReasonerFactory()
+
+        assert reasoner_type in REASONER_TYPES, f"Unknown or unsupported reasoner type: {reasoner_type}."
+        if reasoner_type == "hermit":
+            self.owl_reasoner_factory = HermitReasonerFactory()
+        elif reasoner_type == "elk":
+            self.owl_reasoner_factory = ElkReasonerFactory()
+
         self.owl_reasoner = self.owl_reasoner_factory.createReasoner(self.onto.owl_onto)
         self.owl_data_factory = self.onto.owl_data_factory
 
@@ -716,7 +743,7 @@ class OntologyReasoner:
         # for every inferred child of `computed`, check if it is subsumed by `compared``
         for descendant_iri in self.get_inferred_sub_entities(computed, direct=False):
             # print("check a subsumption")
-            if self.check_subsumption(self.onto.get_owl_object_from_iri(descendant_iri), compared):
+            if self.check_subsumption(self.onto.get_owl_object(descendant_iri), compared):
                 return True
         return False
 

@@ -145,8 +145,8 @@ class AtomicSubsumptionSampler(SubsumptionSamplerBase):
         added = 0
         while added < num_samples and i < max_iter:
             sub_concept_iri, super_concept_iri = draw_one()
-            sub_concept = self.onto.get_owl_object_from_iri(sub_concept_iri)
-            super_concept = self.onto.get_owl_object_from_iri(super_concept_iri)
+            sub_concept = self.onto.get_owl_object(sub_concept_iri)
+            super_concept = self.onto.get_owl_object(super_concept_iri)
             # collect class iri if accepted
             if valid_negative(sub_concept, super_concept):
                 neg = (sub_concept_iri, super_concept_iri)
@@ -203,13 +203,13 @@ class ComplexSubsumptionSampler(SubsumptionSamplerBase):
         for super_concept_iri in self.onto.reasoner.get_inferred_super_entities(atomic_concept, direct=False):
             positives.append(
                 self.onto.owl_data_factory.getOWLSubClassOfAxiom(
-                    complex_concept, self.onto.get_owl_object_from_iri(super_concept_iri)
+                    complex_concept, self.onto.get_owl_object(super_concept_iri)
                 )
             )
         for sub_concept_iri in self.onto.reasoner.get_inferred_sub_entities(atomic_concept, direct=False):
             positives.append(
                 self.onto.owl_data_factory.getOWLSubClassOfAxiom(
-                    self.onto.get_owl_object_from_iri(sub_concept_iri), complex_concept
+                    self.onto.get_owl_object(sub_concept_iri), complex_concept
                 )
             )
         
@@ -266,7 +266,7 @@ class ComplexSubsumptionSampler(SubsumptionSamplerBase):
         """Randomly change an IRI in the input axiom and return a new one.
         """
         replaced_iri = random.choice(re.findall(IRI, str(axiom)))[1:-1]
-        replaced_entity = self.onto.get_owl_object_from_iri(replaced_iri)
+        replaced_entity = self.onto.get_owl_object(replaced_iri)
         replacement_iri = None
         if self.onto.get_entity_type(replaced_entity) == "Classes":
             replacement_iri = self.random_named_concept()

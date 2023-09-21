@@ -294,7 +294,7 @@ class SubsFromEquivMappingGenerator:
                 continue
 
             # construct subsumption pairs by matching the source class and the target class's parents
-            tgt_class = self.tgt_onto.get_owl_object_from_iri(tgt_class_iri)
+            tgt_class = self.tgt_onto.get_owl_object(tgt_class_iri)
             # tgt_class_parent_iris = self.tgt_onto.reasoner.get_inferred_super_entities(tgt_class, direct=True)
             tgt_class_parent_iris = [str(p.getIRI()) for p in self.tgt_onto.get_asserted_parents(tgt_class, named_only=True)]
             for parent_iri in tgt_class_parent_iris:
@@ -384,7 +384,7 @@ class NegativeCandidateMappingGenerator:
         if self.for_subsumption:
             for m in self.reference_class_mappings:
                 src_class_iri, tgt_class_iri = m.to_tuple()
-                tgt_class = self.tgt_onto.get_owl_object_from_iri(tgt_class_iri)
+                tgt_class = self.tgt_onto.get_owl_object(tgt_class_iri)
                 tgt_class_ancestors = self.tgt_onto.reasoner.get_inferred_super_entities(tgt_class)
                 for tgt_ancestor_iri in tgt_class_ancestors:
                     self.reference_class_dict[src_class_iri].append(tgt_ancestor_iri)
@@ -521,7 +521,7 @@ class NegativeCandidateMappingGenerator:
 
             neighbours_of_cur_hop = []
             for tgt_class_iri in frontier:
-                tgt_class = self.tgt_onto.get_owl_object_from_iri(tgt_class_iri)
+                tgt_class = self.tgt_onto.get_owl_object(tgt_class_iri)
                 parents = self.tgt_onto.reasoner.get_inferred_super_entities(tgt_class, direct=True)
                 children = self.tgt_onto.reasoner.get_inferred_sub_entities(tgt_class, direct=True)
                 neighbours_of_cur_hop += parents + children  # used for further hop expansion
