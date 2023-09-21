@@ -494,7 +494,9 @@ class OntologyVerbaliser:
         assert axiom_type in [
             "SubObjectPropertyOf",
             "SuperObjectPropertyOf",
-        ], f"Input axiom type `{axiom_type}` is not object property subsumption (`SubObjectPropertyOf` or `SuperObjectPropertyOf`)."
+            "SubPropertyChainOf",
+            "SuperPropertyChainOf",
+        ], f"Input axiom type `{axiom_type}` is not object property subsumption (`SubObjectPropertyOf`, `SuperObjectPropertyOf`, `SubPropertyChainOf`, or `SuperPropertyChainOf`)."
 
         parsed_subsumption_axiom = self.parser.parse(object_property_subsumption_axiom).children[
             0
