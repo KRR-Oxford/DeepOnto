@@ -11,6 +11,7 @@ Security in case of vulnerabilities. -->
 
 ### Added
 
+- [X] **Add** `get_all_axioms()` method at `deeponto.onto.Ontology`.
 - [X] **Add** `get_iri()` method at `deeponto.onto.Ontology`.
 
 - [X] **Add** new features into `deeponto.onto.OntologyVerbaliser` including:
