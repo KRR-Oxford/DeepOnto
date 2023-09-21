@@ -774,6 +774,20 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#deeponto.align.oaei.is_rejection" class="md-nav__link">
+    is_rejection()
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deeponto.align.oaei.biollm_eval" class="md-nav__link">
+    biollm_eval()
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1228,7 +1242,7 @@ that involve a class marked as <strong>not used in alignment</strong>.</p>
 
 
 <h2 id="deeponto.align.oaei.read_candidate_mappings" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">read_candidate_mappings</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">,</span> <span class="n">has_score</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">read_candidate_mappings</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">,</span> <span class="n">for_biollm</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1238,10 +1252,13 @@ that involve a class marked as <strong>not used in alignment</strong>.</p>
       <p>Load scored or already ranked candidate mappings.</p>
 <p>The predicted candidate mappings are formatted the same as <code>test.cands.tsv</code>, with three columns:
 <code>"SrcEntity"</code>, <code>"TgtEntity"</code>, and <code>"TgtCandidates"</code>, indicating the source reference class IRI, the
-target reference class IRI, and a list of tuples in the form of <code>(target_candidate_class_IRI, score)</code>.
-The scores are optional if the candidate mappings have been ranked.</p>
+target reference class IRI, and a list of <strong>tuples</strong> in the form of <code>(target_candidate_class_IRI, score)</code> where
+<code>score</code> is optional if the candidate mappings have been ranked. For the Bio-LLM special sub-track, <code>"TgtCandidates"</code>
+refers to a list of <strong>triples</strong> in the form of <code>(target_candidate_class_IRI, score, answer)</code> where the <code>answer</code> is
+required for computing matching scores.</p>
 <p>This method loads the candidate mappings in this format and parse them into the inputs of <a class="autorefs autorefs-internal" href="../evaluation/#deeponto.align.evaluation.AlignmentEvaluator.mean_reciprocal_rank"><code>mean_reciprocal_rank</code></a>
 and [<code>hits_at_K</code>][[<code>mean_reciprocal_rank</code>][deeponto.align.evaluation.AlignmentEvaluator.hits_at_K].</p>
+<p>For Bio-LLM, the true prediction mappings and reference mappings will also be generated for the matching evaluation, i.e., the inputs of <a class="autorefs autorefs-internal" href="../evaluation/#deeponto.align.evaluation.AlignmentEvaluator.f1"><code>f1</code></a>.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/oaei.py</code></summary>
@@ -1271,23 +1288,66 @@ and [<code>hits_at_K</code>][[<code>mean_reciprocal_rank</code>][deeponto.align.
 <span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
-<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_candidate_mappings</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">has_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="normal">125</span>
+<span class="normal">126</span>
+<span class="normal">127</span>
+<span class="normal">128</span>
+<span class="normal">129</span>
+<span class="normal">130</span>
+<span class="normal">131</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
+<span class="normal">135</span>
+<span class="normal">136</span>
+<span class="normal">137</span>
+<span class="normal">138</span>
+<span class="normal">139</span>
+<span class="normal">140</span>
+<span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
+<span class="normal">144</span>
+<span class="normal">145</span>
+<span class="normal">146</span>
+<span class="normal">147</span>
+<span class="normal">148</span>
+<span class="normal">149</span>
+<span class="normal">150</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">read_candidate_mappings</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">for_biollm</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Load scored or already ranked candidate mappings.</span>
 
 <span class="sd">    The predicted candidate mappings are formatted the same as `test.cands.tsv`, with three columns:</span>
 <span class="sd">    `&quot;SrcEntity&quot;`, `&quot;TgtEntity&quot;`, and `&quot;TgtCandidates&quot;`, indicating the source reference class IRI, the</span>
-<span class="sd">    target reference class IRI, and a list of tuples in the form of `(target_candidate_class_IRI, score)`.</span>
-<span class="sd">    The scores are optional if the candidate mappings have been ranked.</span>
+<span class="sd">    target reference class IRI, and a list of **tuples** in the form of `(target_candidate_class_IRI, score)` where</span>
+<span class="sd">    `score` is optional if the candidate mappings have been ranked. For the Bio-LLM special sub-track, `&quot;TgtCandidates&quot;`</span>
+<span class="sd">    refers to a list of **triples** in the form of `(target_candidate_class_IRI, score, answer)` where the `answer` is</span>
+<span class="sd">    required for computing matching scores.</span>
 
 <span class="sd">    This method loads the candidate mappings in this format and parse them into the inputs of [`mean_reciprocal_rank`][deeponto.align.evaluation.AlignmentEvaluator.mean_reciprocal_rank]</span>
 <span class="sd">    and [`hits_at_K`][[`mean_reciprocal_rank`][deeponto.align.evaluation.AlignmentEvaluator.hits_at_K].</span>
+
+<span class="sd">    For Bio-LLM, the true prediction mappings and reference mappings will also be generated for the matching evaluation, i.e., the inputs of [`f1`][deeponto.align.evaluation.AlignmentEvaluator.f1].</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="n">all_cand_maps</span> <span class="o">=</span> <span class="n">read_table</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-    <span class="n">formatted</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">cands</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">unmatched_cands</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># only used for bio-llm</span>
+    <span class="n">refs</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># only used for bio-llm</span>
+
     <span class="k">for</span> <span class="n">src_ref_class</span><span class="p">,</span> <span class="n">tgt_ref_class</span><span class="p">,</span> <span class="n">tgt_cands</span> <span class="ow">in</span> <span class="n">all_cand_maps</span><span class="p">:</span>
         <span class="n">ref_map</span> <span class="o">=</span> <span class="n">ReferenceMapping</span><span class="p">(</span><span class="n">src_ref_class</span><span class="p">,</span> <span class="n">tgt_ref_class</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">)</span>
         <span class="n">tgt_cands</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">tgt_cands</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">has_score</span><span class="p">:</span>
+        <span class="n">has_score</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tgt_cands</span><span class="p">])</span> <span class="k">else</span> <span class="kc">False</span>
+        <span class="n">cand_maps</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">refs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref_map</span><span class="p">)</span> <span class="k">if</span> <span class="n">tgt_ref_class</span> <span class="o">!=</span> <span class="s2">&quot;UnMatched&quot;</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">for_biollm</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">tgt_cands</span><span class="p">:</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">EntityMapping</span><span class="p">(</span><span class="n">src_ref_class</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+                <span class="n">cand_maps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="kc">True</span> <span class="ow">and</span> <span class="n">s</span> <span class="o">&gt;=</span> <span class="n">threshold</span><span class="p">:</span>  <span class="c1"># only keep first one</span>
+                    <span class="n">preds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">has_score</span><span class="p">:</span>
             <span class="n">cand_maps</span> <span class="o">=</span> <span class="p">[</span><span class="n">EntityMapping</span><span class="p">(</span><span class="n">src_ref_class</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="s2">&quot;=&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">tgt_cands</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Input candidate mappings do not have a score, assume default rank in descending order.&quot;</span><span class="p">)</span>
@@ -1296,8 +1356,15 @@ and [<code>hits_at_K</code>][[<code>mean_reciprocal_rank</code>][deeponto.align.
                 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tgt_cands</span><span class="p">)</span>
             <span class="p">]</span>
         <span class="n">cand_maps</span> <span class="o">=</span> <span class="n">EntityMapping</span><span class="o">.</span><span class="n">sort_entity_mappings_by_score</span><span class="p">(</span><span class="n">cand_maps</span><span class="p">)</span>
-        <span class="n">formatted</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ref_map</span><span class="p">,</span> <span class="n">cand_maps</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">formatted</span>
+        <span class="k">if</span> <span class="n">for_biollm</span> <span class="ow">and</span> <span class="n">tgt_ref_class</span> <span class="o">==</span> <span class="s2">&quot;UnMatched&quot;</span><span class="p">:</span>
+            <span class="n">unmatched_cands</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ref_map</span><span class="p">,</span> <span class="n">cand_maps</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">cands</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ref_map</span><span class="p">,</span> <span class="n">cand_maps</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">for_biollm</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cands</span><span class="p">,</span> <span class="n">unmatched_cands</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="n">refs</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cands</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -1310,7 +1377,7 @@ and [<code>hits_at_K</code>][[<code>mean_reciprocal_rank</code>][deeponto.align.
 
 
 <h2 id="deeponto.align.oaei.ranking_eval" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">ranking_eval</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">,</span> <span class="n">has_score</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">Ks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span></code>
+<code class="highlight language-python"><span class="n">ranking_eval</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">,</span> <span class="n">Ks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span></code>
 
 </h2>
 
@@ -1322,24 +1389,107 @@ and [<code>hits_at_K</code>][[<code>mean_reciprocal_rank</code>][deeponto.align.
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/align/oaei.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span>
-<span class="normal">133</span>
-<span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ranking_eval</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">has_score</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">Ks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">153</span>
+<span class="normal">154</span>
+<span class="normal">155</span>
+<span class="normal">156</span>
+<span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span>
+<span class="normal">160</span>
+<span class="normal">161</span>
+<span class="normal">162</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">ranking_eval</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Ks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">]):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Conduct **local ranking** evaluation for the scored or ranked candidate mappings.</span>
 
 <span class="sd">    See [`read_candidate_mappings`][deeponto.align.oaei.read_candidate_mappings] for the file format and loading.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">formatted_cand_maps</span> <span class="o">=</span> <span class="n">read_candidate_mappings</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">,</span> <span class="n">has_score</span><span class="p">)</span>
+    <span class="n">formatted_cand_maps</span> <span class="o">=</span> <span class="n">read_candidate_mappings</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">)</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;MRR&quot;</span><span class="p">:</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">mean_reciprocal_rank</span><span class="p">(</span><span class="n">formatted_cand_maps</span><span class="p">)}</span>
     <span class="k">for</span> <span class="n">K</span> <span class="ow">in</span> <span class="n">Ks</span><span class="p">:</span>
         <span class="n">results</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Hits@</span><span class="si">{</span><span class="n">K</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">hits_at_K</span><span class="p">(</span><span class="n">formatted_cand_maps</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="deeponto.align.oaei.is_rejection" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">is_rejection</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">cands</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>A successful rejection means none of the candidate mappings are predicted as true mappings.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/deeponto/align/oaei.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">is_rejection</span><span class="p">(</span><span class="n">preds</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">],</span> <span class="n">cands</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EntityMapping</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A successful rejection means none of the candidate mappings are predicted as true mappings.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">set</span><span class="p">([</span><span class="n">p</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">preds</span><span class="p">])</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">to_tuple</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cands</span><span class="p">]))</span> <span class="o">==</span> <span class="nb">set</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="deeponto.align.oaei.biollm_eval" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">biollm_eval</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">,</span> <span class="n">Ks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Conduct Bio-LLM evaluation for the Bio-LLM formatted candidate mappings.</p>
+<p>See <a class="autorefs autorefs-internal" href="#deeponto.align.oaei.read_candidate_mappings"><code>read_candidate_mappings</code></a> for the file format and loading.</p>
+
+          <details class="quote">
+            <summary>Source code in <code>src/deeponto/align/oaei.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span>
+<span class="normal">180</span>
+<span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">biollm_eval</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">,</span> <span class="n">Ks</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Conduct Bio-LLM evaluation for the Bio-LLM formatted candidate mappings.</span>
+
+<span class="sd">    See [`read_candidate_mappings`][deeponto.align.oaei.read_candidate_mappings] for the file format and loading.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matched_cand_maps</span><span class="p">,</span> <span class="n">unmatched_cand_maps</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="n">refs</span> <span class="o">=</span> <span class="n">read_candidate_mappings</span><span class="p">(</span><span class="n">cand_maps_file</span><span class="p">,</span> <span class="n">for_biollm</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">)</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">f1</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">refs</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">K</span> <span class="ow">in</span> <span class="n">Ks</span><span class="p">:</span>
+        <span class="n">results</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Hits@</span><span class="si">{</span><span class="n">K</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">hits_at_K</span><span class="p">(</span><span class="n">matched_cand_maps</span><span class="p">,</span> <span class="n">K</span><span class="o">=</span><span class="n">K</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;MRR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">AlignmentEvaluator</span><span class="o">.</span><span class="n">mean_reciprocal_rank</span><span class="p">(</span><span class="n">matched_cand_maps</span><span class="p">)</span>
+    <span class="n">rej</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">cs</span> <span class="ow">in</span> <span class="n">unmatched_cand_maps</span><span class="p">:</span>
+        <span class="n">rej</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">is_rejection</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span> <span class="n">cs</span><span class="p">))</span>
+    <span class="n">results</span><span class="p">[</span><span class="s2">&quot;RR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rej</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">unmatched_cand_maps</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">results</span>
 </code></pre></div></td></tr></table></div>
           </details>
