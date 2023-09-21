@@ -111,10 +111,10 @@ class OntologyVerbaliser:
         parser (OntologySyntaxParser): A syntax parser for the string representation of an `OWLObject`.
         vocab (Dict[str, List[str]]): A dictionary with `(entity_iri, entity_name)` pairs, by default
             the names are retrieved from $\texttt{rdfs:label}$.
-        apply_lowercasing (bool): Whether to apply lowercasing to the entity names.
-        keep_iri (bool): Whether to keep the IRIs of entities without verbalising them using `self.vocab`.
-        apply_auto_correction (bool): Whether to automatically apply rule-based auto-correction to entity names.
-        add_quantifier_word (bool): Whether to add quantifier words ("some"/"only") as in the Manchester syntax.
+        apply_lowercasing (bool, optional): Whether to apply lowercasing to the entity names. Defaults to `False`.
+        keep_iri (bool, optional): Whether to keep the IRIs of entities without verbalising them using `self.vocab`. Defaults to `False`.
+        apply_auto_correction (bool, optional): Whether to automatically apply rule-based auto-correction to entity names. Defaults to `False`.
+        add_quantifier_word (bool, optional): Whether to add quantifier words ("some"/"only") as in the Manchester syntax. Defaults to `False`.
     """
 
     def __init__(
@@ -129,10 +129,10 @@ class OntologyVerbaliser:
 
         Args:
             onto (Ontology): An ontology whose entities and axioms are to be verbalised.
-            apply_lowercasing (bool, optional): Whether to apply lowercasing to the entity names. Defaults to False.
-            keep_iri (bool, optional): Whether to keep the IRIs of entities without verbalising them using `self.vocab`. Defaults to False.
-            apply_auto_correction (bool, optional): Whether to automatically apply rule-based auto-correction to entity names. Defaults to False.
-            add_quantifier_word (bool, optional): Whether to add quantifier words ("some"/"only") as in the Manchester syntax. Defaults to False.
+            apply_lowercasing (bool, optional): Whether to apply lowercasing to the entity names. Defaults to `False`.
+            keep_iri (bool, optional): Whether to keep the IRIs of entities without verbalising them using `self.vocab`. Defaults to `False`.
+            apply_auto_correction (bool, optional): Whether to automatically apply rule-based auto-correction to entity names. Defaults to `False`.
+            add_quantifier_word (bool, optional): Whether to add quantifier words ("some"/"only") as in the Manchester syntax. Defaults to `False`.
         """
         self.onto = onto
         self.parser = OntologySyntaxParser()

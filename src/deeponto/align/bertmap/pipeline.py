@@ -69,7 +69,7 @@ class BERTMapPipeline:
     """
 
     def __init__(self, src_onto: Ontology, tgt_onto: Ontology, config: CfgNode):
-        """Initialize the BERTMap or BERTMapLt model.
+        """Initialise the BERTMap or BERTMapLt model.
 
         Args:
             src_onto (Ontology): The source ontology for alignment.
