@@ -622,7 +622,8 @@ class OntologyReasoner:
             self.owl_reasoner_factory = HermitReasonerFactory()
         elif reasoner_type == "elk":
             self.owl_reasoner_factory = ElkReasonerFactory()
-            Logger.getLogger("org.semanticweb.elk").setLevel(Level.ERROR)
+            # somehow Level.ERROR does not prevent the INFO message
+            Logger.getLogger("org.semanticweb.elk").setLevel(Level.OFF)
 
         self.owl_reasoner = self.owl_reasoner_factory.createReasoner(self.onto.owl_onto)
         self.owl_data_factory = self.onto.owl_data_factory
