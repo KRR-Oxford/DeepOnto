@@ -298,6 +298,8 @@ class Ontology:
             return list(self.owl_onto.getAxioms(AxiomType.OBJECT_PROPERTY_ASSERTION))
         elif entity_type == "DataProperties":
             return list(self.owl_onto.getAxioms(AxiomType.DATA_PROPERTY_ASSERTION))
+        elif entity_type == "Annotations":
+            return list(self.owl_onto.getAxioms(AxiomType.ANNOTATION_ASSERTION))
         else:
             raise ValueError(f"Unknown entity type {entity_type}.")
 
