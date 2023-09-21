@@ -218,6 +218,10 @@ class OntologyVerbaliser:
             fix = self._fix_verb_phrase if is_property else self._fix_noun_phrase
             verbal = fix(verbal)
         return CfgNode({"verbal": verbal, "iri": iri, "type": "IRI"})
+    
+    def _verbalise_property(self, property_node: RangeNode):
+        # TODO: to support property chain; also need to change the recursion at restriction 
+        pass
 
     def _fix_noun_phrase(self, noun_phrase: str):
         """Rule-based auto-correction for the noun phrase."""
