@@ -57,7 +57,7 @@ prompt:
 # These hyperparameters are about the BERT model and its fine-tuning
 fine_tune:
   do_fine_tune: true
-  pretrained: bert-base-uncased
+  pretrained: bert-base-uncased  # already fine-tuned or pre-trained model can be used by setting do_fine_tune to false
   tokenizer": bert-base-uncased
   output_dir: fine-tuned-bert
   warm_up_ratio: 0.0
