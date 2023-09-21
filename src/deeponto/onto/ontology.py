@@ -100,7 +100,7 @@ class Ontology:
         """
         self.owl_path = os.path.abspath(owl_path)
         self.owl_manager = OWLManager.createOWLOntologyManager()
-        self.owl_onto = self.owl_manager.loadOntologyFromOntologyDocument(IRI.create("file:///" + self.owl_path))
+        self.owl_onto = self.owl_manager.loadOntologyFromOntologyDocument(IRI.create(File(self.owl_path)))
         self.owl_iri = str(self.owl_onto.getOntologyID().getOntologyIRI().get())
         self.owl_classes = self._get_owl_objects("Classes")
         self.owl_object_properties = self._get_owl_objects("ObjectProperties")
