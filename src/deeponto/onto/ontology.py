@@ -45,7 +45,6 @@ from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
 from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLIndividual, OWLAxiom, AddAxiom, RemoveAxiom, AxiomType  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory as HermitReasonerFactory  # type: ignore
 from org.semanticweb.elk.owlapi import ElkReasonerFactory  # type: ignore
-from org.apache.log4j import Logger, Level  # type: ignore
 from org.semanticweb.owlapi.util import OWLObjectDuplicator, OWLEntityRemover  # type: ignore
 from org.semanticweb.owlapi.search import EntitySearcher  # type: ignore
 
@@ -623,7 +622,7 @@ class OntologyReasoner:
         elif reasoner_type == "elk":
             self.owl_reasoner_factory = ElkReasonerFactory()
             # somehow Level.ERROR does not prevent the INFO message
-            Logger.getLogger("org.semanticweb.elk").setLevel(Level.OFF)
+            # Logger.getLogger("org.semanticweb.elk").setLevel(Level.OFF)
 
         self.owl_reasoner = self.owl_reasoner_factory.createReasoner(self.onto.owl_onto)
         self.owl_data_factory = self.onto.owl_data_factory
