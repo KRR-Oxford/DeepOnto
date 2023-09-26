@@ -26,13 +26,13 @@ import xml.etree.ElementTree as ET
 
 
 def process_annotation_literal(
-    annotation_literal: str, apply_lowercasing: bool = True, normalise_identifiers: bool = False
+    annotation_literal: str, apply_lowercasing: bool = False, normalise_identifiers: bool = False
 ):
     """Pre-process an annotation literal string.
 
     Args:
         annotation_literal (str): A literal string of an entity's annotation.
-        apply_lowercasing (bool): A boolean that determines lowercasing or not. Defaults to `True`.
+        apply_lowercasing (bool): A boolean that determines lowercasing or not. Defaults to `False`.
         normalise_identifiers (bool): Whether to normalise annotation text that is in the Java identifier format. Defaults to `False`.
 
     Returns:

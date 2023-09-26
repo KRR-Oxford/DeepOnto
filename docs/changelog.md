@@ -9,41 +9,50 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased
 
-...
+### Added
+
+- [x] **Add** `rdflib` into the dependencies for building graph-related features.
+- [ ] **Add** `deeponto.onto.OntologyTaxonomy` for building the subsumption graph from an ontology.
+- [ ] **Add** `deeponto.onto.WordnetNounTaxonomy` for building the noun hypernym graph from wordnet (not an ontology but a commonly used KG).
+
+### Changed
+- [X] **Change** the default lowcasing argument of `deeponto.utils.process_annotation_literal()` to `False`.
+
 ## v0.8.7 (2023 September)
 
 ### Added
 
-- [X] **Add** the OAEI evaluation code for the main track global matching, local ranking, and the special sub-track bio-llm at `deeponto.align.oaei`. 
-- [X] **Add** `reasoner_type` argument at `deeponto.onto.Ontology`, now supporting `hermit` (default) and `elk`.
-- [X] **Add** `get_all_axioms()` method at `deeponto.onto.Ontology`.
-- [X] **Add** `get_iri()` method at `deeponto.onto.Ontology`.
+- [x] **Add** the OAEI evaluation code for the main track global matching, local ranking, and the special sub-track bio-llm at `deeponto.align.oaei`.
+- [x] **Add** `reasoner_type` argument at `deeponto.onto.Ontology`, now supporting `hermit` (default) and `elk`.
+- [x] **Add** `get_all_axioms()` method at `deeponto.onto.Ontology`.
+- [x] **Add** `get_iri()` method at `deeponto.onto.Ontology`.
 
-- [X] **Add** new features into `deeponto.onto.OntologyVerbaliser` including:
-    - `verbalise_object_property_subsumption()` for object property subsumption axioms.
-    - property chain verbalisation at `verbalise_class_expression()`.
-    - `verbalise_class_subsumption()` for class subsumption axioms;
-    - `verbalise_class_equivalence()` for class equivalence axioms;
-    - `verbalise_class_assertion()` for class assertion axioms;
-    - `verbalise_relation_assertion()` for relation assertion axioms;
-    - `auto-correction` option for fixing entity names.
-    - `keep_iri` option for keeping entity IRIs.
-    - `add_quantifier_word` option for adding quantifier words as in the Manchester syntax.  
+- [x] **Add** new features into `deeponto.onto.OntologyVerbaliser` including:
 
-- [X] **Add** `get_assertion_axioms()` method at `deeponto.onto.Ontology`.
-- [X] **Add** `get_axiom_type()` method at `deeponto.onto.Ontology`.
-- [X] **Add** `owl_individuals` attribute at `deeponto.onto.Ontology`.
+  - `verbalise_object_property_subsumption()` for object property subsumption axioms.
+  - property chain verbalisation at `verbalise_class_expression()`.
+  - `verbalise_class_subsumption()` for class subsumption axioms;
+  - `verbalise_class_equivalence()` for class equivalence axioms;
+  - `verbalise_class_assertion()` for class assertion axioms;
+  - `verbalise_relation_assertion()` for relation assertion axioms;
+  - `auto-correction` option for fixing entity names.
+  - `keep_iri` option for keeping entity IRIs.
+  - `add_quantifier_word` option for adding quantifier words as in the Manchester syntax.
+
+- [x] **Add** `get_assertion_axioms()` method at `deeponto.onto.Ontology`.
+- [x] **Add** `get_axiom_type()` method at `deeponto.onto.Ontology`.
+- [x] **Add** `owl_individuals` attribute at `deeponto.onto.Ontology`.
 
 ### Changed
 
-- [X] **Change** `get_owl_objects()` method to be anonymous as it is only used for creating pre-processed entity index at `deeponto.onto.Ontology`.
-- [X] **Change** `get_owl_object_from_iri()` method to `get_owl_object()` at `deeponto.onto.Ontology`.
-- [X] Change the log level of the ELK reasoner to `ERROR``.
+- [x] **Change** `get_owl_objects()` method to be anonymous as it is only used for creating pre-processed entity index at `deeponto.onto.Ontology`.
+- [x] **Change** `get_owl_object_from_iri()` method to `get_owl_object()` at `deeponto.onto.Ontology`.
+- [x] Change the log level of the ELK reasoner to `ERROR``.
 
 ### Fixed
 
-- [X] **Fix** the file path problem of loading ontologies for Windows systems.
-- [X] **Fix** the version of ELK to the latest by manually adding in the dependencies. See download link at <https://github.com/liveontologies/elk-reasoner/wiki/GettingElk>.
+- [x] **Fix** the file path problem of loading ontologies for Windows systems.
+- [x] **Fix** the version of ELK to the latest by manually adding in the dependencies. See download link at <https://github.com/liveontologies/elk-reasoner/wiki/GettingElk>.
 
 ## v0.8.5 (2023 September)
 
