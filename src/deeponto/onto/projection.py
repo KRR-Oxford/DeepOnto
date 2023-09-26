@@ -47,6 +47,7 @@
 
 from __future__ import annotations
 
+from rdflib.namespace import RDFS
 from . import Ontology
 
 from org.mowl.Projectors import OWL2VecStarProjector as Projector #type:ignore
@@ -99,5 +100,11 @@ class OntologyProjector:
             raise TypeError(
                 "Input ontology must be of type `org.semanticweb.owlapi.model.OWLOntology`.")
         edges = self.projector.project(ontology)
-        triples = [(str(e.src()), str(e.rel()), str(e.dst())) for e in edges if str(e.dst()) != ""]
+        triples = []
+        for e in edges:
+            s, r, o = str(e.src()), str(e.rel()), str(e.dst())
+            if o != "":
+                if r == "http://subclassof":
+                    r = str(RDFS.subClassOf)
+                triples.append((s, r, o))
         return set(triples)

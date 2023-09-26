@@ -19,3 +19,4 @@ textdistance
 ipywidgets==7.7.1
 ipykernel
 enlighten
+rdflib
