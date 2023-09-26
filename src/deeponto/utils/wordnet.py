@@ -74,4 +74,5 @@ class WordnetTaxonym:
             if include_membership:
                 for h_synset in synset.instance_hypernyms():
                     hypernyms.append((synset.name(), h_synset.name()))
+        print(len(hypernyms), f'hypernyms fetched.')
         return hypernyms
