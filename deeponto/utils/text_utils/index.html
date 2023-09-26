@@ -1368,7 +1368,7 @@
 
 
 <h2 id="deeponto.utils.text_utils.process_annotation_literal" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">process_annotation_literal</span><span class="p">(</span><span class="n">annotation_literal</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">normalise_identifiers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">process_annotation_literal</span><span class="p">(</span><span class="n">annotation_literal</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">normalise_identifiers</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h2>
 
@@ -1411,11 +1411,11 @@
           </td>
           <td>
             <div class="doc-md-description">
-              <p>A boolean that determines lowercasing or not. Defaults to <code>True</code>.</p>
+              <p>A boolean that determines lowercasing or not. Defaults to <code>False</code>.</p>
             </div>
           </td>
           <td>
-                <code>True</code>
+                <code>False</code>
           </td>
         </tr>
         <tr>
@@ -1488,13 +1488,13 @@
 <span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">process_annotation_literal</span><span class="p">(</span>
-    <span class="n">annotation_literal</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">normalise_identifiers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">annotation_literal</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">normalise_identifiers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pre-process an annotation literal string.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        annotation_literal (str): A literal string of an entity&#39;s annotation.</span>
-<span class="sd">        apply_lowercasing (bool): A boolean that determines lowercasing or not. Defaults to `True`.</span>
+<span class="sd">        apply_lowercasing (bool): A boolean that determines lowercasing or not. Defaults to `False`.</span>
 <span class="sd">        normalise_identifiers (bool): Whether to normalise annotation text that is in the Java identifier format. Defaults to `False`.</span>
 
 <span class="sd">    Returns:</span>

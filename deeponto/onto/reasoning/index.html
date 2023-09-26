@@ -1229,7 +1229,8 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">611</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">610</span>
+<span class="normal">611</span>
 <span class="normal">612</span>
 <span class="normal">613</span>
 <span class="normal">614</span>
@@ -1260,7 +1261,8 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner_factory</span> <span class="o">=</span> <span class="n">HermitReasonerFactory</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">reasoner_type</span> <span class="o">==</span> <span class="s2">&quot;elk&quot;</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner_factory</span> <span class="o">=</span> <span class="n">ElkReasonerFactory</span><span class="p">()</span>
-        <span class="n">Logger</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;org.semanticweb.elk&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">Level</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+        <span class="c1"># somehow Level.ERROR does not prevent the INFO message</span>
+        <span class="c1"># Logger.getLogger(&quot;org.semanticweb.elk&quot;).setLevel(Level.OFF)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner_factory</span><span class="o">.</span><span class="n">createReasoner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_onto</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">owl_data_factory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_data_factory</span>
