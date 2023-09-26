@@ -28,7 +28,7 @@ class WordnetTaxonym:
                 "name": synset.name().split(".")[0].replace("_", " "),
                 "definition": synset.definition(),
             }
-        self.edges = self.fetch_hypernyms(self.synsets, include_membership)
+        self.edges = self.fetch_hypernyms(synsets, include_membership)
         self.graph = nx.DiGraph(self.edges)
 
     def get_descendant_graph(self, top_entity_id: str):
