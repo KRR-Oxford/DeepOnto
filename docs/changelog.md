@@ -13,7 +13,7 @@ Security in case of vulnerabilities. -->
 
 - [x] **Add** `rdflib` into the dependencies for building graph-related features.
 - [ ] **Add** `deeponto.onto.OntologyTaxonomy` for building the subsumption graph from an ontology.
-- [ ] **Add** `deeponto.onto.WordnetNounTaxonomy` for building the noun hypernym graph from wordnet (not an ontology but a commonly used KG).
+- [X] **Add** `deeponto.utils.wordnet.WordnetTaxonomy` for building the noun hypernym graph from wordnet (not an ontology but a commonly used KG).
 
 ### Changed
 - [X] **Change** the default lowcasing argument of `deeponto.utils.process_annotation_literal()` to `False`.
