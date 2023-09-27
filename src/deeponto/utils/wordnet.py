@@ -60,7 +60,7 @@ class WordnetTaxonym:
                 for candidate in frontier:
                     descendants += list(self.get_hyponyms(candidate))
                 explored.update(frontier)
-                frontier = descendants - explored
+                frontier = set(descendants) - explored
             return set(descendants)
 
     @staticmethod
