@@ -52,7 +52,16 @@ class WordnetTaxonym:
         if not apply_transitivity:
             return set(self.graph.predecessors(entity_id))
         else:
-            return set(itertools.chain.from_iterable(nx.dfs_predecessors(self.graph, entity_id).values()))
+            # NOTE: the nx.dfs_predecessors does not give desirable results
+            frontier = list(self.get_hyponyms(entity_id))
+            explored = set()
+            descendants = frontier
+            while frontier:
+                for candidate in frontier:
+                    descendants += list(self.get_hyponyms(candidate))
+                explored.update(frontier)
+                frontier = descendants - explored
+            return set(descendants)
 
     @staticmethod
     def fetch_synsets(pos: str = "n"):
@@ -74,5 +83,5 @@ class WordnetTaxonym:
             if include_membership:
                 for h_synset in synset.instance_hypernyms():
                     hypernyms.append((synset.name(), h_synset.name()))
-        print(len(hypernyms), f'hypernyms fetched.')
+        print(len(hypernyms), f"hypernyms fetched.")
         return hypernyms
