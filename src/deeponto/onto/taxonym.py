@@ -27,15 +27,23 @@ class OntologyTaxonym:
         self.onto = onto
 
 
-
 class WordnetTaxonym:
-    """Class for the building the taxonym (noun hypernym graph) from wordnet."""
+    r"""Class for the building the taxonym (hypernym graph) from wordnet.
+
+    Attributes:
+        pos (str): The pos-tag of entities to be extracted from wordnet.
+        annotation_index (dict): Annotation (name, definition, etc.) index for entities extracted from wordnet.
+        entities (list): A list of entity ids extracted from wordnet.
+        edges (list): A list of hyponym-hypernym pairs extracted from the extracted entities.
+        graph (DiGraph): A directed hypernym graph created from the extracted edges.
+    """
 
     def __init__(self, pos: str = "n", include_membership: bool = False):
         synsets = self.fetch_synsets(pos=pos)
-        self.entity_index = dict()
+        self.pos = pos
+        self.annotation_index = dict()
         for synset in synsets:
-            self.entity_index[synset.name()] = {
+            self.annotation_index[synset.name()] = {
                 "name": synset.name().split(".")[0].replace("_", " "),
                 "definition": synset.definition(),
             }
