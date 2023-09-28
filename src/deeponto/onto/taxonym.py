@@ -35,7 +35,7 @@ class WordnetTaxonym:
         annotation_index (dict): Annotation (name, definition, etc.) index for entities extracted from wordnet.
         entities (list): A list of entity ids extracted from wordnet.
         edges (list): A list of hyponym-hypernym pairs extracted from the extracted entities.
-        graph (DiGraph): A directed hypernym graph created from the extracted edges.
+        graph (networkx.DiGraph): A directed hypernym graph created from the extracted edges.
     """
 
     def __init__(self, pos: str = "n", include_membership: bool = False):
@@ -52,7 +52,7 @@ class WordnetTaxonym:
         self.entities = list(self.graph.nodes)
 
     def get_descendant_graph(self, top_entity_id: str):
-        r"""Create a descendant graph for a given entity."""
+        r"""Create a descendant graph (`networkx.DiGraph`) for a given entity."""
         edges = []
         descendants = self.get_hyponyms(top_entity_id, apply_transitivity=True)
         for desc in descendants:
