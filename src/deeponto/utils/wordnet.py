@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Optional
 import itertools
 from nltk.corpus import wordnet as wn
 import networkx as nx
+import numpy as np
 
 
 class WordnetTaxonym:
@@ -30,6 +32,7 @@ class WordnetTaxonym:
             }
         self.edges = self.fetch_hypernyms(synsets, include_membership)
         self.graph = nx.DiGraph(self.edges)
+        self.entities = list(self.graph.nodes)
 
     def get_descendant_graph(self, top_entity_id: str):
         r"""Create a descendant graph for a given entity."""
