@@ -92,7 +92,7 @@ class OntologyTaxonym(Taxonomy):
         # simple structural reasoner used for completing the hierarchy
         self.structural_reasoner = OntologyReasoner(self.onto, "struct")
         subsumption_pairs = []
-        for cl_iri, cl in self.onto.owl_classes:
+        for cl_iri, cl in self.onto.owl_classes.items():
             # NOTE: this is different from using self.onto.get_asserted_parents which does not conduct simple reasoning
             for named_parent in self.structural_reasoner.get_inferred_super_entities(cl, direct=True):
                 subsumption_pairs.append((cl_iri, named_parent))
