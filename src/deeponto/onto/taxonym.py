@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.\
 
-
 from __future__ import annotations
 
-from typing import List
 import itertools
 import networkx as nx
 from nltk.corpus import wordnet as wn
@@ -81,7 +79,8 @@ class OntologyTaxonym(Taxonomy):
 
     Attributes:
         onto (Ontology): The input ontology to build the taxonym.
-        structural_reasoner (OntologyReasoner): A simple structural reasoner for completing the hierarchy.
+        structural_reasoner (OntologyReasoner): A simple structural reasoner for completing the hierarchy.\
+        root_node (str): The root node that represents `owl:Thing`.
         nodes (list): A list of named class IRIs.
         edges (list): A list of class subsumption pairs.
         graph (networkx.DiGraph): A directed subsumption graph.
@@ -91,19 +90,26 @@ class OntologyTaxonym(Taxonomy):
         self.onto = onto
         # simple structural reasoner used for completing the hierarchy
         self.structural_reasoner = OntologyReasoner(self.onto, "struct")
+        self.root_node = "owl:Thing"
         subsumption_pairs = []
         for cl_iri, cl in self.onto.owl_classes.items():
             # NOTE: this is different from using self.onto.get_asserted_parents which does not conduct simple reasoning
-            for named_parent in self.structural_reasoner.get_inferred_super_entities(cl, direct=True):
+            named_parents = self.structural_reasoner.get_inferred_super_entities(cl, direct=True)
+            if not named_parents:
+                # if no parents then add root node as the parent
+                named_parents.append(self.root_node)
+            for named_parent in named_parents:
                 subsumption_pairs.append((cl_iri, named_parent))
         super().__init__(edges=subsumption_pairs)
 
-        # set node annotations
+        # set node annotations (rdfs:label)
         for class_iri in self.nodes:
-            owl_class = self.onto.get_owl_object(class_iri)
-            for annotation_property_iri in self.onto.owl_annotation_properties.keys():
-                self.graph.nodes[class_iri][annotation_property_iri] = self.onto.get_annotations(
-                    owl_class, annotation_property_iri
+            if class_iri == self.root_node:
+                self.graph.nodes[class_iri]["label"] = "Thing"
+            else:
+                owl_class = self.onto.get_owl_object(class_iri)
+                self.graph.nodes[class_iri]["label"] = self.onto.get_annotations(
+                    owl_class, "http://www.w3.org/2000/01/rdf-schema#label"
                 )
 
     def get_parents(self, class_iri: str, apply_transitivity: bool = False):
@@ -125,6 +131,14 @@ class OntologyTaxonym(Taxonomy):
     def get_descendant_graph(self, class_iri: str):
         r"""Create a descendant graph (`networkx.DiGraph`) for a given ontology class."""
         super().get_descendant_graph(class_iri)
+
+    def get_shortest_node_depth(self, class_iri: str):
+        """Get the shortest depth of the given named class in the taxonomy."""
+        return nx.shortest_path_length(self.graph, class_iri, self.root_node)
+
+    def get_longest_node_depth(self, class_iri: str):
+        """Get the longest depth of the given named class in the taxonomy."""
+        return max([len(p) for p in nx.all_simple_paths(self.graph, class_iri, self.root_node)])
 
 
 class WordnetTaxonym(Taxonomy):
