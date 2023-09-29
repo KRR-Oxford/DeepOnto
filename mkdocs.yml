@@ -60,6 +60,7 @@ nav:
           - Verbalisation: deeponto/onto/verbalisation.md
           - Projection: deeponto/onto/projection.md
           - Normalisation: deeponto/onto/normalisation.md
+          - Taxonomy: deeponto/onto/taxonomy.md
         - Ontology Alignment:
           - Mapping: deeponto/align/mapping.md
           - BERTMap: deeponto/align/bertmap/index.md
