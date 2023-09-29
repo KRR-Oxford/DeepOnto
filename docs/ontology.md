@@ -34,7 +34,7 @@ It also possible to choose a reasoner to be used:
 onto = Ontology("path_to_ontology.owl", "hermit")
 ```
 
-!!! tips
+!!! tip
 
         For faster (but incomplete) reasoning over larger ontologies, choose a reasoner like `"elk"`.
 
@@ -84,14 +84,14 @@ doid.OWLThing
 
 ## Ontology Reasoning
 
-[`Ontology`][deeponto.onto.Ontology] has an important attribute `.reasoner` which refers to the [HermitT](http://www.hermit-reasoner.com/) reasoning tool.
+[`Ontology`][deeponto.onto.Ontology] has an important attribute `.reasoner` for conducting reasoning activities. Currently, two types of reasoners are supported, i.e., [HermitT](http://www.hermit-reasoner.com/) and [ELK](http://liveontologies.github.io/elk-reasoner/).
 
 ### Inferring Super- and Sub-Entities
 
 To get the **super-entities** (a super-class, or a super-propety) of an entity, do the following:
 
 ```python
-doid_class = doid.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_9969")
+doid_class = doid.get_owl_object("http://purl.obolibrary.org/obo/DOID_9969")
 doid.reasoner.get_inferred_super_entities(doid_class, direct=False) 
 ```
 
