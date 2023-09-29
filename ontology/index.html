@@ -1057,6 +1057,10 @@
 <p>It also possible to choose a reasoner to be used:</p>
 <div class="highlight"><pre><span></span><code>onto = Ontology(&quot;path_to_ontology.owl&quot;, &quot;hermit&quot;)
 </code></pre></div>
+<div class="admonition tips">
+<p class="admonition-title">Tips<p>For faster (but incomplete) reasoning over larger ontologies, choose a reasoner like <code>"elk"</code>.</p>
+</p>
+</div>
 <h2 id="acessing-ontology-entities">Acessing Ontology Entities</h2>
 <p>The most fundamental feature of <a class="autorefs autorefs-internal" href="../deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a> is to access entities in the ontology such as <strong>classes</strong> (or <em>concepts</em>) and <strong>properties</strong> (<em>object</em>, <em>data</em>, and <em>annotation</em> properties). To get an entity by its IRI, do the following:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
@@ -1122,7 +1126,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 21, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 29, 2023</span>
       
         <br>
         Created:
