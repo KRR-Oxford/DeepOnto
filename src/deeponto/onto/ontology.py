@@ -45,6 +45,7 @@ from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
 from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLIndividual, OWLAxiom, AddAxiom, RemoveAxiom, AxiomType  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory as HermitReasonerFactory  # type: ignore
 from org.semanticweb.elk.owlapi import ElkReasonerFactory  # type: ignore
+from org.semanticweb.owlapi.reasoner.structural import StructuralReasonerFactory # type: ignore
 from org.semanticweb.owlapi.util import OWLObjectDuplicator, OWLEntityRemover  # type: ignore
 from org.semanticweb.owlapi.search import EntitySearcher  # type: ignore
 
@@ -66,7 +67,11 @@ TOP_BOTTOMS = CfgNode(
     }
 )
 
-REASONER_TYPES = ["hermit", "elk"]  # to be expanded
+REASONER_DICT = {
+    "hermit": HermitReasonerFactory,
+    "elk": ElkReasonerFactory,
+    "struct": StructuralReasonerFactory,
+}
 
 
 class Ontology:
@@ -88,7 +93,7 @@ class Ontology:
         owl_annotation_properties (Dict[str, OWLAnnotationProperty]): A dictionary that stores the `(iri, ontology_annotation_property)` pairs.
         owl_individuals (Dict[str, OWLIndividual]): A dictionary that stores the `(iri, ontology_individual)` pairs.
         owl_data_factory (OWLDataFactory): A data factory for manipulating axioms.
-        reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`. Options are `["hermit", "elk"]`.
+        reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`. Options are `["hermit", "elk", "structural"]`.
         reasoner (OntologyReasoner): A reasoner for ontology inference.
     """
 
@@ -97,7 +102,7 @@ class Ontology:
 
         Args:
             owl_path (str): The path to the OWL ontology file.
-            reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`. Options are `["hermit", "elk"]`.
+            reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`. Options are `["hermit", "elk", "structural"]`.
         """
         self.owl_path = os.path.abspath(owl_path)
         self.owl_manager = OWLManager.createOWLOntologyManager()
@@ -612,7 +617,7 @@ class OntologyReasoner:
 
         Args:
             onto (Ontology): The input ontology to conduct reasoning on.
-            reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`. Options are `["hermit", "elk"]`.
+            reasoner_type (str): The type of reasoner used. Options are `["hermit", "elk", "structural"]`.
         """
         self.onto = onto
         self.owl_reasoner_factory = None
@@ -622,17 +627,16 @@ class OntologyReasoner:
 
     def load_reasoner(self, reasoner_type: str):
         """Load a new reaonser and dispose the old one if existed."""
-        assert reasoner_type in REASONER_TYPES, f"Unknown or unsupported reasoner type: {reasoner_type}."
+        assert reasoner_type in REASONER_DICT.keys(), f"Unknown or unsupported reasoner type: {reasoner_type}."
         
         if self.owl_reasoner:
             self.owl_reasoner.dispose()
-
-        if reasoner_type == "hermit":
-            self.owl_reasoner_factory = HermitReasonerFactory()
-        elif reasoner_type == "elk":
-            self.owl_reasoner_factory = ElkReasonerFactory()
-            # somehow Level.ERROR does not prevent the INFO message
-            # Logger.getLogger("org.semanticweb.elk").setLevel(Level.OFF)
+            
+        self.owl_reasoner_factory = REASONER_DICT[reasoner_type]()
+        # TODO: remove ELK message
+        # somehow Level.ERROR does not prevent the INFO message from ELK
+        # Logger.getLogger("org.semanticweb.elk").setLevel(Level.OFF)
+        
         self.owl_reasoner = self.owl_reasoner_factory.createReasoner(self.onto.owl_onto)
 
     def reload_reasoner(self):

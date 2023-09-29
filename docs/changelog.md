@@ -11,6 +11,7 @@ Security in case of vulnerabilities. -->
 
 ### Added
 
+- [X] **Add** new reasoner type `"struct"` ([Structural Reasoner](https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/reasoner/structural/StructuralReasoner.html)) at `deeponto.onto.OntologyReasoner`.
 - [X] **Add** `load_reasoner()` method at `deeponto.onto.OntologyReasoner` for convenience of changing the reasoner type.
 - [x] **Add** `rdflib` into the dependencies for building graph-related features.
 - [ ] **Add** `deeponto.onto.OntologyTaxonomy` for building the subsumption graph from an ontology.
@@ -24,7 +25,7 @@ Security in case of vulnerabilities. -->
 ### Added
 
 - [x] **Add** the OAEI evaluation code for the main track global matching, local ranking, and the special sub-track bio-llm at `deeponto.align.oaei`.
-- [x] **Add** `reasoner_type` argument at `deeponto.onto.Ontology`, now supporting `hermit` (default) and `elk`.
+- [x] **Add** `reasoner_type` argument at `deeponto.onto.OntologyReasoner`, now supporting `hermit` (default) and `elk`.
 - [x] **Add** `get_all_axioms()` method at `deeponto.onto.Ontology`.
 - [x] **Add** `get_iri()` method at `deeponto.onto.Ontology`.
 
