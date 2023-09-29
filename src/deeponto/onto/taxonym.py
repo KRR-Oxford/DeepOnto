@@ -20,7 +20,7 @@ import itertools
 import networkx as nx
 from nltk.corpus import wordnet as wn
 
-from . import Ontology, OntologyReasoner, RDFS_LABEL
+from . import Ontology, OntologyReasoner
 
 
 class Taxonomy:
