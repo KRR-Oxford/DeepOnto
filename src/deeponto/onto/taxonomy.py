@@ -21,6 +21,9 @@ from nltk.corpus import wordnet as wn
 from . import Ontology, OntologyReasoner
 
 
+RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
+
+
 class Taxonomy:
     r"""Class for building the taxonomy over structured data.
 
@@ -105,7 +108,7 @@ class OntologyTaxonomy(Taxonomy):
             else:
                 owl_class = self.onto.get_owl_object(class_iri)
                 self.graph.nodes[class_iri]["label"] = self.onto.get_annotations(
-                    owl_class, "http://www.w3.org/2000/01/rdf-schema#label"
+                    owl_class, RDFS_LABEL
                 )
 
     def get_parents(self, class_iri: str, apply_transitivity: bool = False):
