@@ -7,4 +7,4 @@ Extracting the taxonomy from an ontology often comes in handy for graph-based ma
         It is also possible to use [`OntologyProjector`][deeponto.onto.projection.OntologyProjector] to extract triples from the ontology as edges of the taxonomy. We will consider this feature in the future.
 
 ::: deeponto.onto.taxonomy
-heading_level: 2
+    heading_level: 2
