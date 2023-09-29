@@ -34,6 +34,10 @@ It also possible to choose a reasoner to be used:
 onto = Ontology("path_to_ontology.owl", "hermit")
 ```
 
+!!! tips
+
+        For faster (but incomplete) reasoning over larger ontologies, choose a reasoner like `"elk"`.
+
 ## Acessing Ontology Entities
 
 The most fundamental feature of [`Ontology`][deeponto.onto.Ontology] is to access entities in the ontology such as **classes** (or *concepts*) and **properties** (*object*, *data*, and *annotation* properties). To get an entity by its IRI, do the following:
