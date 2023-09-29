@@ -11,6 +11,7 @@ Security in case of vulnerabilities. -->
 
 ### Added
 
+- [X] **Add** `load_reasoner()` method at `deeponto.onto.OntologyReasoner` for convenience of changing the reasoner type.
 - [x] **Add** `rdflib` into the dependencies for building graph-related features.
 - [ ] **Add** `deeponto.onto.OntologyTaxonomy` for building the subsumption graph from an ontology.
 - [X] **Add** `deeponto.onto.WordnetTaxonomy` for building the noun hypernym graph from wordnet (not an ontology but a commonly used KG).
