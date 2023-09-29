@@ -615,6 +615,15 @@ class OntologyReasoner:
             reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`. Options are `["hermit", "elk"]`.
         """
         self.onto = onto
+        self.owl_reasoner_factory = None
+        self.owl_reasoner = None
+        self.load_reasoner(reasoner_type)
+        self.owl_data_factory = self.onto.owl_data_factory
+
+    def load_reasoner(self, reasoner_type: str):
+        """Load a new reaonser and dispose the old one if existed."""
+        if self.owl_reasoner:
+            self.owl_reasoner.dispose()
 
         assert reasoner_type in REASONER_TYPES, f"Unknown or unsupported reasoner type: {reasoner_type}."
         if reasoner_type == "hermit":
@@ -623,9 +632,7 @@ class OntologyReasoner:
             self.owl_reasoner_factory = ElkReasonerFactory()
             # somehow Level.ERROR does not prevent the INFO message
             # Logger.getLogger("org.semanticweb.elk").setLevel(Level.OFF)
-
         self.owl_reasoner = self.owl_reasoner_factory.createReasoner(self.onto.owl_onto)
-        self.owl_data_factory = self.onto.owl_data_factory
 
     def reload_reasoner(self):
         """Reload the reasoner for the current ontology (possibly changed)."""
