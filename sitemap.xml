@@ -101,6 +101,11 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
+         <loc>https://krr-oxford.github.io/DeepOnto/deeponto/onto/taxonomy/</loc>
+         <lastmod>2023-09-29</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
          <loc>https://krr-oxford.github.io/DeepOnto/deeponto/onto/verbalisation/</loc>
          <lastmod>2023-09-29</lastmod>
          <changefreq>daily</changefreq>
