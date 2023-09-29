@@ -72,13 +72,13 @@ class Taxonomy:
         return nx.DiGraph(edges)
 
 
-class OntologyTaxonym(Taxonomy):
-    r"""Class for building the taxonym (subsumption graph) from an ontology.
+class OntologyTaxonomy(Taxonomy):
+    r"""Class for building the taxonomy (subsumption graph) from an ontology.
 
     The nodes of this graph are **named classes** only, but the hierarchy is enriched by a simple structural reasoner.
 
     Attributes:
-        onto (Ontology): The input ontology to build the taxonym.
+        onto (Ontology): The input ontology to build the taxonomy.
         structural_reasoner (OntologyReasoner): A simple structural reasoner for completing the hierarchy.\
         root_node (str): The root node that represents `owl:Thing`.
         nodes (list): A list of named class IRIs.
@@ -141,8 +141,8 @@ class OntologyTaxonym(Taxonomy):
         return max([len(p) for p in nx.all_simple_paths(self.graph, class_iri, self.root_node)])
 
 
-class WordnetTaxonym(Taxonomy):
-    r"""Class for the building the taxonym (hypernym graph) from wordnet.
+class WordnetTaxonomy(Taxonomy):
+    r"""Class for the building the taxonomy (hypernym graph) from wordnet.
 
     Attributes:
         pos (str): The pos-tag of entities to be extracted from wordnet.

@@ -16,4 +16,4 @@ from .pruning import OntologyPruner
 from .verbalisation import OntologyVerbaliser, OntologySyntaxParser
 from .projection import OntologyProjector
 from .normalisation import OntologyNormaliser
-from .taxonym import OntologyTaxonym, WordnetTaxonym
+from .taxonomy import OntologyTaxonomy, WordnetTaxonomy
