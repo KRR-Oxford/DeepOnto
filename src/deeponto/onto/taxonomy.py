@@ -64,12 +64,8 @@ class Taxonomy:
 
     def get_descendant_graph(self, entity_id: str):
         r"""Create a descendant graph (`networkx.DiGraph`) for a given entity."""
-        edges = []
         descendants = self.get_children(entity_id, apply_transitivity=True)
-        for desc in descendants:
-            for desc_hyper in self.get_children(desc):
-                edges.append((desc, desc_hyper))
-        return nx.DiGraph(edges)
+        return self.graph.subgraph(list(descendants))
 
 
 class OntologyTaxonomy(Taxonomy):
