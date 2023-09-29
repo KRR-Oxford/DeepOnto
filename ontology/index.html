@@ -1057,8 +1057,8 @@
 <p>It also possible to choose a reasoner to be used:</p>
 <div class="highlight"><pre><span></span><code>onto = Ontology(&quot;path_to_ontology.owl&quot;, &quot;hermit&quot;)
 </code></pre></div>
-<div class="admonition tips">
-<p class="admonition-title">Tips<p>For faster (but incomplete) reasoning over larger ontologies, choose a reasoner like <code>"elk"</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip<p>For faster (but incomplete) reasoning over larger ontologies, choose a reasoner like <code>"elk"</code>.</p>
 </p>
 </div>
 <h2 id="acessing-ontology-entities">Acessing Ontology Entities</h2>
@@ -1093,10 +1093,10 @@
 <div class="highlight"><pre><span></span><code><span class="n">doid</span><span class="o">.</span><span class="n">OWLThing</span>
 </code></pre></div>
 <h2 id="ontology-reasoning">Ontology Reasoning</h2>
-<p><a class="autorefs autorefs-internal" href="../deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a> has an important attribute <code>.reasoner</code> which refers to the <a href="http://www.hermit-reasoner.com/">HermitT</a> reasoning tool.</p>
+<p><a class="autorefs autorefs-internal" href="../deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a> has an important attribute <code>.reasoner</code> for conducting reasoning activities. Currently, two types of reasoners are supported, i.e., <a href="http://www.hermit-reasoner.com/">HermitT</a> and <a href="http://liveontologies.github.io/elk-reasoner/">ELK</a>.</p>
 <h3 id="inferring-super-and-sub-entities">Inferring Super- and Sub-Entities</h3>
 <p>To get the <strong>super-entities</strong> (a super-class, or a super-propety) of an entity, do the following:</p>
-<div class="highlight"><pre><span></span><code><span class="n">doid_class</span> <span class="o">=</span> <span class="n">doid</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_9969&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">doid_class</span> <span class="o">=</span> <span class="n">doid</span><span class="o">.</span><span class="n">get_owl_object</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_9969&quot;</span><span class="p">)</span>
 <span class="n">doid</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">get_inferred_super_entities</span><span class="p">(</span><span class="n">doid_class</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
 </code></pre></div>
 <dl>
