@@ -1292,6 +1292,7 @@ Security in case of vulnerabilities. -->
 <h2 id="unreleased">Unreleased</h2>
 <h3 id="added">Added</h3>
 <ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> new reasoner type <code>"struct"</code> (<a href="https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/reasoner/structural/StructuralReasoner.html">Structural Reasoner</a>) at <code>deeponto.onto.OntologyReasoner</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>load_reasoner()</code> method at <code>deeponto.onto.OntologyReasoner</code> for convenience of changing the reasoner type.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>rdflib</code> into the dependencies for building graph-related features.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>deeponto.onto.OntologyTaxonomy</code> for building the subsumption graph from an ontology.</li>
@@ -1305,7 +1306,7 @@ Security in case of vulnerabilities. -->
 <h3 id="added_1">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the OAEI evaluation code for the main track global matching, local ranking, and the special sub-track bio-llm at <code>deeponto.align.oaei</code>.</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>reasoner_type</code> argument at <code>deeponto.onto.Ontology</code>, now supporting <code>hermit</code> (default) and <code>elk</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>reasoner_type</code> argument at <code>deeponto.onto.OntologyReasoner</code>, now supporting <code>hermit</code> (default) and <code>elk</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>get_all_axioms()</code> method at <code>deeponto.onto.Ontology</code>.</li>
 <li class="task-list-item">
 <p><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>get_iri()</code> method at <code>deeponto.onto.Ontology</code>.</p>
