@@ -14,8 +14,10 @@
 
 from __future__ import annotations
 
+from typing import Optional
 import itertools
 import networkx as nx
+import numpy as np
 from nltk.corpus import wordnet as wn
 
 from . import Ontology, OntologyReasoner
@@ -107,9 +109,7 @@ class OntologyTaxonomy(Taxonomy):
                 self.graph.nodes[class_iri]["label"] = "Thing"
             else:
                 owl_class = self.onto.get_owl_object(class_iri)
-                self.graph.nodes[class_iri]["label"] = self.onto.get_annotations(
-                    owl_class, RDFS_LABEL
-                )
+                self.graph.nodes[class_iri]["label"] = self.onto.get_annotations(owl_class, RDFS_LABEL)
 
     def get_parents(self, class_iri: str, apply_transitivity: bool = False):
         r"""Get the set of parents for a given class.
@@ -193,3 +193,44 @@ class WordnetTaxonomy(Taxonomy):
                     hypernyms.append((synset.name(), h_synset.name()))
         print(len(hypernyms), f"hypernyms fetched.")
         return hypernyms
+
+
+class TaxonomyNegativeSampler:
+    r"""Class for the efficient negative sampling with buffer over the taxonomy.
+
+    Attributes:
+        taxonomy (str): The taxonomy for negative sampling.
+        entity_weights (Optional[dict]): A dictionary with the taxonomy entities as keys and their corresponding weights as values. Defaults to `None`.
+    """
+
+    def __init__(self, taxonomy: Taxonomy, entity_weights: Optional[dict] = None):
+        self.taxonomy = taxonomy
+        self.entities = self.taxonomy.nodes
+        # uniform distribution if weights not provided
+        self.entity_weights = entity_weights
+
+        self._entity_probs = None
+        if self.entity_weights:
+            self._entity_probs = np.array([self.entity_weights[e] for e in self.entities])
+            self._entity_probs = self._entity_probs / self._entity_probs.sum()
+        self._buffer = []
+        self._default_buffer_size = 10000
+
+    def fill(self, buffer_size: Optional[int] = None):
+        """Buffer a large collection of entities sampled with replacement for faster negative sampling."""
+        buffer_size = buffer_size if buffer_size else self._default_buffer_size
+        if self._entity_probs:
+            self._buffer = np.random.choice(self.entities, size=buffer_size, p=self._entity_probs)
+        else:
+            self._buffer = np.random.choice(self.entities, size=buffer_size)
+
+    def sample(self, entity_id: str, n_samples: int, buffer_size: Optional[int] = None):
+        """Sample N negative samples for a given entity with replacement."""
+        negative_samples = []
+        positive_samples = self.taxonomy.get_parents(entity_id, True)
+        while len(negative_samples) < n_samples:
+            if len(self._buffer) < n_samples:
+                self.fill(buffer_size)
+            negative_samples += list(filter(lambda x: x not in positive_samples, self._buffer[:n_samples]))
+            self._buffer = self._buffer[n_samples:]  # remove the samples from the buffer
+        return negative_samples[:n_samples]
