@@ -165,8 +165,11 @@ class WordnetTaxonomy(Taxonomy):
 
         # set node annotations
         for synset in synsets:
-            self.graph.nodes[synset.name()]["name"] = synset.name().split(".")[0].replace("_", " ")
-            self.graph.nodes[synset.name()]["definition"] = synset.definition()
+            try:
+                self.graph.nodes[synset.name()]["name"] = synset.name().split(".")[0].replace("_", " ")
+                self.graph.nodes[synset.name()]["definition"] = synset.definition()
+            except:
+                continue
 
     @staticmethod
     def fetch_synsets(pos: str = "n"):
