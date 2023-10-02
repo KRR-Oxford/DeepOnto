@@ -585,13 +585,6 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#deeponto.onto.ontology.OntologyReasoner.reload_reasoner" class="md-nav__link">
-    reload_reasoner()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
   <a href="#deeponto.onto.ontology.OntologyReasoner.get_entity_type" class="md-nav__link">
     get_entity_type()
   </a>
@@ -1261,7 +1254,8 @@
 <span class="normal">623</span>
 <span class="normal">624</span>
 <span class="normal">625</span>
-<span class="normal">626</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">reasoner_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">626</span>
+<span class="normal">627</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">reasoner_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialise an ontology reasoner.</span>
 
 <span class="sd">    Args:</span>
@@ -1271,7 +1265,8 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">onto</span> <span class="o">=</span> <span class="n">onto</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner_factory</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">load_reasoner</span><span class="p">(</span><span class="n">reasoner_type</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reasoner_type</span> <span class="o">=</span> <span class="n">reasoner_type</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">load_reasoner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reasoner_type</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">owl_data_factory</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_data_factory</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -1305,8 +1300,7 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">628</span>
-<span class="normal">629</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">629</span>
 <span class="normal">630</span>
 <span class="normal">631</span>
 <span class="normal">632</span>
@@ -1317,52 +1311,21 @@
 <span class="normal">637</span>
 <span class="normal">638</span>
 <span class="normal">639</span>
-<span class="normal">640</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_reasoner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reasoner_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">640</span>
+<span class="normal">641</span>
+<span class="normal">642</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">load_reasoner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reasoner_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a new reaonser and dispose the old one if existed.&quot;&quot;&quot;</span>
     <span class="k">assert</span> <span class="n">reasoner_type</span> <span class="ow">in</span> <span class="n">REASONER_DICT</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;Unknown or unsupported reasoner type: </span><span class="si">{</span><span class="n">reasoner_type</span><span class="si">}</span><span class="s2">.&quot;</span>
 
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner_factory</span> <span class="o">=</span> <span class="n">REASONER_DICT</span><span class="p">[</span><span class="n">reasoner_type</span><span class="p">]()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">reasoner_type</span> <span class="o">=</span> <span class="n">reasoner_type</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner_factory</span> <span class="o">=</span> <span class="n">REASONER_DICT</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">reasoner_type</span><span class="p">]()</span>
     <span class="c1"># TODO: remove ELK message</span>
     <span class="c1"># somehow Level.ERROR does not prevent the INFO message from ELK</span>
     <span class="c1"># Logger.getLogger(&quot;org.semanticweb.elk&quot;).setLevel(Level.OFF)</span>
 
-    <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner_factory</span><span class="o">.</span><span class="n">createReasoner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_onto</span><span class="p">)</span>
-</code></pre></div></td></tr></table></div>
-          </details>
-  </div>
-
-</div>
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.onto.ontology.OntologyReasoner.reload_reasoner" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">reload_reasoner</span><span class="p">()</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Reload the reasoner for the current ontology (possibly changed).</p>
-
-          <details class="quote">
-            <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">642</span>
-<span class="normal">643</span>
-<span class="normal">644</span>
-<span class="normal">645</span>
-<span class="normal">646</span>
-<span class="normal">647</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">reload_reasoner</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reload the reasoner for the current ontology (possibly changed).&quot;&quot;&quot;</span>
-    <span class="c1"># release the memory</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
-    <span class="c1"># conduct reasoning on the possibly changed ontology</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner_factory</span><span class="o">.</span><span class="n">createReasoner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_onto</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
           </details>
@@ -1392,13 +1355,13 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">649</span>
-<span class="normal">650</span>
-<span class="normal">651</span>
-<span class="normal">652</span>
-<span class="normal">653</span>
-<span class="normal">654</span>
-<span class="normal">655</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">get_entity_type</span><span class="p">(</span><span class="n">entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">is_singular</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A handy method to get the type of an entity (`OWLObject`).</span>
 
@@ -1432,14 +1395,14 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">657</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span>
+<span class="normal">655</span>
+<span class="normal">656</span>
+<span class="normal">657</span>
 <span class="normal">658</span>
-<span class="normal">659</span>
-<span class="normal">660</span>
-<span class="normal">661</span>
-<span class="normal">662</span>
-<span class="normal">663</span>
-<span class="normal">664</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">659</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">has_iri</span><span class="p">(</span><span class="n">entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an entity has an IRI.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -1542,7 +1505,12 @@ ancestors (<code>direct=False</code>). Defaults to <code>False</code>.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">666</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">661</span>
+<span class="normal">662</span>
+<span class="normal">663</span>
+<span class="normal">664</span>
+<span class="normal">665</span>
+<span class="normal">666</span>
 <span class="normal">667</span>
 <span class="normal">668</span>
 <span class="normal">669</span>
@@ -1561,12 +1529,7 @@ ancestors (<code>direct=False</code>). Defaults to <code>False</code>.</p>
 <span class="normal">682</span>
 <span class="normal">683</span>
 <span class="normal">684</span>
-<span class="normal">685</span>
-<span class="normal">686</span>
-<span class="normal">687</span>
-<span class="normal">688</span>
-<span class="normal">689</span>
-<span class="normal">690</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_inferred_super_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">direct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">685</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_inferred_super_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">direct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Return the IRIs of named super-entities of a given `OWLObject` according to the reasoner.</span>
 
 <span class="sd">    A mixture of `getSuperClasses`, `getSuperObjectProperties`, `getSuperDataProperties`</span>
@@ -1686,7 +1649,12 @@ ancestors (<code>direct=False</code>). Defaults to <code>False</code>.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">692</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">687</span>
+<span class="normal">688</span>
+<span class="normal">689</span>
+<span class="normal">690</span>
+<span class="normal">691</span>
+<span class="normal">692</span>
 <span class="normal">693</span>
 <span class="normal">694</span>
 <span class="normal">695</span>
@@ -1704,12 +1672,7 @@ ancestors (<code>direct=False</code>). Defaults to <code>False</code>.</p>
 <span class="normal">707</span>
 <span class="normal">708</span>
 <span class="normal">709</span>
-<span class="normal">710</span>
-<span class="normal">711</span>
-<span class="normal">712</span>
-<span class="normal">713</span>
-<span class="normal">714</span>
-<span class="normal">715</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_inferred_sub_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">direct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">710</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_inferred_sub_entities</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">direct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the IRIs of named sub-entities of a given `OWLObject` according to the reasoner.</span>
 
 <span class="sd">    A mixture of `getSubClasses`, `getSubObjectProperties`, `getSubDataProperties`</span>
@@ -1756,14 +1719,14 @@ ancestors (<code>direct=False</code>). Defaults to <code>False</code>.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">717</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">712</span>
+<span class="normal">713</span>
+<span class="normal">714</span>
+<span class="normal">715</span>
+<span class="normal">716</span>
+<span class="normal">717</span>
 <span class="normal">718</span>
-<span class="normal">719</span>
-<span class="normal">720</span>
-<span class="normal">721</span>
-<span class="normal">722</span>
-<span class="normal">723</span>
-<span class="normal">724</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_subsumption</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub_entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">super_entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
+<span class="normal">719</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_subsumption</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sub_entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">super_entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the first entity is subsumed by the second entity according to the reasoner.&quot;&quot;&quot;</span>
     <span class="n">entity_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">sub_entity</span><span class="p">,</span> <span class="n">is_singular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">super_entity</span><span class="p">,</span> <span class="n">is_singular</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -1794,14 +1757,14 @@ ancestors (<code>direct=False</code>). Defaults to <code>False</code>.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">726</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">721</span>
+<span class="normal">722</span>
+<span class="normal">723</span>
+<span class="normal">724</span>
+<span class="normal">725</span>
+<span class="normal">726</span>
 <span class="normal">727</span>
-<span class="normal">728</span>
-<span class="normal">729</span>
-<span class="normal">730</span>
-<span class="normal">731</span>
-<span class="normal">732</span>
-<span class="normal">733</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_disjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity1</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">entity2</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
+<span class="normal">728</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_disjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity1</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">entity2</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two entities are disjoint according to the reasoner.&quot;&quot;&quot;</span>
     <span class="n">entity_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity1</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity2</span><span class="p">)</span>
@@ -1837,7 +1800,12 @@ compare them against the other entity which could be complex.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">735</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">730</span>
+<span class="normal">731</span>
+<span class="normal">732</span>
+<span class="normal">733</span>
+<span class="normal">734</span>
+<span class="normal">735</span>
 <span class="normal">736</span>
 <span class="normal">737</span>
 <span class="normal">738</span>
@@ -1859,12 +1827,7 @@ compare them against the other entity which could be complex.</p>
 <span class="normal">754</span>
 <span class="normal">755</span>
 <span class="normal">756</span>
-<span class="normal">757</span>
-<span class="normal">758</span>
-<span class="normal">759</span>
-<span class="normal">760</span>
-<span class="normal">761</span>
-<span class="normal">762</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_common_descendants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity1</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">entity2</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
+<span class="normal">757</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_common_descendants</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity1</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">entity2</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two entities have a common decendant.</span>
 
 <span class="sd">    Entities can be **OWL class or property expressions**, and can be either **atomic</span>
@@ -1984,18 +1947,18 @@ also include the sub-classes' instances (<code>direct=False</code>). Defaults to
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">764</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">759</span>
+<span class="normal">760</span>
+<span class="normal">761</span>
+<span class="normal">762</span>
+<span class="normal">763</span>
+<span class="normal">764</span>
 <span class="normal">765</span>
 <span class="normal">766</span>
 <span class="normal">767</span>
 <span class="normal">768</span>
 <span class="normal">769</span>
-<span class="normal">770</span>
-<span class="normal">771</span>
-<span class="normal">772</span>
-<span class="normal">773</span>
-<span class="normal">774</span>
-<span class="normal">775</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">instances_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_class</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">direct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">770</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">instances_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_class</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">direct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the list of named individuals that are instances of a given OWL class expression.</span>
 
 <span class="sd">    Args:</span>
@@ -2030,10 +1993,10 @@ also include the sub-classes' instances (<code>direct=False</code>). Defaults to
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">777</span>
-<span class="normal">778</span>
-<span class="normal">779</span>
-<span class="normal">780</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_instance</span><span class="p">:</span> <span class="n">OWLIndividual</span><span class="p">,</span> <span class="n">owl_class</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">772</span>
+<span class="normal">773</span>
+<span class="normal">774</span>
+<span class="normal">775</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_instance</span><span class="p">:</span> <span class="n">OWLIndividual</span><span class="p">,</span> <span class="n">owl_class</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if a named individual is an instance of an OWL class.&quot;&quot;&quot;</span>
     <span class="n">assertion_axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_data_factory</span><span class="o">.</span><span class="n">getOWLClassAssertionAxiom</span><span class="p">(</span><span class="n">owl_class</span><span class="p">,</span> <span class="n">owl_instance</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="o">.</span><span class="n">isEntailed</span><span class="p">(</span><span class="n">assertion_axiom</span><span class="p">)</span>
@@ -2070,7 +2033,12 @@ but <code>instance</code> is restricted to classes.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">782</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">777</span>
+<span class="normal">778</span>
+<span class="normal">779</span>
+<span class="normal">780</span>
+<span class="normal">781</span>
+<span class="normal">782</span>
 <span class="normal">783</span>
 <span class="normal">784</span>
 <span class="normal">785</span>
@@ -2093,12 +2061,7 @@ but <code>instance</code> is restricted to classes.</p>
 <span class="normal">802</span>
 <span class="normal">803</span>
 <span class="normal">804</span>
-<span class="normal">805</span>
-<span class="normal">806</span>
-<span class="normal">807</span>
-<span class="normal">808</span>
-<span class="normal">809</span>
-<span class="normal">810</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_common_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_class1</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">):</span>
+<span class="normal">805</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_common_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_class1</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if two OWL class expressions have a common instance.</span>
 
 <span class="sd">    Class expressions can be **atomic or complex**, and it takes longer computation time</span>
@@ -2182,7 +2145,12 @@ See <a class="autorefs autorefs-internal" href="#deeponto.onto.ontology.Ontology
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">812</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">807</span>
+<span class="normal">808</span>
+<span class="normal">809</span>
+<span class="normal">810</span>
+<span class="normal">811</span>
+<span class="normal">812</span>
 <span class="normal">813</span>
 <span class="normal">814</span>
 <span class="normal">815</span>
@@ -2241,12 +2209,7 @@ See <a class="autorefs autorefs-internal" href="#deeponto.onto.ontology.Ontology
 <span class="normal">868</span>
 <span class="normal">869</span>
 <span class="normal">870</span>
-<span class="normal">871</span>
-<span class="normal">872</span>
-<span class="normal">873</span>
-<span class="normal">874</span>
-<span class="normal">875</span>
-<span class="normal">876</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_assumed_disjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_class1</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">):</span>
+<span class="normal">871</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_assumed_disjoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_class1</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Check if two OWL class expressions satisfy the Assumed Disjointness.</span>
 
 <span class="sd">    !!! credit &quot;Paper&quot;</span>
@@ -2288,7 +2251,7 @@ See <a class="autorefs autorefs-internal" href="#deeponto.onto.ontology.Ontology
     <span class="c1"># adding the disjointness axiom of `class1`` and `class2``</span>
     <span class="n">disjoint_axiom</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_data_factory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;getOWLDisjoint</span><span class="si">{</span><span class="n">entity_type</span><span class="si">}</span><span class="s2">Axiom&quot;</span><span class="p">)([</span><span class="n">owl_class1</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">])</span>
     <span class="n">undo_change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">add_axiom</span><span class="p">(</span><span class="n">disjoint_axiom</span><span class="p">,</span> <span class="n">return_undo</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">reload_reasoner</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">load_reasoner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reasoner_type</span><span class="p">)</span>
 
     <span class="c1"># check if they are still satisfiable</span>
     <span class="n">still_satisfiable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">owl_reasoner</span><span class="o">.</span><span class="n">isSatisfiable</span><span class="p">(</span><span class="n">owl_class1</span><span class="p">)</span>
@@ -2298,7 +2261,7 @@ See <a class="autorefs autorefs-internal" href="#deeponto.onto.ontology.Ontology
     <span class="c1"># remove the axiom and re-construct the reasoner</span>
     <span class="n">undo_change_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">onto</span><span class="o">.</span><span class="n">owl_onto</span><span class="o">.</span><span class="n">applyChange</span><span class="p">(</span><span class="n">undo_change</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">undo_change_result</span><span class="p">)</span><span class="si">}</span><span class="s2">] Removing the axiom from the ontology.&quot;</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">reload_reasoner</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">load_reasoner</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reasoner_type</span><span class="p">)</span>
 
     <span class="c1"># failing first check, there is no need to do the second.</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">still_satisfiable</span><span class="p">:</span>
@@ -2367,7 +2330,12 @@ be time-saving.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/ontology.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">878</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">873</span>
+<span class="normal">874</span>
+<span class="normal">875</span>
+<span class="normal">876</span>
+<span class="normal">877</span>
+<span class="normal">878</span>
 <span class="normal">879</span>
 <span class="normal">880</span>
 <span class="normal">881</span>
@@ -2435,12 +2403,7 @@ be time-saving.</p>
 <span class="normal">943</span>
 <span class="normal">944</span>
 <span class="normal">945</span>
-<span class="normal">946</span>
-<span class="normal">947</span>
-<span class="normal">948</span>
-<span class="normal">949</span>
-<span class="normal">950</span>
-<span class="normal">951</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_assumed_disjoint_alternative</span><span class="p">(</span>
+<span class="normal">946</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_assumed_disjoint_alternative</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">owl_class1</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">owl_class2</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Check if two OWL class expressions satisfy the Assumed Disjointness.</span>
