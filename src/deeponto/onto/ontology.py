@@ -45,7 +45,7 @@ from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
 from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLIndividual, OWLAxiom, AddAxiom, RemoveAxiom, AxiomType  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory as HermitReasonerFactory  # type: ignore
 from org.semanticweb.elk.owlapi import ElkReasonerFactory  # type: ignore
-from org.semanticweb.owlapi.reasoner.structural import StructuralReasonerFactory # type: ignore
+from org.semanticweb.owlapi.reasoner.structural import StructuralReasonerFactory  # type: ignore
 from org.semanticweb.owlapi.util import OWLObjectDuplicator, OWLEntityRemover  # type: ignore
 from org.semanticweb.owlapi.search import EntitySearcher  # type: ignore
 
@@ -622,28 +622,23 @@ class OntologyReasoner:
         self.onto = onto
         self.owl_reasoner_factory = None
         self.owl_reasoner = None
-        self.load_reasoner(reasoner_type)
+        self.reasoner_type = reasoner_type
+        self.load_reasoner(self.reasoner_type)
         self.owl_data_factory = self.onto.owl_data_factory
 
     def load_reasoner(self, reasoner_type: str):
         """Load a new reaonser and dispose the old one if existed."""
         assert reasoner_type in REASONER_DICT.keys(), f"Unknown or unsupported reasoner type: {reasoner_type}."
-        
+
         if self.owl_reasoner:
             self.owl_reasoner.dispose()
-            
-        self.owl_reasoner_factory = REASONER_DICT[reasoner_type]()
+
+        self.reasoner_type = reasoner_type
+        self.owl_reasoner_factory = REASONER_DICT[self.reasoner_type]()
         # TODO: remove ELK message
         # somehow Level.ERROR does not prevent the INFO message from ELK
         # Logger.getLogger("org.semanticweb.elk").setLevel(Level.OFF)
-        
-        self.owl_reasoner = self.owl_reasoner_factory.createReasoner(self.onto.owl_onto)
 
-    def reload_reasoner(self):
-        """Reload the reasoner for the current ontology (possibly changed)."""
-        # release the memory
-        self.owl_reasoner.dispose()
-        # conduct reasoning on the possibly changed ontology
         self.owl_reasoner = self.owl_reasoner_factory.createReasoner(self.onto.owl_onto)
 
     @staticmethod
@@ -851,7 +846,7 @@ class OntologyReasoner:
         # adding the disjointness axiom of `class1`` and `class2``
         disjoint_axiom = getattr(self.owl_data_factory, f"getOWLDisjoint{entity_type}Axiom")([owl_class1, owl_class2])
         undo_change = self.onto.add_axiom(disjoint_axiom, return_undo=True)
-        self.reload_reasoner()
+        self.load_reasoner(self.reasoner_type)
 
         # check if they are still satisfiable
         still_satisfiable = self.owl_reasoner.isSatisfiable(owl_class1)
@@ -861,7 +856,7 @@ class OntologyReasoner:
         # remove the axiom and re-construct the reasoner
         undo_change_result = self.onto.owl_onto.applyChange(undo_change)
         print(f"[{str(undo_change_result)}] Removing the axiom from the ontology.")
-        self.reload_reasoner()
+        self.load_reasoner(self.reasoner_type)
 
         # failing first check, there is no need to do the second.
         if not still_satisfiable:

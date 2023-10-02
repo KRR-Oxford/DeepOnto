@@ -33,12 +33,14 @@ class Taxonomy:
         nodes (list): A list of entity ids.
         edges (list): A list of `(child, parent)` pairs.
         graph (networkx.DiGraph): A directed graph that represents the taxonomy.
+        root_node (Optional[str]): Optional root node id. Defaults to `None`.
     """
 
-    def __init__(self, edges: list):
+    def __init__(self, edges: list, root_node: Optional[str] = None):
         self.edges = edges
         self.graph = nx.DiGraph(self.edges)
         self.nodes = list(self.graph.nodes)
+        self.root_node = root_node
 
     def get_node_attributes(self, entity_id: str):
         """Get the attributes of the given entity."""
@@ -71,6 +73,18 @@ class Taxonomy:
         r"""Create a descendant graph (`networkx.DiGraph`) for a given entity."""
         descendants = self.get_children(entity_id, apply_transitivity=True)
         return self.graph.subgraph(list(descendants))
+    
+    def get_shortest_node_depth(self, entity_id: str):
+        """Get the shortest depth of the given entity in the taxonomy."""
+        if not self.root_node:
+            raise RuntimeError("No root node specified.")
+        return nx.shortest_path_length(self.graph, entity_id, self.root_node)
+
+    def get_longest_node_depth(self, entity_id: str):
+        """Get the longest depth of the given entity in the taxonomy."""
+        if not self.root_node:
+            raise RuntimeError("No root node specified.")
+        return max([len(p) for p in nx.all_simple_paths(self.graph, entity_id, self.root_node)])
 
 
 class OntologyTaxonomy(Taxonomy):
@@ -91,17 +105,17 @@ class OntologyTaxonomy(Taxonomy):
         self.onto = onto
         # simple structural reasoner used for completing the hierarchy
         self.structural_reasoner = OntologyReasoner(self.onto, "struct")
-        self.root_node = "owl:Thing"
+        root_node = "owl:Thing"
         subsumption_pairs = []
         for cl_iri, cl in self.onto.owl_classes.items():
             # NOTE: this is different from using self.onto.get_asserted_parents which does not conduct simple reasoning
             named_parents = self.structural_reasoner.get_inferred_super_entities(cl, direct=True)
             if not named_parents:
                 # if no parents then add root node as the parent
-                named_parents.append(self.root_node)
+                named_parents.append(root_node)
             for named_parent in named_parents:
                 subsumption_pairs.append((cl_iri, named_parent))
-        super().__init__(edges=subsumption_pairs)
+        super().__init__(edges=subsumption_pairs, root_node=root_node)
 
         # set node annotations (rdfs:label)
         for class_iri in self.nodes:
