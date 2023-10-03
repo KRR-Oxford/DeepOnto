@@ -31,7 +31,7 @@ class Taxonomy:
 
     Attributes:
         nodes (list): A list of entity ids.
-        edges (list): A list of `(child, parent)` pairs.
+        edges (list): A list of `(parent, child)` pairs.
         graph (networkx.DiGraph): A directed graph that represents the taxonomy.
         root_node (Optional[str]): Optional root node id. Defaults to `None`.
     """
@@ -46,25 +46,25 @@ class Taxonomy:
         """Get the attributes of the given entity."""
         return self.graph.nodes[entity_id]
 
-    def get_parents(self, entity_id: str, apply_transitivity: bool = False):
-        r"""Get the set of parents for a given entity."""
+    def get_children(self, entity_id: str, apply_transitivity: bool = False):
+        r"""Get the set of children for a given entity."""
         if not apply_transitivity:
             return set(self.graph.successors(entity_id))
         else:
             return set(itertools.chain.from_iterable(nx.dfs_successors(self.graph, entity_id).values()))
 
-    def get_children(self, entity_id: str, apply_transitivity: bool = False):
-        r"""Get the set of children for a given entity."""
+    def get_parents(self, entity_id: str, apply_transitivity: bool = False):
+        r"""Get the set of parents for a given entity."""
         if not apply_transitivity:
             return set(self.graph.predecessors(entity_id))
         else:
             # NOTE: the nx.dfs_predecessors does not give desirable results
-            frontier = list(self.get_children(entity_id))
+            frontier = list(self.get_parents(entity_id))
             explored = set()
             descendants = frontier
             while frontier:
                 for candidate in frontier:
-                    descendants += list(self.get_children(candidate))
+                    descendants += list(self.get_parents(candidate))
                 explored.update(frontier)
                 frontier = set(descendants) - explored
             return set(descendants)
@@ -78,13 +78,13 @@ class Taxonomy:
         """Get the shortest depth of the given entity in the taxonomy."""
         if not self.root_node:
             raise RuntimeError("No root node specified.")
-        return nx.shortest_path_length(self.graph, entity_id, self.root_node)
+        return nx.shortest_path_length(self.graph, self.root_node, entity_id)
 
     def get_longest_node_depth(self, entity_id: str):
         """Get the longest depth of the given entity in the taxonomy."""
         if not self.root_node:
             raise RuntimeError("No root node specified.")
-        return max([len(p) for p in nx.all_simple_paths(self.graph, entity_id, self.root_node)])
+        return max([len(p) for p in nx.all_simple_paths(self.graph, self.root_node, entity_id)])
 
 
 class OntologyTaxonomy(Taxonomy):
@@ -122,7 +122,7 @@ class OntologyTaxonomy(Taxonomy):
                 # if no parents then add root node as the parent
                 named_parents.append(root_node)
             for named_parent in named_parents:
-                subsumption_pairs.append((cl_iri, named_parent))
+                subsumption_pairs.append((named_parent, cl_iri))
         super().__init__(edges=subsumption_pairs, root_node=root_node)
 
         # set node annotations (rdfs:label)
@@ -155,11 +155,11 @@ class OntologyTaxonomy(Taxonomy):
 
     def get_shortest_node_depth(self, class_iri: str):
         """Get the shortest depth of the given named class in the taxonomy."""
-        return nx.shortest_path_length(self.graph, class_iri, self.root_node)
+        return nx.shortest_path_length(self.graph, self.root_node, class_iri)
 
     def get_longest_node_depth(self, class_iri: str):
         """Get the longest depth of the given named class in the taxonomy."""
-        return max([len(p) for p in nx.all_simple_paths(self.graph, class_iri, self.root_node)])
+        return max([len(p) for p in nx.all_simple_paths(self.graph, self.root_node, class_iri)])
 
 
 class WordnetTaxonomy(Taxonomy):
@@ -205,14 +205,14 @@ class WordnetTaxonomy(Taxonomy):
 
     @staticmethod
     def fetch_hypernyms(synsets: set, include_membership: bool = False):
-        """Get hyponym-hypernym pairs from a given set of wordnet synsets."""
+        """Get hypernym-hyponym pairs from a given set of wordnet synsets."""
         hypernyms = []
         for synset in synsets:
             for h_synset in synset.hypernyms():
-                hypernyms.append((synset.name(), h_synset.name()))
+                hypernyms.append((h_synset.name(), synset.name()))
             if include_membership:
                 for h_synset in synset.instance_hypernyms():
-                    hypernyms.append((synset.name(), h_synset.name()))
+                    hypernyms.append((h_synset.name(), synset.name()))
         print(len(hypernyms), f"hypernyms fetched.")
         return hypernyms
 
