@@ -655,15 +655,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#deeponto.onto.taxonomy.Taxonomy.get_parents" class="md-nav__link">
-    get_parents()
+  <a href="#deeponto.onto.taxonomy.Taxonomy.get_children" class="md-nav__link">
+    get_children()
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#deeponto.onto.taxonomy.Taxonomy.get_children" class="md-nav__link">
-    get_children()
+  <a href="#deeponto.onto.taxonomy.Taxonomy.get_parents" class="md-nav__link">
+    get_parents()
   </a>
   
 </li>
@@ -1225,7 +1225,7 @@
           </td>
           <td>
             <div class="doc-md-description">
-              <p>A list of <code>(child, parent)</code> pairs.</p>
+              <p>A list of <code>(parent, child)</code> pairs.</p>
             </div>
           </td>
         </tr>
@@ -1313,15 +1313,15 @@
 
 
 
-<h3 id="deeponto.onto.taxonomy.Taxonomy.get_parents" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">get_parents</span><span class="p">(</span><span class="n">entity_id</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<h3 id="deeponto.onto.taxonomy.Taxonomy.get_children" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_children</span><span class="p">(</span><span class="n">entity_id</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Get the set of parents for a given entity.</p>
+      <p>Get the set of children for a given entity.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
@@ -1330,8 +1330,8 @@
 <span class="normal">51</span>
 <span class="normal">52</span>
 <span class="normal">53</span>
-<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get the set of parents for a given entity.&quot;&quot;&quot;</span>
+<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get the set of children for a given entity.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">apply_transitivity</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">entity_id</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
@@ -1347,15 +1347,15 @@
 
 
 
-<h3 id="deeponto.onto.taxonomy.Taxonomy.get_children" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">get_children</span><span class="p">(</span><span class="n">entity_id</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<h3 id="deeponto.onto.taxonomy.Taxonomy.get_parents" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_parents</span><span class="p">(</span><span class="n">entity_id</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Get the set of children for a given entity.</p>
+      <p>Get the set of parents for a given entity.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
@@ -1373,18 +1373,18 @@
 <span class="normal">67</span>
 <span class="normal">68</span>
 <span class="normal">69</span>
-<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get the set of children for a given entity.&quot;&quot;&quot;</span>
+<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get the set of parents for a given entity.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">apply_transitivity</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">entity_id</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># NOTE: the nx.dfs_predecessors does not give desirable results</span>
-        <span class="n">frontier</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_children</span><span class="p">(</span><span class="n">entity_id</span><span class="p">))</span>
+        <span class="n">frontier</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_parents</span><span class="p">(</span><span class="n">entity_id</span><span class="p">))</span>
         <span class="n">explored</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="n">descendants</span> <span class="o">=</span> <span class="n">frontier</span>
         <span class="k">while</span> <span class="n">frontier</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">frontier</span><span class="p">:</span>
-                <span class="n">descendants</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_children</span><span class="p">(</span><span class="n">candidate</span><span class="p">))</span>
+                <span class="n">descendants</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_parents</span><span class="p">(</span><span class="n">candidate</span><span class="p">))</span>
             <span class="n">explored</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">frontier</span><span class="p">)</span>
             <span class="n">frontier</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">descendants</span><span class="p">)</span> <span class="o">-</span> <span class="n">explored</span>
         <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">descendants</span><span class="p">)</span>
@@ -1449,7 +1449,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the shortest depth of the given entity in the taxonomy.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No root node specified.&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">shortest_path_length</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">shortest_path_length</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -1481,7 +1481,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the longest depth of the given entity in the taxonomy.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No root node specified.&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">)])</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -1511,7 +1511,7 @@
             Bases: <code><a class="autorefs autorefs-internal" title="deeponto.onto.taxonomy.Taxonomy" href="#deeponto.onto.taxonomy.Taxonomy">Taxonomy</a></code></p>
 
   
-      <p>Class for building the taxonomy (subsumption graph) from an ontology.</p>
+      <p>Class for building the taxonomy (top-down subsumption graph) from an ontology.</p>
 <p>The nodes of this graph are <strong>named classes</strong> only, but the hierarchy is enriched (beyond asserted axioms) by an ontology reasoner.</p>
 
 
@@ -1589,7 +1589,7 @@ If the <code>reasoner_type</code> is the same as <code>onto.reasoner_type</code>
           </td>
           <td>
             <div class="doc-md-description">
-              <p>A list of class subsumption pairs.</p>
+              <p>A list of <code>(parent, child)</code> class pairs. That is, if <span class="arithmatex">\(C \sqsubseteq D\)</span>, then <span class="arithmatex">\((D, C)\)</span> will be added as an edge.</p>
             </div>
           </td>
         </tr>
@@ -1656,7 +1656,7 @@ If the <code>reasoner_type</code> is the same as <code>onto.reasoner_type</code>
             <span class="c1"># if no parents then add root node as the parent</span>
             <span class="n">named_parents</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">root_node</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">named_parent</span> <span class="ow">in</span> <span class="n">named_parents</span><span class="p">:</span>
-            <span class="n">subsumption_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cl_iri</span><span class="p">,</span> <span class="n">named_parent</span><span class="p">))</span>
+            <span class="n">subsumption_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">named_parent</span><span class="p">,</span> <span class="n">cl_iri</span><span class="p">))</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">edges</span><span class="o">=</span><span class="n">subsumption_pairs</span><span class="p">,</span> <span class="n">root_node</span><span class="o">=</span><span class="n">root_node</span><span class="p">)</span>
 
     <span class="c1"># set node annotations (rdfs:label)</span>
@@ -1806,7 +1806,7 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 <span class="normal">157</span>
 <span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_shortest_node_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the shortest depth of the given named class in the taxonomy.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">shortest_path_length</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">shortest_path_length</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -1834,7 +1834,7 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 <span class="normal">161</span>
 <span class="normal">162</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_longest_node_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the longest depth of the given named class in the taxonomy.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">)])</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -2087,7 +2087,7 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
   <div class="doc doc-contents ">
   
-      <p>Get hyponym-hypernym pairs from a given set of wordnet synsets.</p>
+      <p>Get hypernym-hyponym pairs from a given set of wordnet synsets.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
@@ -2104,16 +2104,16 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 <span class="normal">216</span>
 <span class="normal">217</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">fetch_hypernyms</span><span class="p">(</span><span class="n">synsets</span><span class="p">:</span> <span class="nb">set</span><span class="p">,</span> <span class="n">include_membership</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get hyponym-hypernym pairs from a given set of wordnet synsets.&quot;&quot;&quot;</span>
-    <span class="n">hypernyms</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get hypernym-hyponym pairs from a given set of wordnet synsets.&quot;&quot;&quot;</span>
+    <span class="n">hypernym_hyponym_pairs</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">synset</span> <span class="ow">in</span> <span class="n">synsets</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">h_synset</span> <span class="ow">in</span> <span class="n">synset</span><span class="o">.</span><span class="n">hypernyms</span><span class="p">():</span>
-            <span class="n">hypernyms</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">synset</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">h_synset</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
+            <span class="n">hypernym_hyponym_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">h_synset</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">synset</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
         <span class="k">if</span> <span class="n">include_membership</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">h_synset</span> <span class="ow">in</span> <span class="n">synset</span><span class="o">.</span><span class="n">instance_hypernyms</span><span class="p">():</span>
-                <span class="n">hypernyms</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">synset</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">h_synset</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hypernyms</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;hypernyms fetched.&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">hypernyms</span>
+                <span class="n">hypernym_hyponym_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">h_synset</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">synset</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hypernym_hyponym_pairs</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;hypernym-hyponym pairs fetched.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">hypernym_hyponym_pairs</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
