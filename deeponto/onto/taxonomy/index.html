@@ -1508,22 +1508,22 @@
 
 
 <h3 id="deeponto.onto.taxonomy.Taxonomy.get_lowest_common_ancestor" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">get_lowest_common_ancestor</span><span class="p">(</span><span class="o">*</span><span class="n">entity_ids</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">get_lowest_common_ancestor</span><span class="p">(</span><span class="n">entity_id1</span><span class="p">,</span> <span class="n">entity_id2</span><span class="p">)</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Get the lowest common ancestor of the given set of entities.</p>
+      <p>Get the lowest common ancestor of the given two entities.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">89</span>
 <span class="normal">90</span>
-<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_lowest_common_ancestor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">entity_ids</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the lowest common ancestor of the given set of entities.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">lowest_common_ancestor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="o">*</span><span class="n">entity_ids</span><span class="p">)</span>
+<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_lowest_common_ancestor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_id2</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the lowest common ancestor of the given two entities.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">lowest_common_ancestor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">entity_id1</span><span class="p">,</span> <span class="n">entity_id2</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -1889,22 +1889,22 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
 
 <h3 id="deeponto.onto.taxonomy.OntologyTaxonomy.get_lowest_common_ancestor" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">get_lowest_common_ancestor</span><span class="p">(</span><span class="o">*</span><span class="n">class_iris</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">get_lowest_common_ancestor</span><span class="p">(</span><span class="n">class_iri1</span><span class="p">,</span> <span class="n">class_iri2</span><span class="p">)</span></code>
 
 </h3>
 
 
   <div class="doc doc-contents ">
   
-      <p>Get the lowest common ancestor of the given set of named classes.</p>
+      <p>Get the lowest common ancestor of the given two named classes.</p>
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">168</span>
 <span class="normal">169</span>
-<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_lowest_common_ancestor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">class_iris</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the lowest common ancestor of the given set of named classes.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_lowest_common_ancestor</span><span class="p">(</span><span class="o">*</span><span class="n">class_iris</span><span class="p">)</span>
+<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_lowest_common_ancestor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">class_iri2</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the lowest common ancestor of the given two named classes.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_lowest_common_ancestor</span><span class="p">(</span><span class="n">class_iri1</span><span class="p">,</span> <span class="n">class_iri2</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
           </details>
   </div>
