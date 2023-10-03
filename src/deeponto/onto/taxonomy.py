@@ -88,7 +88,7 @@ class Taxonomy:
 
 
 class OntologyTaxonomy(Taxonomy):
-    r"""Class for building the taxonomy (subsumption graph) from an ontology.
+    r"""Class for building the taxonomy (top-down subsumption graph) from an ontology.
 
     The nodes of this graph are **named classes** only, but the hierarchy is enriched (beyond asserted axioms) by an ontology reasoner.
 
@@ -99,7 +99,7 @@ class OntologyTaxonomy(Taxonomy):
             If the `reasoner_type` is the same as `onto.reasoner_type`, then re-use `onto.reasoner`; otherwise, create a new one.
         root_node (str): The root node that represents `owl:Thing`.
         nodes (list): A list of named class IRIs.
-        edges (list): A list of class subsumption pairs.
+        edges (list): A list of `(parent, child)` class pairs. That is, if $C \sqsubseteq D$, then $(D, C)$ will be added as an edge.
         graph (networkx.DiGraph): A directed subsumption graph.
     """
 
