@@ -90,7 +90,7 @@ class Taxonomy:
 class OntologyTaxonomy(Taxonomy):
     r"""Class for building the taxonomy (subsumption graph) from an ontology.
 
-    The nodes of this graph are **named classes** only, but the hierarchy is enriched by a simple structural reasoner.
+    The nodes of this graph are **named classes** only, but the hierarchy is enriched (beyond asserted axioms) by an ontology reasoner.
 
     Attributes:
         onto (Ontology): The input ontology to build the taxonomy.
