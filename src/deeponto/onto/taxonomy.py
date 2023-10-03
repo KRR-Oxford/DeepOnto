@@ -87,7 +87,7 @@ class Taxonomy:
         return max([len(p) for p in nx.all_simple_paths(self.graph, self.root_node, entity_id)])
 
     def get_lowest_common_ancestor(self, *entity_ids: str):
-        """Get the lowest common ancestor for the given set of entities."""
+        """Get the lowest common ancestor of the given set of entities."""
         return nx.lowest_common_ancestor(self.graph, *entity_ids)
 
 
@@ -164,6 +164,10 @@ class OntologyTaxonomy(Taxonomy):
     def get_longest_node_depth(self, class_iri: str):
         """Get the longest depth of the given named class in the taxonomy."""
         return max([len(p) for p in nx.all_simple_paths(self.graph, self.root_node, class_iri)])
+    
+    def get_lowest_common_ancestor(self, *class_iris: str):
+        """Get the lowest common ancestor of the given set of named classes."""
+        return super().get_lowest_common_ancestor(*class_iris)
 
 
 class WordnetTaxonomy(Taxonomy):
