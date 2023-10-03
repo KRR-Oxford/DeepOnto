@@ -206,15 +206,15 @@ class WordnetTaxonomy(Taxonomy):
     @staticmethod
     def fetch_hypernyms(synsets: set, include_membership: bool = False):
         """Get hypernym-hyponym pairs from a given set of wordnet synsets."""
-        hypernyms = []
+        hypernym_hyponym_pairs = []
         for synset in synsets:
             for h_synset in synset.hypernyms():
-                hypernyms.append((h_synset.name(), synset.name()))
+                hypernym_hyponym_pairs.append((h_synset.name(), synset.name()))
             if include_membership:
                 for h_synset in synset.instance_hypernyms():
-                    hypernyms.append((h_synset.name(), synset.name()))
-        print(len(hypernyms), f"hypernyms fetched.")
-        return hypernyms
+                    hypernym_hyponym_pairs.append((h_synset.name(), synset.name()))
+        print(len(hypernym_hyponym_pairs), f"hypernym-hyponym pairs fetched.")
+        return hypernym_hyponym_pairs
 
 
 class TaxonomyNegativeSampler:
