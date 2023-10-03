@@ -73,7 +73,7 @@ class Taxonomy:
         r"""Create a descendant graph (`networkx.DiGraph`) for a given entity."""
         descendants = self.get_children(entity_id, apply_transitivity=True)
         return self.graph.subgraph(list(descendants))
-    
+
     def get_shortest_node_depth(self, entity_id: str):
         """Get the shortest depth of the given entity in the taxonomy."""
         if not self.root_node:
@@ -94,22 +94,30 @@ class OntologyTaxonomy(Taxonomy):
 
     Attributes:
         onto (Ontology): The input ontology to build the taxonomy.
-        structural_reasoner (OntologyReasoner): A simple structural reasoner for completing the hierarchy.\
+        reasoner_type (str): The type of reasoner used. Defaults to `"struct"`. Options are `["hermit", "elk", "struct"]`.
+        reasoner (OntologyReasoner): An ontology reasoner used for completing the hierarchy. 
+            If the `reasoner_type` is the same as `onto.reasoner_type`, then re-use `onto.reasoner`; otherwise, create a new one.
         root_node (str): The root node that represents `owl:Thing`.
         nodes (list): A list of named class IRIs.
         edges (list): A list of class subsumption pairs.
         graph (networkx.DiGraph): A directed subsumption graph.
     """
 
-    def __init__(self, onto: Ontology):
+    def __init__(self, onto: Ontology, reasoner_type: str = "struct"):
         self.onto = onto
-        # simple structural reasoner used for completing the hierarchy
-        self.structural_reasoner = OntologyReasoner(self.onto, "struct")
+        # the reasoner is used for completing the hierarchy
+        self.reasoner_type = reasoner_type
+        # re-use onto.reasoner if the reasoner type is the same; otherwise create a new one
+        self.reasoner = (
+            self.onto.reasoner
+            if reasoner_type == self.onto.reasoner_type
+            else OntologyReasoner(self.onto, reasoner_type)
+        )
         root_node = "owl:Thing"
         subsumption_pairs = []
         for cl_iri, cl in self.onto.owl_classes.items():
             # NOTE: this is different from using self.onto.get_asserted_parents which does not conduct simple reasoning
-            named_parents = self.structural_reasoner.get_inferred_super_entities(cl, direct=True)
+            named_parents = self.reasoner.get_inferred_super_entities(cl, direct=True)
             if not named_parents:
                 # if no parents then add root node as the parent
                 named_parents.append(root_node)
