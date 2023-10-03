@@ -86,6 +86,10 @@ class Taxonomy:
             raise RuntimeError("No root node specified.")
         return max([len(p) for p in nx.all_simple_paths(self.graph, self.root_node, entity_id)])
 
+    def get_lowest_common_ancestor(self, *entity_ids: str):
+        """Get the lowest common ancestor for the given set of entities."""
+        return nx.lowest_common_ancestor(self.graph, *entity_ids)
+
 
 class OntologyTaxonomy(Taxonomy):
     r"""Class for building the taxonomy (top-down subsumption graph) from an ontology.
@@ -95,7 +99,7 @@ class OntologyTaxonomy(Taxonomy):
     Attributes:
         onto (Ontology): The input ontology to build the taxonomy.
         reasoner_type (str): The type of reasoner used. Defaults to `"struct"`. Options are `["hermit", "elk", "struct"]`.
-        reasoner (OntologyReasoner): An ontology reasoner used for completing the hierarchy. 
+        reasoner (OntologyReasoner): An ontology reasoner used for completing the hierarchy.
             If the `reasoner_type` is the same as `onto.reasoner_type`, then re-use `onto.reasoner`; otherwise, create a new one.
         root_node (str): The root node that represents `owl:Thing`.
         nodes (list): A list of named class IRIs.
