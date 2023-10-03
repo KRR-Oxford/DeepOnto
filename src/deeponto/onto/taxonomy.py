@@ -86,9 +86,9 @@ class Taxonomy:
             raise RuntimeError("No root node specified.")
         return max([len(p) for p in nx.all_simple_paths(self.graph, self.root_node, entity_id)])
 
-    def get_lowest_common_ancestor(self, *entity_ids: str):
-        """Get the lowest common ancestor of the given set of entities."""
-        return nx.lowest_common_ancestor(self.graph, *entity_ids)
+    def get_lowest_common_ancestor(self, entity_id1: str, entity_id2: str):
+        """Get the lowest common ancestor of the given two entities."""
+        return nx.lowest_common_ancestor(self.graph, entity_id1, entity_id2)
 
 
 class OntologyTaxonomy(Taxonomy):
@@ -164,10 +164,10 @@ class OntologyTaxonomy(Taxonomy):
     def get_longest_node_depth(self, class_iri: str):
         """Get the longest depth of the given named class in the taxonomy."""
         return max([len(p) for p in nx.all_simple_paths(self.graph, self.root_node, class_iri)])
-    
-    def get_lowest_common_ancestor(self, *class_iris: str):
-        """Get the lowest common ancestor of the given set of named classes."""
-        return super().get_lowest_common_ancestor(*class_iris)
+
+    def get_lowest_common_ancestor(self, class_iri1: str, class_iri2: str):
+        """Get the lowest common ancestor of the given two named classes."""
+        return super().get_lowest_common_ancestor(class_iri1, class_iri2)
 
 
 class WordnetTaxonomy(Taxonomy):
