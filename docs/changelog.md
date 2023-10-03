@@ -11,6 +11,7 @@ Security in case of vulnerabilities. -->
 
 ### Added
 
+- [X] **Add** object property domain/range verbalisation at `deeponto.onto.OntologyVerbaliser`.
 - [X] **Add** new reasoner type `"struct"` ([Structural Reasoner](https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/reasoner/structural/StructuralReasoner.html)) at `deeponto.onto.OntologyReasoner`.
 - [X] **Add** `load_reasoner()` method at `deeponto.onto.OntologyReasoner` for convenience of changing the reasoner type and remove `reload_reasoner()` method as it is a special case of `load_reasoner()`.
 - [x] **Add** `rdflib` into the dependencies for building graph-related features.

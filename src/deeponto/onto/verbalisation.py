@@ -39,8 +39,14 @@ ABBREVIATION_DICT = {
     "SuperClassOf": "[SUP]",  # subsumes (class)
     "ClassAssertion": "[CLA]",  # class assertion
     "SubObjectPropertyOf": "[SUB]",  # subsumed by (object property)
-    "SuperObjectPropertyOf": "[SUP]", #  subsumes (object property)
+    "SuperObjectPropertyOf": "[SUP]",  #  subsumes (object property)
     "ObjectPropertyAssertion": "[OPA]",  # object property assertion
+    "ObjectPropertyDomain": "[OPD]",  # object property domain
+    "DataPropertyDomain": "[DPD]",  # data property domain
+    "AnnotationPropertyDomain": "[APD]",  # annotation property domain
+    "ObjectPropertyRange": "[OPR]",  # object property range
+    "DataPropertyRange": "[DPR]",  # data property range
+    "AnnotationPropertyRange": "[APR]",  # annotation property range
 }
 
 RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
@@ -377,6 +383,12 @@ class OntologyVerbaliser:
 
         return results
 
+    def _axiom_input_check(self, axiom: OWLAxiom, *required_axiom_types):
+        axiom_type = self.onto.get_axiom_type(axiom)
+        assert (
+            axiom_type in required_axiom_types
+        ), f"Input axiom type `{axiom_type}` is not in {list(required_axiom_types)}."
+
     def verbalise_class_subsumption_axiom(self, class_subsumption_axiom: OWLAxiom):
         r"""Verbalise a class subsumption axiom.
 
@@ -393,11 +405,7 @@ class OntologyVerbaliser:
         """
 
         # input check
-        axiom_type = self.onto.get_axiom_type(class_subsumption_axiom)
-        assert axiom_type in [
-            "SubClassOf",
-            "SuperClassOf",
-        ], f"Input axiom type `{axiom_type}` is not class subsumption (`SubClassOf` or `SuperClassOf`)."
+        self._axiom_input_check(class_subsumption_axiom, "SubClassOf", "SuperClassOf")
 
         parsed_subsumption_axiom = self.parser.parse(class_subsumption_axiom).children[0]  # skip the root node
         if str(class_subsumption_axiom).startswith("SubClassOf"):
@@ -422,10 +430,7 @@ class OntologyVerbaliser:
         """
 
         # input check
-        axiom_type = self.onto.get_axiom_type(class_equivalence_axiom)
-        assert (
-            axiom_type == "EquivalentClasses"
-        ), f"Input axiom type `{axiom_type}` is not equivalence (`EquivalentClasses`)."
+        self._axiom_input_check(class_equivalence_axiom, "EquivalentClasses")
 
         parsed_equivalence_axiom = self.parser.parse(class_equivalence_axiom).children[0]  # skip the root node
         parsed_class_left, parsed_class_right = parsed_equivalence_axiom.children
@@ -447,10 +452,7 @@ class OntologyVerbaliser:
         """
 
         # input check
-        axiom_type = self.onto.get_axiom_type(class_assertion_axiom)
-        assert (
-            axiom_type == "ClassAssertion"
-        ), f"Input axiom type `{axiom_type}` is not class assertion (`ClassAssertion`)."
+        self._axiom_input_check(class_assertion_axiom, "ClassAssertion")
 
         parsed_equivalence_axiom = self.parser.parse(class_assertion_axiom).children[0]  # skip the root node
         parsed_class, parsed_individual = parsed_equivalence_axiom.children
@@ -475,13 +477,13 @@ class OntologyVerbaliser:
         """
 
         # input check
-        axiom_type = self.onto.get_axiom_type(object_property_subsumption_axiom)
-        assert axiom_type in [
+        self._axiom_input_check(
+            object_property_subsumption_axiom,
             "SubObjectPropertyOf",
             "SuperObjectPropertyOf",
             "SubPropertyChainOf",
             "SuperPropertyChainOf",
-        ], f"Input axiom type `{axiom_type}` is not object property subsumption (`SubObjectPropertyOf`, `SuperObjectPropertyOf`, `SubPropertyChainOf`, or `SuperPropertyChainOf`)."
+        )
 
         parsed_subsumption_axiom = self.parser.parse(object_property_subsumption_axiom).children[
             0
@@ -495,7 +497,7 @@ class OntologyVerbaliser:
         verbalised_super_property = self._verbalise_property(parsed_super_property)
         return verbalised_sub_property, verbalised_super_property
 
-    def verbalise_object_property_assertion(self, object_property_assertion_axiom: OWLAxiom):
+    def verbalise_object_property_assertion_axiom(self, object_property_assertion_axiom: OWLAxiom):
         r"""Verbalise an object property assertion axiom.
 
         The object property assertion axiom has the form $r(x, y)$.
@@ -508,10 +510,7 @@ class OntologyVerbaliser:
         """
 
         # input check
-        axiom_type = self.onto.get_axiom_type(object_property_assertion_axiom)
-        assert (
-            axiom_type == "ObjectPropertyAssertion"
-        ), f"Input axiom type `{axiom_type}` is not class assertion (`ObjectPropertyAssertion`)."
+        self._axiom_input_check(object_property_assertion_axiom, "ObjectPropertyAssertion")
 
         # skip the root node
         parsed_object_property_assertion_axiom = self.parser.parse(object_property_assertion_axiom).children[0]
@@ -521,6 +520,54 @@ class OntologyVerbaliser:
         verbalised_individual_x = self._verbalise_iri(parsed_indiv_x)
         verbalised_individual_y = self._verbalise_iri(parsed_indiv_y)
         return verbalised_object_property, verbalised_individual_x, verbalised_individual_y
+
+    def verbalise_object_property_domain_axiom(self, object_property_domain_axiom: OWLAxiom):
+        r"""Verbalise an object property domain axiom.
+
+        The domain of a property $r: X \rightarrow Y$ specifies the concept expression $X$ of its subject.
+
+        Args:
+            object_property_domain_axiom (OWLAxiom): The object property domain axiom to be verbalised.
+
+        Returns:
+            (Tuple[CfgNode, CfgNode]): The verbalised object property $\mathcal{V}(r)$ and its domain $\mathcal{V}(X)$ (order matters).
+        """
+
+        # input check
+        self._axiom_input_check(object_property_domain_axiom, "ObjectPropertyDomain")
+
+        # skip the root node
+        parsed_object_property_domain_axiom = self.parser.parse(object_property_domain_axiom).children[0]
+        parsed_obj_prop, parsed_obj_prop_domain = parsed_object_property_domain_axiom.children
+
+        verbalised_object_property = self._verbalise_iri(parsed_obj_prop, is_property=True)
+        verbalised_object_property_domain = self.verbalise_class_expression(parsed_obj_prop_domain)
+
+        return verbalised_object_property, verbalised_object_property_domain
+
+    def verbalise_object_property_range_axiom(self, object_property_range_axiom: OWLAxiom):
+        r"""Verbalise an object property range axiom.
+
+        The range of a property $r: X \rightarrow Y$ specifies the concept expression $Y$ of its object.
+
+        Args:
+            object_property_range_axiom (OWLAxiom): The object property range axiom to be verbalised.
+
+        Returns:
+            (Tuple[CfgNode, CfgNode]): The verbalised object property $\mathcal{V}(r)$ and its range $\mathcal{V}(Y)$ (order matters).
+        """
+
+        # input check
+        self._axiom_input_check(object_property_range_axiom, "ObjectPropertyRange")
+
+        # skip the root node
+        parsed_object_property_range_axiom = self.parser.parse(object_property_range_axiom).children[0]
+        parsed_obj_prop, parsed_obj_prop_range = parsed_object_property_range_axiom.children
+
+        verbalised_object_property = self._verbalise_iri(parsed_obj_prop, is_property=True)
+        verbalised_object_property_range = self.verbalise_class_expression(parsed_obj_prop_range)
+
+        return verbalised_object_property, verbalised_object_property_range
 
 
 class OntologySyntaxParser:
