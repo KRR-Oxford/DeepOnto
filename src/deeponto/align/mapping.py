@@ -139,7 +139,7 @@ class EntityMapping:
         """
         df = read_table(table_of_mappings_file)
         entity_mappings = []
-        for dp in df.itertuples()():
+        for dp in df.itertuples():
             if is_reference:
                 entity_mappings.append(ReferenceMapping(dp.SrcEntity, dp.TgtEntity, relation))
             else:
