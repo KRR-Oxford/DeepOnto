@@ -139,13 +139,13 @@ class EntityMapping:
         """
         df = read_table(table_of_mappings_file)
         entity_mappings = []
-        for _, dp in df.iterrows():
+        for dp in df.itertuples()():
             if is_reference:
-                entity_mappings.append(ReferenceMapping(dp["SrcEntity"], dp["TgtEntity"], relation))
+                entity_mappings.append(ReferenceMapping(dp.SrcEntity, dp.TgtEntity, relation))
             else:
                 # allow `None` for threshold
                 if not threshold or dp["Score"] >= threshold:
-                    entity_mappings.append(EntityMapping(dp["SrcEntity"], dp["TgtEntity"], relation, dp["Score"]))
+                    entity_mappings.append(EntityMapping(dp.SrcEntity, dp.TgtEntity, relation, dp.Score))
         return entity_mappings
 
     def __repr__(self):
