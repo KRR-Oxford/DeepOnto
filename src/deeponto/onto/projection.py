@@ -93,7 +93,7 @@ class OntologyProjector:
             ontology (Ontology): An ontology to be processed.
 
         Returns:
-            (Set): Set of triples after projection.
+            (set): Set of triples after projection.
         """
         ontology = ontology.owl_onto
         if not isinstance(ontology, OWLOntology):

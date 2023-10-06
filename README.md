@@ -180,6 +180,6 @@ The preprint of our system paper for $\textsf{DeepOnto}$ is current available at
 
 ----------------------------------------------------------------
 
-Please report any bugs or queries by raising a GitHub issue or sending emails to the maintainers (Yuan He or Jiaoyan Chen) through:
+Please report any bugs or queries by [raising a GitHub issue](https://github.com/KRR-Oxford/DeepOnto/issues/new/choose) or sending emails to the maintainers (Yuan He or Jiaoyan Chen) through:
 
 > first_name.last_name@cs.ox.ac.uk

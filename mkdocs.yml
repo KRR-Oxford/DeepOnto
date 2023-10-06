@@ -98,6 +98,7 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
+  - attr_list
 
 
 plugins:
@@ -121,6 +122,11 @@ plugins:
             show_root_toc_entry: false
             members_order: source
             docstring_section_style: table
+          import:
+          # - https://installer.readthedocs.io/en/stable/objects.inv
+          - https://networkx.org/documentation/stable/objects.inv
+          # - https://docs.python.org/3.10/objects.inv
+          # - http://owlcs.github.io/owlapi/apidocs_4/object.inv
 
 
 extra_javascript:

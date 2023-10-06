@@ -95,7 +95,7 @@ class OntologyNormaliser:
             ontology (Ontology): An ontology to be normalised.
 
         Returns:
-            (List[OWLAxiom]): A list of normalised TBox axioms.
+            (list[OWLAxiom]): A list of normalised TBox axioms.
         """
 
         processed_owl_onto = self.preprocess_ontology(ontology)

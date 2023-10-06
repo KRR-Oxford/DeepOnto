@@ -127,7 +127,7 @@ class OntologyVerbaliser:
     Attributes:
         onto (Ontology): An ontology whose entities and axioms are to be verbalised.
         parser (OntologySyntaxParser): A syntax parser for the string representation of an `OWLObject`.
-        vocab (Dict[str, List[str]]): A dictionary with `(entity_iri, entity_name)` pairs, by default
+        vocab (dict[str, list[str]]): A dictionary with `(entity_iri, entity_name)` pairs, by default
             the names are retrieved from $\texttt{rdfs:label}$.
         apply_lowercasing (bool, optional): Whether to apply lowercasing to the entity names. Defaults to `False`.
         keep_iri (bool, optional): Whether to keep the IRIs of entities without verbalising them using `self.vocab`. Defaults to `False`.

@@ -56,7 +56,7 @@ class OntologyPruner:
         relevant hierarchy.
 
         Args:
-            class_iris_to_be_removed (List[str]): Classes with IRIs in this list will be pruned and the relevant hierarchy will be repaired.
+            class_iris_to_be_removed (list[str]): Classes with IRIs in this list will be pruned and the relevant hierarchy will be repaired.
         """
 
         # create the subsumption axioms first

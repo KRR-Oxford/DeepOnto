@@ -87,11 +87,11 @@ class Ontology:
         owl_manager (OWLOntologyManager): A ontology manager for creating `OWLOntology`.
         owl_onto (OWLOntology): An `OWLOntology` created by `owl_manger` from `owl_path`.
         owl_iri (str): The IRI of the `owl_onto`.
-        owl_classes (Dict[str, OWLClass]): A dictionary that stores the `(iri, ontology_class)` pairs.
-        owl_object_properties (Dict[str, OWLObjectProperty]): A dictionary that stores the `(iri, ontology_object_property)` pairs.
-        owl_data_properties (Dict[str, OWLDataProperty]): A dictionary that stores the `(iri, ontology_data_property)` pairs.
-        owl_annotation_properties (Dict[str, OWLAnnotationProperty]): A dictionary that stores the `(iri, ontology_annotation_property)` pairs.
-        owl_individuals (Dict[str, OWLIndividual]): A dictionary that stores the `(iri, ontology_individual)` pairs.
+        owl_classes (dict[str, OWLClass]): A dictionary that stores the `(iri, ontology_class)` pairs.
+        owl_object_properties (dict[str, OWLObjectProperty]): A dictionary that stores the `(iri, ontology_object_property)` pairs.
+        owl_data_properties (dict[str, OWLDataProperty]): A dictionary that stores the `(iri, ontology_data_property)` pairs.
+        owl_annotation_properties (dict[str, OWLAnnotationProperty]): A dictionary that stores the `(iri, ontology_annotation_property)` pairs.
+        owl_individuals (dict[str, OWLIndividual]): A dictionary that stores the `(iri, ontology_individual)` pairs.
         owl_data_factory (OWLDataFactory): A data factory for manipulating axioms.
         reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`. Options are `["hermit", "elk", "struct"]`.
         reasoner (OntologyReasoner): A reasoner for ontology inference.
@@ -277,7 +277,7 @@ class Ontology:
             entity_type (str, optional): The entity type to be considered. Defaults to `"Classes"`.
                 Options are `"Classes"`, `"ObjectProperties"`, and `"DataProperties"`.
         Returns:
-            (List[OWLAxiom]): A list of equivalence axioms subject to input entity type.
+            (list[OWLAxiom]): A list of equivalence axioms subject to input entity type.
         """
         if entity_type == "Classes":
             return list(self.owl_onto.getAxioms(AxiomType.EQUIVALENT_CLASSES))
@@ -295,7 +295,7 @@ class Ontology:
             entity_type (str, optional): The entity type to be considered. Defaults to `"Classes"`.
                 Options are `"Classes"`, `"ObjectProperties"`, and `"DataProperties"`.
         Returns:
-            (List[OWLAxiom]): A list of assertion axioms subject to input entity type.
+            (list[OWLAxiom]): A list of assertion axioms subject to input entity type.
         """
         if entity_type == "Classes":
             return list(self.owl_onto.getAxioms(AxiomType.CLASS_ASSERTION))
@@ -315,7 +315,7 @@ class Ontology:
             owl_object (OWLObject): An owl object that could have a parent.
             named_only (bool): If `True`, return parents that are named classes.
         Returns:
-            (Set[OWLObject]): The parent set of the given owl object.
+            (set[OWLObject]): The parent set of the given owl object.
         """
         entity_type = self.get_entity_type(owl_object)
         if entity_type == "Classes":
@@ -335,7 +335,7 @@ class Ontology:
             owl_object (OWLObject): An owl object that could have a child.
             named_only (bool): If `True`, return children that are named classes.
         Returns:
-            (Set[OWLObject]): The children set of the given owl object.
+            (set[OWLObject]): The children set of the given owl object.
         """
         entity_type = self.get_entity_type(owl_object)
         if entity_type == "Classes":
@@ -355,7 +355,7 @@ class Ontology:
             gci_only (bool): If `True`, consider complex classes that occur in GCIs only; otherwise consider
                 those that occur in equivalence axioms as well.
         Returns:
-            (Set[OWLClassExpression]): A set of complex classes.
+            (set[OWLClassExpression]): A set of complex classes.
         """
         complex_classes = []
 
@@ -403,7 +403,7 @@ class Ontology:
             normalise_identifiers (bool): Whether to normalise annotation text that is in the Java identifier format.
                 Defaults to `False`.
         Returns:
-            (Set[str]): A set of annotation literals of the given `OWLObject`.
+            (set[str]): A set of annotation literals of the given `OWLObject`.
         """
         if isinstance(owl_object, str):
             owl_object = self.get_owl_object(owl_object)
@@ -516,7 +516,7 @@ class Ontology:
         """Build an annotation index for a given type of entities.
 
         Args:
-            annotation_property_iris (List[str]): A list of annotation property IRIs (it is possible
+            annotation_property_iris (list[str]): A list of annotation property IRIs (it is possible
                 that not every annotation property IRI is in use); if not provided, the built-in
                 `rdfs:label` is considered. Defaults to `[RDFS_LABEL]`.
             entity_type (str, optional): The entity type to be considered. Defaults to `"Classes"`.
@@ -527,7 +527,7 @@ class Ontology:
                 Defaults to `False`.
 
         Returns:
-            (Tuple[dict, List[str]]): The built annotation index, and the list of annotation property IRIs that are in use.
+            (Tuple[dict, list[str]]): The built annotation index, and the list of annotation property IRIs that are in use.
         """
 
         annotation_index = defaultdict(set)
@@ -672,7 +672,7 @@ class OntologyReasoner:
                 ancestors (`direct=False`). Defaults to `False`.
 
         Returns:
-            (List[str]): A list of IRIs of the super-entities of the given `OWLObject` entity.
+            (list[str]): A list of IRIs of the super-entities of the given `OWLObject` entity.
         """
         entity_type = self.get_entity_type(entity)
         get_super = f"getSuper{entity_type}"
@@ -697,7 +697,7 @@ class OntologyReasoner:
                 ancestors (`direct=False`). Defaults to `False`.
 
         Returns:
-            (List[str]): A list of IRIs of the sub-entities of the given `OWLObject` entity.
+            (list[str]): A list of IRIs of the sub-entities of the given `OWLObject` entity.
         """
         entity_type = self.get_entity_type(entity)
         get_sub = f"getSub{entity_type}"
@@ -765,7 +765,7 @@ class OntologyReasoner:
                 also include the sub-classes' instances (`direct=False`). Defaults to `False`.
 
         Returns:
-            (List[OWLIndividual]): A list of named individuals that are instances of `owl_class`.
+            (list[OWLIndividual]): A list of named individuals that are instances of `owl_class`.
         """
         return list(self.owl_reasoner.getInstances(owl_class, direct).getFlattened())
 
