@@ -1321,7 +1321,7 @@ should feel relatively easy to extend the Python classes here.</p>
         <tr>
           <td><code>owl_classes</code></td>
           <td>
-                <code>Dict[str, OWLClass]</code>
+                <code>dict[str, OWLClass]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -1332,7 +1332,7 @@ should feel relatively easy to extend the Python classes here.</p>
         <tr>
           <td><code>owl_object_properties</code></td>
           <td>
-                <code>Dict[str, OWLObjectProperty]</code>
+                <code>dict[str, OWLObjectProperty]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -1343,7 +1343,7 @@ should feel relatively easy to extend the Python classes here.</p>
         <tr>
           <td><code>owl_data_properties</code></td>
           <td>
-                <code>Dict[str, OWLDataProperty]</code>
+                <code>dict[str, OWLDataProperty]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -1354,7 +1354,7 @@ should feel relatively easy to extend the Python classes here.</p>
         <tr>
           <td><code>owl_annotation_properties</code></td>
           <td>
-                <code>Dict[str, OWLAnnotationProperty]</code>
+                <code>dict[str, OWLAnnotationProperty]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -1365,7 +1365,7 @@ should feel relatively easy to extend the Python classes here.</p>
         <tr>
           <td><code>owl_individuals</code></td>
           <td>
-                <code>Dict[str, <span title="org.semanticweb.owlapi.model.OWLIndividual">OWLIndividual</span>]</code>
+                <code>dict[str, <span title="org.semanticweb.owlapi.model.OWLIndividual">OWLIndividual</span>]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -2144,7 +2144,7 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
     <tbody>
         <tr>
           <td>
-                <code><span title="typing.List">List</span>[<span title="org.semanticweb.owlapi.model.OWLAxiom">OWLAxiom</span>]</code>
+                <code>list[<span title="org.semanticweb.owlapi.model.OWLAxiom">OWLAxiom</span>]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -2180,7 +2180,7 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
 <span class="sd">        entity_type (str, optional): The entity type to be considered. Defaults to `&quot;Classes&quot;`.</span>
 <span class="sd">            Options are `&quot;Classes&quot;`, `&quot;ObjectProperties&quot;`, and `&quot;DataProperties&quot;`.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        (List[OWLAxiom]): A list of equivalence axioms subject to input entity type.</span>
+<span class="sd">        (list[OWLAxiom]): A list of equivalence axioms subject to input entity type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="s2">&quot;Classes&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_onto</span><span class="o">.</span><span class="n">getAxioms</span><span class="p">(</span><span class="n">AxiomType</span><span class="o">.</span><span class="n">EQUIVALENT_CLASSES</span><span class="p">))</span>
@@ -2255,7 +2255,7 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
     <tbody>
         <tr>
           <td>
-                <code><span title="typing.List">List</span>[<span title="org.semanticweb.owlapi.model.OWLAxiom">OWLAxiom</span>]</code>
+                <code>list[<span title="org.semanticweb.owlapi.model.OWLAxiom">OWLAxiom</span>]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -2293,7 +2293,7 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
 <span class="sd">        entity_type (str, optional): The entity type to be considered. Defaults to `&quot;Classes&quot;`.</span>
 <span class="sd">            Options are `&quot;Classes&quot;`, `&quot;ObjectProperties&quot;`, and `&quot;DataProperties&quot;`.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        (List[OWLAxiom]): A list of assertion axioms subject to input entity type.</span>
+<span class="sd">        (list[OWLAxiom]): A list of assertion axioms subject to input entity type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="s2">&quot;Classes&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">owl_onto</span><span class="o">.</span><span class="n">getAxioms</span><span class="p">(</span><span class="n">AxiomType</span><span class="o">.</span><span class="n">CLASS_ASSERTION</span><span class="p">))</span>
@@ -2383,7 +2383,7 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
     <tbody>
         <tr>
           <td>
-                <code>Set[<span title="org.semanticweb.owlapi.model.OWLObject">OWLObject</span>]</code>
+                <code>set[<span title="org.semanticweb.owlapi.model.OWLObject">OWLObject</span>]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -2421,7 +2421,7 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
 <span class="sd">        owl_object (OWLObject): An owl object that could have a parent.</span>
 <span class="sd">        named_only (bool): If `True`, return parents that are named classes.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        (Set[OWLObject]): The parent set of the given owl object.</span>
+<span class="sd">        (set[OWLObject]): The parent set of the given owl object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">entity_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">owl_object</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="s2">&quot;Classes&quot;</span><span class="p">:</span>
@@ -2511,7 +2511,7 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
     <tbody>
         <tr>
           <td>
-                <code>Set[<span title="org.semanticweb.owlapi.model.OWLObject">OWLObject</span>]</code>
+                <code>set[<span title="org.semanticweb.owlapi.model.OWLObject">OWLObject</span>]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -2549,7 +2549,7 @@ Options are <code>"Classes"</code>, <code>"ObjectProperties"</code>, and <code>"
 <span class="sd">        owl_object (OWLObject): An owl object that could have a child.</span>
 <span class="sd">        named_only (bool): If `True`, return children that are named classes.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        (Set[OWLObject]): The children set of the given owl object.</span>
+<span class="sd">        (set[OWLObject]): The children set of the given owl object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">entity_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_entity_type</span><span class="p">(</span><span class="n">owl_object</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">entity_type</span> <span class="o">==</span> <span class="s2">&quot;Classes&quot;</span><span class="p">:</span>
@@ -2626,7 +2626,7 @@ those that occur in equivalence axioms as well.</p>
     <tbody>
         <tr>
           <td>
-                <code>Set[<span title="org.semanticweb.owlapi.model.OWLClassExpression">OWLClassExpression</span>]</code>
+                <code>set[<span title="org.semanticweb.owlapi.model.OWLClassExpression">OWLClassExpression</span>]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -2676,7 +2676,7 @@ those that occur in equivalence axioms as well.</p>
 <span class="sd">        gci_only (bool): If `True`, consider complex classes that occur in GCIs only; otherwise consider</span>
 <span class="sd">            those that occur in equivalence axioms as well.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        (Set[OWLClassExpression]): A set of complex classes.</span>
+<span class="sd">        (set[OWLClassExpression]): A set of complex classes.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">complex_classes</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -2824,7 +2824,7 @@ Defaults to <code>False</code>.</p>
     <tbody>
         <tr>
           <td>
-                <code>Set[str]</code>
+                <code>set[str]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -2921,7 +2921,7 @@ Defaults to <code>False</code>.</p>
 <span class="sd">        normalise_identifiers (bool): Whether to normalise annotation text that is in the Java identifier format.</span>
 <span class="sd">            Defaults to `False`.</span>
 <span class="sd">    Returns:</span>
-<span class="sd">        (Set[str]): A set of annotation literals of the given `OWLObject`.</span>
+<span class="sd">        (set[str]): A set of annotation literals of the given `OWLObject`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">owl_object</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="n">owl_object</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_owl_object</span><span class="p">(</span><span class="n">owl_object</span><span class="p">)</span>
@@ -3126,7 +3126,7 @@ is not defined in this ontology, return <code>False</code> by default.</p>
         <tr>
           <td><code>annotation_property_iris</code></td>
           <td>
-                <code><span title="typing.List">List</span>[str]</code>
+                <code>list[str]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -3200,7 +3200,7 @@ Defaults to <code>False</code>.</p>
     <tbody>
         <tr>
           <td>
-                <code>Tuple[dict, <span title="typing.List">List</span>[str]]</code>
+                <code>Tuple[dict, list[str]]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -3270,7 +3270,7 @@ Defaults to <code>False</code>.</p>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build an annotation index for a given type of entities.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        annotation_property_iris (List[str]): A list of annotation property IRIs (it is possible</span>
+<span class="sd">        annotation_property_iris (list[str]): A list of annotation property IRIs (it is possible</span>
 <span class="sd">            that not every annotation property IRI is in use); if not provided, the built-in</span>
 <span class="sd">            `rdfs:label` is considered. Defaults to `[RDFS_LABEL]`.</span>
 <span class="sd">        entity_type (str, optional): The entity type to be considered. Defaults to `&quot;Classes&quot;`.</span>
@@ -3281,7 +3281,7 @@ Defaults to <code>False</code>.</p>
 <span class="sd">            Defaults to `False`.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        (Tuple[dict, List[str]]): The built annotation index, and the list of annotation property IRIs that are in use.</span>
+<span class="sd">        (Tuple[dict, list[str]]): The built annotation index, and the list of annotation property IRIs that are in use.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">annotation_index</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">set</span><span class="p">)</span>
