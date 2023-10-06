@@ -121,7 +121,7 @@ def read_candidate_mappings(cand_maps_file: str, for_biollm: bool = False, thres
     for src_ref_class, tgt_ref_class, tgt_cands in all_cand_maps:
         ref_map = ReferenceMapping(src_ref_class, tgt_ref_class, "=")
         tgt_cands = eval(tgt_cands)
-        has_score = True if all([len(x) > 1 for x in tgt_cands]) else False
+        has_score = True if all([not isinstance(x, str) for x in tgt_cands]) else False
         cand_maps = []
         refs.append(ref_map) if tgt_ref_class != "UnMatched" else None
         if for_biollm:
