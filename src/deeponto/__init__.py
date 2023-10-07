@@ -20,6 +20,8 @@ import os
 import platform
 import logging
 
+logging.basicConfig(level = logging.INFO)
+
 def init_jvm(memory):
     jars_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib/")
     # jars_dir = os.path.join(os.path.dirname(os.path.realpath(mowl.__file__)), "lib/")
