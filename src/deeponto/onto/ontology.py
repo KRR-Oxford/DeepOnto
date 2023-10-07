@@ -21,6 +21,8 @@ from yacs.config import CfgNode
 # import warnings
 import jpype
 import logging
+logger = logging.getLogger(__name__)
+
 
 from deeponto.utils import (
     Tokenizer,
@@ -570,7 +572,7 @@ class Ontology:
         """
         change = AddAxiom(self.owl_onto, owl_axiom)
         result = self.owl_onto.applyChange(change)
-        logging.info(f"[{str(result)}] Adding the axiom {str(owl_axiom)} into the ontology.")
+        logger.info(f"[{str(result)}] Adding the axiom {str(owl_axiom)} into the ontology.")
         if return_undo:
             return change.reverseChange()
 
@@ -583,7 +585,7 @@ class Ontology:
         """
         change = RemoveAxiom(self.owl_onto, owl_axiom)
         result = self.owl_onto.applyChange(change)
-        logging.info(f"[{str(result)}] Removing the axiom {str(owl_axiom)} from the ontology.")
+        logger.info(f"[{str(result)}] Removing the axiom {str(owl_axiom)} from the ontology.")
         if return_undo:
             return change.reverseChange()
 
@@ -741,7 +743,7 @@ class OntologyReasoner:
         assert entity_type == self.get_entity_type(entity2)
 
         if not self.has_iri(entity1) and not self.has_iri(entity2):
-            logging.warn("Computing descendants for two complex entities is not efficient.")
+            logger.warn("Computing descendants for two complex entities is not efficient.")
 
         # `computed` is the one we compute the descendants
         # `compared` is the one we compare `computed`'s descendant one-by-one
@@ -790,7 +792,7 @@ class OntologyReasoner:
         """
 
         if not self.has_iri(owl_class1) and not self.has_iri(owl_class2):
-            logging.warn("Computing instances for two complex classes is not efficient.")
+            logger.warn("Computing instances for two complex classes is not efficient.")
 
         # `computed` is the one we compute the instances
         # `compared` is the one we compare `computed`'s descendant one-by-one
@@ -852,23 +854,23 @@ class OntologyReasoner:
         # check if they are still satisfiable
         still_satisfiable = self.owl_reasoner.isSatisfiable(owl_class1)
         still_satisfiable = still_satisfiable and self.owl_reasoner.isSatisfiable(owl_class2)
-        logging.info(f"[CHECK1 {still_satisfiable}] input classes are still satisfiable;")
+        logger.info(f"[CHECK1 {still_satisfiable}] input classes are still satisfiable;")
 
         # remove the axiom and re-construct the reasoner
         undo_change_result = self.onto.owl_onto.applyChange(undo_change)
-        logging.info(f"[{str(undo_change_result)}] Removing the axiom from the ontology.")
+        logger.info(f"[{str(undo_change_result)}] Removing the axiom from the ontology.")
         self.load_reasoner(self.reasoner_type)
 
         # failing first check, there is no need to do the second.
         if not still_satisfiable:
-            logging.info("Failed `satisfiability check`, skip the `common descendant` check.")
-            logging.info(f"[PASSED {still_satisfiable}] assumed disjointness check done.")
+            logger.info("Failed `satisfiability check`, skip the `common descendant` check.")
+            logger.info(f"[PASSED {still_satisfiable}] assumed disjointness check done.")
             return False
 
         # otherwise, the classes are still satisfiable and we should conduct the second check
         has_common_descendants = self.check_common_descendants(owl_class1, owl_class2)
-        logging.info(f"[CHECK2 {not has_common_descendants}] input classes have NO common descendant.")
-        logging.info(f"[PASSED {not has_common_descendants}] assumed disjointness check done.")
+        logger.info(f"[CHECK2 {not has_common_descendants}] input classes have NO common descendant.")
+        logger.info(f"[PASSED {not has_common_descendants}] assumed disjointness check done.")
         return not has_common_descendants
 
     def check_assumed_disjoint_alternative(
@@ -923,25 +925,25 @@ class OntologyReasoner:
         has_subsumption = self.check_subsumption(owl_class1, owl_class2)
         has_subsumption = has_subsumption or self.check_subsumption(owl_class2, owl_class1)
         if verbose:
-            logging.info(f"[CHECK1 {not has_subsumption}] input classes have NO subsumption relationship;")
+            logger.info(f"[CHECK1 {not has_subsumption}] input classes have NO subsumption relationship;")
         if has_subsumption:
             if verbose:
-                logging.info("Failed the `subsumption check`, skip the `common descendant` check.")
-                logging.info(f"[PASSED {not has_subsumption}] assumed disjointness check done.")
+                logger.info("Failed the `subsumption check`, skip the `common descendant` check.")
+                logger.info(f"[PASSED {not has_subsumption}] assumed disjointness check done.")
             return False
 
         has_common_descendants = self.check_common_descendants(owl_class1, owl_class2)
         if verbose:
-            logging.info(f"[CHECK2 {not has_common_descendants}] input classes have NO common descendant;")
+            logger.info(f"[CHECK2 {not has_common_descendants}] input classes have NO common descendant;")
         if has_common_descendants:
             if verbose:
-                logging.info("Failed the `common descendant check`, skip the `common instance` check.")
-                logging.info(f"[PASSED {not has_common_descendants}] assumed disjointness check done.")
+                logger.info("Failed the `common descendant check`, skip the `common instance` check.")
+                logger.info(f"[PASSED {not has_common_descendants}] assumed disjointness check done.")
             return False
 
         # TODO: `check_common_instances` is still experimental because we have not tested it with ontologies of rich ABox.
         has_common_instances = self.check_common_instances(owl_class1, owl_class2)
         if verbose:
-            logging.info(f"[CHECK3 {not has_common_instances}] input classes have NO common instance;")
-            logging.info(f"[PASSED {not has_common_instances}] assumed disjointness check done.")
+            logger.info(f"[CHECK3 {not has_common_instances}] input classes have NO common instance;")
+            logger.info(f"[PASSED {not has_common_instances}] assumed disjointness check done.")
         return not has_common_instances

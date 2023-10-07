@@ -19,9 +19,11 @@ import itertools
 import networkx as nx
 import numpy as np
 from nltk.corpus import wordnet as wn
-import logging
 
 from . import Ontology, OntologyReasoner
+
+import logging
+logger = logging.getLogger(__name__)
 
 
 RDFS_LABEL = "http://www.w3.org/2000/01/rdf-schema#label"
@@ -209,7 +211,7 @@ class WordnetTaxonomy(Taxonomy):
         synsets = set()
         for word in words:
             synsets.update(wn.synsets(word, pos=pos))
-        logging.info(len(synsets), f'synsets (pos="{pos}") fetched.')
+        logger.info(f'{len(synsets)} synsets (pos="{pos}") fetched.')
         return synsets
 
     @staticmethod
@@ -222,7 +224,7 @@ class WordnetTaxonomy(Taxonomy):
             if include_membership:
                 for h_synset in synset.instance_hypernyms():
                     hypernym_hyponym_pairs.append((h_synset.name(), synset.name()))
-        logging.info(len(hypernym_hyponym_pairs), f"hypernym-hyponym pairs fetched.")
+        logger.info(f"{len(hypernym_hyponym_pairs)} hypernym-hyponym pairs fetched.")
         return hypernym_hyponym_pairs
 
 

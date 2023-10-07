@@ -21,6 +21,7 @@ import platform
 import logging
 
 logging.basicConfig(level = logging.INFO)
+logger = logging.getLogger(__name__)
 
 def init_jvm(memory):
     jars_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib/")
@@ -44,5 +45,5 @@ and contains the JAR dependencies.")
             convertStrings=False)
         
     if jpype.isJVMStarted():
-        logging.info(f"{memory} maximum memory allocated to JVM.")
-        logging.info("JVM started successfully.")
+        logger.info(f"{memory} maximum memory allocated to JVM.")
+        logger.info("JVM started successfully.")
