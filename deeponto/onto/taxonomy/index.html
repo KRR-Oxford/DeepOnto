@@ -1270,11 +1270,11 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
-<span class="normal">40</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
 <span class="normal">41</span>
 <span class="normal">42</span>
-<span class="normal">43</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edges</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">root_node</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="normal">43</span>
+<span class="normal">44</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edges</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">root_node</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">edges</span> <span class="o">=</span> <span class="n">edges</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">)</span>
@@ -1311,9 +1311,9 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">45</span>
-<span class="normal">46</span>
-<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_node_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_node_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the attributes of the given entity.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">entity_id</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
@@ -1339,12 +1339,12 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
-<span class="normal">50</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">50</span>
 <span class="normal">51</span>
 <span class="normal">52</span>
 <span class="normal">53</span>
-<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">54</span>
+<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get the set of children for a given entity.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">apply_transitivity</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">entity_id</span><span class="p">))</span>
@@ -1373,8 +1373,7 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
-<span class="normal">57</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
 <span class="normal">60</span>
@@ -1387,7 +1386,8 @@
 <span class="normal">67</span>
 <span class="normal">68</span>
 <span class="normal">69</span>
-<span class="normal">70</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">70</span>
+<span class="normal">71</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get the set of parents for a given entity.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">apply_transitivity</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">entity_id</span><span class="p">))</span>
@@ -1425,10 +1425,10 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">72</span>
-<span class="normal">73</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">73</span>
 <span class="normal">74</span>
-<span class="normal">75</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_descendant_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_descendant_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Create a descendant graph (`networkx.DiGraph`) for a given entity.&quot;&quot;&quot;</span>
     <span class="n">descendants</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_children</span><span class="p">(</span><span class="n">entity_id</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">descendants</span><span class="p">))</span>
@@ -1455,11 +1455,11 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">77</span>
-<span class="normal">78</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
 <span class="normal">79</span>
 <span class="normal">80</span>
-<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_shortest_node_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">81</span>
+<span class="normal">82</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_shortest_node_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the shortest depth of the given entity in the taxonomy.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No root node specified.&quot;</span><span class="p">)</span>
@@ -1487,11 +1487,11 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">83</span>
-<span class="normal">84</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">84</span>
 <span class="normal">85</span>
 <span class="normal">86</span>
-<span class="normal">87</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_longest_node_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">87</span>
+<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_longest_node_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the longest depth of the given entity in the taxonomy.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No root node specified.&quot;</span><span class="p">)</span>
@@ -1519,9 +1519,9 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">89</span>
-<span class="normal">90</span>
-<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_lowest_common_ancestor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_id2</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">90</span>
+<span class="normal">91</span>
+<span class="normal">92</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_lowest_common_ancestor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">entity_id2</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the lowest common ancestor of the given two entities.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">lowest_common_ancestor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="n">entity_id1</span><span class="p">,</span> <span class="n">entity_id2</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -1651,8 +1651,7 @@ If the <code>reasoner_type</code> is the same as <code>onto.reasoner_type</code>
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">110</span>
-<span class="normal">111</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">111</span>
 <span class="normal">112</span>
 <span class="normal">113</span>
 <span class="normal">114</span>
@@ -1679,7 +1678,8 @@ If the <code>reasoner_type</code> is the same as <code>onto.reasoner_type</code>
 <span class="normal">135</span>
 <span class="normal">136</span>
 <span class="normal">137</span>
-<span class="normal">138</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">reasoner_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;struct&quot;</span><span class="p">):</span>
+<span class="normal">138</span>
+<span class="normal">139</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">onto</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">,</span> <span class="n">reasoner_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;struct&quot;</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">onto</span> <span class="o">=</span> <span class="n">onto</span>
     <span class="c1"># the reasoner is used for completing the hierarchy</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">reasoner_type</span> <span class="o">=</span> <span class="n">reasoner_type</span>
@@ -1742,13 +1742,13 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">140</span>
-<span class="normal">141</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">141</span>
 <span class="normal">142</span>
 <span class="normal">143</span>
 <span class="normal">144</span>
 <span class="normal">145</span>
-<span class="normal">146</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">146</span>
+<span class="normal">147</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_parents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get the set of parents for a given class.</span>
 
 <span class="sd">    It is worth noting that this method with transitivity applied can be deemed as simple structural reasoning.</span>
@@ -1780,13 +1780,13 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
-<span class="normal">149</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">149</span>
 <span class="normal">150</span>
 <span class="normal">151</span>
 <span class="normal">152</span>
 <span class="normal">153</span>
-<span class="normal">154</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">154</span>
+<span class="normal">155</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_transitivity</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Get the set of children for a given class.</span>
 
 <span class="sd">    It is worth noting that this method with transitivity applied can be deemed as simple structural reasoning.</span>
@@ -1816,9 +1816,9 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_descendant_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">157</span>
+<span class="normal">158</span>
+<span class="normal">159</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_descendant_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Create a descendant graph (`networkx.DiGraph`) for a given ontology class.&quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_descendant_graph</span><span class="p">(</span><span class="n">class_iri</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -1844,9 +1844,9 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_shortest_node_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">161</span>
+<span class="normal">162</span>
+<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_shortest_node_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the shortest depth of the given named class in the taxonomy.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">shortest_path_length</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -1872,9 +1872,9 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_longest_node_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">165</span>
+<span class="normal">166</span>
+<span class="normal">167</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_longest_node_depth</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the longest depth of the given named class in the taxonomy.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">nx</span><span class="o">.</span><span class="n">all_simple_paths</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">graph</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">root_node</span><span class="p">,</span> <span class="n">class_iri</span><span class="p">)])</span>
 </code></pre></div></td></tr></table></div>
@@ -1900,9 +1900,9 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_lowest_common_ancestor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">class_iri2</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">169</span>
+<span class="normal">170</span>
+<span class="normal">171</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_lowest_common_ancestor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_iri1</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">class_iri2</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the lowest common ancestor of the given two named classes.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_lowest_common_ancestor</span><span class="p">(</span><span class="n">class_iri1</span><span class="p">,</span> <span class="n">class_iri2</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -2042,8 +2042,7 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">183</span>
-<span class="normal">184</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">184</span>
 <span class="normal">185</span>
 <span class="normal">186</span>
 <span class="normal">187</span>
@@ -2061,7 +2060,8 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 <span class="normal">199</span>
 <span class="normal">200</span>
 <span class="normal">201</span>
-<span class="normal">202</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="n">include_membership</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">202</span>
+<span class="normal">203</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="n">include_membership</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Initialise the wordnet taxonomy.</span>
 
 <span class="sd">    Args:</span>
@@ -2117,22 +2117,22 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">204</span>
-<span class="normal">205</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">205</span>
 <span class="normal">206</span>
 <span class="normal">207</span>
 <span class="normal">208</span>
 <span class="normal">209</span>
 <span class="normal">210</span>
 <span class="normal">211</span>
-<span class="normal">212</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">212</span>
+<span class="normal">213</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">fetch_synsets</span><span class="p">(</span><span class="n">pos</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;n&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get synsets of certain pos-tag from wordnet.&quot;&quot;&quot;</span>
     <span class="n">words</span> <span class="o">=</span> <span class="n">wn</span><span class="o">.</span><span class="n">words</span><span class="p">()</span>
     <span class="n">synsets</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
         <span class="n">synsets</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">wn</span><span class="o">.</span><span class="n">synsets</span><span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="n">pos</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">synsets</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;synsets (pos=&quot;</span><span class="si">{</span><span class="n">pos</span><span class="si">}</span><span class="s1">&quot;) fetched.&#39;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">synsets</span><span class="p">),</span> <span class="sa">f</span><span class="s1">&#39;synsets (pos=&quot;</span><span class="si">{</span><span class="n">pos</span><span class="si">}</span><span class="s1">&quot;) fetched.&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">synsets</span>
 </code></pre></div></td></tr></table></div>
           </details>
@@ -2161,8 +2161,7 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">214</span>
-<span class="normal">215</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">215</span>
 <span class="normal">216</span>
 <span class="normal">217</span>
 <span class="normal">218</span>
@@ -2172,7 +2171,8 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 <span class="normal">222</span>
 <span class="normal">223</span>
 <span class="normal">224</span>
-<span class="normal">225</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
+<span class="normal">225</span>
+<span class="normal">226</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">fetch_hypernyms</span><span class="p">(</span><span class="n">synsets</span><span class="p">:</span> <span class="nb">set</span><span class="p">,</span> <span class="n">include_membership</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get hypernym-hyponym pairs from a given set of wordnet synsets.&quot;&quot;&quot;</span>
     <span class="n">hypernym_hyponym_pairs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -2182,7 +2182,7 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
         <span class="k">if</span> <span class="n">include_membership</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">h_synset</span> <span class="ow">in</span> <span class="n">synset</span><span class="o">.</span><span class="n">instance_hypernyms</span><span class="p">():</span>
                 <span class="n">hypernym_hyponym_pairs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">h_synset</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">synset</span><span class="o">.</span><span class="n">name</span><span class="p">()))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hypernym_hyponym_pairs</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;hypernym-hyponym pairs fetched.&quot;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hypernym_hyponym_pairs</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;hypernym-hyponym pairs fetched.&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">hypernym_hyponym_pairs</span>
 </code></pre></div></td></tr></table></div>
           </details>
@@ -2252,8 +2252,7 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">236</span>
-<span class="normal">237</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">237</span>
 <span class="normal">238</span>
 <span class="normal">239</span>
 <span class="normal">240</span>
@@ -2263,7 +2262,8 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 <span class="normal">244</span>
 <span class="normal">245</span>
 <span class="normal">246</span>
-<span class="normal">247</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">taxonomy</span><span class="p">:</span> <span class="n">Taxonomy</span><span class="p">,</span> <span class="n">entity_weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="normal">247</span>
+<span class="normal">248</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">taxonomy</span><span class="p">:</span> <span class="n">Taxonomy</span><span class="p">,</span> <span class="n">entity_weights</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">taxonomy</span> <span class="o">=</span> <span class="n">taxonomy</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">entities</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taxonomy</span><span class="o">.</span><span class="n">nodes</span>
     <span class="c1"># uniform distribution if weights not provided</span>
@@ -2307,13 +2307,13 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">249</span>
-<span class="normal">250</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">250</span>
 <span class="normal">251</span>
 <span class="normal">252</span>
 <span class="normal">253</span>
 <span class="normal">254</span>
-<span class="normal">255</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="normal">255</span>
+<span class="normal">256</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">fill</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Buffer a large collection of entities sampled with replacement for faster negative sampling.&quot;&quot;&quot;</span>
     <span class="n">buffer_size</span> <span class="o">=</span> <span class="n">buffer_size</span> <span class="k">if</span> <span class="n">buffer_size</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_buffer_size</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_entity_probs</span><span class="p">:</span>
@@ -2343,8 +2343,7 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/taxonomy.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">257</span>
-<span class="normal">258</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">258</span>
 <span class="normal">259</span>
 <span class="normal">260</span>
 <span class="normal">261</span>
@@ -2352,7 +2351,8 @@ For more advanced logical reasoning, use the DL reasoner <code>self.onto.reasone
 <span class="normal">263</span>
 <span class="normal">264</span>
 <span class="normal">265</span>
-<span class="normal">266</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="normal">266</span>
+<span class="normal">267</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">entity_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">buffer_size</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample N negative samples for a given entity with replacement.&quot;&quot;&quot;</span>
     <span class="n">negative_samples</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">positive_samples</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">taxonomy</span><span class="o">.</span><span class="n">get_parents</span><span class="p">(</span><span class="n">entity_id</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
