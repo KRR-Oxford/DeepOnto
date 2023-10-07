@@ -19,6 +19,7 @@ import pprintpp
 from collections import defaultdict
 import pandas as pd
 import random
+import logging
 
 from deeponto.onto import Ontology
 from deeponto.utils import Tokenizer, uniqify, read_table
@@ -317,12 +318,12 @@ class SubsFromEquivMappingGenerator:
         used_equiv_tgt_class_iris = None
         if self.delete_used_equiv_tgt_class:
             used_equiv_tgt_class_iris = [iri for iri, used in used_equivs.items() if used is True]
-            print(
+            logging.info(
                 f"{len(used_equiv_tgt_class_iris)}/{len(self.equiv_class_pairs)} are used for creating at least one subsumption mapping."
             )
 
         subs_class_pairs = uniqify(subs_class_pairs)
-        print(f"{len(subs_class_pairs)} subsumption mappings are created in the end.")
+        logging.info(f"{len(subs_class_pairs)} subsumption mappings are created in the end.")
 
         return subs_class_pairs, used_equiv_tgt_class_iris
 

@@ -18,6 +18,7 @@ Security in case of vulnerabilities. -->
 - [X] **Add** `deeponto.onto.taxonomy` for building the taxonomy over ontologies and potentially other structured data.
 
 ### Changed
+- [X] **Change** printing to appropriate logging (gradually).
 - [X] **Change** `read_table_mappings()` method at `deeponto.align.mapping` from using `dataframe.iterrows()` to `dataframe.itertuples()` which is much more efficient.
 - [X] **Change** the default lowcasing argument of `deeponto.utils.process_annotation_literal()` to `False`.
 

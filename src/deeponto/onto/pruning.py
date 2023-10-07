@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import itertools
 from typing import List, TYPE_CHECKING
+import logging
 
 if TYPE_CHECKING:
     from . import Ontology
@@ -40,8 +41,8 @@ class OntologyPruner:
         
     def save_onto(self, save_path: str):
         """Save the pruned ontology file to the given path."""
-        print(f"{self._pruning_applied} pruning algorithm has been applied.")
-        print(f"Save the pruned ontology file to {save_path}.")
+        logging.info(f"{self._pruning_applied} pruning algorithm has been applied.")
+        logging.info(f"Save the pruned ontology file to {save_path}.")
         return self.onto.save_onto(save_path)
         
     def prune(self, class_iris_to_be_removed: List[str]):

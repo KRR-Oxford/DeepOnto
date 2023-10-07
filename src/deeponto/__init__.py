@@ -18,6 +18,7 @@ import jpype
 import jpype.imports  # very important for basic Java dependencies!
 import os
 import platform
+import logging
 
 def init_jvm(memory):
     jars_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), "lib/")
@@ -41,5 +42,5 @@ and contains the JAR dependencies.")
             convertStrings=False)
         
     if jpype.isJVMStarted():
-        print(f"{memory} maximum memory allocated to JVM.")
-        print("JVM started successfully.")
+        logging.info(f"{memory} maximum memory allocated to JVM.")
+        logging.info("JVM started successfully.")

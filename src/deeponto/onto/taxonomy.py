@@ -19,6 +19,7 @@ import itertools
 import networkx as nx
 import numpy as np
 from nltk.corpus import wordnet as wn
+import logging
 
 from . import Ontology, OntologyReasoner
 
@@ -208,7 +209,7 @@ class WordnetTaxonomy(Taxonomy):
         synsets = set()
         for word in words:
             synsets.update(wn.synsets(word, pos=pos))
-        print(len(synsets), f'synsets (pos="{pos}") fetched.')
+        logging.info(len(synsets), f'synsets (pos="{pos}") fetched.')
         return synsets
 
     @staticmethod
@@ -221,7 +222,7 @@ class WordnetTaxonomy(Taxonomy):
             if include_membership:
                 for h_synset in synset.instance_hypernyms():
                     hypernym_hyponym_pairs.append((h_synset.name(), synset.name()))
-        print(len(hypernym_hyponym_pairs), f"hypernym-hyponym pairs fetched.")
+        logging.info(len(hypernym_hyponym_pairs), f"hypernym-hyponym pairs fetched.")
         return hypernym_hyponym_pairs
 
 
