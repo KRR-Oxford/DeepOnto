@@ -150,6 +150,28 @@ def read_candidate_mappings(cand_maps_file: str, for_biollm: bool = False, thres
         return cands
 
 
+def ranking_result_file_check(cand_maps_file: str, ref_cand_maps_file: str):
+    r"""Check if the ranking result file is formatted correctly as the original
+    `test.cands.tsv` file provided in the dataset.
+    """
+    formatted_cand_maps = read_candidate_mappings(cand_maps_file)
+    formatted_ref_cand_maps = read_candidate_mappings(ref_cand_maps_file)
+    assert len(formatted_cand_maps) == len(
+        formatted_ref_cand_maps
+    ), f"Mismatched number of reference mappings: {len(formatted_cand_maps)}; should be {len(formatted_ref_cand_maps)}."
+    for i in range(len(formatted_cand_maps)):
+        anchor, cands = formatted_cand_maps[i]
+        ref_anchor, ref_cands = formatted_ref_cand_maps[i]
+        assert (
+            anchor.to_tuple() == ref_anchor.to_tuple()
+        ), f"Mismatched reference mapping: {anchor}; should be {ref_anchor}."
+        cands = [c.to_tuple() for c in cands]
+        ref_cands = [rc.to_tuple() for rc in ref_cands]
+        assert not (
+            set(cands) - set(ref_cands)
+        ), f"Mismatch set of candidate mappings for the reference mapping: {anchor}."
+
+
 def ranking_eval(cand_maps_file: str, Ks=[1, 5, 10]):
     r"""Conduct **local ranking** evaluation for the scored or ranked candidate mappings.
 
@@ -166,6 +188,7 @@ def ranking_eval(cand_maps_file: str, Ks=[1, 5, 10]):
 ###                  for biollm evaluation                   ###
 ################################################################
 
+
 def is_rejection(preds: List[EntityMapping], cands: List[EntityMapping]):
     """A successful rejection means none of the candidate mappings are predicted as true mappings."""
     return set([p.to_tuple() for p in preds]).intersection(set([c.to_tuple() for c in cands])) == set()
@@ -176,8 +199,10 @@ def biollm_eval(cand_maps_file, Ks=[1], threshold: float = 0.0):
 
     See [`read_candidate_mappings`][deeponto.align.oaei.read_candidate_mappings] for the file format and loading.
     """
-    matched_cand_maps, unmatched_cand_maps, preds, refs = read_candidate_mappings(cand_maps_file, for_biollm=True, threshold=threshold)
-    
+    matched_cand_maps, unmatched_cand_maps, preds, refs = read_candidate_mappings(
+        cand_maps_file, for_biollm=True, threshold=threshold
+    )
+
     results = AlignmentEvaluator.f1(preds, refs)
     for K in Ks:
         results[f"Hits@{K}"] = AlignmentEvaluator.hits_at_K(matched_cand_maps, K=K)
