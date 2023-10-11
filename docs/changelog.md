@@ -52,7 +52,7 @@ Security in case of vulnerabilities. -->
 
 - [x] **Change** `get_owl_objects()` method to be anonymous as it is only used for creating pre-processed entity index at `deeponto.onto.Ontology`.
 - [x] **Change** `get_owl_object_from_iri()` method to `get_owl_object()` at `deeponto.onto.Ontology`.
-- [x] ～～Change the log level of the ELK reasoner to `ERROR`～～.
+- [x] <del>Change the log level of the ELK reasoner to `ERROR`</del>.
 
 ### Fixed
 
