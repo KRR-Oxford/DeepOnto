@@ -21,7 +21,7 @@ Security in case of vulnerabilities. -->
 - [X] **Change** printing to appropriate logging (gradually).
 - [X] **Change** `read_table_mappings()` method at `deeponto.align.mapping` from using `dataframe.iterrows()` to `dataframe.itertuples()` which is much more efficient.
 - [X] **Change** the default lowcasing argument of `deeponto.utils.process_annotation_literal()` to `False`.
-- [X] **Change** the default logging level of `slf4j` to `warn` to prevent tons of printing at ELK (issue #13).
+- [X] **Change** the default logging level of `slf4j` to `warn` to prevent tons of printing at ELK (issue (#13)[https://github.com/KRR-Oxford/DeepOnto/issues/13]).
 
 ## v0.8.7 (2023 September)
 
