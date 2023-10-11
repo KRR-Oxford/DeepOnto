@@ -43,7 +43,9 @@ if not jpype.isJVMStarted():
     init_jvm(memory)
 
 from java.io import File  # type: ignore
-from java.lang import Runtime  # type: ignore
+from java.lang import Runtime, System  # type: ignore
+from org.slf4j.impl import SimpleLogger  # type: ignore
+System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "warn");
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
 from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLIndividual, OWLAxiom, AddAxiom, RemoveAxiom, AxiomType  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory as HermitReasonerFactory  # type: ignore
