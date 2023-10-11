@@ -9,6 +9,10 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased
 
+...
+
+## v0.8.7 (2023 October)
+
 ### Added
 
 - [X] **Add** object property domain/range verbalisation at `deeponto.onto.OntologyVerbaliser`.
