@@ -21,6 +21,7 @@ Security in case of vulnerabilities. -->
 - [X] **Change** printing to appropriate logging (gradually).
 - [X] **Change** `read_table_mappings()` method at `deeponto.align.mapping` from using `dataframe.iterrows()` to `dataframe.itertuples()` which is much more efficient.
 - [X] **Change** the default lowcasing argument of `deeponto.utils.process_annotation_literal()` to `False`.
+- [X] **Change** the default logging level of `slf4j` to `warn` to prevent tons of printing at ELK (issue #13).
 
 ## v0.8.7 (2023 September)
 
@@ -51,7 +52,7 @@ Security in case of vulnerabilities. -->
 
 - [x] **Change** `get_owl_objects()` method to be anonymous as it is only used for creating pre-processed entity index at `deeponto.onto.Ontology`.
 - [x] **Change** `get_owl_object_from_iri()` method to `get_owl_object()` at `deeponto.onto.Ontology`.
-- [x] Change the log level of the ELK reasoner to `ERROR``.
+- [x] ～～Change the log level of the ELK reasoner to `ERROR`～～.
 
 ### Fixed
 
