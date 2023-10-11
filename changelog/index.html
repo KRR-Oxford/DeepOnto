@@ -1317,6 +1317,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> printing to appropriate logging (gradually).</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> <code>read_table_mappings()</code> method at <code>deeponto.align.mapping</code> from using <code>dataframe.iterrows()</code> to <code>dataframe.itertuples()</code> which is much more efficient.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the default lowcasing argument of <code>deeponto.utils.process_annotation_literal()</code> to <code>False</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the default logging level of <code>slf4j</code> to <code>warn</code> to prevent tons of printing at ELK (issue #13).</li>
 </ul>
 <h2 id="v087-2023-september">v0.8.7 (2023 September)</h2>
 <h3 id="added_1">Added</h3>
@@ -1353,7 +1354,7 @@ Security in case of vulnerabilities. -->
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> <code>get_owl_objects()</code> method to be anonymous as it is only used for creating pre-processed entity index at <code>deeponto.onto.Ontology</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> <code>get_owl_object_from_iri()</code> method to <code>get_owl_object()</code> at <code>deeponto.onto.Ontology</code>.</li>
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Change the log level of the ELK reasoner to `ERROR``.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> ～～Change the log level of the ELK reasoner to <code>ERROR</code>～～.</li>
 </ul>
 <h3 id="fixed">Fixed</h3>
 <ul class="task-list">
@@ -1483,7 +1484,7 @@ Security in case of vulnerabilities. -->
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 7, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 11, 2023</span>
       
         <br>
         Created:
