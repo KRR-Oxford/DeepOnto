@@ -45,7 +45,7 @@ if not jpype.isJVMStarted():
 from java.io import File  # type: ignore
 from java.lang import Runtime, System  # type: ignore
 from org.slf4j.impl import SimpleLogger  # type: ignore
-System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "warn");
+System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "warn")  # set slf4j default logging level to warning
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
 from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLIndividual, OWLAxiom, AddAxiom, RemoveAxiom, AxiomType  # type: ignore
 from org.semanticweb.HermiT import ReasonerFactory as HermitReasonerFactory  # type: ignore
