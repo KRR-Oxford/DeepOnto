@@ -1013,7 +1013,7 @@
 </code></pre></div>
 <p>To verbalise a complex concept expression:</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># get complex concepts asserted in the ontology</span>
-<span class="n">complex_concepts</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_asserted_complex_classes</span><span class="p">()</span>
+<span class="n">complex_concepts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">onto</span><span class="o">.</span><span class="n">get_asserted_complex_classes</span><span class="p">())</span>
 
 <span class="c1"># verbalise the first complex concept</span>
 <span class="n">v_concept</span> <span class="o">=</span> <span class="n">verbaliser</span><span class="o">.</span><span class="n">verbalise_class_expression</span><span class="p">(</span><span class="n">complex_concepts</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -1041,6 +1041,7 @@ recursive process. Users can access the final verbalisation by:</p>
 <div class="highlight"><pre><span></span><code><span class="n">tree</span> <span class="o">=</span> <span class="n">verbaliser</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">subsumption_axioms</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 <span class="n">tree</span><span class="o">.</span><span class="n">render_image</span><span class="p">()</span>
 </code></pre></div>
+<p>Note that rendering the image requires <code>graphiviz</code> to be installed. Check this <a href="https://graphviz.org/download/">link</a> for installing <code>graphiviz</code>.</p>
 <blockquote>
 <p>See an example with image at <a class="autorefs autorefs-internal" href="../deeponto/onto/verbalisation/#deeponto.onto.verbalisation.OntologySyntaxParser"><code>OntologySyntaxParser</code></a>.</p>
 </blockquote>
@@ -1050,7 +1051,7 @@ recursive process. Users can access the final verbalisation by:</p>
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 19, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 17, 2023</span>
       
         <br>
         Created:
