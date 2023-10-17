@@ -52,7 +52,7 @@ To verbalise a complex concept expression:
 
 ```python
 # get complex concepts asserted in the ontology
-complex_concepts = onto.get_asserted_complex_classes()
+complex_concepts = list(onto.get_asserted_complex_classes())
 
 # verbalise the first complex concept
 v_concept = verbaliser.verbalise_class_expression(complex_concepts[0])
