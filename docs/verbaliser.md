@@ -96,4 +96,6 @@ tree = verbaliser.parser.parse(str(subsumption_axioms[0]))
 tree.render_image()
 ```
 
+Note that rendering the image requires `graphiviz` to be installed. Check this [link](https://graphviz.org/download/) for installing `graphiviz`.
+
 > See an example with image at [`OntologySyntaxParser`][deeponto.onto.verbalisation.OntologySyntaxParser].

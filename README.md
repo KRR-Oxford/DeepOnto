@@ -67,21 +67,22 @@ $\textsf{DeepOnto}$ aims to provide building blocks for implementing deep learni
 
 $\textsf{DeepOnto}$ relies on [OWLAPI](http://owlapi.sourceforge.net/) version 4 (written in Java) for ontologies. 
 
-We follow what has been implemented in [mOWL](https://mowl.readthedocs.io/en/latest/index.html) that uses [JPype](https://jpype.readthedocs.io/en/latest/) to bridge Python and Java Virtual Machine (JVM). 
+We follow what has been implemented in [mOWL](https://mowl.readthedocs.io/en/latest/index.html) that uses [JPype](https://jpype.readthedocs.io/en/latest/) to bridge Python and Java Virtual Machine (JVM). Please check JPype's [installation page](https://jpype.readthedocs.io/en/latest/install.html#) for successful JVM initialisation.
 
 
 ### Pytorch
 
 $\textsf{DeepOnto}$ relies on [Pytorch](https://pytorch.org/) for deep learning framework.
 
-Configure Pytorch installation with CUDA support using, for example:
+We recommend installing Pytorch prior to installing DeepOnto following the commands listed on the [Pytorch webpage](https://pytorch.org/). Notice that users can choose either GPU (with CUDA) or CPU version of Pytorch.
+
+In case the most recent Pytorch version causes any incompatibility issues, use the following command (with `CUDA 11.6`) known to work:
 
 ```bash
 pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 ```
 
-Basic usage of Ontology does not rely on GPUs, but for efficient deep learning model training, please make sure
-`torch.cuda.is_available()` returns `True`.
+Basic usage of Ontology does not rely on GPUs, but for efficient deep learning model training, please make sure `torch.cuda.is_available()` returns `True`.
 
 ### Install from PyPI
 

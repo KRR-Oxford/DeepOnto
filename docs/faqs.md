@@ -9,4 +9,4 @@
     - Ans: JPype seems to be not compatible with the most recent version of Python; check valid Python versions across platforms at Q1.
     
 - Q3: Missing system-level dependencies on Linux?
-    - Ans: Please ensure that the essential dev tools package has been deployed if you are using a Linux system.
+    - Ans: Please ensure that the essential dev tools package has been deployed if you are using a Linux system. Also, according to [JPype's documentation](https://jpype.readthedocs.io/en/latest/install.html#debian-ubuntu), `g++` and `python-dev` need to be installed.
