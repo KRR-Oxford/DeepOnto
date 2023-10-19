@@ -104,7 +104,7 @@ pip install git+https://github.com/KRR-Oxford/DeepOnto.git
 ## Main Features
 
 <p align="center">
-  <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/deeponto.svg" width=60%">
+  <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/deeponto.svg" width=75%">
   <p align="center">Figure: Illustration of DeepOnto's architecture.</p>
 </p>
 
