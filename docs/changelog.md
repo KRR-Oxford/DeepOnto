@@ -11,7 +11,7 @@ Security in case of vulnerabilities. -->
 
 ...
 
-## v0.8.7 (2023 October)
+## v0.8.8 (2023 October)
 
 ### Added
 
