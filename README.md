@@ -122,7 +122,7 @@ The base class of $\textsf{DeepOnto}$ is [`Ontology`][deeponto.onto.Ontology], w
 
 - **Ontology Normalisation** ([`OntologyNormaliser`][deeponto.onto.OntologyNormaliser]): The implemented $\mathcal{EL}$ normalisation is also modified from the mOWL library, which is used to transform TBox axioms into normalised forms to support, e.g., geometric ontology embeddings.
 
-- **Ontology Taxonomy** ([`OntologyTaxonomy`][deeponto.onto.OntologyTaxonomy]): The taxonomy (subsumption graph) is used to support graph-based machine learning approaches.
+- **Ontology Taxonomy** ([`OntologyTaxonomy`][deeponto.onto.OntologyTaxonomy]): The taxonomy extracted from an ontology is a directed acyclic graph for the subsumption hierarchy, which is often used to support graph-based deep learning applications.
 
 
 ### Tools and Resources
