@@ -62,7 +62,7 @@ To verbaliser a class subsumption axiom:
 
 ```python
 # get subsumption axioms from the ontology
-subsumption_axioms = onto.get_subsumption_axioms(entity_type="Classes)
+subsumption_axioms = onto.get_subsumption_axioms(entity_type="Classes")
 
 # verbalise the first subsumption axiom
 v_sub, v_super = verbaliser.verbalise_class_subsumption_axiom(subsumption_axioms[0])
