@@ -447,6 +447,12 @@ class Ontology:
                     )
 
         return uniqify(annotations)
+    
+    def check_consistency(self):
+        """Check if the ontology is consistent according to the pre-loaded reasoner.
+        """
+        logging.info(f"Checking consistency with `{self.reasoner_type}` reasoner.")
+        return self.reasoner.owl_reasoner.isConsistent()
 
     def check_named_entity(self, owl_object: OWLObject):
         r"""Check if the input entity is a named atomic entity. That is,
