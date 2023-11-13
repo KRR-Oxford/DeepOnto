@@ -359,6 +359,19 @@
     Unreleased
   </a>
   
+    <nav class="md-nav" aria-label="Unreleased">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    Added
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -370,7 +383,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added" class="md-nav__link">
+  <a href="#added_1" class="md-nav__link">
     Added
   </a>
   
@@ -397,7 +410,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_1" class="md-nav__link">
+  <a href="#added_2" class="md-nav__link">
     Added
   </a>
   
@@ -431,7 +444,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_2" class="md-nav__link">
+  <a href="#added_3" class="md-nav__link">
     Added
   </a>
   
@@ -465,7 +478,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_3" class="md-nav__link">
+  <a href="#added_4" class="md-nav__link">
     Added
   </a>
   
@@ -526,7 +539,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_4" class="md-nav__link">
+  <a href="#added_5" class="md-nav__link">
     Added
   </a>
   
@@ -580,7 +593,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_5" class="md-nav__link">
+  <a href="#added_6" class="md-nav__link">
     Added
   </a>
   
@@ -614,7 +627,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#added_6" class="md-nav__link">
+  <a href="#added_7" class="md-nav__link">
     Added
   </a>
   
@@ -1311,9 +1324,14 @@ Fixed for any bug fixes.
 Security in case of vulnerabilities. -->
 
 <h2 id="unreleased">Unreleased</h2>
+<h3 id="added">Added</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>check_consistency()</code> at <code>deeponto.onto.Ontology</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> a warning message for empty vocab at <code>deeponto.onto.OntologyVerbaliser</code>.</li>
+</ul>
 <p>...</p>
 <h2 id="v088-2023-october">v0.8.8 (2023 October)</h2>
-<h3 id="added">Added</h3>
+<h3 id="added_1">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> object property domain/range verbalisation at <code>deeponto.onto.OntologyVerbaliser</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> new reasoner type <code>"struct"</code> (<a href="https://owlcs.github.io/owlapi/apidocs_4/org/semanticweb/owlapi/reasoner/structural/StructuralReasoner.html">Structural Reasoner</a>) at <code>deeponto.onto.OntologyReasoner</code>.</li>
@@ -1329,7 +1347,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the default logging level of <code>slf4j</code> to <code>warn</code> to prevent tons of printing at ELK (issue (#13)[https://github.com/KRR-Oxford/DeepOnto/issues/13]).</li>
 </ul>
 <h2 id="v087-2023-september">v0.8.7 (2023 September)</h2>
-<h3 id="added_1">Added</h3>
+<h3 id="added_2">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the OAEI evaluation code for the main track global matching, local ranking, and the special sub-track bio-llm at <code>deeponto.align.oaei</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>reasoner_type</code> argument at <code>deeponto.onto.OntologyReasoner</code>, now supporting <code>hermit</code> (default) and <code>elk</code>.</li>
@@ -1371,7 +1389,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> the version of ELK to the latest by manually adding in the dependencies. See download link at <a href="https://github.com/liveontologies/elk-reasoner/wiki/GettingElk">https://github.com/liveontologies/elk-reasoner/wiki/GettingElk</a>.</li>
 </ul>
 <h2 id="v085-2023-september">v0.8.5 (2023 September)</h2>
-<h3 id="added_2">Added</h3>
+<h3 id="added_3">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>set_seed()</code> method at <code>deeponto.utils</code>.</li>
 </ul>
@@ -1389,7 +1407,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> duplicate logging in running BERTMap due to progapagation.</li>
 </ul>
 <h2 id="v084-2023-july">v0.8.4 (2023 July)</h2>
-<h3 id="added_3">Added</h3>
+<h3 id="added_4">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> specific check of <code>use_in_alignment</code> annotation in BERTMap for the OAEI.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> OAEI utilities at <code>deeponto.align.oaei</code>.</li>
@@ -1416,7 +1434,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> the minor bug for the <code>f1</code> and <code>MRR</code> method in <code>deeponto.align.evaluation.AlignmentEvaluator</code>.</li>
 </ul>
 <h2 id="v080-2023-june">v0.8.0 (2023 June)</h2>
-<h3 id="added_4">Added</h3>
+<h3 id="added_5">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the ontology normaliser at <code>deeponto.onto.OntologyNormaliser</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the ontology projector at <code>deeponto.onto.OntologyProjector</code>.</li>
@@ -1436,7 +1454,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> BERTMap's non-synonym sampling when the class labels are not available using the try-catch block.</li>
 </ul>
 <h2 id="v070-2023-april">v0.7.0 (2023 April)</h2>
-<h3 id="added_5">Added</h3>
+<h3 id="added_6">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the BERTSubs module at <code>deeponto.subs.bertsubs</code>; its inter-ontology setting is also imported at <code>deeponto.align.bertsubs</code>.</li>
 </ul>
@@ -1451,7 +1469,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> the function <code>check_deprecated</code> at <code>deeponto.onto.Ontology</code> by adding a check for the <span class="arithmatex">\(\texttt{owl:deprecated}\)</span> annotation property -- if this property does not exist in the current ontology, return <code>False</code> (not deprecated).</li>
 </ul>
 <h2 id="v061-2023-april">v0.6.1 (2023 April)</h2>
-<h3 id="added_6">Added</h3>
+<h3 id="added_7">Added</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method <code>remove_axiom</code> for removing an axiom from the ontology at <code>deeponto.onto.Ontology</code> (note that the counterpart <code>add_axiom</code> has already been available).</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method <code>check_named_entity</code> for checking if an entity is named at <code>deeponto.onto.Ontology</code>.</li>
@@ -1493,7 +1511,7 @@ Security in case of vulnerabilities. -->
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 25, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">November 13, 2023</span>
       
         <br>
         Created:
