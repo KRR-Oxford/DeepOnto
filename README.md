@@ -135,7 +135,7 @@ Individual tools and resources are implemented based on the core ontology proces
 
 - **BERTSubs** [3] is a system for ontology subsumption prediction. We have transformed its original [experimental code](https://gitlab.com/chen00217/bert_subsumption) into this project. See [Subsumption Inference with BERTSubs](https://krr-oxford.github.io/DeepOnto/bertsubs/).
 
-- **OntoLAMA** [4] is a set of language model probing datasets for ontology subsumption inference. See [OntoLAMA: Dataset Overview & Usage Guide](https://krr-oxford.github.io/DeepOnto/ontolama) for the use of the datasets and the prompt-based probing approach.
+- **OntoLAMA** [4] is an evaluation of language model probing datasets for ontology subsumption inference. See [OntoLAMA: Dataset Overview & Usage Guide](https://krr-oxford.github.io/DeepOnto/ontolama) for the use of the datasets and the prompt-based probing approach.
 
 
 ## License
@@ -158,7 +158,7 @@ Individual tools and resources are implemented based on the core ontology proces
 
 ## Citation
 
-The preprint of our system paper for $\textsf{DeepOnto}$ is current available at [arxiv](https://arxiv.org/abs/2307.03067).
+The preprint of our system paper for $\textsf{DeepOnto}$ is currently available at [arxiv](https://arxiv.org/abs/2307.03067).
 
 *Yuan He, Jiaoyan Chen, Hang Dong, Ian Horrocks, Carlo Allocca, Taehun Kim, and Brahmananda Sapkota.* **DeepOnto: A Python Package for Ontology Engineering with Deep Learning.** arXiv preprint arXiv:2307.03067 (2023).
 
@@ -177,7 +177,7 @@ The preprint of our system paper for $\textsf{DeepOnto}$ is current available at
 - [2] *Yuan He‚ Jiaoyan Chen‚ Hang Dong, Ernesto Jiménez-Ruiz, Ali Hadian and Ian Horrocks.* **Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching**. The 21st International Semantic Web Conference (ISWC-2022, **Best Resource Paper Candidate**). /[arxiv](https://arxiv.org/abs/2205.03447)/ /[iswc](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33)/  <a name="bioml_paper"></a>
 - [3] *Jiaoyan Chen, Yuan He, Yuxia Geng, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.* **Contextual Semantic Embeddings for Ontology Subsumption Prediction**. World Wide Web Journal （WWWJ-2023). /[arxiv](https://arxiv.org/abs/2202.09791)/ /[wwwj](https://link.springer.com/article/10.1007/s11280-023-01169-9)/  <a name="bertsubs_paper"></a>
 - [4] *Yuan He‚ Jiaoyan Chen, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.* **Language Model Analysis for Ontology Subsumption Inference**. Findings of the Association for Computational Linguistics (ACL-2023). /[arxiv](https://arxiv.org/abs/2302.06761)/ /[acl](https://aclanthology.org/2023.findings-acl.213/)/ <a name="ontolama_paper"></a>
-- [5] *Yuan He, Jiaoyan Chen, Hang Dong, and Ian Horrocks.* **Exploring Large Language Models for Ontology Alignment**. ISWC 2023 Posters and Demos: 22nd International Semantic Web Conference (to appear). /[arxiv](https://arxiv.org/abs/2309.07172)/ <a name="llmap_paper"></a>
+- [5] *Yuan He, Jiaoyan Chen, Hang Dong, and Ian Horrocks.* **Exploring Large Language Models for Ontology Alignment**. ISWC 2023 Posters and Demos: 22nd International Semantic Web Conference. /[arxiv](https://arxiv.org/abs/2309.07172)/ /[iswc](https://hozo.jp/ISWC2023_PD-Industry-proc/ISWC2023_paper_427.pdf)/ <a name="llmap_paper"></a>
 
 ----------------------------------------------------------------
 
