@@ -22,6 +22,8 @@ from IPython.display import Image
 from anytree.dotexport import RenderTreeGraph
 import math
 from yacs.config import CfgNode
+import logging
+logger = logging.getLogger(__name__)
 
 from . import Ontology
 from org.semanticweb.owlapi.model import OWLObject, OWLClassExpression, OWLAxiom  # type: ignore
@@ -251,7 +253,13 @@ class OntologyVerbaliser:
     def _verbalise_iri(self, iri_node: RangeNode, is_property: bool = False):
         """Verbalise a (parsed) named entity (class, property, or individual) that has an IRI."""
         iri = iri_node.text.lstrip("<").rstrip(">")
-        verbal = self.vocab[iri] if not self.keep_iri else iri_node.text
+        
+        try:
+            verbal = self.vocab[iri] if not self.keep_iri else iri_node.text
+        except KeyError:
+            verbal = iri_node.text
+            logger.warning(f"Use full IRI as no vocab (defaults to `rdfs:label`) found for {iri}. ")
+            
         if self.apply_auto_correction:
             fix = self._fix_verb_phrase if is_property else self._fix_noun_phrase
             verbal = fix(verbal)
