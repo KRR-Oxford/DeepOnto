@@ -9,6 +9,11 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased
 
+### Added
+
+- [X] **Add** `check_consistency()` at `deeponto.onto.Ontology`.
+- [X] **Add** a warning message for empty vocab at `deeponto.onto.OntologyVerbaliser`.
+
 ...
 
 ## v0.8.8 (2023 October)
