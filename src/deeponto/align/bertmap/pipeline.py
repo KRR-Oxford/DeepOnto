@@ -104,6 +104,8 @@ class BERTMapPipeline:
         # build the annotation thesaurus
         self.src_annotation_index, _ = self.src_onto.build_annotation_index(self.annotation_property_iris, apply_lowercasing=True)
         self.tgt_annotation_index, _ = self.tgt_onto.build_annotation_index(self.annotation_property_iris, apply_lowercasing=True)
+        if (not self.src_annotation_index) or (not self.tgt_annotation_index):
+            raise RuntimeError("No class annotations found in input ontologies; unable to produce alignment.")
 
         # provided mappings if any
         self.known_mappings = self.config.known_mappings
