@@ -76,7 +76,7 @@ The test metrics (MRR and Hits@K) can also be output if the ground truth and a s
 1. The following code is for intra-ontology subsumption.
 ```python
 from yacs.config import CfgNode
-from deeponto.subs.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE_INTRA
+from deeponto.complete.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE_INTRA
 from deeponto.utils import load_file
 from deeponto.onto import Ontology
 
@@ -96,7 +96,7 @@ intra_pipeline = BERTSubsIntraPipeline(onto=onto, config=config)
 2. The following code is for inter-ontology subsumption.
 ```python
 from yacs.config import CfgNode
-from deeponto.subs.bertsubs import BERTSubsInterPipeline, DEFAULT_CONFIG_FILE_INTER
+from deeponto.complete.bertsubs import BERTSubsInterPipeline, DEFAULT_CONFIG_FILE_INTER
 from deeponto.utils import load_file
 from deeponto.onto import Ontology
 

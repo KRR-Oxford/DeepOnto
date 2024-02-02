@@ -69,8 +69,8 @@ nav:
           - Evaluation: deeponto/align/evaluation.md
           - OAEI Utilities: deeponto/align/oaei.md
         - Ontology Completion:
-          - BERTSubs (Intra): deeponto/subs/bertsubs/index.md
-          - OntoLAMA: deeponto/subs/ontolama.md
+          - BERTSubs (Intra): deeponto/complete/bertsubs/index.md
+          - OntoLAMA: deeponto/complete/ontolama.md
         - Utilities: 
           - Text Utilities: deeponto/utils/text_utils.md
           - File Utilities: deeponto/utils/file_utils.md

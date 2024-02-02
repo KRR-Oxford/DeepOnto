@@ -28,7 +28,7 @@ This page provides an overview of the $\textsf{OntoLAMA}$ datasets, how to use t
 
 ## Overview
 
-$\textsf{OntoLAMA}$ is a set of language model (LM) probing datasets for ontology subsumption inference. The work follows the "LMs-as-KBs" literature but focuses on conceptualised knowledge extracted from formalised KBs such as the OWL ontologies. Specifically, the subsumption inference (SI) task is introduced and formulated in the Natural Language Inference (NLI) style, where the sub-concept and the super-concept involved in a subsumption axiom are verbalised and fitted into a template to form the premise and hypothesis, respectively. The sampled axioms are verified through ontology reasoning. The SI task is further divided into Atomic SI and Complex SI where the former involves only atomic named concepts and the latter involves both atomic and complex concepts. Real-world ontologies of different scales and domains are used for constructing OntoLAMA and in total there are **four** Atomic SI datasets and **two** Complex SI datasets.
+$\textsf{OntoLAMA}$ is a set of language model (LM) probing datasets and a prompt-based probing method for ontology subsumption inference or ontology completion. The work follows the "LMs-as-KBs" literature but focuses on conceptualised knowledge extracted from formalised KBs such as the OWL ontologies. Specifically, the subsumption inference (SI) task is introduced and formulated in the Natural Language Inference (NLI) style, where the sub-concept and the super-concept involved in a subsumption axiom are verbalised and fitted into a template to form the premise and hypothesis, respectively. The sampled axioms are verified through ontology reasoning. The SI task is further divided into Atomic SI and Complex SI where the former involves only atomic named concepts and the latter involves both atomic and complex concepts. Real-world ontologies of different scales and domains are used for constructing OntoLAMA and in total there are **four** Atomic SI datasets and **two** Complex SI datasets.
 
 ## Useful Links
 
@@ -100,7 +100,7 @@ To conduct probing, users can write the following code into a script, e.g., `pro
 
 ```python
 from openprompt.config import get_config
-from deeponto.probe.ontolama import run_inference
+from deeponto.complete.ontolama import run_inference
 
 config, args = get_config()
 # you can then manipulate the configuration before running the inference
