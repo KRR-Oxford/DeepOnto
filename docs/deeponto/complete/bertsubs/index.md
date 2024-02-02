@@ -31,14 +31,14 @@ $\textsf{BERTMapLt}$ is a light-weight version of $\textsf{BERTMap}$ *without* t
 See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
  
 
-::: deeponto.subs.bertsubs.pipeline_intra
+::: deeponto.complete.bertsubs.pipeline_intra
     heading_level: 2
 
 
-::: deeponto.subs.bertsubs.text_semantics
+::: deeponto.complete.bertsubs.text_semantics
     heading_level: 2
 
 
-::: deeponto.subs.bertsubs.bert_classifier
+::: deeponto.complete.bertsubs.bert_classifier
     heading_level: 2
 

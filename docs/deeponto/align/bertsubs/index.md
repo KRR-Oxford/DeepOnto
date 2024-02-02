@@ -31,6 +31,6 @@ $\textsf{BERTMapLt}$ is a light-weight version of $\textsf{BERTMap}$ *without* t
 See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
  
 
-::: deeponto.subs.bertsubs.pipeline_inter
+::: deeponto.complete.bertsubs.pipeline_inter
     heading_level: 2
 
