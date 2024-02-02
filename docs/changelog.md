@@ -11,7 +11,7 @@ Security in case of vulnerabilities. -->
 
 ### Added
 
-- [] **Add** ICON as a completion service at `deeponto.complete`.
+- [ ] **Add** ICON as a completion service at `deeponto.complete`.
 - [X] **Add** empty annotation index warning for BERTMap, related to issue #18.
 - [X] **Add** `check_consistency()` at `deeponto.onto.Ontology`.
 - [X] **Add** a warning message for empty vocab at `deeponto.onto.OntologyVerbaliser`.
