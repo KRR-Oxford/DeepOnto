@@ -369,6 +369,13 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    Changed
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -390,7 +397,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed" class="md-nav__link">
+  <a href="#changed_1" class="md-nav__link">
     Changed
   </a>
   
@@ -417,7 +424,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_1" class="md-nav__link">
+  <a href="#changed_2" class="md-nav__link">
     Changed
   </a>
   
@@ -451,7 +458,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_2" class="md-nav__link">
+  <a href="#changed_3" class="md-nav__link">
     Changed
   </a>
   
@@ -485,7 +492,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_3" class="md-nav__link">
+  <a href="#changed_4" class="md-nav__link">
     Changed
   </a>
   
@@ -512,7 +519,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#changed_4" class="md-nav__link">
+  <a href="#changed_5" class="md-nav__link">
     Changed
   </a>
   
@@ -546,7 +553,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_5" class="md-nav__link">
+  <a href="#changed_6" class="md-nav__link">
     Changed
   </a>
   
@@ -566,7 +573,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#changed_6" class="md-nav__link">
+  <a href="#changed_7" class="md-nav__link">
     Changed
   </a>
   
@@ -600,7 +607,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_7" class="md-nav__link">
+  <a href="#changed_8" class="md-nav__link">
     Changed
   </a>
   
@@ -634,7 +641,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#changed_8" class="md-nav__link">
+  <a href="#changed_9" class="md-nav__link">
     Changed
   </a>
   
@@ -1106,14 +1113,14 @@
       
       
         <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
-          Subsumption Inference
+          Ontology Completion
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_3_3">
           <span class="md-nav__icon md-icon"></span>
-          Subsumption Inference
+          Ontology Completion
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1123,8 +1130,22 @@
   
   
     <li class="md-nav__item">
-      <a href="../deeponto/subs/bertsubs/" class="md-nav__link">
+      <a href="../deeponto/complete/bertsubs/" class="md-nav__link">
         BERTSubs (Intra)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeponto/complete/ontolama/" class="md-nav__link">
+        OntoLAMA
       </a>
     </li>
   
@@ -1154,60 +1175,12 @@
       
       
         <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
-          Language Model Probing
+          Utilities
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_3_4">
-          <span class="md-nav__icon md-icon"></span>
-          Language Model Probing
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../deeponto/probe/ontolama/" class="md-nav__link">
-        OntoLAMA
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
-      
-      
-      
-        <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
-          Utilities
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
-        <label class="md-nav__title" for="__nav_3_5">
           <span class="md-nav__icon md-icon"></span>
           Utilities
         </label>
@@ -1326,9 +1299,15 @@ Security in case of vulnerabilities. -->
 <h2 id="unreleased">Unreleased</h2>
 <h3 id="added">Added</h3>
 <ul class="task-list">
+<li>[] <strong>Add</strong> ICON as a completion service at <code>deeponto.complete</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> empty annotation index warning for BERTMap, related to issue #18.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>check_consistency()</code> at <code>deeponto.onto.Ontology</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> a warning message for empty vocab at <code>deeponto.onto.OntologyVerbaliser</code>.</li>
+</ul>
+<h3 id="changed">Changed</h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> <code>deeponto.subs</code> to <code>deeponto.complete</code>.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Move</strong> <code>deeponto.probe.ontolama</code> into <code>deeponto.complete</code>.</li>
 </ul>
 <p>...</p>
 <h2 id="v088-2023-october">v0.8.8 (2023 October)</h2>
@@ -1340,7 +1319,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>rdflib</code> into the dependencies for building graph-related features.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>deeponto.onto.taxonomy</code> for building the taxonomy over ontologies and potentially other structured data.</li>
 </ul>
-<h3 id="changed">Changed</h3>
+<h3 id="changed_1">Changed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> printing to appropriate logging (gradually).</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> <code>read_table_mappings()</code> method at <code>deeponto.align.mapping</code> from using <code>dataframe.iterrows()</code> to <code>dataframe.itertuples()</code> which is much more efficient.</li>
@@ -1378,7 +1357,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>get_axiom_type()</code> method at <code>deeponto.onto.Ontology</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>owl_individuals</code> attribute at <code>deeponto.onto.Ontology</code>.</li>
 </ul>
-<h3 id="changed_1">Changed</h3>
+<h3 id="changed_2">Changed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> <code>get_owl_objects()</code> method to be anonymous as it is only used for creating pre-processed entity index at <code>deeponto.onto.Ontology</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> <code>get_owl_object_from_iri()</code> method to <code>get_owl_object()</code> at <code>deeponto.onto.Ontology</code>.</li>
@@ -1394,7 +1373,7 @@ Security in case of vulnerabilities. -->
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> <code>set_seed()</code> method at <code>deeponto.utils</code>.</li>
 </ul>
-<h3 id="changed_2">Changed</h3>
+<h3 id="changed_3">Changed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the layout of all utility methods by making them stand-alone instead of static methods.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the <code>.verbalise_class_expression()</code> method by adding an option to keep entity IRIs without verbalising them using <code>.vocabs</code> at <code>deeponto.onto.OntologyVerbaliser</code>.</li>
@@ -1413,7 +1392,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> specific check of <code>use_in_alignment</code> annotation in BERTMap for the OAEI.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> OAEI utilities at <code>deeponto.align.oaei</code>.</li>
 </ul>
-<h3 id="changed_3">Changed</h3>
+<h3 id="changed_4">Changed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the <code>read_table_mappings</code> method to allow <code>None</code> for threshold.</li>
 </ul>
@@ -1423,7 +1402,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Fix</strong> BERTMap error and add corresponding warning when an input ontology has some class with no label (annotation), related to Issue #10.</li>
 </ul>
 <h2 id="v083-2023-july">v0.8.3 (2023 July)</h2>
-<h3 id="changed_4">Changed</h3>
+<h3 id="changed_5">Changed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the mapping extension from using reasoner to direct assertions.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the name of pruning function in <code>deeponto.onto.OntologyPruner</code>.</li>
@@ -1440,12 +1419,12 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the ontology normaliser at <code>deeponto.onto.OntologyNormaliser</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the ontology projector at <code>deeponto.onto.OntologyProjector</code>.</li>
 </ul>
-<h3 id="changed_5">Changed</h3>
+<h3 id="changed_6">Changed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the dependency <code>transformers</code> to <code>transformers[torch]</code>.</li>
 </ul>
 <h2 id="v075-2023-june">v0.7.5 (2023 June)</h2>
-<h3 id="changed_6">Changed</h3>
+<h3 id="changed_7">Changed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> Java dependencies from using <code>lib</code> from mowl to direct import.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> <code>get_owl_object_annotations</code> by adding <code>uniqify</code> at the end to preserve the order.</li>
@@ -1459,7 +1438,7 @@ Security in case of vulnerabilities. -->
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the BERTSubs module at <code>deeponto.subs.bertsubs</code>; its inter-ontology setting is also imported at <code>deeponto.align.bertsubs</code>.</li>
 </ul>
-<h3 id="changed_7">Changed</h3>
+<h3 id="changed_8">Changed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Move</strong> the pruning functionality into <code>deeponto.onto.OntologyPruner</code> as a separate module.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Amend</strong> JVM checking before displaying the JVM memory prompt from importing <code>deeponto.onto.Ontology</code>; if started already, skip this step.</li>
@@ -1479,7 +1458,7 @@ Security in case of vulnerabilities. -->
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the methods <code>get_asserted_parents</code> and <code>get_asserted_children</code> for getting asserted parent and children for a given entity at <code>deeponto.onto.Ontology</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Add</strong> the method <code>check_deprecation</code> for checking an owl object's deprecation (annotated) at <code>deeponto.onto.Ontology</code>.</li>
 </ul>
-<h3 id="changed_8">Changed</h3>
+<h3 id="changed_9">Changed</h3>
 <ul class="task-list">
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Move</strong> the spacy <code>en_core_web_sm</code> download into the initialisation of <code>OntologyVerbaliser</code>.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> <strong>Change</strong> the method of getting equivalence axioms by adding support to different entity types at <code>deeponto.onto.Ontology</code>.</li>
@@ -1512,7 +1491,7 @@ Security in case of vulnerabilities. -->
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">November 23, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 2, 2024</span>
       
         <br>
         Created:

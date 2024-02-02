@@ -75,7 +75,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#deeponto.subs.bertsubs.pipeline_inter.BERTSubsInterPipeline" class="md-skip">
+        <a href="#deeponto.complete.bertsubs.pipeline_inter.BERTSubsInterPipeline" class="md-skip">
           Skip to content
         </a>
       
@@ -726,7 +726,7 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#deeponto.subs.bertsubs.pipeline_inter.BERTSubsInterPipeline" class="md-nav__link">
+  <a href="#deeponto.complete.bertsubs.pipeline_inter.BERTSubsInterPipeline" class="md-nav__link">
     BERTSubsInterPipeline
   </a>
   
@@ -734,35 +734,35 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#deeponto.subs.bertsubs.pipeline_inter.BERTSubsInterPipeline.inter_ontology_sampling" class="md-nav__link">
+  <a href="#deeponto.complete.bertsubs.pipeline_inter.BERTSubsInterPipeline.inter_ontology_sampling" class="md-nav__link">
     inter_ontology_sampling()
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#deeponto.subs.bertsubs.pipeline_inter.BERTSubsInterPipeline.inter_ontology_subsumption_to_sample" class="md-nav__link">
+  <a href="#deeponto.complete.bertsubs.pipeline_inter.BERTSubsInterPipeline.inter_ontology_subsumption_to_sample" class="md-nav__link">
     inter_ontology_subsumption_to_sample()
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#deeponto.subs.bertsubs.pipeline_inter.BERTSubsInterPipeline.score" class="md-nav__link">
+  <a href="#deeponto.complete.bertsubs.pipeline_inter.BERTSubsInterPipeline.score" class="md-nav__link">
     score()
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#deeponto.subs.bertsubs.pipeline_inter.BERTSubsInterPipeline.evaluate" class="md-nav__link">
+  <a href="#deeponto.complete.bertsubs.pipeline_inter.BERTSubsInterPipeline.evaluate" class="md-nav__link">
     evaluate()
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#deeponto.subs.bertsubs.pipeline_inter.BERTSubsInterPipeline.predict" class="md-nav__link">
+  <a href="#deeponto.complete.bertsubs.pipeline_inter.BERTSubsInterPipeline.predict" class="md-nav__link">
     predict()
   </a>
   
@@ -833,14 +833,14 @@
       
       
         <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
-          Subsumption Inference
+          Ontology Completion
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_3_3">
           <span class="md-nav__icon md-icon"></span>
-          Subsumption Inference
+          Ontology Completion
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -850,8 +850,22 @@
   
   
     <li class="md-nav__item">
-      <a href="../../subs/bertsubs/" class="md-nav__link">
+      <a href="../../complete/bertsubs/" class="md-nav__link">
         BERTSubs (Intra)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../complete/ontolama/" class="md-nav__link">
+        OntoLAMA
       </a>
     </li>
   
@@ -881,60 +895,12 @@
       
       
         <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
-          Language Model Probing
+          Utilities
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_3_4">
-          <span class="md-nav__icon md-icon"></span>
-          Language Model Probing
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../probe/ontolama/" class="md-nav__link">
-        OntoLAMA
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
-      
-      
-      
-        <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
-          Utilities
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
-        <label class="md-nav__title" for="__nav_3_5">
           <span class="md-nav__icon md-icon"></span>
           Utilities
         </label>
@@ -1098,7 +1064,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
 
 
 
-<h2 id="deeponto.subs.bertsubs.pipeline_inter.BERTSubsInterPipeline" class="doc doc-heading">
+<h2 id="deeponto.complete.bertsubs.pipeline_inter.BERTSubsInterPipeline" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">BERTSubsInterPipeline</span><span class="p">(</span><span class="n">src_onto</span><span class="p">,</span> <span class="n">tgt_onto</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span></code>
 
 </h2>
@@ -1157,7 +1123,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
         <tr>
           <td><code>src_sampler</code></td>
           <td>
-                <code><a class="autorefs autorefs-internal" title="deeponto.subs.bertsubs.text_semantics.SubsumptionSampler" href="../../subs/bertsubs/#deeponto.subs.bertsubs.text_semantics.SubsumptionSampler">SubsumptionSampler</a></code>
+                <code><a class="autorefs autorefs-internal" title="deeponto.complete.bertsubs.text_semantics.SubsumptionSampler" href="../../complete/bertsubs/#deeponto.complete.bertsubs.text_semantics.SubsumptionSampler">SubsumptionSampler</a></code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -1168,7 +1134,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
         <tr>
           <td><code>tgt_sampler</code></td>
           <td>
-                <code><a class="autorefs autorefs-internal" title="deeponto.subs.bertsubs.text_semantics.SubsumptionSampler" href="../../subs/bertsubs/#deeponto.subs.bertsubs.text_semantics.SubsumptionSampler">SubsumptionSampler</a></code>
+                <code><a class="autorefs autorefs-internal" title="deeponto.complete.bertsubs.text_semantics.SubsumptionSampler" href="../../complete/bertsubs/#deeponto.complete.bertsubs.text_semantics.SubsumptionSampler">SubsumptionSampler</a></code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -1180,7 +1146,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
   </table>
 
               <details class="quote">
-                <summary>Source code in <code>src/deeponto/subs/bertsubs/pipeline_inter.py</code></summary>
+                <summary>Source code in <code>src/deeponto/complete/bertsubs/pipeline_inter.py</code></summary>
                 <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 51</span>
 <span class="normal"> 52</span>
 <span class="normal"> 53</span>
@@ -1454,7 +1420,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
 
 
 
-<h3 id="deeponto.subs.bertsubs.pipeline_inter.BERTSubsInterPipeline.inter_ontology_sampling" class="doc doc-heading">
+<h3 id="deeponto.complete.bertsubs.pipeline_inter.BERTSubsInterPipeline.inter_ontology_sampling" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">inter_ontology_sampling</span><span class="p">(</span><span class="n">subsumptions</span><span class="p">,</span> <span class="n">pos_dup</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">neg_dup</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></code>
 
 </h3>
@@ -1523,7 +1489,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
   </table>
 
           <details class="quote">
-            <summary>Source code in <code>src/deeponto/subs/bertsubs/pipeline_inter.py</code></summary>
+            <summary>Source code in <code>src/deeponto/complete/bertsubs/pipeline_inter.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
@@ -1614,7 +1580,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
 
 
 
-<h3 id="deeponto.subs.bertsubs.pipeline_inter.BERTSubsInterPipeline.inter_ontology_subsumption_to_sample" class="doc doc-heading">
+<h3 id="deeponto.complete.bertsubs.pipeline_inter.BERTSubsInterPipeline.inter_ontology_subsumption_to_sample" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">inter_ontology_subsumption_to_sample</span><span class="p">(</span><span class="n">subsumption</span><span class="p">)</span></code>
 
 </h3>
@@ -1655,7 +1621,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
   </table>
 
           <details class="quote">
-            <summary>Source code in <code>src/deeponto/subs/bertsubs/pipeline_inter.py</code></summary>
+            <summary>Source code in <code>src/deeponto/complete/bertsubs/pipeline_inter.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">220</span>
 <span class="normal">221</span>
 <span class="normal">222</span>
@@ -1694,7 +1660,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
 
 
 
-<h3 id="deeponto.subs.bertsubs.pipeline_inter.BERTSubsInterPipeline.score" class="doc doc-heading">
+<h3 id="deeponto.complete.bertsubs.pipeline_inter.BERTSubsInterPipeline.score" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">score</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span></code>
 
 </h3>
@@ -1735,7 +1701,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
   </table>
 
           <details class="quote">
-            <summary>Source code in <code>src/deeponto/subs/bertsubs/pipeline_inter.py</code></summary>
+            <summary>Source code in <code>src/deeponto/complete/bertsubs/pipeline_inter.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">235</span>
 <span class="normal">236</span>
 <span class="normal">237</span>
@@ -1782,7 +1748,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
 
 
 
-<h3 id="deeponto.subs.bertsubs.pipeline_inter.BERTSubsInterPipeline.evaluate" class="doc doc-heading">
+<h3 id="deeponto.complete.bertsubs.pipeline_inter.BERTSubsInterPipeline.evaluate" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">evaluate</span><span class="p">(</span><span class="n">target_subsumptions</span><span class="p">,</span> <span class="n">test_type</span><span class="o">=</span><span class="s1">&#39;test&#39;</span><span class="p">)</span></code>
 
 </h3>
@@ -1837,7 +1803,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
   </table>
 
           <details class="quote">
-            <summary>Source code in <code>src/deeponto/subs/bertsubs/pipeline_inter.py</code></summary>
+            <summary>Source code in <code>src/deeponto/complete/bertsubs/pipeline_inter.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">254</span>
 <span class="normal">255</span>
 <span class="normal">256</span>
@@ -1920,7 +1886,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
 
 
 
-<h3 id="deeponto.subs.bertsubs.pipeline_inter.BERTSubsInterPipeline.predict" class="doc doc-heading">
+<h3 id="deeponto.complete.bertsubs.pipeline_inter.BERTSubsInterPipeline.predict" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">predict</span><span class="p">(</span><span class="n">target_subsumptions</span><span class="p">)</span></code>
 
 </h3>
@@ -1963,7 +1929,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
   </table>
 
           <details class="quote">
-            <summary>Source code in <code>src/deeponto/subs/bertsubs/pipeline_inter.py</code></summary>
+            <summary>Source code in <code>src/deeponto/complete/bertsubs/pipeline_inter.py</code></summary>
             <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">291</span>
 <span class="normal">292</span>
 <span class="normal">293</span>
@@ -2043,7 +2009,7 @@ See the tutorial for $\textsf{BERTMap}$ [here](../../../bertmap). -->
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 19, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 2, 2024</span>
       
         <br>
         Created:

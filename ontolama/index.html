@@ -822,14 +822,14 @@
       
       
         <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
-          Subsumption Inference
+          Ontology Completion
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_3_3">
           <span class="md-nav__icon md-icon"></span>
-          Subsumption Inference
+          Ontology Completion
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -839,8 +839,22 @@
   
   
     <li class="md-nav__item">
-      <a href="../deeponto/subs/bertsubs/" class="md-nav__link">
+      <a href="../deeponto/complete/bertsubs/" class="md-nav__link">
         BERTSubs (Intra)
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deeponto/complete/ontolama/" class="md-nav__link">
+        OntoLAMA
       </a>
     </li>
   
@@ -870,60 +884,12 @@
       
       
         <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
-          Language Model Probing
+          Utilities
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_3_4">
-          <span class="md-nav__icon md-icon"></span>
-          Language Model Probing
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../deeponto/probe/ontolama/" class="md-nav__link">
-        OntoLAMA
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-      
-      
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
-      
-      
-      
-        <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
-          Utilities
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
-        <label class="md-nav__title" for="__nav_3_5">
           <span class="md-nav__icon md-icon"></span>
           Utilities
         </label>
@@ -1056,7 +1022,7 @@
 </div>
 <p>This page provides an overview of the <span class="arithmatex">\(\textsf{OntoLAMA}\)</span> datasets, how to use them, and the related probing approach introduced in the research paper.</p>
 <h2 id="overview">Overview</h2>
-<p><span class="arithmatex">\(\textsf{OntoLAMA}\)</span> is a set of language model (LM) probing datasets for ontology subsumption inference. The work follows the "LMs-as-KBs" literature but focuses on conceptualised knowledge extracted from formalised KBs such as the OWL ontologies. Specifically, the subsumption inference (SI) task is introduced and formulated in the Natural Language Inference (NLI) style, where the sub-concept and the super-concept involved in a subsumption axiom are verbalised and fitted into a template to form the premise and hypothesis, respectively. The sampled axioms are verified through ontology reasoning. The SI task is further divided into Atomic SI and Complex SI where the former involves only atomic named concepts and the latter involves both atomic and complex concepts. Real-world ontologies of different scales and domains are used for constructing OntoLAMA and in total there are <strong>four</strong> Atomic SI datasets and <strong>two</strong> Complex SI datasets.</p>
+<p><span class="arithmatex">\(\textsf{OntoLAMA}\)</span> is a set of language model (LM) probing datasets and a prompt-based probing method for ontology subsumption inference or ontology completion. The work follows the "LMs-as-KBs" literature but focuses on conceptualised knowledge extracted from formalised KBs such as the OWL ontologies. Specifically, the subsumption inference (SI) task is introduced and formulated in the Natural Language Inference (NLI) style, where the sub-concept and the super-concept involved in a subsumption axiom are verbalised and fitted into a template to form the premise and hypothesis, respectively. The sampled axioms are verified through ontology reasoning. The SI task is further divided into Atomic SI and Complex SI where the former involves only atomic named concepts and the latter involves both atomic and complex concepts. Real-world ontologies of different scales and domains are used for constructing OntoLAMA and in total there are <strong>four</strong> Atomic SI datasets and <strong>two</strong> Complex SI datasets.</p>
 <h2 id="useful-links">Useful Links</h2>
 <ul>
 <li>Datasets available at Zenodo: <em><a href="https://doi.org/10.5281/zenodo.6480540">https://doi.org/10.5281/zenodo.6480540</a></em> (CC BY 4.0 International).</li>
@@ -1140,7 +1106,7 @@
 </blockquote>
 <p>To conduct probing, users can write the following code into a script, e.g., <code>probing.py</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">openprompt.config</span> <span class="kn">import</span> <span class="n">get_config</span>
-<span class="kn">from</span> <span class="nn">deeponto.probe.ontolama</span> <span class="kn">import</span> <span class="n">run_inference</span>
+<span class="kn">from</span> <span class="nn">deeponto.complete.ontolama</span> <span class="kn">import</span> <span class="n">run_inference</span>
 
 <span class="n">config</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="n">get_config</span><span class="p">()</span>
 <span class="c1"># you can then manipulate the configuration before running the inference</span>
@@ -1164,7 +1130,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">August 7, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">February 2, 2024</span>
       
         <br>
         Created:
