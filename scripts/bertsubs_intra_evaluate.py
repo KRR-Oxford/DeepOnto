@@ -16,7 +16,7 @@ import argparse
 import random
 from yacs.config import CfgNode
 from deeponto.onto import Ontology
-from deeponto.subs.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE_INTRA
+from deeponto.complete.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE_INTRA
 from deeponto.utils import load_file
 
 '''

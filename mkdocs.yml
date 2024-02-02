@@ -68,10 +68,9 @@ nav:
           - BERTSubs (Inter): deeponto/align/bertsubs/index.md
           - Evaluation: deeponto/align/evaluation.md
           - OAEI Utilities: deeponto/align/oaei.md
-        - Subsumption Inference:
+        - Ontology Completion:
           - BERTSubs (Intra): deeponto/subs/bertsubs/index.md
-        - Language Model Probing:
-          - OntoLAMA: deeponto/probe/ontolama.md
+          - OntoLAMA: deeponto/subs/ontolama.md
         - Utilities: 
           - Text Utilities: deeponto/utils/text_utils.md
           - File Utilities: deeponto/utils/file_utils.md

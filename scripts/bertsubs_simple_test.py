@@ -13,7 +13,7 @@
 # limitations under the License.
 
 from yacs.config import CfgNode
-from deeponto.subs.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE_INTRA, BERTSubsInterPipeline, DEFAULT_CONFIG_FILE_INTER
+from deeponto.complete.bertsubs import BERTSubsIntraPipeline, DEFAULT_CONFIG_FILE_INTRA, BERTSubsInterPipeline, DEFAULT_CONFIG_FILE_INTER
 from deeponto.utils import load_file
 from deeponto.onto import Ontology
 
