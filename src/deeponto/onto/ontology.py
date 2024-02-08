@@ -767,7 +767,7 @@ class OntologyReasoner:
                 return True
         return False
 
-    def instances_of(self, owl_class: OWLClassExpression, direct: bool = False):
+    def get_instances(self, owl_class: OWLClassExpression, direct: bool = False):
         """Return the list of named individuals that are instances of a given OWL class expression.
 
         Args:
@@ -810,7 +810,7 @@ class OntologyReasoner:
             computed, compared = owl_class2, owl_class2
 
         # for every inferred instance of `computed`, check if it is subsumed by `compared``
-        for instance in self.instances_of(computed, direct=False):
+        for instance in self.get_instances(computed, direct=False):
             if self.check_instance(instance, compared):
                 return True
         return False
@@ -838,8 +838,8 @@ class OntologyReasoner:
             Suppose pre-load an ontology `onto` from the disease ontology file `doid.owl`.
 
             ```python
-            >>> c1 = onto.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_4058")
-            >>> c2 = onto.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_0001816")
+            >>> c1 = onto.get_owl_object("http://purl.obolibrary.org/obo/DOID_4058")
+            >>> c2 = onto.get_owl_object("http://purl.obolibrary.org/obo/DOID_0001816")
             >>> onto.reasoner.check_assumed_disjoint(c1, c2)
             [SUCCESSFULLY] Adding the axiom DisjointClasses(<http://purl.obolibrary.org/obo/DOID_0001816> <http://purl.obolibrary.org/obo/DOID_4058>) into the ontology.
             [CHECK1 True] input classes are still satisfiable;
@@ -908,8 +908,8 @@ class OntologyReasoner:
             Suppose pre-load an ontology `onto` from the disease ontology file `doid.owl`.
 
             ```python
-            >>> c1 = onto.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_4058")
-            >>> c2 = onto.get_owl_object_from_iri("http://purl.obolibrary.org/obo/DOID_0001816")
+            >>> c1 = onto.get_owl_object("http://purl.obolibrary.org/obo/DOID_4058")
+            >>> c2 = onto.get_owl_object("http://purl.obolibrary.org/obo/DOID_0001816")
             >>> onto.reasoner.check_assumed_disjoint(c1, c2, verbose=True)
             [CHECK1 True] input classes have NO subsumption relationship;
             [CHECK2 False] input classes have NO common descendant;
