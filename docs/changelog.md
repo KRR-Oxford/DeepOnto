@@ -18,6 +18,7 @@ Security in case of vulnerabilities. -->
 
 ### Changed
 
+- [X] **Change** `.instances_of()` to `get_instances()` at `deeponto.onto.OntologyReasoner`.
 - [X] **Change** `deeponto.subs` to `deeponto.complete`.
 - [X] **Move** `deeponto.probe.ontolama` into `deeponto.complete`.
 
