@@ -181,16 +181,16 @@ class Ontology:
         return self.owl_data_factory.getOWLBottomDataProperty()
 
     @staticmethod
-    def get_entity_type(entity: OWLObject, is_singular: bool = False):
+    def get_entity_type(entity: OWLObject, return_singular: bool = False):
         """A handy method to get the `type` of an `OWLObject` entity."""
         if isinstance(entity, OWLClassExpression):
-            return "Classes" if not is_singular else "Class"
+            return "Classes" if not return_singular else "Class"
         elif isinstance(entity, OWLObjectPropertyExpression):
-            return "ObjectProperties" if not is_singular else "ObjectProperty"
+            return "ObjectProperties" if not return_singular else "ObjectProperty"
         elif isinstance(entity, OWLDataPropertyExpression):
-            return "DataProperties" if not is_singular else "DataProperty"
+            return "DataProperties" if not return_singular else "DataProperty"
         elif isinstance(entity, OWLIndividual):
-            return "Individuals" if not is_singular else "Individual"
+            return "Individuals" if not return_singular else "Individual"
         else:
             # NOTE: add further options in future
             pass
