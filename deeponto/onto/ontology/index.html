@@ -1702,7 +1702,7 @@ should feel relatively easy to extend the Python classes here.</p>
 
 
 <h3 id="deeponto.onto.ontology.Ontology.get_entity_type" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">is_singular</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">get_entity_type</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">return_singular</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
   
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-staticmethod"><code>staticmethod</code></small>
@@ -1731,16 +1731,16 @@ should feel relatively easy to extend the Python classes here.</p>
 <span class="normal">194</span>
 <span class="normal">195</span>
 <span class="normal">196</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">get_entity_type</span><span class="p">(</span><span class="n">entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">is_singular</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_entity_type</span><span class="p">(</span><span class="n">entity</span><span class="p">:</span> <span class="n">OWLObject</span><span class="p">,</span> <span class="n">return_singular</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A handy method to get the `type` of an `OWLObject` entity.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">OWLClassExpression</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;Classes&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">is_singular</span> <span class="k">else</span> <span class="s2">&quot;Class&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;Classes&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">return_singular</span> <span class="k">else</span> <span class="s2">&quot;Class&quot;</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">OWLObjectPropertyExpression</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;ObjectProperties&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">is_singular</span> <span class="k">else</span> <span class="s2">&quot;ObjectProperty&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;ObjectProperties&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">return_singular</span> <span class="k">else</span> <span class="s2">&quot;ObjectProperty&quot;</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">OWLDataPropertyExpression</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;DataProperties&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">is_singular</span> <span class="k">else</span> <span class="s2">&quot;DataProperty&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;DataProperties&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">return_singular</span> <span class="k">else</span> <span class="s2">&quot;DataProperty&quot;</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entity</span><span class="p">,</span> <span class="n">OWLIndividual</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s2">&quot;Individuals&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">is_singular</span> <span class="k">else</span> <span class="s2">&quot;Individual&quot;</span>
+        <span class="k">return</span> <span class="s2">&quot;Individuals&quot;</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">return_singular</span> <span class="k">else</span> <span class="s2">&quot;Individual&quot;</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="c1"># NOTE: add further options in future</span>
         <span class="k">pass</span>

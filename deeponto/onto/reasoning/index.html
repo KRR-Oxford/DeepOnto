@@ -634,8 +634,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#deeponto.onto.ontology.OntologyReasoner.instances_of" class="md-nav__link">
-    instances_of()
+  <a href="#deeponto.onto.ontology.OntologyReasoner.get_instances" class="md-nav__link">
+    get_instances()
   </a>
   
 </li>
@@ -1832,8 +1832,8 @@ compare them against the other entity which could be complex.</p>
 
 
 
-<h3 id="deeponto.onto.ontology.OntologyReasoner.instances_of" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">instances_of</span><span class="p">(</span><span class="n">owl_class</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
+<h3 id="deeponto.onto.ontology.OntologyReasoner.get_instances" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_instances</span><span class="p">(</span><span class="n">owl_class</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
 
 </h3>
 
@@ -1924,7 +1924,7 @@ also include the sub-classes' instances (<code>direct=False</code>). Defaults to
 <span class="normal">778</span>
 <span class="normal">779</span>
 <span class="normal">780</span>
-<span class="normal">781</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">instances_of</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_class</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">direct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="normal">781</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_instances</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_class</span><span class="p">:</span> <span class="n">OWLClassExpression</span><span class="p">,</span> <span class="n">direct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the list of named individuals that are instances of a given OWL class expression.</span>
 
 <span class="sd">    Args:</span>
@@ -2052,7 +2052,7 @@ but <code>instance</code> is restricted to classes.</p>
         <span class="n">computed</span><span class="p">,</span> <span class="n">compared</span> <span class="o">=</span> <span class="n">owl_class2</span><span class="p">,</span> <span class="n">owl_class2</span>
 
     <span class="c1"># for every inferred instance of `computed`, check if it is subsumed by `compared``</span>
-    <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">instances_of</span><span class="p">(</span><span class="n">computed</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_instances</span><span class="p">(</span><span class="n">computed</span><span class="p">,</span> <span class="n">direct</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_instance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">compared</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">True</span>
     <span class="k">return</span> <span class="kc">False</span>
@@ -2098,8 +2098,8 @@ See <a class="autorefs autorefs-internal" href="#deeponto.onto.ontology.Ontology
 
 <p><strong>Examples:</strong></p>
     <p>Suppose pre-load an ontology <code>onto</code> from the disease ontology file <code>doid.owl</code>.</p>
-<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">c1</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_4058&quot;</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_0001816&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">c1</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_4058&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_0001816&quot;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">check_assumed_disjoint</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span>
 <span class="p">[</span><span class="n">SUCCESSFULLY</span><span class="p">]</span> <span class="n">Adding</span> <span class="n">the</span> <span class="n">axiom</span> <span class="n">DisjointClasses</span><span class="p">(</span><span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">purl</span><span class="o">.</span><span class="n">obolibrary</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">obo</span><span class="o">/</span><span class="n">DOID_0001816</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">purl</span><span class="o">.</span><span class="n">obolibrary</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">obo</span><span class="o">/</span><span class="n">DOID_4058</span><span class="o">&gt;</span><span class="p">)</span> <span class="n">into</span> <span class="n">the</span> <span class="n">ontology</span><span class="o">.</span>
 <span class="p">[</span><span class="n">CHECK1</span> <span class="kc">True</span><span class="p">]</span> <span class="nb">input</span> <span class="n">classes</span> <span class="n">are</span> <span class="n">still</span> <span class="n">satisfiable</span><span class="p">;</span>
@@ -2198,8 +2198,8 @@ See <a class="autorefs autorefs-internal" href="#deeponto.onto.ontology.Ontology
 <span class="sd">        Suppose pre-load an ontology `onto` from the disease ontology file `doid.owl`.</span>
 
 <span class="sd">        ```python</span>
-<span class="sd">        &gt;&gt;&gt; c1 = onto.get_owl_object_from_iri(&quot;http://purl.obolibrary.org/obo/DOID_4058&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; c2 = onto.get_owl_object_from_iri(&quot;http://purl.obolibrary.org/obo/DOID_0001816&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; c1 = onto.get_owl_object(&quot;http://purl.obolibrary.org/obo/DOID_4058&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; c2 = onto.get_owl_object(&quot;http://purl.obolibrary.org/obo/DOID_0001816&quot;)</span>
 <span class="sd">        &gt;&gt;&gt; onto.reasoner.check_assumed_disjoint(c1, c2)</span>
 <span class="sd">        [SUCCESSFULLY] Adding the axiom DisjointClasses(&lt;http://purl.obolibrary.org/obo/DOID_0001816&gt; &lt;http://purl.obolibrary.org/obo/DOID_4058&gt;) into the ontology.</span>
 <span class="sd">        [CHECK1 True] input classes are still satisfiable;</span>
@@ -2282,8 +2282,8 @@ with following conditions:</p>
 
 <p><strong>Examples:</strong></p>
     <p>Suppose pre-load an ontology <code>onto</code> from the disease ontology file <code>doid.owl</code>.</p>
-<p><div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">c1</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_4058&quot;</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object_from_iri</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_0001816&quot;</span><span class="p">)</span>
+<p><div class="highlight"><pre><span></span><code><span class="o">&gt;&gt;&gt;</span> <span class="n">c1</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_4058&quot;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">onto</span><span class="o">.</span><span class="n">get_owl_object</span><span class="p">(</span><span class="s2">&quot;http://purl.obolibrary.org/obo/DOID_0001816&quot;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">onto</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">check_assumed_disjoint</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="p">[</span><span class="n">CHECK1</span> <span class="kc">True</span><span class="p">]</span> <span class="nb">input</span> <span class="n">classes</span> <span class="n">have</span> <span class="n">NO</span> <span class="n">subsumption</span> <span class="n">relationship</span><span class="p">;</span>
 <span class="p">[</span><span class="n">CHECK2</span> <span class="kc">False</span><span class="p">]</span> <span class="nb">input</span> <span class="n">classes</span> <span class="n">have</span> <span class="n">NO</span> <span class="n">common</span> <span class="n">descendant</span><span class="p">;</span>
@@ -2396,8 +2396,8 @@ be time-saving.</p>
 <span class="sd">        Suppose pre-load an ontology `onto` from the disease ontology file `doid.owl`.</span>
 
 <span class="sd">        ```python</span>
-<span class="sd">        &gt;&gt;&gt; c1 = onto.get_owl_object_from_iri(&quot;http://purl.obolibrary.org/obo/DOID_4058&quot;)</span>
-<span class="sd">        &gt;&gt;&gt; c2 = onto.get_owl_object_from_iri(&quot;http://purl.obolibrary.org/obo/DOID_0001816&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; c1 = onto.get_owl_object(&quot;http://purl.obolibrary.org/obo/DOID_4058&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; c2 = onto.get_owl_object(&quot;http://purl.obolibrary.org/obo/DOID_0001816&quot;)</span>
 <span class="sd">        &gt;&gt;&gt; onto.reasoner.check_assumed_disjoint(c1, c2, verbose=True)</span>
 <span class="sd">        [CHECK1 True] input classes have NO subsumption relationship;</span>
 <span class="sd">        [CHECK2 False] input classes have NO common descendant;</span>
