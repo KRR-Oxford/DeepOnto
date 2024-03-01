@@ -9,9 +9,14 @@ Security in case of vulnerabilities. -->
 
 ## Unreleased
 
+...
+
+
+## v0.8.9 (2024 Mar)
+
 ### Added
 
-- [ ] **Add** ICON as a completion service at `deeponto.complete`.
+<!-- - [ ] **Add** ICON as a completion service at `deeponto.complete`. -->
 - [X] **Add** empty annotation index warning for BERTMap, related to issue #18.
 - [X] **Add** `check_consistency()` at `deeponto.onto.Ontology`.
 - [X] **Add** a warning message for empty vocab at `deeponto.onto.OntologyVerbaliser`.
@@ -22,8 +27,6 @@ Security in case of vulnerabilities. -->
 - [X] **Change** `.instances_of()` to `get_instances()` at `deeponto.onto.OntologyReasoner`.
 - [X] **Change** `deeponto.subs` to `deeponto.complete`.
 - [X] **Move** `deeponto.probe.ontolama` into `deeponto.complete`.
-
-...
 
 ## v0.8.8 (2023 October)
 
