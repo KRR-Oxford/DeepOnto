@@ -1,8 +1,7 @@
-JPype1==1.4.1
-# mowl-borg==0.1.0
+JPype1
 yacs
 torch
-anytree==2.8.0
+anytree
 click
 dill
 pandas
@@ -16,7 +15,7 @@ pprintpp
 networkx
 lxml
 textdistance
-ipywidgets==7.7.1
+ipywidgets
 ipykernel
 enlighten
 rdflib
