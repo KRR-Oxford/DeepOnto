@@ -67,7 +67,7 @@ $\textsf{DeepOnto}$ aims to provide building blocks for implementing deep learni
 
 ### OWLAPI
 
-$\textsf{DeepOnto}$ relies on [OWLAPI](http://owlapi.sourceforge.net/) version 4 (written in Java) for ontologies. 
+$\textsf{DeepOnto}$ relies on [OWLAPI](http://owlapi.sourceforge.net/) version 4.5.22 (written in Java) for ontologies. 
 
 We follow what has been implemented in [mOWL](https://mowl.readthedocs.io/en/latest/index.html) that uses [JPype](https://jpype.readthedocs.io/en/latest/) to bridge Python and Java Virtual Machine (JVM). Please check JPype's [installation page](https://jpype.readthedocs.io/en/latest/install.html#) for successful JVM initialisation.
 
