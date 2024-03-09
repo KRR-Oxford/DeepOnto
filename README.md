@@ -81,7 +81,7 @@ We recommend installing Pytorch prior to installing DeepOnto following the comma
 In case the most recent Pytorch version causes any incompatibility issues, use the following command (with `CUDA 11.6`) known to work:
 
 ```bash
-pip3 install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
+pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 ```
 
 Basic usage of DeepOnto does not rely on GPUs, but for efficient deep learning model training, please make sure `torch.cuda.is_available()` returns `True`.
