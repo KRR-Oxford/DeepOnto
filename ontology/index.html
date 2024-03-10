@@ -1025,7 +1025,7 @@
 <p><a class="autorefs autorefs-internal" href="../deeponto/onto/ontology/#deeponto.onto.ontology.Ontology"><code>Ontology</code></a> can be easily loaded from a local ontology file by its path:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">deeponto.onto</span> <span class="kn">import</span> <span class="n">Ontology</span>
 </code></pre></div>
-<p>Importing <code>Ontology</code> will require JVM memory allocation (defaults to <code>8g</code>; if <code>nohup</code> is used to run the program in the backend, use <code>nohup echo "8g" | python command</code>):</p>
+<p>Importing <code>Ontology</code> will require the setting of <code>JAVA_HOME</code> environment variable if it does not find the JVM, and JVM memory allocation (defaults to <code>8g</code>; if <code>nohup</code> is used to run the program in the backend, use <code>nohup echo "8g" | python command</code>):</p>
 <div class="highlight"><pre><span></span><code><span class="n">Please</span> <span class="n">enter</span> <span class="n">the</span> <span class="n">maximum</span> <span class="n">memory</span> <span class="n">located</span> <span class="n">to</span> <span class="n">JVM</span><span class="p">:</span> <span class="p">[</span><span class="mi">8</span><span class="n">g</span><span class="p">]:</span> <span class="mi">16</span><span class="n">g</span>
 
 <span class="mi">16</span><span class="n">g</span> <span class="n">maximum</span> <span class="n">memory</span> <span class="n">allocated</span> <span class="n">to</span> <span class="n">JVM</span><span class="o">.</span>
@@ -1091,7 +1091,7 @@
 <p>To get the <strong>sub-entities</strong>, simply replace the method name with <code class="highlight"><span class="n">sub_entities_of</span></code>.</p>
 <h3 id="inferring-class-instances">Inferring Class Instances</h3>
 <p>To retrieve the entailed <strong>instances</strong> of a class:</p>
-<div class="highlight"><pre><span></span><code><span class="n">doid</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">instances_of</span><span class="p">(</span><span class="n">doid_class</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">doid</span><span class="o">.</span><span class="n">reasoner</span><span class="o">.</span><span class="n">get_instances</span><span class="p">(</span><span class="n">doid_class</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="checking-entailment">Checking Entailment</h3>
 <p>The implemented reasoner also supports several <strong>entailment checks</strong> for subsumption, disjointness, and so on. For example:</p>
@@ -1106,7 +1106,7 @@
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">September 29, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">March 10, 2024</span>
       
         <br>
         Created:
