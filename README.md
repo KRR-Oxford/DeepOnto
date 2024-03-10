@@ -114,7 +114,7 @@ pip install git+https://github.com/KRR-Oxford/DeepOnto.git
 
 <p align="center">
   <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/deeponto.svg" width=90%">
-  <p align="center">Figure: Illustration of $\textsf{DeepOnto}$'s architecture.</p>
+  <p align="center">Figure: Illustration of DeepOnto's architecture.</p>
 </p>
 
 ### Ontology Processing
