@@ -96,7 +96,7 @@ Other dependencies are specified in `setup.cfg` and `requirements.txt` which are
 pip install deeponto
 ```
 
-We have been informed that `openprompt` has a conflict with several other packages, so we now set it as an optional dependency. However, it is main dependency of the OntoLAMA code at `deeponto.complete.ontolama`. To specifically use OntoLAMA, please install `openprompt` manually or use the following command to install $\textsf{DeepOnto}$:
+We have been informed that `openprompt` has a conflict with several other packages that can be hardly addressed on MacOS with M1, so we now set it as an optional dependency. However, it is main dependency of the OntoLAMA code at `deeponto.complete.ontolama`. To use OntoLAMA, please install `openprompt` separately, or use the following command to install $\textsf{DeepOnto}$:
 
 ```bash
 pip install deeponto[ontolama]
