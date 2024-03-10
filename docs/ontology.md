@@ -13,7 +13,7 @@ This page gives typical examples of how to use [`Ontology`][deeponto.onto.Ontolo
 from deeponto.onto import Ontology
 ```
 
-Importing `Ontology` will require JVM memory allocation (defaults to `8g`; if `nohup` is used to run the program in the backend, use `nohup echo "8g" | python command`):
+Importing `Ontology` will require the setting of JAVA_HOME environment variable if it does not find the JVM, and JVM memory allocation (defaults to `8g`; if `nohup` is used to run the program in the backend, use `nohup echo "8g" | python command`):
 
 ```python
 Please enter the maximum memory located to JVM: [8g]: 16g
