@@ -19,3 +19,4 @@ ipywidgets
 ipykernel
 enlighten
 rdflib
+nltk
