@@ -40,6 +40,7 @@ limitations under the License.
 **News** :newspaper:
 
 <!-- - [ ] Amend taxonomy features; integrate ICON into DeepOnto. (**unreleased**) -->
+- [X] Hot fix to the `openprompt` issue by moving it to optional dependencies. (**v0.8.9**)
 - [X] Minor feature enhancement; reorganise package layout. (**v0.8.9**)
 - [X] Deploy `deeponto.onto.taxonomy`; add the structural reasoner type. (**v0.8.8**)
 - [X] Deploy various new ontology processing functions especially for reasoning and verbalisation; update OAEI utitlities for evaluation. (**v0.8.7**)
@@ -93,6 +94,12 @@ Other dependencies are specified in `setup.cfg` and `requirements.txt` which are
 ```bash
 # requiring Python>=3.8
 pip install deeponto
+```
+
+We have been informed that `openprompt` has a conflict with several other packages, so we now set it as an optional dependency. However, it is main dependency of the OntoLAMA code at `deeponto.complete.ontolama`. To specifically use OntoLAMA, please install `openprompt` manually or use the following command to install DeepOnto:
+
+```bash
+pip install deeponto[ontolama]
 ```
 
 ### Install from Git Repository
@@ -162,7 +169,9 @@ Individual tools and resources are implemented based on the core ontology proces
 
 The preprint of our system paper for $\textsf{DeepOnto}$ is currently available at [arxiv](https://arxiv.org/abs/2307.03067).
 
-*Yuan He, Jiaoyan Chen, Hang Dong, Ian Horrocks, Carlo Allocca, Taehun Kim, and Brahmananda Sapkota.* **DeepOnto: A Python Package for Ontology Engineering with Deep Learning.** arXiv preprint arXiv:2307.03067 (2023) (Accepted by Semantic Web Journal).
+*Yuan He, Jiaoyan Chen, Hang Dong, Ian Horrocks, Carlo Allocca, Taehun Kim, and Brahmananda Sapkota.* **DeepOnto: A Python Package for Ontology Engineering with Deep Learning.** arXiv preprint arXiv:2307.03067 (2023).
+
+> Our paper has been accepted by the Semantic Web Journal.
 
 ```
 @article{he2023deeponto,

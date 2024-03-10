@@ -11,6 +11,12 @@ Security in case of vulnerabilities. -->
 
 ...
 
+## v0.9.0 (2024 Mar)
+
+### Changed
+
+- [X] **Move** `openprompt` to extra dependencies as its supported version of `sentencepiece` has known conflicts with many packages.
+
 
 ## v0.8.9 (2024 Mar)
 

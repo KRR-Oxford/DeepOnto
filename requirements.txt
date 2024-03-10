@@ -7,7 +7,7 @@ dill
 pandas
 numpy
 scikit_learn
-openprompt==1.0.0
+# openprompt==1.0.0  # openprompt has been moved to optional dependencies
 transformers[torch]
 datasets
 spacy
