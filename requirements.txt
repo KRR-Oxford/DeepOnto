@@ -17,6 +17,7 @@ lxml
 textdistance
 ipywidgets
 ipykernel
+tqdm
 enlighten
 rdflib
 nltk
