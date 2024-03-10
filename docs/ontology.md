@@ -112,7 +112,7 @@ To get the **sub-entities**, simply replace the method name with `#!python sub_e
 To retrieve the entailed **instances** of a class:
 
 ```python
-doid.reasoner.instances_of(doid_class)
+doid.reasoner.get_instances(doid_class)
 ```
 
 ### Checking Entailment
