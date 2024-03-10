@@ -77,7 +77,7 @@ We follow what has been implemented in [mOWL](https://mowl.readthedocs.io/en/lat
 
 $\textsf{DeepOnto}$ relies on [Pytorch](https://pytorch.org/) for deep learning framework.
 
-We recommend installing Pytorch prior to installing DeepOnto following the commands listed on the [Pytorch webpage](https://pytorch.org/). Notice that users can choose either GPU (with CUDA) or CPU version of Pytorch.
+We recommend installing Pytorch prior to installing $\textsf{DeepOnto}$ following the commands listed on the [Pytorch webpage](https://pytorch.org/). Notice that users can choose either GPU (with CUDA) or CPU version of Pytorch.
 
 In case the most recent Pytorch version causes any incompatibility issues, use the following command (with `CUDA 11.6`) known to work:
 
@@ -85,7 +85,7 @@ In case the most recent Pytorch version causes any incompatibility issues, use t
 pip install torch torchvision torchaudio --extra-index-url https://download.pytorch.org/whl/cu116
 ```
 
-Basic usage of DeepOnto does not rely on GPUs, but for efficient deep learning model training, please make sure `torch.cuda.is_available()` returns `True`.
+Basic usage of $\textsf{DeepOnto}$ does not rely on GPUs, but for efficient deep learning model training, please make sure `torch.cuda.is_available()` returns `True`.
 
 ### Install from PyPI
 
@@ -96,7 +96,7 @@ Other dependencies are specified in `setup.cfg` and `requirements.txt` which are
 pip install deeponto
 ```
 
-We have been informed that `openprompt` has a conflict with several other packages, so we now set it as an optional dependency. However, it is main dependency of the OntoLAMA code at `deeponto.complete.ontolama`. To specifically use OntoLAMA, please install `openprompt` manually or use the following command to install DeepOnto:
+We have been informed that `openprompt` has a conflict with several other packages, so we now set it as an optional dependency. However, it is main dependency of the OntoLAMA code at `deeponto.complete.ontolama`. To specifically use OntoLAMA, please install `openprompt` manually or use the following command to install $\textsf{DeepOnto}$:
 
 ```bash
 pip install deeponto[ontolama]
@@ -114,7 +114,7 @@ pip install git+https://github.com/KRR-Oxford/DeepOnto.git
 
 <p align="center">
   <img alt="deeponto" src="https://raw.githubusercontent.com/KRR-Oxford/DeepOnto/main/docs/images/deeponto.svg" width=90%">
-  <p align="center">Figure: Illustration of DeepOnto's architecture.</p>
+  <p align="center">Figure: Illustration of $\textsf{DeepOnto}$'s architecture.</p>
 </p>
 
 ### Ontology Processing
