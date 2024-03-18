@@ -1,9 +1,9 @@
 # Subsumption Prediction with BERTSubs
 
 
-[![paperlink](https://img.shields.io/badge/paperlink-wwwj-purple)
+[![paperlink](https://img.shields.io/badge/paperlink-wwwj-red)
 ](https://link.springer.com/article/10.1007/s11280-023-01169-9)
-[![paperlink](https://img.shields.io/badge/paperlink-arxiv-red)](https://arxiv.org/abs/2202.09791)
+[![paperlink](https://img.shields.io/badge/paperlink-arxiv-orange)](https://arxiv.org/abs/2202.09791)
 
 !!! credit "Citation"
 

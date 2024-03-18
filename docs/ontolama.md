@@ -1,12 +1,12 @@
 # OntoLAMA: Dataset Overview and Usage Guide
 
-[![paperlink](https://img.shields.io/badge/paperlink-acl-purple)
+[![paperlink](https://img.shields.io/badge/paperlink-acl-red)
 ](https://aclanthology.org/2023.findings-acl.213)
-[![paperlink](https://img.shields.io/badge/paperlink-arxiv-red)](https://arxiv.org/abs/2302.06761)
+[![paperlink](https://img.shields.io/badge/paperlink-arxiv-orange)](https://arxiv.org/abs/2302.06761)
 [![dataset](https://img.shields.io/badge/dataset-10.5281%2Fzenodo.6480540-blue)](https://doi.org/10.5281/zenodo.6480540)
 
 
-!!! credit "paper"
+!!! credit "Citation"
 
     ```
     @inproceedings{he2023language,

@@ -1,8 +1,8 @@
 # Ontology Matching with BERTMap and BERTMapLt
 
-[![paperlink](https://img.shields.io/badge/paperlink-aaai-purple)
+[![paperlink](https://img.shields.io/badge/paperlink-aaai-red)
 ](https://ojs.aaai.org/index.php/AAAI/article/view/20510)
-[![paperlink](https://img.shields.io/badge/paperlink-arxiv-red)](https://arxiv.org/abs/2112.02682)
+[![paperlink](https://img.shields.io/badge/paperlink-arxiv-orange)](https://arxiv.org/abs/2112.02682)
 
 
 !!! credit "Citation"

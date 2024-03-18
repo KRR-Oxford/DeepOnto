@@ -18,9 +18,11 @@ import os
 from typing import Optional, List, Union
 from collections import defaultdict
 from yacs.config import CfgNode
+
 # import warnings
 import jpype
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -45,6 +47,7 @@ if not jpype.isJVMStarted():
 from java.io import File  # type: ignore
 from java.lang import Runtime, System  # type: ignore
 from org.slf4j.impl import SimpleLogger  # type: ignore
+
 System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "warn")  # set slf4j default logging level to warning
 from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
 from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLIndividual, OWLAxiom, AddAxiom, RemoveAxiom, AxiomType  # type: ignore
@@ -447,10 +450,9 @@ class Ontology:
                     )
 
         return uniqify(annotations)
-    
+
     def check_consistency(self):
-        """Check if the ontology is consistent according to the pre-loaded reasoner.
-        """
+        """Check if the ontology is consistent according to the pre-loaded reasoner."""
         logging.info(f"Checking consistency with `{self.reasoner_type}` reasoner.")
         return self.reasoner.owl_reasoner.isConsistent()
 
@@ -818,7 +820,7 @@ class OntologyReasoner:
     def check_assumed_disjoint(self, owl_class1: OWLClassExpression, owl_class2: OWLClassExpression):
         r"""Check if two OWL class expressions satisfy the Assumed Disjointness.
 
-        !!! credit "Paper"
+        !!! credit "Citation"
 
             The definition of **Assumed Disjointness** comes from the paper:
             [Language Model Analysis for Ontology Subsumption Inference](https://aclanthology.org/2023.findings-acl.213).

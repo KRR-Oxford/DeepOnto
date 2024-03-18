@@ -1,15 +1,15 @@
 # Bio-ML: A Comprehensive Documentation
 
-[![paperlink](https://img.shields.io/badge/paperlink-iswc-purple)
+[![paperlink](https://img.shields.io/badge/paperlink-iswc-red)
 ](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33)
-[![paperlink](https://img.shields.io/badge/paperlink-arxiv-red)](https://arxiv.org/abs/2205.03447)
-[![paperlink](https://img.shields.io/badge/biollm_paperlink-iswc_poster-purple)
+[![paperlink](https://img.shields.io/badge/paperlink-arxiv-orange)](https://arxiv.org/abs/2205.03447)
+[![paperlink](https://img.shields.io/badge/biollm_paperlink-iswc_poster-red)
 ](https://ceur-ws.org/Vol-3632/ISWC2023_paper_427.pdf)
-[![paperlink](https://img.shields.io/badge/biollm_paperlink-arxiv-red)](https://arxiv.org/abs/2309.07172)
+[![paperlink](https://img.shields.io/badge/biollm_paperlink-arxiv-orange)](https://arxiv.org/abs/2309.07172)
 [![dataset](https://img.shields.io/badge/dataset-10.5281%2Fzenodo.6510086-blue)](https://zenodo.org/doi/10.5281/zenodo.6510086)
 
 
-!!! credit "paper"
+!!! credit "Citation"
 
     ```
     @inproceedings{he2022machine,
