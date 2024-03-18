@@ -2,29 +2,19 @@
 
 Verbalising concept expressions is very useful for models that take textual inputs. While the named concepts can be verbalised simply using their names (or labels), complex concepts that involve logical operators require a more sophisticated algorithm. In $\textsf{DeepOnto}$, we have implemented the recursive concept verbaliser originally proposed in the OntoLAMA paper to address the need.
 
-!!! credit "Paper"
 
-    The recursive concept verbaliser is proposed in the paper:
-    [Language Model Analysis for Ontology Subsumption Inference (Findings of ACL 2023)](https://aclanthology.org/2023.findings-acl.213).
+!!! credit "Citation"
 
     ```
-    @inproceedings{he-etal-2023-language,
-        title = "Language Model Analysis for Ontology Subsumption Inference",
-        author = "He, Yuan  and
-        Chen, Jiaoyan  and
-        Jimenez-Ruiz, Ernesto  and
-        Dong, Hang  and
-        Horrocks, Ian",
-        booktitle = "Findings of the Association for Computational Linguistics: ACL 2023",
-        month = jul,
-        year = "2023",
-        address = "Toronto, Canada",
-        publisher = "Association for Computational Linguistics",
-        url = "https://aclanthology.org/2023.findings-acl.213",
-        doi = "10.18653/v1/2023.findings-acl.213",
-        pages = "3439--3453"
+    @inproceedings{he2023language,
+        title={Language Model Analysis for Ontology Subsumption Inference},
+        author={He, Yuan and Chen, Jiaoyan and Jimenez-Ruiz, Ernesto and Dong, Hang and Horrocks, Ian},
+        booktitle={Findings of the Association for Computational Linguistics: ACL 2023},
+        pages={3439--3453},
+        year={2023}
     }
     ```
+
 
 This rule-based verbaliser (found in [`OntologyVerbaliser`][deeponto.onto.verbalisation.OntologyVerbaliser]) first parses a complex concept expression into a sub-formula tree (with [`OntologySyntaxParser`][deeponto.onto.verbalisation.OntologySyntaxParser]). Each intermediate node within the tree represents the decomposition of a specific logical operator, while the leaf nodes are named concepts or properties.  The verbaliser then recursively merges the verbalisations in a bottom-to-top manner, creating the overall textual representation of the complex concept. An example of this process is shown in the following figure:
 
