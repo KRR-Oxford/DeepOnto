@@ -1,8 +1,11 @@
 # Ontology Matching with BERTMap and BERTMapLt
 
-!!! credit "Paper"
+[![Static Badge](https://img.shields.io/badge/paper_link-camera_ready-red)
+](https://ojs.aaai.org/index.php/AAAI/article/view/20510)
 
-    Paper for BERTMap: [BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)](https://ojs.aaai.org/index.php/AAAI/article/view/20510).
+
+
+!!! credit "Citation"
 
     ```
     @inproceedings{he2022bertmap,
@@ -42,9 +45,9 @@ The ontology matching (OM) pipeline of $\textsf{BERTMap}$ consists of following 
 highly scored mappings at each round. Terminate mapping extension when there is no
 new mapping with score $\geq \kappa$ found or it exceeds the maximum number of iterations. Note that $\kappa$ is set to $0.9$ by default, as in the original paper.
 
-7. Truncate the extended mappings by preserving only those with scores $\geq \lambda$. In the original paper, $\lambda$ is supposed to be tuned on validation mappings – which are often not available. Also, $\lambda$ is not a sensitive hyperparameter in practice. Therefore, we manually set $\lambda$ to $0.9995$ as a default value which usually yields a higher F1 score. Note that both $\kappa$ and $\lambda$ are made available in the configuration file.
+1. Truncate the extended mappings by preserving only those with scores $\geq \lambda$. In the original paper, $\lambda$ is supposed to be tuned on validation mappings – which are often not available. Also, $\lambda$ is not a sensitive hyperparameter in practice. Therefore, we manually set $\lambda$ to $0.9995$ as a default value which usually yields a higher F1 score. Note that both $\kappa$ and $\lambda$ are made available in the configuration file.
 
-8. Repair the rest of the mappings with the repair module built in LogMap (BERTMap does not focus on mapping repair). In short, a minimum set of inconsistent mappings will be removed (further improve precision).
+2. Repair the rest of the mappings with the repair module built in LogMap (BERTMap does not focus on mapping repair). In short, a minimum set of inconsistent mappings will be removed (further improve precision).
 
 Steps 5-8 are referred to as the **global matching** process which computes OM mappings from two input ontologies. $\textsf{BERTMapLt}$ is the light-weight version without BERT training and mapping refinement. The mapping filtering threshold for $\textsf{BERTMapLt}$ is $1.0$ (i.e., string-matched). 
 
