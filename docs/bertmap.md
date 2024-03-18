@@ -1,21 +1,21 @@
 # Ontology Matching with BERTMap and BERTMapLt
 
-[![Static Badge](https://img.shields.io/badge/paper_link-camera_ready-red)
+[![paperlink](https://img.shields.io/badge/paperlink-aaai-purple)
 ](https://ojs.aaai.org/index.php/AAAI/article/view/20510)
-
+[![paperlink](https://img.shields.io/badge/paperlink-arxiv-red)](https://arxiv.org/abs/2112.02682)
 
 
 !!! credit "Citation"
 
     ```
     @inproceedings{he2022bertmap,
-      title={BERTMap: a BERT-based ontology alignment system},
-      author={He, Yuan and Chen, Jiaoyan and Antonyrajah, Denvar and Horrocks, Ian},
-      booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
-      volume={36},
-      number={5},
-      pages={5684--5691},
-      year={2022}
+        title={BERTMap: a BERT-based ontology alignment system},
+        author={He, Yuan and Chen, Jiaoyan and Antonyrajah, Denvar and Horrocks, Ian},
+        booktitle={Proceedings of the AAAI Conference on Artificial Intelligence},
+        volume={36},
+        number={5},
+        pages={5684--5691},
+        year={2022}
     }
     ```
 

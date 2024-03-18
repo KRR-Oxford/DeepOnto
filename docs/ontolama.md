@@ -1,26 +1,20 @@
 # OntoLAMA: Dataset Overview and Usage Guide
 
+[![paperlink](https://img.shields.io/badge/paperlink-acl-purple)
+](https://aclanthology.org/2023.findings-acl.213)
+[![paperlink](https://img.shields.io/badge/paperlink-arxiv-red)](https://arxiv.org/abs/2302.06761)
+[![dataset](https://img.shields.io/badge/dataset-10.5281%2Fzenodo.6480540-blue)](https://doi.org/10.5281/zenodo.6480540)
+
+
 !!! credit "paper"
 
-    Paper for OntoLAMA:
-    [Language Model Analysis for Ontology Subsumption Inference (Findings of ACL 2023)](https://aclanthology.org/2023.findings-acl.213).
-
     ```
-    @inproceedings{he-etal-2023-language,
-        title = "Language Model Analysis for Ontology Subsumption Inference",
-        author = "He, Yuan  and
-        Chen, Jiaoyan  and
-        Jimenez-Ruiz, Ernesto  and
-        Dong, Hang  and
-        Horrocks, Ian",
-        booktitle = "Findings of the Association for Computational Linguistics: ACL 2023",
-        month = jul,
-        year = "2023",
-        address = "Toronto, Canada",
-        publisher = "Association for Computational Linguistics",
-        url = "https://aclanthology.org/2023.findings-acl.213",
-        doi = "10.18653/v1/2023.findings-acl.213",
-        pages = "3439--3453"
+    @inproceedings{he2023language,
+        title={Language Model Analysis for Ontology Subsumption Inference},
+        author={He, Yuan and Chen, Jiaoyan and Jimenez-Ruiz, Ernesto and Dong, Hang and Horrocks, Ian},
+        booktitle={Findings of the Association for Computational Linguistics: ACL 2023},
+        pages={3439--3453},
+        year={2023}
     }
     ```
 

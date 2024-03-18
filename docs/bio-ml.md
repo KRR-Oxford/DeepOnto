@@ -1,18 +1,32 @@
 # Bio-ML: A Comprehensive Documentation
 
-!!! credit "paper"
+[![paperlink](https://img.shields.io/badge/paperlink-iswc-purple)
+](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33)
+[![paperlink](https://img.shields.io/badge/paperlink-arxiv-red)](https://arxiv.org/abs/2205.03447)
+[![paperlink](https://img.shields.io/badge/biollm_paperlink-iswc_poster-purple)
+](https://ceur-ws.org/Vol-3632/ISWC2023_paper_427.pdf)
+[![paperlink](https://img.shields.io/badge/biollm_paperlink-arxiv-red)](https://arxiv.org/abs/2309.07172)
+[![dataset](https://img.shields.io/badge/dataset-10.5281%2Fzenodo.6510086-blue)](https://zenodo.org/doi/10.5281/zenodo.6510086)
 
-    Paper for Bio-ML:
-    [Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching (ISWC 2022)](https://link.springer.com/chapter/10.1007/978-3-031-19433-7_33). It was nominated as the **best resource paper candidate** at ISWC 2022.
+
+!!! credit "paper"
 
     ```
     @inproceedings{he2022machine,
-      title={Machine Learning-Friendly Biomedical Datasets for Equivalence and Subsumption Ontology Matching},
-      author={He, Yuan and Chen, Jiaoyan and Dong, Hang and Jim{\'e}nez-Ruiz, Ernesto and Hadian, Ali and Horrocks, Ian},
-      booktitle={The Semantic Web--ISWC 2022: 21st International Semantic Web Conference, Virtual Event, October 23--27, 2022, Proceedings},
-      pages={575--591},
-      year={2022},
-      organization={Springer}
+    title={Machine learning-friendly biomedical datasets for equivalence and subsumption ontology matching},
+    author={He, Yuan and Chen, Jiaoyan and Dong, Hang and Jim{\'e}nez-Ruiz, Ernesto and Hadian, Ali and Horrocks, Ian},
+    booktitle={International Semantic Web Conference},
+    pages={575--591},
+    year={2022},
+    organization={Springer}
+    }
+    ```
+    ```
+    @article{he2023exploring,
+        title={Exploring large language models for ontology alignment},
+        author={He, Yuan and Chen, Jiaoyan and Dong, Hang and Horrocks, Ian},
+        journal={arXiv preprint arXiv:2309.07172},
+        year={2023}
     }
     ```
 

@@ -1,8 +1,11 @@
 # Subsumption Prediction with BERTSubs
 
-!!! credit "Paper"
 
-    Paper for BERTSubs: [Contextual Semantic Embeddings for Ontology Subsumption Prediction (accepted by WWW Journal in 2023)](https://arxiv.org/abs/2202.09791).
+[![paperlink](https://img.shields.io/badge/paperlink-wwwj-purple)
+](https://link.springer.com/article/10.1007/s11280-023-01169-9)
+[![paperlink](https://img.shields.io/badge/paperlink-arxiv-red)](https://arxiv.org/abs/2202.09791)
+
+!!! credit "Citation"
 
     ```
     @article{chen2023contextual,
