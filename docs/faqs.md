@@ -10,3 +10,6 @@
     
 - Q3: Missing system-level dependencies on Linux?
     - Ans: Please ensure that the essential dev tools package has been deployed if you are using a Linux system. Also, according to [JPype's documentation](https://jpype.readthedocs.io/en/latest/install.html#debian-ubuntu), `g++` and `python-dev` need to be installed.
+
+- Q4: `ModuleNotFoundError` error?
+  - Ans: Please check there is no duplicated naming (e.g., `org`) in your paths because the Java dependencies would be overridden by that.
