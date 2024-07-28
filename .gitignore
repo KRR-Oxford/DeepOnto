@@ -107,3 +107,6 @@ print_reqs.py
 
 # mkdocs site
 site
+
+# java
+.gradle
