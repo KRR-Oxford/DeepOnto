@@ -38,14 +38,15 @@ $\textsf{Bio-ML}$ is a comprehensive ontology matching (OM) dataset that include
 - **Ontology Pruning**: In this stage, a sub-ontology is obtained in accordance with a list of preserved class IRIs. For Mondo ontologies, class preservation is based on reference mappings, while for UMLS ontologies, it relies on semantic types (see [Ontology Pruning](#ontology-pruning)).
 - **Subsumption Mapping Construction**: Reference subsumption mappings are built from reference equivalence mappings, subject to target class deletion. To clarify, if an equivalence mapping is utilised for constructing a subsumption mapping, its corresponding target ontology class will be discarded to enforce direct subsumption matching (see [Subsumption Mapping Construction](#subsumption-mapping-construction)).
 - **Candidate Mapping Generation**: For the purpose of evaluating an Ontology Matching (OM) system using ranking-based metrics, we generate a list of negative candidate mappings for each reference mapping by employing various heuristics (see [Candidate Mapping Generation](#candidate-mapping-generation)).
-- **Locality Module Enrichment** (NEW :star2:): Newly introduced in the OAEI 2023 version, the pruned ontologies are enriched with classes that serve as context (annotated as **not used in alignment**) for existing classes, leveraging the locality module technique (access the [code](https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java)). OM systems can use these supplemental classes as auxiliary information while excluding them from the alignment process. These additional classes will also be omitted from the final evaluation. 
-- **Bio-LLM: A Special Sub-Track for Large Language Models** (NEW :star2:): Another addition to the OAEI 2023 version, we introduced a unique sub-track for Large Language Model (LLM)-based OM systems. This is achieved by extracting small but challenging subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets (see [OAEI Bio-LLM 2023](#oaei-bio-llm-2023)).
+- **Locality Module Enrichment** (Since OAEI 2023 :star2:): Introduced in the OAEI 2023 version, the pruned ontologies are enriched with classes that serve as context (annotated as **not used in alignment**) for existing classes, leveraging the locality module technique (access the [code](https://github.com/ernestojimenezruiz/logmap-matcher/blob/master/src/test/java/uk/ac/ox/krr/logmap2/test/oaei/CreateModulesForBioMLTrack.java)). OM systems can use these supplemental classes as auxiliary information while excluding them from the alignment process. These additional classes will also be omitted from the final evaluation. 
+- **Bio-LLM: A Special Sub-Track for Large Language Models** (Since OAEI 2023 :star2:): Another addition to the OAEI 2023 version, we introduced a unique sub-track for Large Language Model (LLM)-based OM systems. This is achieved by extracting small but challenging subsets from the NCIT-DOID and SNOMED-FMA (Body) datasets (see [OAEI Bio-LLM 2023](#oaei-bio-llm-2023)).
 
 ## Important Links
 
 - **Dataset Download** (License: CC BY 4.0 International):
     - **OAEI 2022**: <https://doi.org/10.5281/zenodo.6946466> (see [OAEI Bio-ML 2022](#oaei-bio-ml-2022) for detailed description).
     - **OAEI 2023**: <https://doi.org/10.5281/zenodo.8193375> (see [OAEI Bio-ML 2023](#oaei-bio-ml-2023) for detailed description).
+    - **OAEI 2024**: <https://zenodo.org/records/13119437> (see [OAEI Bio-ML 2024](#oaei-bio-ml-2024) for detailed description).
 
 - **Complete Documentation**: *<https://krr-oxford.github.io/DeepOnto/bio-ml/>* (this page).
 - **Reference Paper**: *<https://arxiv.org/abs/2205.03447>* (revised arXiv version).
@@ -417,6 +418,30 @@ Remarks on this figure:
 As Large Language Models (LLMs) are trending in the AI community, we formulate a special sub-track for evaluating LLM-based OM systems. However, evaluating LLMs with the current OM datasets can be time and resource intensive. To yield insightful results prior to full implementation, we leverage two challenging subsets extracted from the NCIT-DOID and the SNOMED-FMA (Body) equivalence matching datasets.
 
 For each original dataset, we first randomly select 50 **matched** class pairs from ground truth mappings, but **excluding pairs that can be aligned** with direct string matching (i.e., having at least one shared label) to restrict the efficacy of conventional lexical matching. Next, with a fixed source ontology class, we further select 99 negative target ontology classes, thus forming a total of 100 candidate mappings (inclusive of the ground truth mapping). This selection is guided by the sub-word inverted index-based idf scores as in the BERTMap paper (see [BERTMap tutorial](../bertmap) for more details), which are capable of producing target ontology classes lexically akin to the fixed source class. We finally randomly choose 50 source classes that **do not have a matched target class** according to the ground truth mappings, and create 100 candidate mappings using the inverted index for each. Therefore, each subset comprises 50 source ontology classes with a match and 50 without. Each class is associated with 100 candidate mappings, culminating in a total extraction of 10,000, i.e., (50+50)*100, class pairs.
+
+## OAEI Bio-LM 2024
+
+The OAEI 2024 version has only one change compared to the OAEI 2023 one, that is, the training subsumption mappings that can be used to infer testing subsumption mappings through deductive reasoning. 
+
+Below demonstrates the data statistics for the OAEI 2024 version of Bio-ML. The changes compared to the previous version (see [Bio-ML OAEI 2023](#bio-ml-oaei-2023)) are reflected in the `-` numbers of reference subsumption mappings. 
+
+In the **Category** column, *"Disease"* indicates that the Mondo data are mainly about disease concepts, while *"Body"*, *"Pharm"*, and *"Neoplas"* denote semantic types of *"Body Part, Organ, or Organ Components"*, *"Pharmacologic Substance"*, and *"Neoplastic Process"* in UMLS, respectively. 
+
+<center>
+<small>
+
+| Source | Task        | Category | #SrcCls         | #TgtCls         |#Ref($\equiv$)  |#Ref($\sqsubseteq$) |
+|--------|:-----------:|:--------:|:----------------:|:---------------:|:-------------:|:------------:|
+| Mondo  | OMIM-ORDO   | Disease  | 9,648      | 9,275  | 3,721          | 103          |
+| Mondo  | NCIT-DOID   | Disease  | 15,762     | 8,465  | 4,686          | 3,338 (-1)   | 
+| UMLS   | SNOMED-FMA  | Body     | 34,418     | 88,955 | 7,256          | 5,453 (-53)  |
+| UMLS   | SNOMED-NCIT | Pharm    | 29,500     | 22,136 | 5,803          | 4,224 (-1)   |
+| UMLS   | SNOMED-NCIT | Neoplas  | 22,971     | 20,247 | 3,804          | 213          |
+
+</small>
+</center>
+
+The [Bio-LLM sub-track](#oaei-bio-llm-2023) remains the same.
 
 ### Evaluation 
 
