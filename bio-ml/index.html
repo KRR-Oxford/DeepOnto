@@ -531,11 +531,11 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#oaei-bio-lm-2024" class="md-nav__link">
-    OAEI Bio-LM 2024
+  <a href="#oaei-bio-ml-2024" class="md-nav__link">
+    OAEI Bio-ML 2024
   </a>
   
-    <nav class="md-nav" aria-label="OAEI Bio-LM 2024">
+    <nav class="md-nav" aria-label="OAEI Bio-ML 2024">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1570,12 +1570,12 @@ organization={Springer}
 <ol>
 <li>For equivalence matching, testing of the global matching evaluation should be performed on <code>refs_equiv/full.tsv</code> in the unsupervised setting, and on <code>refs_equiv/test.tsv</code> (with <code>refs_equiv/train.tsv</code> set to null reference mappings) in the semi-supervised setting. Testing of the local ranking evaluation should be performed on <code>refs_equiv/test.cands.tsv</code> for both settings.</li>
 <li>For subsumption matching, the local ranking evaluation should be performed on <code>refs_equiv/test.cands.tsv</code> and the training mapping set <code>refs_subs/train.tsv</code> is optional.</li>
-<li>The <code>test.cands.tsv</code> file in the Bio-LLM sub-track is different from the main Bio-LM track ones. See <a href="#oaei-bio-llm-2023">OAEI Bio-LLM 2023</a> for more information and how to evaluate on it.</li>
+<li>The <code>test.cands.tsv</code> file in the Bio-LLM sub-track is different from the main Bio-ML track ones. See <a href="#oaei-bio-llm-2023">OAEI Bio-LLM 2023</a> for more information and how to evaluate on it.</li>
 </ol>
 <h2 id="oaei-bio-llm-2023">OAEI Bio-LLM 2023</h2>
 <p>As Large Language Models (LLMs) are trending in the AI community, we formulate a special sub-track for evaluating LLM-based OM systems. However, evaluating LLMs with the current OM datasets can be time and resource intensive. To yield insightful results prior to full implementation, we leverage two challenging subsets extracted from the NCIT-DOID and the SNOMED-FMA (Body) equivalence matching datasets.</p>
 <p>For each original dataset, we first randomly select 50 <strong>matched</strong> class pairs from ground truth mappings, but <strong>excluding pairs that can be aligned</strong> with direct string matching (i.e., having at least one shared label) to restrict the efficacy of conventional lexical matching. Next, with a fixed source ontology class, we further select 99 negative target ontology classes, thus forming a total of 100 candidate mappings (inclusive of the ground truth mapping). This selection is guided by the sub-word inverted index-based idf scores as in the BERTMap paper (see <a href="../bertmap">BERTMap tutorial</a> for more details), which are capable of producing target ontology classes lexically akin to the fixed source class. We finally randomly choose 50 source classes that <strong>do not have a matched target class</strong> according to the ground truth mappings, and create 100 candidate mappings using the inverted index for each. Therefore, each subset comprises 50 source ontology classes with a match and 50 without. Each class is associated with 100 candidate mappings, culminating in a total extraction of 10,000, i.e., (50+50)*100, class pairs.</p>
-<h2 id="oaei-bio-lm-2024">OAEI Bio-LM 2024</h2>
+<h2 id="oaei-bio-ml-2024">OAEI Bio-ML 2024</h2>
 <p>The OAEI 2024 version has only one change compared to the OAEI 2023 one, that is, the training subsumption mappings that can be used to infer testing subsumption mappings through deductive reasoning. </p>
 <p>Below demonstrates the data statistics for the OAEI 2024 version of Bio-ML. The changes compared to the previous version (see <a href="#bio-ml-oaei-2023">Bio-ML OAEI 2023</a>) are reflected in the <code>-</code> numbers of reference subsumption mappings. </p>
 <p>In the <strong>Category</strong> column, <em>"Disease"</em> indicates that the Mondo data are mainly about disease concepts, while <em>"Body"</em>, <em>"Pharm"</em>, and <em>"Neoplas"</em> denote semantic types of <em>"Body Part, Organ, or Organ Components"</em>, <em>"Pharmacologic Substance"</em>, and <em>"Neoplastic Process"</em> in UMLS, respectively. </p>
