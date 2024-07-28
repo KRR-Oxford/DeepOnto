@@ -410,7 +410,7 @@ Remarks on this figure:
 
 1. For equivalence matching, testing of the global matching evaluation should be performed on `refs_equiv/full.tsv` in the unsupervised setting, and on `refs_equiv/test.tsv` (with `refs_equiv/train.tsv` set to null reference mappings) in the semi-supervised setting. Testing of the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` for both settings.
 2. For subsumption matching, the local ranking evaluation should be performed on `refs_equiv/test.cands.tsv` and the training mapping set `refs_subs/train.tsv` is optional.
-3. The `test.cands.tsv` file in the Bio-LLM sub-track is different from the main Bio-LM track ones. See [OAEI Bio-LLM 2023](#oaei-bio-llm-2023) for more information and how to evaluate on it.
+3. The `test.cands.tsv` file in the Bio-LLM sub-track is different from the main Bio-ML track ones. See [OAEI Bio-LLM 2023](#oaei-bio-llm-2023) for more information and how to evaluate on it.
 
 
 ## OAEI Bio-LLM 2023
@@ -419,7 +419,7 @@ As Large Language Models (LLMs) are trending in the AI community, we formulate a
 
 For each original dataset, we first randomly select 50 **matched** class pairs from ground truth mappings, but **excluding pairs that can be aligned** with direct string matching (i.e., having at least one shared label) to restrict the efficacy of conventional lexical matching. Next, with a fixed source ontology class, we further select 99 negative target ontology classes, thus forming a total of 100 candidate mappings (inclusive of the ground truth mapping). This selection is guided by the sub-word inverted index-based idf scores as in the BERTMap paper (see [BERTMap tutorial](../bertmap) for more details), which are capable of producing target ontology classes lexically akin to the fixed source class. We finally randomly choose 50 source classes that **do not have a matched target class** according to the ground truth mappings, and create 100 candidate mappings using the inverted index for each. Therefore, each subset comprises 50 source ontology classes with a match and 50 without. Each class is associated with 100 candidate mappings, culminating in a total extraction of 10,000, i.e., (50+50)*100, class pairs.
 
-## OAEI Bio-LM 2024
+## OAEI Bio-ML 2024
 
 The OAEI 2024 version has only one change compared to the OAEI 2023 one, that is, the training subsumption mappings that can be used to infer testing subsumption mappings through deductive reasoning. 
 
