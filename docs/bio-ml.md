@@ -50,7 +50,7 @@ $\textsf{Bio-ML}$ is a comprehensive ontology matching (OM) dataset that include
 
 - **Complete Documentation**: *<https://krr-oxford.github.io/DeepOnto/bio-ml/>* (this page).
 - **Reference Paper**: *<https://arxiv.org/abs/2205.03447>* (revised arXiv version).
-- **Official OAEI Page**: *<https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html>* (OAEI participation and results).
+- **Official OAEI Page**: *<https://krr-oxford.github.io/OAEI-Bio-ML>* (OAEI participation and results).
 
 
 ## Ontology Pruning
@@ -487,7 +487,7 @@ To summarise, the Bio-LLM sub-track provides two representative OM subsets and a
 
 ## OAEI Participation
 
-To participate in the OAEI track, please visit the [OAEI Bio-ML website](https://www.cs.ox.ac.uk/isg/projects/ConCur/oaei/index.html) for more information, especially on the instructions of system submission or direct result submission. In the following, we present the formats of result files we expect participants to submit.
+To participate in the OAEI track, please visit the [OAEI Bio-ML website](https://krr-oxford.github.io/OAEI-Bio-ML/) for more information, especially on the instructions of system submission or direct result submission. In the following, we present the formats of result files we expect participants to submit.
 
 ### Result Submission Format
 
