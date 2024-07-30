@@ -46,7 +46,7 @@ $\textsf{Bio-ML}$ is a comprehensive ontology matching (OM) dataset that include
 - **Dataset Download** (License: CC BY 4.0 International):
     - **OAEI 2022**: <https://doi.org/10.5281/zenodo.6946466> (see [OAEI Bio-ML 2022](#oaei-bio-ml-2022) for detailed description).
     - **OAEI 2023**: <https://doi.org/10.5281/zenodo.8193375> (see [OAEI Bio-ML 2023](#oaei-bio-ml-2023) for detailed description).
-    - **OAEI 2024**: <https://zenodo.org/records/13119437> (see [OAEI Bio-ML 2024](#oaei-bio-ml-2024) for detailed description).
+    - **OAEI 2024**: <https://doi.org/10.5281/zenodo.13119437> (see [OAEI Bio-ML 2024](#oaei-bio-ml-2024) for detailed description).
 
 - **Complete Documentation**: *<https://krr-oxford.github.io/DeepOnto/bio-ml/>* (this page).
 - **Reference Paper**: *<https://arxiv.org/abs/2205.03447>* (revised arXiv version).
