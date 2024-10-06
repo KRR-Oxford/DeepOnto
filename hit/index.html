@@ -10,27 +10,23 @@
         <meta name="author" content="Yuan He (KRR-Oxford)">
       
       
-        <link rel="canonical" href="https://krr-oxford.github.io/DeepOnto/deeponto/onto/normalisation/">
+        <link rel="canonical" href="https://krr-oxford.github.io/DeepOnto/hit/">
       
       
-        <link rel="prev" href="../projection/">
       
-      
-        <link rel="next" href="../taxonomy/">
-      
-      <link rel="icon" href="../../../images/favicon_package/favicon.ico">
+      <link rel="icon" href="../images/favicon_package/favicon.ico">
       <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.19">
     
     
       
-        <title>Normalisation - DeepOnto</title>
+        <title>HiT: Embedding Hierarchies with Transformer Encoders - DeepOnto</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.eebd395e.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.eebd395e.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ecc896b0.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ecc896b0.min.css">
       
       
 
@@ -46,11 +42,11 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/_mkdocstrings.css">
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
     
-      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+      <link rel="stylesheet" href="../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -75,7 +71,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ontology-pruning" class="md-skip">
+        <a href="#hit-embedding-hierarchies-with-transformer-encoders" class="md-skip">
           Skip to content
         </a>
       
@@ -91,9 +87,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="DeepOnto" class="md-header__button md-logo" aria-label="DeepOnto" data-md-component="logo">
+    <a href=".." title="DeepOnto" class="md-header__button md-logo" aria-label="DeepOnto" data-md-component="logo">
       
-  <img src="../../../images/favicon_package/safari-pinned-tab.svg" alt="logo">
+  <img src="../images/favicon_package/safari-pinned-tab.svg" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -109,7 +105,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Normalisation
+              HiT: Embedding Hierarchies with Transformer Encoders
             
           </span>
         </div>
@@ -223,14 +219,14 @@
   <!-- Site title -->
   <label class="md-nav__title" for="__drawer">
     <a
-      href="../../.."
+      href=".."
       title="DeepOnto"
       class="md-nav__button md-logo"
       aria-label="DeepOnto"
       data-md-component="logo"
     >
       
-  <img src="../../../images/favicon_package/safari-pinned-tab.svg" alt="logo">
+  <img src="../images/favicon_package/safari-pinned-tab.svg" alt="logo">
 
     </a>
     <!-- DeepOnto -->
@@ -291,7 +287,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href=".." class="md-nav__link">
         Introduction
       </a>
     </li>
@@ -305,7 +301,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ontology/" class="md-nav__link">
+      <a href="../ontology/" class="md-nav__link">
         Load an Ontology
       </a>
     </li>
@@ -319,7 +315,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../changelog/" class="md-nav__link">
+      <a href="../changelog/" class="md-nav__link">
         Changelog
       </a>
     </li>
@@ -333,7 +329,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../faqs/" class="md-nav__link">
+      <a href="../faqs/" class="md-nav__link">
         FAQs
       </a>
     </li>
@@ -384,7 +380,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../verbaliser/" class="md-nav__link">
+      <a href="../verbaliser/" class="md-nav__link">
         Verbalise Complex Ontology Concepts
       </a>
     </li>
@@ -398,7 +394,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../bertmap/" class="md-nav__link">
+      <a href="../bertmap/" class="md-nav__link">
         Ontology Matching with BERTMap Family
       </a>
     </li>
@@ -412,7 +408,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../bio-ml/" class="md-nav__link">
+      <a href="../bio-ml/" class="md-nav__link">
         Bio-ML: A Comprehensive Documentation
       </a>
     </li>
@@ -426,7 +422,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../bertsubs/" class="md-nav__link">
+      <a href="../bertsubs/" class="md-nav__link">
         Subsumption Inference with BERTSubs
       </a>
     </li>
@@ -440,7 +436,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../ontolama/" class="md-nav__link">
+      <a href="../ontolama/" class="md-nav__link">
         OntoLAMA: Dataset Overview and Usage Guide
       </a>
     </li>
@@ -460,18 +456,16 @@
 
   
   
-    
-  
   
     
       
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
       
       
       
@@ -480,7 +474,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+      <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
           PACKAGE REFERENCE
@@ -491,16 +485,14 @@
               
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
       
       
-      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+      <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
       
       
       
@@ -509,7 +501,7 @@
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+      <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
         <label class="md-nav__title" for="__nav_3_1">
           <span class="md-nav__icon md-icon"></span>
           Ontology Processing
@@ -522,7 +514,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../ontology/" class="md-nav__link">
+      <a href="../deeponto/onto/ontology/" class="md-nav__link">
         Ontology
       </a>
     </li>
@@ -536,7 +528,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reasoning/" class="md-nav__link">
+      <a href="../deeponto/onto/reasoning/" class="md-nav__link">
         Reasoning
       </a>
     </li>
@@ -550,7 +542,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../pruning/" class="md-nav__link">
+      <a href="../deeponto/onto/pruning/" class="md-nav__link">
         Pruning
       </a>
     </li>
@@ -564,7 +556,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../verbalisation/" class="md-nav__link">
+      <a href="../deeponto/onto/verbalisation/" class="md-nav__link">
         Verbalisation
       </a>
     </li>
@@ -578,7 +570,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../projection/" class="md-nav__link">
+      <a href="../deeponto/onto/projection/" class="md-nav__link">
         Projection
       </a>
     </li>
@@ -590,72 +582,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Normalisation
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../deeponto/onto/normalisation/" class="md-nav__link">
         Normalisation
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#deeponto.onto.normalisation.OntologyNormaliser" class="md-nav__link">
-    OntologyNormaliser
-  </a>
-  
-    <nav class="md-nav" aria-label="OntologyNormaliser">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#deeponto.onto.normalisation.OntologyNormaliser.normalise" class="md-nav__link">
-    normalise()
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deeponto.onto.normalisation.OntologyNormaliser.preprocess_ontology" class="md-nav__link">
-    preprocess_ontology()
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -667,7 +598,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../taxonomy/" class="md-nav__link">
+      <a href="../deeponto/onto/taxonomy/" class="md-nav__link">
         Taxonomy
       </a>
     </li>
@@ -715,7 +646,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/mapping/" class="md-nav__link">
+      <a href="../deeponto/align/mapping/" class="md-nav__link">
         Mapping
       </a>
     </li>
@@ -729,7 +660,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/bertmap/" class="md-nav__link">
+      <a href="../deeponto/align/bertmap/" class="md-nav__link">
         BERTMap
       </a>
     </li>
@@ -743,7 +674,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/logmap/" class="md-nav__link">
+      <a href="../deeponto/align/logmap/" class="md-nav__link">
         LogMap
       </a>
     </li>
@@ -757,7 +688,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/bertsubs/" class="md-nav__link">
+      <a href="../deeponto/align/bertsubs/" class="md-nav__link">
         BERTSubs (Inter)
       </a>
     </li>
@@ -771,7 +702,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/evaluation/" class="md-nav__link">
+      <a href="../deeponto/align/evaluation/" class="md-nav__link">
         Evaluation
       </a>
     </li>
@@ -785,7 +716,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../align/oaei/" class="md-nav__link">
+      <a href="../deeponto/align/oaei/" class="md-nav__link">
         OAEI Utilities
       </a>
     </li>
@@ -833,7 +764,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../complete/bertsubs/" class="md-nav__link">
+      <a href="../deeponto/complete/bertsubs/" class="md-nav__link">
         BERTSubs (Intra)
       </a>
     </li>
@@ -847,7 +778,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../complete/ontolama/" class="md-nav__link">
+      <a href="../deeponto/complete/ontolama/" class="md-nav__link">
         OntoLAMA
       </a>
     </li>
@@ -895,7 +826,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../utils/text_utils/" class="md-nav__link">
+      <a href="../deeponto/utils/text_utils/" class="md-nav__link">
         Text Utilities
       </a>
     </li>
@@ -909,7 +840,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../utils/file_utils/" class="md-nav__link">
+      <a href="../deeponto/utils/file_utils/" class="md-nav__link">
         File Utilities
       </a>
     </li>
@@ -923,7 +854,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../utils/logging/" class="md-nav__link">
+      <a href="../deeponto/utils/logging/" class="md-nav__link">
         Logging
       </a>
     </li>
@@ -937,7 +868,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../utils/data_utils/" class="md-nav__link">
+      <a href="../deeponto/utils/data_utils/" class="md-nav__link">
         Data Utilities
       </a>
     </li>
@@ -951,7 +882,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../utils/decorators/" class="md-nav__link">
+      <a href="../deeponto/utils/decorators/" class="md-nav__link">
         Decorators
       </a>
     </li>
@@ -1009,7 +940,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../hierarchy_transformers/homepage/" class="md-nav__link">
+      <a href="../hierarchy_transformers/homepage/" class="md-nav__link">
         Hierarchy Transformers
       </a>
     </li>
@@ -1042,403 +973,24 @@
   
 
 
-<h1 id="ontology-pruning">Ontology Pruning</h1>
-
-
-<div class="doc doc-object doc-module">
-
-
-
-  <div class="doc doc-contents first">
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-class">
-
-
-
-<h2 id="deeponto.onto.normalisation.OntologyNormaliser" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">OntologyNormaliser</span><span class="p">()</span></code>
-
-</h2>
-
-
-  <div class="doc doc-contents ">
-
-  
-      <p>Class for ontology normalisation.</p>
-<div class="admonition note">
-<p class="admonition-title">Credit</p>
-<p>The code of this class originates from the <a href="https://mowl.readthedocs.io/en/latest/index.html">mOWL library</a>,
-which utilises the normalisation functionality from the Java library <code>Jcel</code>.</p>
-</div>
-<p>The normalisation process transforms ontology axioms into <strong>normal forms</strong> in the Description Logic <span class="arithmatex">\(\mathcal{EL}\)</span>, including:</p>
-<ul>
-<li><span class="arithmatex">\(C \sqsubseteq D\)</span></li>
-<li><span class="arithmatex">\(C \sqcap C' \sqsubseteq D\)</span></li>
-<li><span class="arithmatex">\(C \sqsubseteq \exists r.D\)</span></li>
-<li><span class="arithmatex">\(\exists r.C \sqsubseteq D\)</span></li>
-</ul>
-<p>where <span class="arithmatex">\(C\)</span> and <span class="arithmatex">\(C'\)</span> can be named concepts or <span class="arithmatex">\(\top\)</span>, <span class="arithmatex">\(D\)</span> is a named concept or <span class="arithmatex">\(\bot\)</span>, <span class="arithmatex">\(r\)</span> is a role (property).</p>
-
-
-
-  <p><strong>Attributes:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>onto</code></td>
-          <td>
-                <code><a class="autorefs autorefs-internal" title="deeponto.onto.ontology.Ontology" href="../ontology/#deeponto.onto.ontology.Ontology">Ontology</a></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The input ontology to be normalised.</p>
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td><code>temp_super_class_index</code></td>
-          <td>
-                <code>Dict[OWLCLassExpression, OWLClass]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A dictionary in the form of <code>{complex_sub_class: temp_super_class}</code>, which means
-<code>temp_super_class</code> is created during the normalisation of a complex subsumption axiom that has <code>complex_sub_class</code> as the sub-class.</p>
-            </div>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-              <details class="quote">
-                <summary>Source code in <code>src/deeponto/onto/normalisation.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">88</span>
-<span class="normal">89</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="k">return</span>
-</code></pre></div></td></tr></table></div>
-              </details>
-
-  
-
-  <div class="doc doc-children">
-
-
-
-
-
-
-
-
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.onto.normalisation.OntologyNormaliser.normalise" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">normalise</span><span class="p">(</span><span class="n">ontology</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Performs the <span class="arithmatex">\(\mathcal{EL}\)</span> normalisation.</p>
-
-
-
-  <p><strong>Parameters:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td><code>ontology</code></td>
-          <td>
-                <code><a class="autorefs autorefs-internal" title="deeponto.onto.ontology.Ontology" href="../ontology/#deeponto.onto.ontology.Ontology">Ontology</a></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>An ontology to be normalised.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-
-
-  <p><strong>Returns:</strong></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr>
-          <td>
-                <code>list[OWLAxiom]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A list of normalised TBox axioms.</p>
-            </div>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-          <details class="quote">
-            <summary>Source code in <code>src/deeponto/onto/normalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
-<span class="normal"> 94</span>
-<span class="normal"> 95</span>
-<span class="normal"> 96</span>
-<span class="normal"> 97</span>
-<span class="normal"> 98</span>
-<span class="normal"> 99</span>
-<span class="normal">100</span>
-<span class="normal">101</span>
-<span class="normal">102</span>
-<span class="normal">103</span>
-<span class="normal">104</span>
-<span class="normal">105</span>
-<span class="normal">106</span>
-<span class="normal">107</span>
-<span class="normal">108</span>
-<span class="normal">109</span>
-<span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span>
-<span class="normal">114</span>
-<span class="normal">115</span>
-<span class="normal">116</span>
-<span class="normal">117</span>
-<span class="normal">118</span>
-<span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span>
-<span class="normal">123</span>
-<span class="normal">124</span>
-<span class="normal">125</span>
-<span class="normal">126</span>
-<span class="normal">127</span>
-<span class="normal">128</span>
-<span class="normal">129</span>
-<span class="normal">130</span>
-<span class="normal">131</span>
-<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ontology</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Performs the $\mathcal{EL}$ normalisation.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        ontology (Ontology): An ontology to be normalised.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">        (list[OWLAxiom]): A list of normalised TBox axioms.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">processed_owl_onto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preprocess_ontology</span><span class="p">(</span><span class="n">ontology</span><span class="p">)</span>
-    <span class="n">root_ont</span> <span class="o">=</span> <span class="n">processed_owl_onto</span>
-    <span class="n">translator</span> <span class="o">=</span> <span class="n">Translator</span><span class="p">(</span>
-        <span class="n">processed_owl_onto</span><span class="o">.</span><span class="n">getOWLOntologyManager</span><span class="p">()</span><span class="o">.</span><span class="n">getOWLDataFactory</span><span class="p">(),</span> <span class="n">IntegerOntologyObjectFactoryImpl</span><span class="p">()</span>
-    <span class="p">)</span>
-    <span class="n">axioms</span> <span class="o">=</span> <span class="n">HashSet</span><span class="p">()</span>
-    <span class="n">axioms</span><span class="o">.</span><span class="n">addAll</span><span class="p">(</span><span class="n">root_ont</span><span class="o">.</span><span class="n">getAxioms</span><span class="p">())</span>
-    <span class="n">translator</span><span class="o">.</span><span class="n">getTranslationRepository</span><span class="p">()</span><span class="o">.</span><span class="n">addAxiomEntities</span><span class="p">(</span><span class="n">root_ont</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">ont</span> <span class="ow">in</span> <span class="n">root_ont</span><span class="o">.</span><span class="n">getImportsClosure</span><span class="p">():</span>
-        <span class="n">axioms</span><span class="o">.</span><span class="n">addAll</span><span class="p">(</span><span class="n">ont</span><span class="o">.</span><span class="n">getAxioms</span><span class="p">())</span>
-        <span class="n">translator</span><span class="o">.</span><span class="n">getTranslationRepository</span><span class="p">()</span><span class="o">.</span><span class="n">addAxiomEntities</span><span class="p">(</span><span class="n">ont</span><span class="p">)</span>
-
-    <span class="n">intAxioms</span> <span class="o">=</span> <span class="n">translator</span><span class="o">.</span><span class="n">translateSA</span><span class="p">(</span><span class="n">axioms</span><span class="p">)</span>
-
-    <span class="n">normaliser</span> <span class="o">=</span> <span class="n">OntologyNormalizer</span><span class="p">()</span>
-
-    <span class="n">factory</span> <span class="o">=</span> <span class="n">IntegerOntologyObjectFactoryImpl</span><span class="p">()</span>
-    <span class="n">normalised_ontology</span> <span class="o">=</span> <span class="n">normaliser</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">intAxioms</span><span class="p">,</span> <span class="n">factory</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">rTranslator</span> <span class="o">=</span> <span class="n">ReverseAxiomTranslator</span><span class="p">(</span><span class="n">translator</span><span class="p">,</span> <span class="n">processed_owl_onto</span><span class="p">)</span>
-
-    <span class="n">normalised_axioms</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="c1"># revert the jcel axioms to the original OWLAxioms</span>
-    <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">normalised_ontology</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rTranslator</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
-            <span class="n">normalised_axioms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">axiom</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Reverse translation. Ignoring axiom: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
-            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">axioms</span><span class="p">))</span>
-</code></pre></div></td></tr></table></div>
-          </details>
-  </div>
-
-</div>
-
-
-<div class="doc doc-object doc-function">
-
-
-
-<h3 id="deeponto.onto.normalisation.OntologyNormaliser.preprocess_ontology" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">preprocess_ontology</span><span class="p">(</span><span class="n">ontology</span><span class="p">)</span></code>
-
-</h3>
-
-
-  <div class="doc doc-contents ">
-  
-      <p>Preprocess the ontology to remove axioms that are not supported by the normalisation process.</p>
-
-          <details class="quote">
-            <summary>Source code in <code>src/deeponto/onto/normalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
-<span class="normal">137</span>
-<span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span>
-<span class="normal">142</span>
-<span class="normal">143</span>
-<span class="normal">144</span>
-<span class="normal">145</span>
-<span class="normal">146</span>
-<span class="normal">147</span>
-<span class="normal">148</span>
-<span class="normal">149</span>
-<span class="normal">150</span>
-<span class="normal">151</span>
-<span class="normal">152</span>
-<span class="normal">153</span>
-<span class="normal">154</span>
-<span class="normal">155</span>
-<span class="normal">156</span>
-<span class="normal">157</span>
-<span class="normal">158</span>
-<span class="normal">159</span>
-<span class="normal">160</span>
-<span class="normal">161</span>
-<span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span>
-<span class="normal">166</span>
-<span class="normal">167</span>
-<span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
-<span class="normal">173</span>
-<span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">preprocess_ontology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ontology</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Preprocess the ontology to remove axioms that are not supported by the normalisation process.&quot;&quot;&quot;</span>
-
-    <span class="n">tbox_axioms</span> <span class="o">=</span> <span class="n">ontology</span><span class="o">.</span><span class="n">owl_onto</span><span class="o">.</span><span class="n">getTBoxAxioms</span><span class="p">(</span><span class="n">Imports</span><span class="o">.</span><span class="n">fromBoolean</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>
-    <span class="n">new_tbox_axioms</span> <span class="o">=</span> <span class="n">HashSet</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">axiom</span> <span class="ow">in</span> <span class="n">tbox_axioms</span><span class="p">:</span>
-        <span class="n">axiom_as_str</span> <span class="o">=</span> <span class="n">axiom</span><span class="o">.</span><span class="n">toString</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="s2">&quot;UnionOf&quot;</span> <span class="ow">in</span> <span class="n">axiom_as_str</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s2">&quot;MinCardinality&quot;</span> <span class="ow">in</span> <span class="n">axiom_as_str</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s2">&quot;ComplementOf&quot;</span> <span class="ow">in</span> <span class="n">axiom_as_str</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s2">&quot;AllValuesFrom&quot;</span> <span class="ow">in</span> <span class="n">axiom_as_str</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s2">&quot;MaxCardinality&quot;</span> <span class="ow">in</span> <span class="n">axiom_as_str</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s2">&quot;ExactCardinality&quot;</span> <span class="ow">in</span> <span class="n">axiom_as_str</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s2">&quot;Annotation&quot;</span> <span class="ow">in</span> <span class="n">axiom_as_str</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s2">&quot;ObjectHasSelf&quot;</span> <span class="ow">in</span> <span class="n">axiom_as_str</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s2">&quot;urn:swrl&quot;</span> <span class="ow">in</span> <span class="n">axiom_as_str</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s2">&quot;EquivalentObjectProperties&quot;</span> <span class="ow">in</span> <span class="n">axiom_as_str</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s2">&quot;SymmetricObjectProperty&quot;</span> <span class="ow">in</span> <span class="n">axiom_as_str</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s2">&quot;AsymmetricObjectProperty&quot;</span> <span class="ow">in</span> <span class="n">axiom_as_str</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">elif</span> <span class="s2">&quot;ObjectOneOf&quot;</span> <span class="ow">in</span> <span class="n">axiom_as_str</span><span class="p">:</span>
-            <span class="k">continue</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">new_tbox_axioms</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">axiom</span><span class="p">)</span>
-
-    <span class="n">processed_owl_onto</span> <span class="o">=</span> <span class="n">ontology</span><span class="o">.</span><span class="n">owl_manager</span><span class="o">.</span><span class="n">createOntology</span><span class="p">(</span><span class="n">new_tbox_axioms</span><span class="p">)</span>
-    <span class="c1"># NOTE: the returned object is `owlapi.OWLOntology` not `deeponto.onto.Ontology`</span>
-    <span class="k">return</span> <span class="n">processed_owl_onto</span>
-</code></pre></div></td></tr></table></div>
-          </details>
-  </div>
-
-</div>
-
-
-
-  </div>
-
-  </div>
-
-</div>
-
-
-
-
-  </div>
-
-  </div>
-
-</div>
+<h1 id="hit-embedding-hierarchies-with-transformer-encoders">HiT: Embedding Hierarchies with Transformer Encoders</h1>
+<p><a href="to appear"><img alt="paperlink" src="https://img.shields.io/badge/paperlink-neurips-red" />
+</a>
+<a href="https://arxiv.org/abs/2401.11374"><img alt="paperlink" src="https://img.shields.io/badge/paperlink-arxiv-orange" /></a>
+<a href="https://doi.org/10.5281/zenodo.10511043"><img alt="dataset" src="https://img.shields.io/badge/dataset-10.5281%2Fzenodo.10511043-blue" /></a>
+<a href="https://huggingface.co/Hierarchy-Transformers"><img alt="models" src="https://img.shields.io/badge/models-huggingface-yellow" /></a></p>
+<p>To be updated...</p>
 
   <hr>
 <div class="md-source-file">
   <small>
     
       Last update:
-      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">June 26, 2023</span>
+      <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 6, 2024</span>
       
         <br>
         Created:
-        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">April 19, 2023</span>
+        <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-date">October 6, 2024</span>
       
     
   </small>
@@ -1543,13 +1095,13 @@ which utilises the normalisation functionality from the Java library <code>Jcel<
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.sections", "toc.integrate", "navigation.top", "header.autohide", "toc.follow", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.sections", "toc.integrate", "navigation.top", "header.autohide", "toc.follow", "content.code.copy"], "search": "../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.220ee61c.min.js"></script>
+      <script src="../assets/javascripts/bundle.220ee61c.min.js"></script>
       
         
-          <script src="../../../javascripts/mathjax.js"></script>
+          <script src="../javascripts/mathjax.js"></script>
         
       
         
