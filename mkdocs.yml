@@ -71,12 +71,15 @@ nav:
         - Ontology Completion:
           - BERTSubs (Intra): deeponto/complete/bertsubs/index.md
           - OntoLAMA: deeponto/complete/ontolama.md
+        - Hierarchy Transformers:
+          - Models: hierarchy_transformers/hit.md
         - Utilities: 
           - Text Utilities: deeponto/utils/text_utils.md
           - File Utilities: deeponto/utils/file_utils.md
           - Logging: deeponto/utils/logging.md
           - Data Utilities: deeponto/utils/data_utils.md
           - Decorators: deeponto/utils/decorators.md
+        
 
 
 
@@ -111,7 +114,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [src]  # search packages in the src folder
+          paths: [src,HierarchyTransformers/src]  # search packages in the src folder
           options:
             docstring_style: google
             docstring_options:

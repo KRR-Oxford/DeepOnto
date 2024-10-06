@@ -1,3 +1,6 @@
 [submodule "OAEI-Bio-ML"]
 	path = OAEI-Bio-ML
 	url = https://github.com/KRR-Oxford/OAEI-Bio-ML.git
+[submodule "HierarchyTransformers"]
+	path = HierarchyTransformers
+	url = https://github.com/KRR-Oxford/HierarchyTransformers.git
