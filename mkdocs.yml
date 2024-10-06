@@ -52,6 +52,7 @@ nav:
       - "Bio-ML: A Comprehensive Documentation": bio-ml.md
       - Subsumption Inference with BERTSubs: bertsubs.md
       - "OntoLAMA: Dataset Overview and Usage Guide": ontolama.md
+      # - "HiT: Embedding Hierarchies with Transformer Encoders": hit.md
     - PACKAGE REFERENCE:
         - Ontology Processing: 
           - Ontology: deeponto/onto/ontology.md
@@ -71,15 +72,20 @@ nav:
         - Ontology Completion:
           - BERTSubs (Intra): deeponto/complete/bertsubs/index.md
           - OntoLAMA: deeponto/complete/ontolama.md
-        - Hierarchy Transformers:
-          - Models: hierarchy_transformers/hit.md
         - Utilities: 
           - Text Utilities: deeponto/utils/text_utils.md
           - File Utilities: deeponto/utils/file_utils.md
           - Logging: deeponto/utils/logging.md
           - Data Utilities: deeponto/utils/data_utils.md
           - Decorators: deeponto/utils/decorators.md
-        
+    - EXTERNAL:
+        - "Hierarchy Transformers": hierarchy_transformers/homepage.md
+        # - "Hierarchy Transformers (REFERENCE)": 
+        #   - Models: hierarchy_transformers/models.md
+        #   - Losses: hierarchy_transformers/losses.md
+        #   - Evaluation: hierarchy_transformers/evaluation.md
+        #   - Utilities: hierarchy_transformers/utils.md
+
 
 
 

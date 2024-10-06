@@ -146,6 +146,8 @@ Individual tools and resources are implemented based on the core ontology proces
 
 - **OntoLAMA** [4] is an evaluation of language model for ontology subsumption inference. See [OntoLAMA: Dataset Overview & Usage Guide](https://krr-oxford.github.io/DeepOnto/ontolama) for the use of the datasets and the prompt-based probing approach.
 
+- **HiT (External)** [6] is a hierarchy embedding model derived from re-training BERT-like models in hyperbolic space. See [HiT Models on Huggingface Hub](https://huggingface.co/Hierarchy-Transformers) for options and usage.
+
 
 ## License
 
@@ -191,6 +193,7 @@ The preprint of our system paper for $\textsf{DeepOnto}$ is currently available 
 - [3] *Jiaoyan Chen, Yuan He, Yuxia Geng, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.* **Contextual Semantic Embeddings for Ontology Subsumption Prediction**. World Wide Web Journal （WWWJ-2023). /[arxiv](https://arxiv.org/abs/2202.09791)/ /[wwwj](https://link.springer.com/article/10.1007/s11280-023-01169-9)/  <a name="bertsubs_paper"></a>
 - [4] *Yuan He‚ Jiaoyan Chen, Ernesto Jiménez-Ruiz, Hang Dong and Ian Horrocks.* **Language Model Analysis for Ontology Subsumption Inference**. Findings of the Association for Computational Linguistics (ACL-2023). /[arxiv](https://arxiv.org/abs/2302.06761)/ /[acl](https://aclanthology.org/2023.findings-acl.213/)/ <a name="ontolama_paper"></a>
 - [5] *Yuan He, Jiaoyan Chen, Hang Dong, and Ian Horrocks.* **Exploring Large Language Models for Ontology Alignment**. The 22nd International Semantic Web Conference (ISWC-2023 Posters & Demos). /[arxiv](https://arxiv.org/abs/2309.07172)/ /[iswc](https://hozo.jp/ISWC2023_PD-Industry-proc/ISWC2023_paper_427.pdf)/ <a name="llmap_paper"></a>
+- [6] *Yuan He, Zhangdie Yuan, Jiaoyan Chen, and Ian Horrocks.* **Language Models as Hierarchy Encoders**. Advances in Neural Information Processing Systems (NeurIPS 2024). /[arxiv](https://arxiv.org/abs/2401.11374)/ /[neurips](to appear)/ <a name="hit_paper"></a>
 
 ----------------------------------------------------------------
 
