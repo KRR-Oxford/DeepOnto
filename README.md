@@ -169,20 +169,21 @@ Individual tools and resources are implemented based on the core ontology proces
 
 ## Citation
 
-The preprint of our system paper for $\textsf{DeepOnto}$ is currently available at [arxiv](https://arxiv.org/abs/2307.03067).
+Our system papaer for $\textsf{DeepOnto}$ is available at [arxiv](https://arxiv.org/abs/2307.03067) and [ios press](https://content.iospress.com/articles/semantic-web/sw243568).
 
-*Yuan He, Jiaoyan Chen, Hang Dong, Ian Horrocks, Carlo Allocca, Taehun Kim, and Brahmananda Sapkota.* **DeepOnto: A Python Package for Ontology Engineering with Deep Learning.** arXiv preprint arXiv:2307.03067 (2023).
-
-> Our paper has been accepted by the Semantic Web Journal.
+*Yuan He, Jiaoyan Chen, Hang Dong, Ian Horrocks, Carlo Allocca, Taehun Kim, and Brahmananda Sapkota.* **DeepOnto: A Python Package for Ontology Engineering with Deep Learning.** Semantic Web, vol. 15, no. 5, pp. 1991-2004, 2024.
 
 !!! credit "Citation"
 
     ```
-    @article{he2023deeponto,
-      title={DeepOnto: A Python Package for Ontology Engineering with Deep Learning},
-      author={He, Yuan and Chen, Jiaoyan and Dong, Hang and Horrocks, Ian and Allocca, Carlo and Kim, Taehun and Sapkota, Brahmananda},
-      journal={arXiv preprint arXiv:2307.03067},
-      year={2023}
+    @article{he2024deeponto,
+      author = {He, Yuan and Chen, Jiaoyan and Dong, Hang and Horrocks, Ian and Allocca, Carlo and Kim, Taehun and Sapkota, Brahmananda},
+      journal = {Semantic Web},
+      number = {5},
+      pages = {1991--2004},
+      title = {DeepOnto: A Python package for ontology engineering with deep learning},
+      volume = {15},
+      year = {2024}
     }
     ```
 
