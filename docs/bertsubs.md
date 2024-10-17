@@ -119,5 +119,5 @@ inter_pipeline = BERTSubsInterPipeline(src_onto=src_onto, tgt_onto=tgt_onto, con
 ```
 
 For more details on the configuration, please see the comment in the default configuration files 
-[default_config_intra.yaml](https://github.com/KRR-Oxford/DeepOnto/blob/main/src/deeponto/subs/bertsubs/default_config_intra.yaml)
-and [default_config_inter.yaml](https://github.com/KRR-Oxford/DeepOnto/blob/main/src/deeponto/subs/bertsubs/pipeline_inter.py).
+[default_config_intra.yaml](https://github.com/KRR-Oxford/DeepOnto/blob/main/src/deeponto/complete/bertsubs/default_config_intra.yaml)
+and [default_config_inter.yaml](https://github.com/KRR-Oxford/DeepOnto/blob/main/src/deeponto/complete/bertsubs/default_config_inter.yaml).
