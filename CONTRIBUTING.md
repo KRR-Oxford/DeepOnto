@@ -34,7 +34,7 @@ All types of contributions are encouraged and valued. See the [Table of Contents
 This project and everyone participating in it is governed by the
 [DeepOnto Code of Conduct](https://github.com/KRR-Oxford/DeepOntoblob/master/CODE_OF_CONDUCT.md).
 By participating, you are expected to uphold this code. Please report unacceptable behavior
-to <yuanhe.oxcs@gmail.com>.
+to <yuanhe.cs.ai@gmail.com>.
 
 
 ## I Have a Question
@@ -96,7 +96,7 @@ A good bug report shouldn't leave others needing to chase you up for more inform
 
 #### How Do I Submit a Good Bug Report?
 
-> You must never report security related issues, vulnerabilities or bugs including sensitive information to the issue tracker, or elsewhere in public. Instead sensitive bugs must be sent by email to <yuanhe.oxcs@gmail.com>.
+> You must never report security related issues, vulnerabilities or bugs including sensitive information to the issue tracker, or elsewhere in public. Instead sensitive bugs must be sent by email to <yuanhe.cs.ai@gmail.com>.
 > <!-- You may add a PGP key to allow the messages to be sent encrypted as well. -->
 
 We use GitHub issues to track bugs and errors. If you run into an issue with the project:
@@ -167,6 +167,8 @@ Updating, improving and correcting the documentation
 ## Join The Project Team
 
 <!-- TODO -->
+
+Should you want to be a long-term developer of maintainer of this repository, please contact by email to <yuanhe.cs.ai@gmail.com> and we can shedule a meeting to discuss that.
 
 <!-- omit in toc -->
 
