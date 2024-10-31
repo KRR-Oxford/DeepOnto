@@ -23,6 +23,7 @@ from nltk.corpus import wordnet as wn
 from . import Ontology, OntologyReasoner
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 
@@ -174,30 +175,33 @@ class OntologyTaxonomy(Taxonomy):
 
 
 class WordnetTaxonomy(Taxonomy):
-    r"""Class for the building the taxonomy (hypernym graph) from wordnet.
+    r"""Class for the building the taxonomy (`subsumption`, `membership`, or `part-of` relations) from wordnet.
 
     Attributes:
         pos (str): The pos-tag of entities to be extracted from wordnet.
         nodes (list): A list of entity ids extracted from wordnet.
-        edges (list): A list of hyponym-hypernym pairs.
+        edges (list): A list of `(parent, child)` pairs w.r.t. the given hierarchical relation.
         graph (networkx.DiGraph): A directed hypernym graph.
     """
 
-    def __init__(self, pos: str = "n", include_membership: bool = False):
+    def __init__(self, pos: str = "n", relation: str = "subsumption"):
         r"""Initialise the wordnet taxonomy.
 
         Args:
             pos (str): The pos-tag of entities to be extracted from wordnet.
-            include_membership (bool): Whether to include `instance_hypernyms` or not (e.g., London is an instance of City).  Defaults to `False`.
+            relation (str): The hierarchical relation for this taxonomy. Options are `"subsumption"`, `"membership"`, and `"partof"`. Defaults to `"subsumption"`.
         """
 
         self.pos = pos
-        synsets = self.fetch_synsets(pos=pos)
-        hypernym_pairs = self.fetch_hypernyms(synsets, include_membership)
-        super().__init__(edges=hypernym_pairs)
+        self.synsets = self.fetch_synsets(pos=pos)
+        try:
+            parent_child_pairs = getattr(self, f"fetch_{relation}s")(self.synsets)
+        except:
+            raise ValueError(f"Input relation '{relation}' is not 'subsumption', 'membership', or 'partof'.")
+        super().__init__(edges=parent_child_pairs)
 
         # set node annotations
-        for synset in synsets:
+        for synset in self.synsets:
             try:
                 self.graph.nodes[synset.name()]["name"] = synset.name().split(".")[0].replace("_", " ")
                 self.graph.nodes[synset.name()]["definition"] = synset.definition()
@@ -215,17 +219,34 @@ class WordnetTaxonomy(Taxonomy):
         return synsets
 
     @staticmethod
-    def fetch_hypernyms(synsets: set, include_membership: bool = False):
-        """Get hypernym-hyponym pairs from a given set of wordnet synsets."""
-        hypernym_hyponym_pairs = []
+    def fetch_subsumptions(synsets: set):
+        """Get subsumption (hypernym-hyponym) pairs from a given set of wordnet synsets."""
+        subsumption_pairs = []
         for synset in synsets:
             for h_synset in synset.hypernyms():
-                hypernym_hyponym_pairs.append((h_synset.name(), synset.name()))
-            if include_membership:
-                for h_synset in synset.instance_hypernyms():
-                    hypernym_hyponym_pairs.append((h_synset.name(), synset.name()))
-        logger.info(f"{len(hypernym_hyponym_pairs)} hypernym-hyponym pairs fetched.")
-        return hypernym_hyponym_pairs
+                subsumption_pairs.append((h_synset.name(), synset.name()))
+        logger.info(f"{len(subsumption_pairs)} subsumption (hypernym-hyponym) pairs fetched.")
+        return subsumption_pairs
+
+    @staticmethod
+    def fetch_memberships(synsets: set):
+        """Get membership (instance hypernym-hyponym) pairs from a given set of wordnet synsets."""
+        membership_pairs = []
+        for synset in synsets:
+            for h_synset in synset.instance_hypernyms():
+                membership_pairs.append((h_synset.name(), synset.name()))
+        logger.info(f"{len(membership_pairs)} membership (instance hypernym-hyponym) pairs fetched.")
+        return membership_pairs
+
+    @staticmethod
+    def fetch_partofs(synsets: set):
+        """Get part-of (meronym-holonym) pairs from a given set of wordnet synsets."""
+        partof_pairs = []
+        for synset in synsets:
+            for h_synset in synset.holonyms():
+                partof_pairs.append((h_synset.name(), synset.name()))
+        logger.info(f"{len(partof_pairs)} part-of (meronym-holonym) pairs fetched.")
+        return partof_pairs
 
 
 class TaxonomyNegativeSampler:
