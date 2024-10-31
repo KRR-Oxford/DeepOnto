@@ -189,15 +189,16 @@ class WordnetTaxonomy(Taxonomy):
 
         Args:
             pos (str): The pos-tag of entities to be extracted from wordnet.
-            relation (str): The hierarchical relation for this taxonomy. Options are `"subsumption"`, `"membership"`, and `"partof"`. Defaults to `"subsumption"`.
+            relation (str): The hierarchical relation for this taxonomy. Options are `"subsumption"`, `"membership"`, and `"part"`. Defaults to `"subsumption"`.
         """
 
         self.pos = pos
         self.synsets = self.fetch_synsets(pos=pos)
+        self.relation = relation
         try:
             parent_child_pairs = getattr(self, f"fetch_{relation}s")(self.synsets)
         except:
-            raise ValueError(f"Input relation '{relation}' is not 'subsumption', 'membership', or 'partof'.")
+            raise ValueError(f"Input relation '{relation}' is not 'subsumption', 'membership', or 'part'.")
         super().__init__(edges=parent_child_pairs)
 
         # set node annotations
@@ -239,14 +240,14 @@ class WordnetTaxonomy(Taxonomy):
         return membership_pairs
 
     @staticmethod
-    def fetch_partofs(synsets: set):
-        """Get part-of (meronym-holonym) pairs from a given set of wordnet synsets."""
-        partof_pairs = []
+    def fetch_parts(synsets: set):
+        """Get has-part (holonym-meronym) pairs from a given set of wordnet synsets."""
+        part_pairs = []
         for synset in synsets:
             for h_synset in synset.part_holonyms():
-                partof_pairs.append((h_synset.name(), synset.name()))
-        logger.info(f"{len(partof_pairs)} part-of (meronym-holonym) pairs fetched.")
-        return partof_pairs
+                part_pairs.append((h_synset.name(), synset.name()))
+        logger.info(f"{len(part_pairs)} has-part (holonym-meronym pairs fetched.")
+        return part_pairs
 
 
 class TaxonomyNegativeSampler:
