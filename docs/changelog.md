@@ -7,9 +7,11 @@ Removed for now removed features.
 Fixed for any bug fixes.
 Security in case of vulnerabilities. -->
 
-## Unreleased
+## v0.9.2 (2024 Oct)
 
-...
+### Changed
+
+- [X] **Refine** `deeponto.onto.taxonomy` and add more options.
 
 ## v0.9.1 (2024 Mar)
 
