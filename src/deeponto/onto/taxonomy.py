@@ -243,7 +243,7 @@ class WordnetTaxonomy(Taxonomy):
         """Get part-of (meronym-holonym) pairs from a given set of wordnet synsets."""
         partof_pairs = []
         for synset in synsets:
-            for h_synset in synset.holonyms():
+            for h_synset in synset.part_holonyms():
                 partof_pairs.append((h_synset.name(), synset.name()))
         logger.info(f"{len(partof_pairs)} part-of (meronym-holonym) pairs fetched.")
         return partof_pairs
