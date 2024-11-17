@@ -32,9 +32,18 @@ limitations under the License.
     </a>
 </p>
 
-<p align="center">
-  A package for ontology engineering with deep learning. 
-</p>
+<h4 align="center">
+    <p>
+        <a href="https://krr-oxford.github.io/DeepOnto/">Docs</a> |
+        <a href="https://github.com/KRR-Oxford/DeepOnto">GitHub</a> |
+        <a href="https://arxiv.org/abs/2401.11374">arXiv</a> 
+        <a href=" https://content.iospress.com/articles/semantic-web/sw243568">Paper</a> 
+    </p>
+</h4>
+
+<h3 align="center">
+  <p>A package for ontology engineering with deep learning.</p> 
+</h3>
 
 
 **News** :newspaper:
