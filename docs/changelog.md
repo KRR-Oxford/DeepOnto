@@ -11,7 +11,7 @@ Security in case of vulnerabilities. -->
 
 ### Added
 
-- [X] **Add** external references to `OAEI-Bio-ML` and `HierarchyTransformers`.
+- [X] **Add** external references to `OAEI-Bio-ML`.
 
 ### Changed
 
