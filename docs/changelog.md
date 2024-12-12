@@ -7,6 +7,12 @@ Removed for now removed features.
 Fixed for any bug fixes.
 Security in case of vulnerabilities. -->
 
+## Unreleased
+
+### Changed
+
+- [X] [`chore`] Refactor with ruff linter.
+
 ## v0.9.2 (2024 Oct)
 
 ### Added
