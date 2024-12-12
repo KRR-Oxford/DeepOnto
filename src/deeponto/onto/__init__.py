@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from __future__ import annotations
+from __future__ import annotations  # noqa: I001
 
-from .normalisation import OntologyNormaliser
 from .ontology import Ontology, OntologyReasoner
+from .normalisation import OntologyNormaliser
 from .projection import OntologyProjector
 from .pruning import OntologyPruner
 from .taxonomy import OntologyTaxonomy, Taxonomy, TaxonomyNegativeSampler, WordnetTaxonomy
