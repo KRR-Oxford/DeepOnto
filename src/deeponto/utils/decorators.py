@@ -11,11 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 from __future__ import annotations
 
-from functools import wraps
 import time
+from functools import wraps
 
 
 def timer(function):
@@ -51,6 +50,7 @@ def debug(function):
 
 def paper(title: str, link: str):
     """Add paper tagger for methods."""
+
     # Define a new decorator, named "decorator", to return
     def decorator(func):
         # Ensure the decorated function keeps its metadata

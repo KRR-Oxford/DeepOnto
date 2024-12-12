@@ -11,11 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 from __future__ import annotations
 
-import logging
 import datetime
+import logging
 import time
 
 
@@ -31,7 +30,7 @@ class RuntimeFormatter(logging.Formatter):
         """Record relative runtime in hr:min:sec format。"""
         duration = datetime.datetime.utcfromtimestamp(record.created - self.start_time)
         elapsed = duration.strftime("%H:%M:%S")
-        return "{}".format(elapsed)
+        return f"{elapsed}"
 
 
 def create_logger(model_name: str, saved_path: str):

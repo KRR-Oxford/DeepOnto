@@ -11,19 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 from __future__ import annotations
 
 import json
-import yaml
-import dill as pickle
-import os
 import shutil
-from pathlib import Path
-import pandas as pd
-import xml.etree.ElementTree as ET
 import subprocess
 import warnings
+import xml.etree.ElementTree as ET
+from pathlib import Path
+
+import dill as pickle
+import pandas as pd
+import yaml
 
 
 def create_path(path: str):
@@ -49,13 +48,13 @@ def save_file(obj, save_path: str, sort_keys: bool = False):
 def load_file(save_path: str):
     """Load an object of a certain format."""
     if save_path.endswith(".json"):
-        with open(save_path, "r") as input:
+        with open(save_path) as input:
             return json.load(input)
     elif save_path.endswith(".pkl"):
         with open(save_path, "rb") as input:
             return pickle.load(input)
     elif save_path.endswith(".yaml"):
-        with open(save_path, "r") as input:
+        with open(save_path) as input:
             return yaml.safe_load(input)
     else:
         raise RuntimeError(f"Unsupported loading format: {save_path}")
@@ -82,7 +81,7 @@ def read_jsonl(file_path: str):
     """Read `.jsonl` file (list of json) introduced in the BLINK project."""
     results = []
     key_set = []
-    with open(file_path, "r", encoding="utf-8-sig") as f:
+    with open(file_path, encoding="utf-8-sig") as f:
         lines = f.readlines()
         for line in lines:
             record = json.loads(line)

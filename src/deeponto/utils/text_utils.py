@@ -11,18 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 from __future__ import annotations
 
-from typing import Iterable, List, Dict, Tuple, Union
+import math
 import re
 from collections import defaultdict
 from itertools import chain
-import math
-from transformers import AutoTokenizer
+
 import spacy
 from spacy.lang.en import English
-import xml.etree.ElementTree as ET
+from transformers import AutoTokenizer
 
 
 def process_annotation_literal(
@@ -98,7 +96,7 @@ class Tokenizer:
         self._tokenizer = None  # hidden tokenizer
         self.tokenize = None  # the tokenization method
 
-    def __call__(self, texts: Union[str, List[str]]):
+    def __call__(self, texts: str | list[str]):
         if isinstance(texts, str):
             return self.tokenize(texts)
         else:
@@ -140,7 +138,7 @@ class InvertedIndex:
             for token in self.tokenizer(v):
                 self.constructed_index[token].append(k)
 
-    def idf_select(self, texts: Union[str, List[str]], pool_size: int = 200):
+    def idf_select(self, texts: str | list[str], pool_size: int = 200):
         """Given a list of tokens, select a set candidates based on the inverted document frequency (idf) scores.
 
         We use `idf` instead of  `tf` because labels have different lengths and thus tf is not a fair measure.

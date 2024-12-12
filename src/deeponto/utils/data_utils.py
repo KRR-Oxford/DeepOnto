@@ -11,11 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 from __future__ import annotations
 
-from typing import Optional
 import json
+
 from transformers import set_seed as t_set_seed
 
 
@@ -24,7 +23,7 @@ def set_seed(seed):
     t_set_seed(seed)
 
 
-def sort_dict_by_values(dic: dict, desc: bool = True, k: Optional[int] = None):
+def sort_dict_by_values(dic: dict, desc: bool = True, k: int | None = None):
     """Return a sorted dict by values with first k reserved if provided."""
     sorted_items = list(sorted(dic.items(), key=lambda item: item[1], reverse=desc))
     return dict(sorted_items[:k])
