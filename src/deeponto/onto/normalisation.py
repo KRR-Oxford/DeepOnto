@@ -48,16 +48,18 @@ from __future__ import annotations
 
 import logging
 
-logging.basicConfig(level=logging.INFO)
+from de.tudresden.inf.lat.jcel.ontology.axiom.extension import IntegerOntologyObjectFactoryImpl  # type: ignore
+from de.tudresden.inf.lat.jcel.ontology.normalization import OntologyNormalizer  # type: ignore
+from de.tudresden.inf.lat.jcel.owlapi.translator import (  # type: ignore
+    ReverseAxiomTranslator,
+    Translator,
+)
+from java.util import HashSet  # type: ignore
+from org.semanticweb.owlapi.model.parameters import Imports  # type: ignore
 
 from . import Ontology
 
-from de.tudresden.inf.lat.jcel.ontology.normalization import OntologyNormalizer  # type: ignore
-from de.tudresden.inf.lat.jcel.ontology.axiom.extension import IntegerOntologyObjectFactoryImpl  # type: ignore
-from de.tudresden.inf.lat.jcel.owlapi.translator import ReverseAxiomTranslator  # type: ignore
-from de.tudresden.inf.lat.jcel.owlapi.translator import Translator  # type: ignore
-from org.semanticweb.owlapi.model.parameters import Imports  # type: ignore
-from java.util import HashSet  # type: ignore
+logging.basicConfig(level=logging.INFO)
 
 
 class OntologyNormaliser:
@@ -118,7 +120,7 @@ class OntologyNormaliser:
         factory = IntegerOntologyObjectFactoryImpl()
         normalised_ontology = normaliser.normalize(intAxioms, factory)
         self.rTranslator = ReverseAxiomTranslator(translator, processed_owl_onto)
-        
+
         normalised_axioms = []
         # revert the jcel axioms to the original OWLAxioms
         for ax in normalised_ontology:
@@ -128,12 +130,12 @@ class OntologyNormaliser:
             except Exception as e:
                 logging.info("Reverse translation. Ignoring axiom: %s", ax)
                 logging.info(e)
-                
+
         return list(set(axioms))
 
     def preprocess_ontology(self, ontology: Ontology):
         """Preprocess the ontology to remove axioms that are not supported by the normalisation process."""
-        
+
         tbox_axioms = ontology.owl_onto.getTBoxAxioms(Imports.fromBoolean(True))
         new_tbox_axioms = HashSet()
 

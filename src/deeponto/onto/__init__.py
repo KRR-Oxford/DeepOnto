@@ -11,9 +11,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from .ontology import Ontology, OntologyReasoner
-from .pruning import OntologyPruner
-from .verbalisation import OntologyVerbaliser, OntologySyntaxParser
-from .projection import OntologyProjector
+from __future__ import annotations
+
 from .normalisation import OntologyNormaliser
-from .taxonomy import Taxonomy, OntologyTaxonomy, WordnetTaxonomy, TaxonomyNegativeSampler
+from .ontology import Ontology, OntologyReasoner
+from .projection import OntologyProjector
+from .pruning import OntologyPruner
+from .taxonomy import OntologyTaxonomy, Taxonomy, TaxonomyNegativeSampler, WordnetTaxonomy
+from .verbalisation import OntologySyntaxParser, OntologyVerbaliser
+
+__all__ = [
+    "Ontology",
+    "OntologyReasoner",
+    "OntologyPruner",
+    "OntologyVerbaliser",
+    "OntologySyntaxParser",
+    "OntologyProjector",
+    "OntologyNormaliser",
+    "Taxonomy",
+    "OntologyTaxonomy",
+    "WordnetTaxonomy",
+    "TaxonomyNegativeSampler",
+]

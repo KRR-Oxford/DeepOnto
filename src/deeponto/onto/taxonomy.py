@@ -14,15 +14,14 @@
 
 from __future__ import annotations
 
-from typing import Optional
 import itertools
+import logging
+
 import networkx as nx
 import numpy as np
 from nltk.corpus import wordnet as wn
 
-from . import Ontology, OntologyReasoner
-
-import logging
+from .ontology import Ontology, OntologyReasoner
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +39,7 @@ class Taxonomy:
         root_node (Optional[str]): Optional root node id. Defaults to `None`.
     """
 
-    def __init__(self, edges: list, root_node: Optional[str] = None):
+    def __init__(self, edges: list, root_node: str | None = None):
         self.edges = edges
         self.graph = nx.DiGraph(self.edges)
         self.nodes = list(self.graph.nodes)
@@ -197,7 +196,7 @@ class WordnetTaxonomy(Taxonomy):
         self.relation = relation
         try:
             parent_child_pairs = getattr(self, f"fetch_{relation}s")(self.synsets)
-        except:
+        except Exception:
             raise ValueError(f"Input relation '{relation}' is not 'subsumption', 'membership', or 'part'.")
         super().__init__(edges=parent_child_pairs)
 
@@ -206,7 +205,7 @@ class WordnetTaxonomy(Taxonomy):
             try:
                 self.graph.nodes[synset.name()]["name"] = synset.name().split(".")[0].replace("_", " ")
                 self.graph.nodes[synset.name()]["definition"] = synset.definition()
-            except:
+            except Exception:
                 continue
 
     @staticmethod
@@ -258,7 +257,7 @@ class TaxonomyNegativeSampler:
         entity_weights (Optional[dict]): A dictionary with the taxonomy entities as keys and their corresponding weights as values. Defaults to `None`.
     """
 
-    def __init__(self, taxonomy: Taxonomy, entity_weights: Optional[dict] = None):
+    def __init__(self, taxonomy: Taxonomy, entity_weights: dict | None = None):
         self.taxonomy = taxonomy
         self.entities = self.taxonomy.nodes
         # uniform distribution if weights not provided
@@ -271,7 +270,7 @@ class TaxonomyNegativeSampler:
         self._buffer = []
         self._default_buffer_size = 10000
 
-    def fill(self, buffer_size: Optional[int] = None):
+    def fill(self, buffer_size: int | None = None):
         """Buffer a large collection of entities sampled with replacement for faster negative sampling."""
         buffer_size = buffer_size if buffer_size else self._default_buffer_size
         if self._entity_probs:
@@ -279,7 +278,7 @@ class TaxonomyNegativeSampler:
         else:
             self._buffer = np.random.choice(self.entities, size=buffer_size)
 
-    def sample(self, entity_id: str, n_samples: int, buffer_size: Optional[int] = None):
+    def sample(self, entity_id: str, n_samples: int, buffer_size: int | None = None):
         """Sample N negative samples for a given entity with replacement."""
         negative_samples = []
         positive_samples = self.taxonomy.get_parents(entity_id, True)

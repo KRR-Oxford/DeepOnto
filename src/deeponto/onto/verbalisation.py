@@ -13,21 +13,21 @@
 # limitations under the License.
 from __future__ import annotations
 
-import os
-import spacy
-from typing import List, Union
-from collections import defaultdict
-from anytree import NodeMixin, RenderTree
-from IPython.display import Image
-from anytree.dotexport import RenderTreeGraph
-import math
-from yacs.config import CfgNode
 import logging
+import math
+import os
+from collections import defaultdict
+
+import spacy
+from anytree import NodeMixin, RenderTree
+from anytree.dotexport import RenderTreeGraph
+from IPython.display import Image
+from org.semanticweb.owlapi.model import OWLAxiom, OWLClassExpression, OWLObject  # type: ignore
+from yacs.config import CfgNode
+
+from .ontology import Ontology
+
 logger = logging.getLogger(__name__)
-
-from . import Ontology
-from org.semanticweb.owlapi.model import OWLObject, OWLClassExpression, OWLAxiom  # type: ignore
-
 
 ABBREVIATION_DICT = {
     "ObjectComplementOf": "[NEG]",  # negation
@@ -160,7 +160,7 @@ class OntologyVerbaliser:
         # download en_core_web_sm for object property
         try:
             spacy.load("en_core_web_sm")
-        except:
+        except Exception:
             print("Download `en_core_web_sm` for pos tagger.")
             os.system("python -m spacy download en_core_web_sm")
 
@@ -189,7 +189,7 @@ class OntologyVerbaliser:
         """
         self.vocab[entity_iri] = entity_name
 
-    def verbalise_class_expression(self, class_expression: Union[OWLClassExpression, str, RangeNode]):
+    def verbalise_class_expression(self, class_expression: OWLClassExpression | str | RangeNode):
         r"""Verbalise a class expression (`OWLClassExpression`) or its parsed form (in `RangeNode`).
 
         See currently supported types of class (or concept) expressions [here][deeponto.onto.verbalisation.OntologyVerbaliser].
@@ -253,13 +253,13 @@ class OntologyVerbaliser:
     def _verbalise_iri(self, iri_node: RangeNode, is_property: bool = False):
         """Verbalise a (parsed) named entity (class, property, or individual) that has an IRI."""
         iri = iri_node.text.lstrip("<").rstrip(">")
-        
+
         try:
             verbal = self.vocab[iri] if not self.keep_iri else iri_node.text
         except KeyError:
             verbal = iri_node.text
             logger.warning(f"Use full IRI as no vocab (defaults to `rdfs:label`) found for {iri}. ")
-            
+
         if self.apply_auto_correction:
             fix = self._fix_verb_phrase if is_property else self._fix_noun_phrase
             verbal = fix(verbal)
@@ -286,7 +286,7 @@ class OntologyVerbaliser:
         try:
             assert restriction_node.name.startswith("EX.") or restriction_node.name.startswith("ALL")
             assert len(restriction_node.children) == 2
-        except:
+        except Exception:
             raise RuntimeError("Input range node is not related to a existential or universal restriction statement.")
 
         quantifier_word = "some" if restriction_node.name.startswith("EX.") else "only"
@@ -306,7 +306,7 @@ class OntologyVerbaliser:
 
         verbal = verbal.lstrip()
         if add_something:
-            verbal = f"something that " + verbal
+            verbal = "something that " + verbal
 
         return CfgNode(
             {
@@ -322,7 +322,7 @@ class OntologyVerbaliser:
 
         try:
             assert junction_node.name.startswith("AND") or junction_node.name.startswith("OR.")
-        except:
+        except Exception:
             raise RuntimeError("Input range node is not related to a conjunction or disjunction statement.")
 
         junction_word = "and" if junction_node.name.startswith("AND") else "or"
@@ -686,7 +686,7 @@ class OntologySyntaxParser:
             owl_expression = owl_expression.replace(k, v)
         return owl_expression
 
-    def parse(self, owl_expression: Union[str, OWLObject]) -> RangeNode:
+    def parse(self, owl_expression: str | OWLObject) -> RangeNode:
         r"""Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.verbalisation.RangeNode].
 
         This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.verbalisation.OntologySyntaxParser.parse_by_parentheses]
@@ -729,7 +729,7 @@ class OntologySyntaxParser:
         """
         if not already_parsed:
             # a root node that covers the entire sentence
-            parsed = RangeNode(0, math.inf, name=f"Root", text=owl_expression, is_iri=False)
+            parsed = RangeNode(0, math.inf, name="Root", text=owl_expression, is_iri=False)
         else:
             parsed = already_parsed
         stack = []
@@ -824,7 +824,7 @@ class RangeNode(NodeMixin):
         raise RuntimeError("Compared ranges have a partial overlap.")
 
     @staticmethod
-    def sort_by_start(nodes: List[RangeNode]):
+    def sort_by_start(nodes: list[RangeNode]):
         """A sorting function that sorts the nodes by their starting positions."""
         temp = {sib: sib.start for sib in nodes}
         return list(dict(sorted(temp.items(), key=lambda item: item[1])).keys())

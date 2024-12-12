@@ -11,33 +11,26 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 from __future__ import annotations
 
-import os
-from typing import Optional, List, Union
-from collections import defaultdict
-from yacs.config import CfgNode
-
-# import warnings
-import jpype
 import logging
-
-logger = logging.getLogger(__name__)
-
-
-from deeponto.utils import (
-    Tokenizer,
-    InvertedIndex,
-    uniqify,
-    print_dict,
-    split_java_identifier,
-    process_annotation_literal,
-)
-from deeponto import init_jvm
+import os
+from collections import defaultdict
 
 # initialise JVM for python-java interaction
 import click
+import jpype
+from yacs.config import CfgNode
+
+from deeponto import init_jvm
+from deeponto.utils import (
+    InvertedIndex,
+    Tokenizer,
+    print_dict,
+    process_annotation_literal,
+    split_java_identifier,
+    uniqify,
+)
 
 if not jpype.isJVMStarted():
     memory = click.prompt("Please enter the maximum memory located to JVM", type=str, default="8g")
@@ -49,13 +42,26 @@ from java.lang import Runtime, System  # type: ignore
 from org.slf4j.impl import SimpleLogger  # type: ignore
 
 System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "warn")  # set slf4j default logging level to warning
-from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore
-from org.semanticweb.owlapi.model import IRI, OWLObject, OWLClassExpression, OWLObjectPropertyExpression, OWLDataPropertyExpression, OWLIndividual, OWLAxiom, AddAxiom, RemoveAxiom, AxiomType  # type: ignore
-from org.semanticweb.HermiT import ReasonerFactory as HermitReasonerFactory  # type: ignore
-from org.semanticweb.elk.owlapi import ElkReasonerFactory  # type: ignore
-from org.semanticweb.owlapi.reasoner.structural import StructuralReasonerFactory  # type: ignore
-from org.semanticweb.owlapi.util import OWLObjectDuplicator, OWLEntityRemover  # type: ignore
-from org.semanticweb.owlapi.search import EntitySearcher  # type: ignore
+from org.semanticweb.elk.owlapi import ElkReasonerFactory  # type: ignore  # noqa: E402
+from org.semanticweb.HermiT import ReasonerFactory as HermitReasonerFactory  # type: ignore  # noqa: E402
+from org.semanticweb.owlapi.apibinding import OWLManager  # type: ignore  # noqa: E402
+from org.semanticweb.owlapi.model import (  # type: ignore  # noqa: E402
+    IRI,
+    AddAxiom,
+    AxiomType,
+    OWLAxiom,
+    OWLClassExpression,
+    OWLDataPropertyExpression,
+    OWLIndividual,
+    OWLObject,
+    OWLObjectPropertyExpression,
+    RemoveAxiom,
+)
+from org.semanticweb.owlapi.reasoner.structural import StructuralReasonerFactory  # type: ignore  # noqa: E402
+from org.semanticweb.owlapi.search import EntitySearcher  # type: ignore  # noqa: E402
+from org.semanticweb.owlapi.util import OWLObjectDuplicator  # type: ignore  # noqa: E402
+
+logger = logging.getLogger(__name__)
 
 # IRIs for special entities
 OWL_THING = "http://www.w3.org/2002/07/owl#Thing"
@@ -243,7 +249,7 @@ class Ontology:
         """Get the IRI of an `OWLObject`. Raises an exception if there is no associated IRI."""
         try:
             return str(owl_object.getIRI())
-        except:
+        except Exception:
             raise RuntimeError("Input owl object does not have IRI.")
 
     @staticmethod
@@ -390,9 +396,9 @@ class Ontology:
 
     def get_annotations(
         self,
-        owl_object: Union[OWLObject, str],
-        annotation_property_iri: Optional[str] = None,
-        annotation_language_tag: Optional[str] = None,
+        owl_object: OWLObject | str,
+        annotation_property_iri: str | None = None,
+        annotation_language_tag: str | None = None,
         apply_lowercasing: bool = False,
         normalise_identifiers: bool = False,
     ):
@@ -434,7 +440,7 @@ class Ontology:
                 try:
                     # NOTE: not every annotation has a language attribute
                     fit_language = annotation.getLang() == annotation_language_tag
-                except:
+                except Exception:
                     # in the case when this annotation has no language tag
                     # we assume it is in English
                     if annotation_language_tag == "en":
@@ -475,7 +481,7 @@ class Ontology:
         NOTE: the string literal indicating deprecation is either `'true'` or `'True'`. Also, if $\texttt{owl:deprecated}$
         is not defined in this ontology, return `False` by default.
         """
-        if not OWL_DEPRECATED in self.owl_annotation_properties.keys():
+        if OWL_DEPRECATED not in self.owl_annotation_properties.keys():
             # return False if owl:deprecated is not defined in this ontology
             return False
 
@@ -486,7 +492,7 @@ class Ontology:
             return False
 
     @property
-    def sibling_class_groups(self) -> List[List[str]]:
+    def sibling_class_groups(self) -> list[list[str]]:
         """Return grouped sibling classes (with a common *direct* parent);
 
         NOTE that only groups with size > 1 will be considered
@@ -521,7 +527,7 @@ class Ontology:
 
     def build_annotation_index(
         self,
-        annotation_property_iris: List[str] = [RDFS_LABEL],
+        annotation_property_iris: list[str] = [RDFS_LABEL],
         entity_type: str = "Classes",
         apply_lowercasing: bool = False,
         normalise_identifiers: bool = False,
@@ -668,7 +674,7 @@ class OntologyReasoner:
         try:
             entity.getIRI()
             return True
-        except:
+        except Exception:
             return False
 
     def get_inferred_super_entities(self, entity: OWLObject, direct: bool = False):

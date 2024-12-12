@@ -14,22 +14,23 @@
 from __future__ import annotations
 
 import itertools
-from typing import List, TYPE_CHECKING
 import logging
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from . import Ontology
+    from .ontology import Ontology
 
-from org.semanticweb.owlapi.util import OWLEntityRemover  # type: ignore
 from java.util import Collections  # type: ignore
+from org.semanticweb.owlapi.util import OWLEntityRemover  # type: ignore
+
 
 class OntologyPruner:
     r"""Class for in-place ontology pruning.
-    
+
     Attributes:
         onto (Ontology): The input ontology to be pruned. Note that the pruning process is in-place.
     """
-    
+
     def __init__(self, onto: Ontology):
         """Initialise an ontology pruner.
 
@@ -38,14 +39,14 @@ class OntologyPruner:
         """
         self.onto = onto
         self._pruning_applied = None
-        
+
     def save_onto(self, save_path: str):
         """Save the pruned ontology file to the given path."""
         logging.info(f"{self._pruning_applied} pruning algorithm has been applied.")
         logging.info(f"Save the pruned ontology file to {save_path}.")
         return self.onto.save_onto(save_path)
-        
-    def prune(self, class_iris_to_be_removed: List[str]):
+
+    def prune(self, class_iris_to_be_removed: list[str]):
         r"""Apply ontology pruning while preserving the relevant hierarchy.
 
         !!! credit "paper"
@@ -78,5 +79,5 @@ class OntologyPruner:
 
         # remove IRIs in dictionaries?
         # TODO Test it
-        
+
         # self._pruning_applied = "min_hierarchy"
