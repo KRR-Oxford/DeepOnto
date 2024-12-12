@@ -1,3 +1,95 @@
+[project]
+name = "deeponto"
+version = "0.9.3.dev0"
+description = "DeepOnto aims to provide implemented deep learning models and an evaluation platform for various ontology engineering purposes."
+readme = "README.md"
+authors = [
+    {name = "Yuan He", email = "yuan.he@cs.ox.ac.uk"},
+    {name = "Jiaoyan Chen", email = "jiaoyan.chen@manchester.ac.uk"}
+]
+maintainers = [
+    { name = "Yuan He", email = "yuan.he@cs.ox.ac.uk" }
+]
+license = {text = "Apache License 2.0"}
+classifiers = [
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: Apache Software License",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research"
+]
+requires-python = ">=3.8"
+dependencies = [
+    "JPype1",
+    "yacs",
+    "torch",
+    "anytree",
+    "click",
+    "dill",
+    "pandas",
+    "numpy",
+    "scikit_learn",
+    "transformers[torch]",
+    "datasets",
+    "spacy",
+    "pprintpp",
+    "networkx",
+    "lxml",
+    "textdistance",
+    "ipywidgets",
+    "ipykernel",
+    "enlighten",
+    "rdflib",
+    "nltk"
+]
+
+[project.optional-dependencies]
+docs = [
+    "mkdocs>=1.4.2",
+    "mkdocstrings>=0.19.1",
+    "mkdocs-material>=9.0.5",
+    "mkdocs-include-markdown-plugin>=4.0.3",
+    "mkdocstrings-python>=0.8.3",
+    "mkdocs-git-revision-date-localized-plugin",
+    "mkdocs-git-authors-plugin"
+]
+ontolama = [
+    "openprompt"
+]
+
+[project.urls]
+Homepage = "https://krr-oxford.github.io/DeepOnto/"
+Repository = "https://github.com/KRR-Oxford/DeepOnto"
+
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"*" = ["*.jar", "*.yaml", "lib/*.jar"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.ruff]
+line-length = 119
+fix = true
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP"]
+# Skip `E731` (do not assign a lambda expression, use a def)
+ignore = [
+    # LineTooLong
+    "E501",
+    # DoNotAssignLambda
+    "E731"
+]
+
+[tool.ruff.lint.isort]
+known-third-party = ["datasets"]
+required-imports = ["from __future__ import annotations"]
