@@ -1535,7 +1535,7 @@ the names are retrieved from <span class="arithmatex">\(\texttt{rdfs:label}\)</s
     <span class="c1"># download en_core_web_sm for object property</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">spacy</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Download `en_core_web_sm` for pos tagger.&quot;</span><span class="p">)</span>
         <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;python -m spacy download en_core_web_sm&quot;</span><span class="p">)</span>
 
@@ -1640,7 +1640,7 @@ function before applying verbalisation.</p>
         <tr>
           <td><code>class_expression</code></td>
           <td>
-                <code><span title="typing.Union">Union</span>[<span title="org.semanticweb.owlapi.model.OWLClassExpression">OWLClassExpression</span>, str, <a class="autorefs autorefs-internal" title="deeponto.onto.verbalisation.RangeNode" href="#deeponto.onto.verbalisation.RangeNode">RangeNode</a>]</code>
+                <code>Union[<span title="org.semanticweb.owlapi.model.OWLClassExpression">OWLClassExpression</span>, str, <a class="autorefs autorefs-internal" title="deeponto.onto.verbalisation.RangeNode" href="#deeponto.onto.verbalisation.RangeNode">RangeNode</a>]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -1748,7 +1748,7 @@ can be accessed with the key <code>["verbal"]</code> or with the attribute <code
 <span class="normal">232</span>
 <span class="normal">233</span>
 <span class="normal">234</span>
-<span class="normal">235</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_class_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">OWLClassExpression</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">RangeNode</span><span class="p">]):</span>
+<span class="normal">235</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">verbalise_class_expression</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">class_expression</span><span class="p">:</span> <span class="n">OWLClassExpression</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">RangeNode</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Verbalise a class expression (`OWLClassExpression`) or its parsed form (in `RangeNode`).</span>
 
 <span class="sd">    See currently supported types of class (or concept) expressions [here][deeponto.onto.verbalisation.OntologyVerbaliser].</span>
@@ -2940,7 +2940,7 @@ method below.</p>
         <tr>
           <td><code>owl_expression</code></td>
           <td>
-                <code><span title="typing.Union">Union</span>[str, <span title="org.semanticweb.owlapi.model.OWLObject">OWLObject</span>]</code>
+                <code>Union[str, <span title="org.semanticweb.owlapi.model.OWLObject">OWLObject</span>]</code>
           </td>
           <td>
             <div class="doc-md-description">
@@ -2999,7 +2999,7 @@ method below.</p>
 <span class="normal">705</span>
 <span class="normal">706</span>
 <span class="normal">707</span>
-<span class="normal">708</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">OWLObject</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
+<span class="normal">708</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">owl_expression</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">OWLObject</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RangeNode</span><span class="p">:</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Parse an `OWLAxiom` into a [`RangeNode`][deeponto.onto.verbalisation.RangeNode].</span>
 
 <span class="sd">    This is the main entry for using the parser, which relies on the [`parse_by_parentheses`][deeponto.onto.verbalisation.OntologySyntaxParser.parse_by_parentheses]</span>
@@ -3240,7 +3240,7 @@ a different parenthesis pattern.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">already_parsed</span><span class="p">:</span>
         <span class="c1"># a root node that covers the entire sentence</span>
-        <span class="n">parsed</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Root&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">owl_expression</span><span class="p">,</span> <span class="n">is_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">RangeNode</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Root&quot;</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">owl_expression</span><span class="p">,</span> <span class="n">is_iri</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">parsed</span> <span class="o">=</span> <span class="n">already_parsed</span>
     <span class="n">stack</span> <span class="o">=</span> <span class="p">[]</span>
@@ -3459,7 +3459,7 @@ a different parenthesis pattern.</p>
 <span class="normal">828</span>
 <span class="normal">829</span>
 <span class="normal">830</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@staticmethod</span>
-<span class="k">def</span> <span class="nf">sort_by_start</span><span class="p">(</span><span class="n">nodes</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">RangeNode</span><span class="p">]):</span>
+<span class="k">def</span> <span class="nf">sort_by_start</span><span class="p">(</span><span class="n">nodes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">RangeNode</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A sorting function that sorts the nodes by their starting positions.&quot;&quot;&quot;</span>
     <span class="n">temp</span> <span class="o">=</span> <span class="p">{</span><span class="n">sib</span><span class="p">:</span> <span class="n">sib</span><span class="o">.</span><span class="n">start</span> <span class="k">for</span> <span class="n">sib</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">}</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">temp</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>

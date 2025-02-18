@@ -1130,8 +1130,8 @@ which utilises the normalisation functionality from the Java library <code>Jcel<
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/onto/normalisation.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">88</span>
-<span class="normal">89</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">90</span>
+<span class="normal">91</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="k">return</span>
 </code></pre></div></td></tr></table></div>
               </details>
@@ -1219,9 +1219,7 @@ which utilises the normalisation functionality from the Java library <code>Jcel<
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/normalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 91</span>
-<span class="normal"> 92</span>
-<span class="normal"> 93</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 93</span>
 <span class="normal"> 94</span>
 <span class="normal"> 95</span>
 <span class="normal"> 96</span>
@@ -1260,7 +1258,9 @@ which utilises the normalisation functionality from the Java library <code>Jcel<
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
-<span class="normal">132</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ontology</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
+<span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">normalise</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ontology</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Performs the $\mathcal{EL}$ normalisation.</span>
 
 <span class="sd">    Args:</span>
@@ -1325,9 +1325,7 @@ which utilises the normalisation functionality from the Java library <code>Jcel<
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/onto/normalisation.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">134</span>
-<span class="normal">135</span>
-<span class="normal">136</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">136</span>
 <span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
@@ -1365,7 +1363,9 @@ which utilises the normalisation functionality from the Java library <code>Jcel<
 <span class="normal">171</span>
 <span class="normal">172</span>
 <span class="normal">173</span>
-<span class="normal">174</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">preprocess_ontology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ontology</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
+<span class="normal">174</span>
+<span class="normal">175</span>
+<span class="normal">176</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">preprocess_ontology</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ontology</span><span class="p">:</span> <span class="n">Ontology</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Preprocess the ontology to remove axioms that are not supported by the normalisation process.&quot;&quot;&quot;</span>
 
     <span class="n">tbox_axioms</span> <span class="o">=</span> <span class="n">ontology</span><span class="o">.</span><span class="n">owl_onto</span><span class="o">.</span><span class="n">getTBoxAxioms</span><span class="p">(</span><span class="n">Imports</span><span class="o">.</span><span class="n">fromBoolean</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span>

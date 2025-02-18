@@ -1067,7 +1067,8 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/utils/decorators.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">21</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
+<span class="normal">21</span>
 <span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
@@ -1078,8 +1079,7 @@
 <span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">timer</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">timer</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the runtime of the decorated function.&quot;&quot;&quot;</span>
 
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
@@ -1115,7 +1115,8 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/utils/decorators.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">35</span>
+<span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
@@ -1127,8 +1128,7 @@
 <span class="normal">45</span>
 <span class="normal">46</span>
 <span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+<span class="normal">48</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">debug</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the function signature and return value.&quot;&quot;&quot;</span>
 
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">function</span><span class="p">)</span>
@@ -1165,7 +1165,8 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/utils/decorators.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
+<span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
@@ -1182,6 +1183,7 @@
 <span class="normal">66</span>
 <span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">paper</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">link</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Add paper tagger for methods.&quot;&quot;&quot;</span>
+
     <span class="c1"># Define a new decorator, named &quot;decorator&quot;, to return</span>
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="c1"># Ensure the decorated function keeps its metadata</span>

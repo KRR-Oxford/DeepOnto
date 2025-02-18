@@ -1108,10 +1108,10 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">96</span>
-<span class="normal">97</span>
-<span class="normal">98</span>
-<span class="normal">99</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">94</span>
+<span class="normal">95</span>
+<span class="normal">96</span>
+<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenizer_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">tokenizer_type</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_tokenizer</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># hidden tokenizer</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tokenize</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the tokenization method</span>
@@ -1151,13 +1151,13 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">107</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">105</span>
+<span class="normal">106</span>
+<span class="normal">107</span>
 <span class="normal">108</span>
 <span class="normal">109</span>
 <span class="normal">110</span>
-<span class="normal">111</span>
-<span class="normal">112</span>
-<span class="normal">113</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">111</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span> <span class="nf">from_pretrained</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">pretrained_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;bert-base-uncased&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;(Based on **transformers**) Load a sub-word level tokenizer from pre-trained model.&quot;&quot;&quot;</span>
     <span class="n">instance</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="s2">&quot;pre-trained&quot;</span><span class="p">)</span>
@@ -1191,14 +1191,14 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">113</span>
+<span class="normal">114</span>
+<span class="normal">115</span>
 <span class="normal">116</span>
 <span class="normal">117</span>
 <span class="normal">118</span>
 <span class="normal">119</span>
-<span class="normal">120</span>
-<span class="normal">121</span>
-<span class="normal">122</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">120</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span> <span class="nf">from_rule_based</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;(Based on **spacy**) Load a word-level (rule-based) tokenizer.&quot;&quot;&quot;</span>
     <span class="n">spacy</span><span class="o">.</span><span class="n">prefer_gpu</span><span class="p">()</span>
@@ -1285,14 +1285,14 @@
 
               <details class="quote">
                 <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">134</span>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">132</span>
+<span class="normal">133</span>
+<span class="normal">134</span>
 <span class="normal">135</span>
 <span class="normal">136</span>
 <span class="normal">137</span>
 <span class="normal">138</span>
-<span class="normal">139</span>
-<span class="normal">140</span>
-<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Tokenizer</span><span class="p">):</span>
+<span class="normal">139</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">:</span> <span class="n">Tokenizer</span><span class="p">):</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">tokenizer</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">original_index</span> <span class="o">=</span> <span class="n">index</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">constructed_index</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
@@ -1333,7 +1333,9 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">141</span>
+<span class="normal">142</span>
+<span class="normal">143</span>
 <span class="normal">144</span>
 <span class="normal">145</span>
 <span class="normal">146</span>
@@ -1353,9 +1355,7 @@
 <span class="normal">160</span>
 <span class="normal">161</span>
 <span class="normal">162</span>
-<span class="normal">163</span>
-<span class="normal">164</span>
-<span class="normal">165</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">idf_select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span> <span class="n">pool_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
+<span class="normal">163</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">idf_select</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">pool_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Given a list of tokens, select a set candidates based on the inverted document frequency (idf) scores.</span>
 
 <span class="sd">    We use `idf` instead of  `tf` because labels have different lengths and thus tf is not a fair measure.</span>
@@ -1492,7 +1492,9 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">26</span>
+<span class="normal">27</span>
+<span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span>
@@ -1516,9 +1518,7 @@
 <span class="normal">49</span>
 <span class="normal">50</span>
 <span class="normal">51</span>
-<span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">process_annotation_literal</span><span class="p">(</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">process_annotation_literal</span><span class="p">(</span>
     <span class="n">annotation_literal</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">apply_lowercasing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">normalise_identifiers</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pre-process an annotation literal string.</span>
@@ -1577,7 +1577,9 @@
 
           <details class="quote">
             <summary>Source code in <code>src/deeponto/utils/text_utils.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">57</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
 <span class="normal">58</span>
 <span class="normal">59</span>
 <span class="normal">60</span>
@@ -1608,9 +1610,7 @@
 <span class="normal">85</span>
 <span class="normal">86</span>
 <span class="normal">87</span>
-<span class="normal">88</span>
-<span class="normal">89</span>
-<span class="normal">90</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">split_java_identifier</span><span class="p">(</span><span class="n">java_style_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">88</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">split_java_identifier</span><span class="p">(</span><span class="n">java_style_identifier</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Split words in java&#39;s identifier style into natural language phrase.</span>
 
 <span class="sd">    Examples:</span>
