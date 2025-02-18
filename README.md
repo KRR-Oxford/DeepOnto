@@ -30,6 +30,10 @@ limitations under the License.
     <a href="https://pypi.org/project/deeponto/">
         <img alt="pypi" src="https://img.shields.io/pypi/v/deeponto">
     </a>
+    <a href="https://github.com/KRR-Oxford/DeepOnto">
+        <img alt="stars" src="https://img.shields.io/github/stars/KRR-Oxford/DeepOnto
+        ">
+    </a>
 </p>
 
 <h4 align="center">
