@@ -90,11 +90,12 @@ class OntologyNormaliser:
     def __init__(self):
         return
 
-    def normalise(self, ontology: Ontology):
+    def normalise(self, ontology: Ontology, reverse_translation: bool = False):
         r"""Performs the $\mathcal{EL}$ normalisation.
 
         Args:
             ontology (Ontology): An ontology to be normalised.
+            reverse_translation (bool, optional): Whether to perform reverse translation to axioms in the origianl ontology. Defaults to `False`.
 
         Returns:
             (list[OWLAxiom]): A list of normalised TBox axioms.
@@ -125,7 +126,7 @@ class OntologyNormaliser:
         # revert the jcel axioms to the original OWLAxioms
         for ax in normalised_ontology:
             try:
-                axiom = self.rTranslator.visit(ax)
+                axiom = self.rTranslator.visit(ax) if reverse_translation else ax
                 normalised_axioms.append(axiom)
             except Exception as e:
                 logging.info("Reverse translation. Ignoring axiom: %s", ax)
