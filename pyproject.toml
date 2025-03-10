@@ -1,6 +1,6 @@
 [project]
 name = "deeponto"
-version = "0.9.3.dev0"
+version = "0.9.3"
 description = "DeepOnto aims to provide implemented deep learning models and an evaluation platform for various ontology engineering purposes."
 readme = "README.md"
 authors = [

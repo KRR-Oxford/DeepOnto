@@ -7,11 +7,12 @@ Removed for now removed features.
 Fixed for any bug fixes.
 Security in case of vulnerabilities. -->
 
-## Unreleased
+## v0.9.3 (2025 Mar)
 
 ### Changed
 
 - [X] [`chore`] Refactor with ruff linter.
+- [X] [`feat`] Add option to skip reverse translation in normalisation.
 
 ## v0.9.2 (2024 Oct)
 

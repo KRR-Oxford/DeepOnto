@@ -53,7 +53,8 @@ limitations under the License.
 **News** :newspaper:
 
 <!-- - [ ] Amend taxonomy features; integrate ICON into DeepOnto. (**unreleased**) -->
-- [X] Minor refinement to `deeponto.onto.taxonomy`. (**v0.9.2**)
+- [X] Refinement to `deeponto.onto.normalisation` (**v0.9.3**).
+- [X] Refinement to `deeponto.onto.taxonomy`. (**v0.9.2**)
 - [X] Hot fix to the `openprompt` issue by moving it to optional dependencies. (**v0.9.1**)
 - [X] Minor feature enhancement; reorganise package layout. (**v0.8.9**)
 - [X] Deploy `deeponto.onto.taxonomy`; add the structural reasoner type. (**v0.8.8**)
