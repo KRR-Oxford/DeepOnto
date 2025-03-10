@@ -15,26 +15,6 @@ All types of contributions are encouraged and valued. See the [Table of Contents
 
 <!-- omit in toc -->
 
-## Table of Contents
-
-- [Contributing to DeepOnto](#contributing-to-deeponto)
-  - [Table of Contents](#table-of-contents)
-  - [Code of Conduct](#code-of-conduct)
-  - [I Have a Question](#i-have-a-question)
-  - [I Want To Contribute](#i-want-to-contribute)
-    - [Reporting Bugs](#reporting-bugs)
-      - [Before Submitting a Bug Report](#before-submitting-a-bug-report)
-      - [How Do I Submit a Good Bug Report?](#how-do-i-submit-a-good-bug-report)
-    - [Suggesting Enhancements](#suggesting-enhancements)
-      - [Before Submitting an Enhancement](#before-submitting-an-enhancement)
-      - [How Do I Submit a Good Enhancement Suggestion?](#how-do-i-submit-a-good-enhancement-suggestion)
-    - [Your First Code Contribution](#your-first-code-contribution)
-    - [Improving The Documentation](#improving-the-documentation)
-  - [Styleguides](#styleguides)
-    - [Commit Messages](#commit-messages)
-  - [Join The Project Team](#join-the-project-team)
-  - [Attribution](#attribution)
-
 
 ## Code of Conduct
 
@@ -79,6 +59,10 @@ Depending on how large the project is, you may want to outsource the questioning
 > ### Legal Notice <!-- omit in toc -->
 >
 > When contributing to this project, you must agree that you have authored 100% of the content, that you have the necessary rights to the content and that the content you contribute may be provided under the project license.
+
+### Your Code Contribution
+
+Follow the [Fork-and-Pull-Request](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) workflow when opening your pull requests. Make sure to mention any related issues and tag the relevant maintainers too. 
 
 ### Reporting Bugs
 
@@ -148,10 +132,6 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/KRR-Ox
 - **Explain why this enhancement would be useful** to most DeepOnto users. You may also want to point out the other projects that solved it better and which could serve as inspiration.
 
 <!-- You might want to create an issue template for enhancement suggestions that can be used as a guide and that defines the structure of the information to be included. If you do so, reference it here in the description. -->
-
-### Your Code Contribution
-
-Follow the [Fork-and-Pull-Request](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) workflow when opening your pull requests. Make sure to mention any related issues and tag the relevant maintainers too. 
 
 
 ## Styleguides
