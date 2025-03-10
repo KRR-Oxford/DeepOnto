@@ -149,16 +149,10 @@ Enhancement suggestions are tracked as [GitHub issues](https://github.com/KRR-Ox
 
 <!-- You might want to create an issue template for enhancement suggestions that can be used as a guide and that defines the structure of the information to be included. If you do so, reference it here in the description. -->
 
-### Your First Code Contribution
+### Your Code Contribution
 
-<!-- TODO
-include Setup of env, IDE and typical getting started instructions?
+Follow the [Fork-and-Pull-Request](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) workflow when opening your pull requests. Make sure to mention any related issues and tag the relevant maintainers too. 
 
--->
-
-### Improving The Documentation
-
-A simple PR on typos or other potential improvements can do the job.
 
 ## Styleguides
 
