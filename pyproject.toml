@@ -47,7 +47,7 @@ dependencies = [
 [project.optional-dependencies]
 docs = [
     "mkdocs==1.4.2",
-    "mkdocstrings==0.19.1",
+    "mkdocstrings==0.30.0",
     "mkdocs-material==9.0.5",
     "mkdocs-include-markdown-plugin==4.0.3",
     "mkdocstrings-python==0.8.3",
