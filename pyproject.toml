@@ -50,7 +50,7 @@ docs = [
     "mkdocstrings==0.19.1",
     "mkdocs-material==9.0.5",
     "mkdocs-include-markdown-plugin==4.0.3",
-    "mkdocstrings-python==0.8.3",
+    "mkdocstrings-python==1.17.0",
     "mkdocs-git-revision-date-localized-plugin",
     "mkdocs-git-authors-plugin"
 ]
