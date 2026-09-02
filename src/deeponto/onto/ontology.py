@@ -16,6 +16,8 @@ from __future__ import annotations
 import logging
 import os
 from collections import defaultdict
+from pathlib import Path
+from typing import Literal, Self
 
 # initialise JVM for python-java interaction
 import click
@@ -87,6 +89,8 @@ REASONER_DICT = {
     "struct": StructuralReasonerFactory,
 }
 
+ReasonerType = Literal["hermit", "elk", "struct"]
+
 
 class Ontology:
     """Ontology class that extends from the Java library OWLAPI.
@@ -111,14 +115,14 @@ class Ontology:
         reasoner (OntologyReasoner): A reasoner for ontology inference.
     """
 
-    def __init__(self, owl_path: str, reasoner_type: str = "hermit"):
+    def __init__(self, owl_path: str | Path, reasoner_type: ReasonerType = "hermit"):
         """Initialise a new ontology.
 
         Args:
-            owl_path (str): The path to the OWL ontology file.
+            owl_path (str or Path): The path to the OWL ontology file.
             reasoner_type (str): The type of reasoner used. Defaults to `"hermit"`. Options are `["hermit", "elk", "struct"]`.
         """
-        self.owl_path = os.path.abspath(owl_path)
+        self.owl_path = Path(owl_path).resolve().as_posix()
         self.owl_manager = OWLManager.createOWLOntologyManager()
         self.owl_onto = self.owl_manager.loadOntologyFromOntologyDocument(IRI.create(File(self.owl_path)))
         self.owl_iri = str(self.owl_onto.getOntologyID().getOntologyIRI().get())
@@ -153,6 +157,27 @@ class Ontology:
                 "reasoner_type": self.reasoner_type,
             }
         }
+
+    @classmethod
+    def from_prefix(cls, prefix: str, *, reasoner_type: ReasonerType = "hermit") -> Self:
+        """Get an ontology from the web  Bioregistry prefix.
+
+        The Bioregistry is a database of OWL download URLs for many ontologies
+        in biomedicine and other domains.
+        """
+        import bioregistry
+        import pystow
+
+        # if an invalid prefix is given, this will raise an exception
+        resource = bioregistry.get_resource(prefix, strict=True)
+
+        url = resource.get_download_owl()
+        if url is None:
+            raise ValueError(f"the bioregistry does not have an OWL download URL for prefix {prefix}")
+
+        # Pystow automatically caches the OWL file in the ~/.data/deeponto/<prefix> folder
+        path = pystow.ensure("deeponto", resource.prefix, url=url)
+        return cls(path, reasoner_type=reasoner_type)
 
     @property
     def name(self):

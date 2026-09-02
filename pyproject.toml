@@ -57,6 +57,9 @@ docs = [
 ontolama = [
     "openprompt"
 ]
+bioregistry = [
+    "bioregistry",
+]
 
 [project.urls]
 Homepage = "https://krr-oxford.github.io/DeepOnto/"

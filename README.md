@@ -99,6 +99,12 @@ We have been informed that `openprompt` has a conflict with several other packag
 pip install deeponto[ontolama]
 ```
 
+For using the automatic ontology lookup and caching, use:
+
+```console
+$ pip install deeponto[bioregistry]
+```
+
 ### Install from Git Repository
 
 To install the latest, probably unreleased version of deeponto, you can directly install from the repository. 
