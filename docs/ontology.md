@@ -28,6 +28,14 @@ Loading an ontology from a local file:
 onto = Ontology("path_to_ontology.owl")
 ```
 
+Automatically download an OWL file and load based on
+the Bioregistry prefix for an ontology (requires `pip install bioregistry`
+or `pip install deeponto[bioregistry]`):
+
+```python
+onto = Ontology.from_prefix("doid")
+```
+
 It also possible to choose a reasoner to be used:
 
 ```
