@@ -26,6 +26,8 @@ from deeponto.onto import Ontology
 from deeponto.utils import Tokenizer, uniqify, read_table
 
 if TYPE_CHECKING:
+    import curies
+    import sssom_pydantic
     from org.semanticweb.owlapi.model import OWLObject  # type: ignore
 
 DEFAULT_REL = "<?rel>"
@@ -92,6 +94,35 @@ class EntityMapping:
             return (self.head, self.tail, self.score)
         else:
             return (self.head, self.tail)
+
+    def to_sssom(
+        self,
+        converter: curies.Converter,
+        predicate: Optional[curies.Reference] = None,
+        justification: Optional[curies.Reference] = None,
+        **kwargs,
+    ) -> sssom_pydantic.SemanticMapping:
+        """Convert into a SSSOM semantic mapping.
+
+        Additional metadata can be injected by the caller, e.g., the BERTmap
+        pipeline, which might add the ``similarity_score``
+        """
+        import sssom_pydantic
+        from curies.vocabulary import exact_match, unspecified_matching_process
+
+        subject = converter.parse_uri(self.head, strict=True).to_pydantic()
+        obj = converter.parse_uri(self.tail, strict=True).to_pydantic()
+        if predicate is not None:
+            predicate = exact_match
+        if justification is None:
+            justification = unspecified_matching_process
+        return sssom_pydantic.SemanticMapping(
+            subject=subject,
+            predicate=predicate,
+            object=obj,
+            justification=justification,
+            **kwargs
+        )
 
     @staticmethod
     def as_tuples(entity_mappings: List[EntityMapping], with_score: bool = False):

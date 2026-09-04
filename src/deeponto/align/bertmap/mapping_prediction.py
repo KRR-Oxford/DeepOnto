@@ -379,15 +379,12 @@ class MappingPredictor:
         the justification, similarity score, and similarity score measure).
         """
         import sssom_pydantic
-        from curies.vocabulary import exact_match, lexical_similarity_threshold_based_matching_process
+        from curies.vocabulary import lexical_similarity_threshold_based_matching_process
 
-        subject = converter.parse_uri(mapping.head, strict=True).to_pydantic()
-        object = converter.parse_uri(mapping.tail, strict=True).to_pydantic()
-        return sssom_pydantic.SemanticMapping(
-            subject=subject,
-            predicate=exact_match,
-            object=object,
+        return mapping.to_sssom(
+            converter=converter,
             similarity_score=mapping.score,
             similarity_measure="bertmap",
             justification=lexical_similarity_threshold_based_matching_process,
+            mapping_tool=sssom_pydantic.MappingTool(name="BERTMap"),
         )
