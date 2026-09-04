@@ -371,7 +371,7 @@ class MappingPredictor:
         sssom_pydantic.write(semantic_mappings, sssom_path, converter=converter, metadata=metadata)
 
     @staticmethod
-    def entity_mapping_to_sssom(mapping: EntityMapping, converter: curies.Converter) -> sssom_pydantic.SemanticMapping:
+    def entity_mapping_to_sssom(mapping: EntityMapping, *, converter: curies.Converter) -> sssom_pydantic.SemanticMapping:
         """Convert a DeepOnto entity mapping into a SSSOM semantic mapping.
 
         This function is only locally applicable inside the BERTmap module, since it

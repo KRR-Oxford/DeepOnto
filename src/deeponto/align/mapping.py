@@ -97,6 +97,7 @@ class EntityMapping:
 
     def to_sssom(
         self,
+        *,
         converter: curies.Converter,
         predicate: Optional[curies.Reference] = None,
         justification: Optional[curies.Reference] = None,
@@ -104,8 +105,33 @@ class EntityMapping:
     ) -> sssom_pydantic.SemanticMapping:
         """Convert into a SSSOM semantic mapping.
 
-        Additional metadata can be injected by the caller, e.g., the BERTmap
-        pipeline, which might add the ``similarity_score``
+        Args:
+            converter : A converter object containing the prefix map (i.e., from CURIE prefixes to URI prefixes)
+                that covers the IRIs for both subjects and objects appearing in your mappings.
+                If you're not sure, you can get a comprehensive one from the :mod:`bioregistry` package
+                with
+
+                .. code-block:: python
+
+                    import bioregistry
+
+                    converter = bioregistry.get_preferred_converter()
+
+            predicate : A reference object representing the predicate. If not given, defaults
+                to :data:`curies.vocabulary.exact_match`, which represents ``skos:exactMatch``.
+            justification : A reference object representing the mapping justification, coming
+                from the SEMAPV vocabulary. If not given, defaults to
+                :data:`curies.vocabulary.unspecified_matching`, which represents
+                ``semapv:UnspecifiedMatching``, meaning no information is available. In
+                DeepOnto, this might take a more specific value, e.g., for
+                ``semapv:LexicalSimilarityThresholdMatching`` or ``semapv:SemanticSimilarityThresholdMatching``.
+            kwargs : Remaining arguments to pass through to the constructor of
+                :class:`sssom_pydantic.SemanticMapping`, allowing for more detailed mapping
+                information (such as the similarity score, similarity measure, and mapping tool)
+                to be added
+
+        Returns:
+            : An object representing a SSSOM semantic mapping from the :mod:`sssom_pydantic` package.
         """
         import sssom_pydantic
         from curies.vocabulary import exact_match, unspecified_matching_process
