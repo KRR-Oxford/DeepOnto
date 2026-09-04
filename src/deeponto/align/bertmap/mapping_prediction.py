@@ -339,7 +339,8 @@ class MappingPredictor:
             progress_bar.update()
 
         try:
-            self.write_sssom(all_mappings, match_dir=match_dir, converter=converter, metadata=metadata)
+            sssom_path = os.path.join(match_dir, "raw_mappings.sssom.tsv")
+            self.write_sssom(all_mappings, sssom_path, converter=converter, metadata=metadata)
         except:
             self.logger.info("Failed to write SSSOM")
 
@@ -348,42 +349,21 @@ class MappingPredictor:
 
     def write_sssom(
         self,
-        mappings: List[EntityMapping],
+        entity_mappings: List[EntityMapping],
+        path: Union[str, Path],
         *,
-        match_dir: Union[str, Path],
         converter: Optional[curies.Converter] = None,
         metadata: Optional[sssom_pydantic.MappingSet] = None,
     ) -> None:
         """Write the entity mappings as SSSOM."""
         import sssom_pydantic
-
-        if converter is None:
-            import bioregistry
-            converter = bioregistry.get_preferred_converter()
-
-        if metadata is None:
-            import uuid
-            mapping_set_id = f"https://w3id.org/sssom/mapping-set/{uuid.uuid4()}"
-            metadata = sssom_pydantic.MappingSet(id=mapping_set_id)
-
-        semantic_mappings = [self.entity_mapping_to_sssom(mapping, converter) for mapping in mappings]
-        sssom_path = Path(match_dir).joinpath("raw_mappings.sssom.tsv")
-        sssom_pydantic.write(semantic_mappings, sssom_path, converter=converter, metadata=metadata)
-
-    @staticmethod
-    def entity_mapping_to_sssom(mapping: EntityMapping, *, converter: curies.Converter) -> sssom_pydantic.SemanticMapping:
-        """Convert a DeepOnto entity mapping into a SSSOM semantic mapping.
-
-        This function is only locally applicable inside the BERTmap module, since it
-        adds additional metadata about raw mappings coming from BERTmap (e.g.,
-        the justification, similarity score, and similarity score measure).
-        """
-        import sssom_pydantic
         from curies.vocabulary import lexical_similarity_threshold_based_matching_process
 
-        return mapping.to_sssom(
+        EntityMapping.write_sssom(
+            entity_mappings,
+            path,
             converter=converter,
-            similarity_score=mapping.score,
+            metadata=metadata,
             similarity_measure="bertmap",
             justification=lexical_similarity_threshold_based_matching_process,
             mapping_tool=sssom_pydantic.MappingTool(name="BERTMap"),

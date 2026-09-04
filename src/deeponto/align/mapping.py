@@ -14,12 +14,13 @@
 
 from __future__ import annotations
 
-from typing import Optional, List, TYPE_CHECKING
+from typing import Optional, List, Union, TYPE_CHECKING
 import pprintpp
 from collections import defaultdict
 import pandas as pd
 import random
 import logging
+from pathlib import Path
 logger = logging.getLogger(__name__)
 
 from deeponto.onto import Ontology
@@ -139,7 +140,11 @@ class EntityMapping:
         subject = converter.parse_uri(self.head, strict=True).to_pydantic()
         obj = converter.parse_uri(self.tail, strict=True).to_pydantic()
         if predicate is not None:
+            pass # override
+        elif self.relation in {"<?rel>", "<EquivalentTo>", "="}:
             predicate = exact_match
+        else:
+            raise NotImplementedError(f"mapping from {self.relation} to a well-defined CURIE has not yet been implemented")
         if justification is None:
             justification = unspecified_matching_process
         return sssom_pydantic.SemanticMapping(
@@ -147,8 +152,41 @@ class EntityMapping:
             predicate=predicate,
             object=obj,
             justification=justification,
+            similarity_score=self.score,
             **kwargs
         )
+
+    @staticmethod
+    def write_sssom(
+        entity_mappings: List[EntityMapping],
+        path: Union[str, Path],
+        *,
+        converter: Optional[curies.Converter] = None,
+        metadata: Optional[sssom_pydantic.MappingSet] = None,
+        predicate: Optional[curies.Reference] = None,
+        justification: Optional[curies.Reference] = None,
+        **kwargs,
+    ) -> None:
+        """Write the entity mappings as SSSOM."""
+        import sssom_pydantic
+
+        if converter is None:
+            import bioregistry
+
+            converter = bioregistry.get_preferred_converter()
+
+        if metadata is None:
+            import uuid
+            mapping_set_id = f"https://w3id.org/sssom/mapping-set/{uuid.uuid4()}"
+            metadata = sssom_pydantic.MappingSet(id=mapping_set_id)
+
+        semantic_mappings = [
+            entity_mapping.to_sssom(converter=converter, predicate=predicate, justification=justification, **kwargs)
+            for entity_mapping in entity_mappings
+        ]
+        sssom_pydantic.write(semantic_mappings, path, converter=converter, metadata=metadata)
+
+
 
     @staticmethod
     def as_tuples(entity_mappings: List[EntityMapping], with_score: bool = False):
