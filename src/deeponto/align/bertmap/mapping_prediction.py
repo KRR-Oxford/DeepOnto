@@ -14,7 +14,7 @@
 
 from __future__ import annotations
 
-from typing import Optional, List, Set
+from typing import Optional, List, Set, Union, TYPE_CHECKING
 from yacs.config import CfgNode
 import os
 from textdistance import levenshtein
@@ -24,6 +24,7 @@ import torch
 import pandas as pd
 import enlighten
 import warnings
+from pathlib import Path
 
 
 from deeponto.align.mapping import EntityMapping
@@ -31,6 +32,9 @@ from deeponto.onto import Ontology
 from deeponto.utils import Tokenizer, create_path, load_file, save_file
 from .bert_classifier import BERTSynonymClassifier
 
+if TYPE_CHECKING:
+    import curies
+    import sssom_pydantic
 
 # @paper(
 #     "BERTMap: A BERT-based Ontology Alignment System (AAAI-2022)",
@@ -280,7 +284,12 @@ class MappingPredictor:
 
         return bert_match()
 
-    def mapping_prediction(self):
+    def mapping_prediction(
+        self,
+        *,
+        converter: Optional[curies.Converter] = None,
+        metadata: Optional[sssom_pydantic.MappingSet] = None,
+    ):
         r"""Apply global matching for each class in the source ontology.
 
         See [`mapping_prediction_for_src_class`][deeponto.align.bertmap.mapping_prediction.MappingPredictor.mapping_prediction_for_src_class].
@@ -303,6 +312,7 @@ class MappingPredictor:
         )
         self.enlighten_status.update(demo="Mapping Prediction")
 
+        all_mappings = []
         for i, src_class_iri in enumerate(self.src_annotation_index.keys()):
             # skip computed classes
             if src_class_iri in mapping_index.keys():
@@ -315,6 +325,7 @@ class MappingPredictor:
                 progress_bar.update()
                 continue
             mappings = self.mapping_prediction_for_src_class(src_class_iri)
+            all_mappings.extend(mappings)
             mapping_index[src_class_iri] = [m.to_tuple(with_score=True) for m in mappings]
 
             if i % 100 == 0 or i == len(self.src_annotation_index) - 1:
@@ -327,5 +338,56 @@ class MappingPredictor:
 
             progress_bar.update()
 
+        try:
+            self.write_sssom(all_mappings, match_dir=match_dir, converter=converter, metadata=metadata)
+        except:
+            self.logger.info("Failed to write SSSOM")
+
         self.logger.info("Finished mapping prediction for each class in the source ontology.")
         progress_bar.close()
+
+    def write_sssom(
+        self,
+        mappings: List[EntityMapping],
+        *,
+        match_dir: Union[str, Path],
+        converter: Optional[curies.Converter] = None,
+        metadata: Optional[sssom_pydantic.MappingSet] = None,
+    ) -> None:
+        """Write the entity mappings as SSSOM."""
+        import sssom_pydantic
+
+        if converter is None:
+            import bioregistry
+            converter = bioregistry.get_preferred_converter()
+
+        if metadata is None:
+            import uuid
+            mapping_set_id = f"https://w3id.org/sssom/mapping-set/{uuid.uuid4()}"
+            metadata = sssom_pydantic.MappingSet(id=mapping_set_id)
+
+        semantic_mappings = [self.entity_mapping_to_sssom(mapping, converter) for mapping in mappings]
+        sssom_path = Path(match_dir).joinpath("raw_mappings.sssom.tsv")
+        sssom_pydantic.write(semantic_mappings, sssom_path, converter=converter, metadata=metadata)
+
+    @staticmethod
+    def entity_mapping_to_sssom(mapping: EntityMapping, converter: curies.Converter) -> sssom_pydantic.SemanticMapping:
+        """Convert a DeepOnto entity mapping into a SSSOM semantic mapping.
+
+        This function is only locally applicable inside the BERTmap module, since it
+        adds additional metadata about raw mappings coming from BERTmap (e.g.,
+        the justification, similarity score, and similarity score measure).
+        """
+        import sssom_pydantic
+        from curies.vocabulary import exact_match, lexical_similarity_threshold_based_matching_process
+
+        subject = converter.parse_uri(mapping.head, strict=True).to_pydantic()
+        object = converter.parse_uri(mapping.tail, strict=True).to_pydantic()
+        return sssom_pydantic.SemanticMapping(
+            subject=subject,
+            predicate=exact_match,
+            object=object,
+            similarity_score=mapping.score,
+            similarity_measure="bertmap",
+            justification=lexical_similarity_threshold_based_matching_process,
+        )
