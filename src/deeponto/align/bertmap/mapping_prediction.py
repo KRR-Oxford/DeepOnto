@@ -347,8 +347,8 @@ class MappingPredictor:
         self.logger.info("Finished mapping prediction for each class in the source ontology.")
         progress_bar.close()
 
+    @staticmethod
     def write_sssom(
-        self,
         entity_mappings: List[EntityMapping],
         path: Union[str, Path],
         *,
