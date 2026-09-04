@@ -14,18 +14,21 @@
 
 from __future__ import annotations
 
-from typing import Optional, List, TYPE_CHECKING
+from typing import Optional, List, Union, TYPE_CHECKING
 import pprintpp
 from collections import defaultdict
 import pandas as pd
 import random
 import logging
+from pathlib import Path
 logger = logging.getLogger(__name__)
 
 from deeponto.onto import Ontology
 from deeponto.utils import Tokenizer, uniqify, read_table
 
 if TYPE_CHECKING:
+    import curies
+    import sssom_pydantic
     from org.semanticweb.owlapi.model import OWLObject  # type: ignore
 
 DEFAULT_REL = "<?rel>"
@@ -92,6 +95,98 @@ class EntityMapping:
             return (self.head, self.tail, self.score)
         else:
             return (self.head, self.tail)
+
+    def to_sssom(
+        self,
+        *,
+        converter: curies.Converter,
+        predicate: Optional[curies.Reference] = None,
+        justification: Optional[curies.Reference] = None,
+        **kwargs,
+    ) -> sssom_pydantic.SemanticMapping:
+        """Convert into a SSSOM semantic mapping.
+
+        Args:
+            converter : A converter object containing the prefix map (i.e., from CURIE prefixes to URI prefixes)
+                that covers the IRIs for both subjects and objects appearing in your mappings.
+                If you're not sure, you can get a comprehensive one from the :mod:`bioregistry` package
+                with
+
+                .. code-block:: python
+
+                    import bioregistry
+
+                    converter = bioregistry.get_preferred_converter()
+
+            predicate : A reference object representing the predicate. If not given, defaults
+                to :data:`curies.vocabulary.exact_match`, which represents ``skos:exactMatch``.
+            justification : A reference object representing the mapping justification, coming
+                from the SEMAPV vocabulary. If not given, defaults to
+                :data:`curies.vocabulary.unspecified_matching`, which represents
+                ``semapv:UnspecifiedMatching``, meaning no information is available. In
+                DeepOnto, this might take a more specific value, e.g., for
+                ``semapv:LexicalSimilarityThresholdMatching`` or ``semapv:SemanticSimilarityThresholdMatching``.
+            kwargs : Remaining arguments to pass through to the constructor of
+                :class:`sssom_pydantic.SemanticMapping`, allowing for more detailed mapping
+                information (such as the similarity score, similarity measure, and mapping tool)
+                to be added
+
+        Returns:
+            : An object representing a SSSOM semantic mapping from the :mod:`sssom_pydantic` package.
+        """
+        import sssom_pydantic
+        from curies.vocabulary import exact_match, unspecified_matching_process
+
+        subject = converter.parse_uri(self.head, strict=True).to_pydantic()
+        obj = converter.parse_uri(self.tail, strict=True).to_pydantic()
+        if predicate is not None:
+            pass # override
+        elif self.relation in {"<?rel>", "<EquivalentTo>", "="}:
+            predicate = exact_match
+        else:
+            raise NotImplementedError(f"mapping from {self.relation} to a well-defined CURIE has not yet been implemented")
+        if justification is None:
+            justification = unspecified_matching_process
+        return sssom_pydantic.SemanticMapping(
+            subject=subject,
+            predicate=predicate,
+            object=obj,
+            justification=justification,
+            similarity_score=self.score,
+            **kwargs
+        )
+
+    @staticmethod
+    def write_sssom(
+        entity_mappings: List[EntityMapping],
+        path: Union[str, Path],
+        *,
+        converter: Optional[curies.Converter] = None,
+        metadata: Optional[sssom_pydantic.MappingSet] = None,
+        predicate: Optional[curies.Reference] = None,
+        justification: Optional[curies.Reference] = None,
+        **kwargs,
+    ) -> None:
+        """Write the entity mappings as SSSOM."""
+        import sssom_pydantic
+
+        if converter is None:
+            import bioregistry
+
+            converter = bioregistry.get_preferred_converter()
+
+        if metadata is None:
+            import uuid
+            mapping_set_id = f"https://w3id.org/sssom/mapping-set/{uuid.uuid4()}"
+            metadata = sssom_pydantic.MappingSet(id=mapping_set_id)
+
+        semantic_mappings = [
+            entity_mapping.to_sssom(converter=converter, predicate=predicate, justification=justification, **kwargs)
+            for entity_mapping in entity_mappings
+        ]
+        sssom_pydantic.write(semantic_mappings, path, converter=converter, metadata=metadata)
+
+
 
     @staticmethod
     def as_tuples(entity_mappings: List[EntityMapping], with_score: bool = False):
